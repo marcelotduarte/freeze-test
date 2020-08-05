@@ -1,0 +1,66 @@
+name: Test-Windows-pipenv
+
+on:
+  push:
+    branches: [ master ]
+  #pull_request:
+  #  branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Test
+
+    strategy:
+      matrix:
+        os: [windows-latest]
+        python-version: [3.8]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout cx_Freeze
+      uses: actions/checkout@v2
+      with:
+        repository: marcelotduarte/cx_Freeze
+        ref: develop
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install pipenv
+      run: |
+        python -m pip install --upgrade pip
+        pip install pipenv
+
+    - name: Freeze cryptography sample
+      run: |
+        cd cx_Freeze/samples/cryptography
+        pipenv --python ${{ matrix.python-version }}
+        pipenv install cryptography
+        pipenv install git+https://github.com/marcelotduarte/cx_Freeze.git@develop#egg=cx_Freeze
+        pipenv run python setup.py build_exe --silent
+    - name: Run cryptography sample
+      run: |
+        ./cx_Freeze/samples/cryptography/build/exe.win-amd64-${{ matrix.python-version }}/test_crypt.exe
+    - name: Freeze matplolib sample
+      run: |
+        cd cx_Freeze/samples/matplotlib
+        pipenv --python ${{ matrix.python-version }}
+        pipenv install matplotlib
+        pipenv install wxPython
+        pipenv install git+https://github.com/marcelotduarte/cx_Freeze.git@develop#egg=cx_Freeze
+        pipenv run python setup.py build_exe --silent
+    - name: Run matplolib sample
+      run: |
+        ./cx_Freeze/samples/matplotlib/build/exe.win-amd64-${{ matrix.python-version }}/matplotlib_afm.exe
+    - name: Freeze pillow sample
+      run: |
+        cd cx_Freeze/samples/pillow
+        pipenv --python ${{ matrix.python-version }}
+        pipenv install pillow
+        pipenv install git+https://github.com/marcelotduarte/cx_Freeze.git@develop#egg=cx_Freeze
+        pipenv run python setup.py build_exe --silent
+    - name: Run pillow sample
+      run: |
+        ./cx_Freeze/samples/pillow/build/exe.win-amd64-${{ matrix.python-version }}/test_pillow.exe
