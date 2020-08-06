@@ -46,7 +46,7 @@ jobs:
     - name: Install cx-freeze
       run: |
         cd cx_Freeze
-        python setup.py install
+        pip install .
 
     - name: Freeze cryptography sample
       run: |
