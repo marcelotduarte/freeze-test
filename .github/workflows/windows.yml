@@ -12,9 +12,10 @@ jobs:
     name: Test
 
     strategy:
+      fail-fast: false
       matrix:
         os: [windows-latest]
-        python-version: [3.5, 3.6, 3.7, 3.8]
+        python-version: [3.7, 3.8]
 
     runs-on: ${{ matrix.os }}
 
@@ -24,6 +25,12 @@ jobs:
       with:
         repository: marcelotduarte/cx_Freeze
         ref: develop
+        path: cx_Freeze
+    - name: Checkout cx_Logging
+      uses: actions/checkout@v2
+      with:
+        repository: anthony-tuininga/cx_Logging
+        path: cx_Logging
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -32,32 +39,37 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -U setuptools wheel
+    - name: Install cx-logging
+      run: |
+        cd cx_Logging
+        python setup.py install
     - name: Install cx-freeze
       run: |
-        python setup.py build install
+        cd cx_Freeze
+        python setup.py install
 
     - name: Freeze cryptography sample
       run: |
-        cd cx_Freeze/samples/cryptography
+        cd cx_Freeze/cx_Freeze/samples/cryptography
         pip install cryptography
-        python setup.py build_exe --silent
+        python setup.py build_exe
     - name: Run cryptography sample
       run: |
-        ./cx_Freeze/samples/cryptography/build/exe.win-amd64-${{ matrix.python-version }}/test_crypt.exe
+        ./cx_Freeze/cx_Freeze/samples/cryptography/build/exe.win-amd64-${{ matrix.python-version }}/test_crypt.exe
     - name: Freeze matplolib sample
       run: |
-        cd cx_Freeze/samples/matplotlib
+        cd cx_Freeze/cx_Freeze/samples/matplotlib
         pip install matplotlib
         pip install wxPython
         python setup.py build_exe --silent
     - name: Run matplolib sample
       run: |
-        ./cx_Freeze/samples/matplotlib/build/exe.win-amd64-${{ matrix.python-version }}/matplotlib_afm.exe
+        ./cx_Freeze/cx_Freeze/samples/matplotlib/build/exe.win-amd64-${{ matrix.python-version }}/matplotlib_afm.exe
     - name: Freeze pillow sample
       run: |
-        cd cx_Freeze/samples/pillow
+        cd cx_Freeze/cx_Freeze/samples/pillow
         pip install pillow
-        pip run python setup.py build_exe --silent
+        python setup.py build_exe --silent
     - name: Run pillow sample
       run: |
-        ./cx_Freeze/samples/pillow/build/exe.win-amd64-${{ matrix.python-version }}/test_pillow.exe
+        ./cx_Freeze/cx_Freeze/samples/pillow/build/exe.win-amd64-${{ matrix.python-version }}/test_pillow.exe
