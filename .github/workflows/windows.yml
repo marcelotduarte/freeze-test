@@ -70,7 +70,7 @@ jobs:
         python setup.py build_exe --silent
     - name: Run pandas sample
       run: |
-        ./cx_Freeze/cx_Freeze/samples/pandas/build/exe.win-amd64-${{ matrix.python-version }}/pandas.exe
+        ./cx_Freeze/cx_Freeze/samples/pandas/build/exe.win-amd64-${{ matrix.python-version }}/test_pandas.exe
     - name: Freeze pillow sample
       run: |
         cd cx_Freeze/cx_Freeze/samples/pillow
