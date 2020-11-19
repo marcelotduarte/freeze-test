@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: [3.6, 3.7, 3.8, 3.5]
 
     runs-on: ${{ matrix.os }}
 
@@ -79,3 +79,10 @@ jobs:
     - name: Run pillow sample
       run: |
         ./cx_Freeze/cx_Freeze/samples/pillow/build/exe.win-amd64-${{ matrix.python-version }}/test_pillow.exe
+    - name: Freeze service sample
+      run: |
+        cd cx_Freeze/cx_Freeze/samples/service
+        python setup.py build_exe --silent
+    - name: Run service sample
+      run: |
+        ./cx_Freeze/cx_Freeze/samples/service/build/exe.win-amd64-${{ matrix.python-version }}/cx_FreezeSampleService.exe
