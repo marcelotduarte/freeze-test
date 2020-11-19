@@ -85,4 +85,4 @@ jobs:
         python setup.py build_exe --silent
     - name: Run service sample
       run: |
-        ./cx_Freeze/cx_Freeze/samples/service/build/exe.win-amd64-${{ matrix.python-version }}/cx_FreezeSampleService.exe --install
+        ./cx_Freeze/cx_Freeze/samples/service/build/exe.win-amd64-${{ matrix.python-version }}/cx_FreezeSampleService.exe --install sample
