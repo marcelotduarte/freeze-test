@@ -1,4 +1,4 @@
-#) Highlights of Version 6.2 up to 6.4:
+# Highlights of Version 6.2 up to 6.4:
 	- Support for metadata to use by pkg_resources and importlib.metadata
 	- Namespace packages are automatically detected
 	- Enhanced support for Python 3.8 and Intial support for Python 3.9
