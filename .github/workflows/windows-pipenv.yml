@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest]
-        python-version: [3.8]
+        python-version: [3.6, 3.7, 3.8, 3.9]
 
     runs-on: ${{ matrix.os }}
 
@@ -54,6 +54,16 @@ jobs:
     - name: Run matplolib sample
       run: |
         ./cx_Freeze/samples/matplotlib/build/exe.win-amd64-${{ matrix.python-version }}/matplotlib_afm.exe
+    - name: Freeze pandas sample
+      run: |
+        cd cx_Freeze/samples/pandas
+        pipenv --python ${{ matrix.python-version }}
+        pipenv install pandas
+        pipenv install git+https://github.com/marcelotduarte/cx_Freeze.git@develop#egg=cx_Freeze
+        pipenv run python setup.py build_exe --silent
+    - name: Run pandas sample
+      run: |
+        ./cx_Freeze/samples/pandas/build/exe.win-amd64-${{ matrix.python-version }}/test_pandas.exe
     - name: Freeze pillow sample
       run: |
         cd cx_Freeze/samples/pillow
@@ -64,3 +74,12 @@ jobs:
     - name: Run pillow sample
       run: |
         ./cx_Freeze/samples/pillow/build/exe.win-amd64-${{ matrix.python-version }}/test_pillow.exe
+    - name: Freeze service sample
+      run: |
+        cd cx_Freeze/samples/service
+        pipenv --python ${{ matrix.python-version }}
+        pipenv install git+https://github.com/marcelotduarte/cx_Freeze.git@develop#egg=cx_Freeze
+        pipenv run python setup.py build_exe --silent
+    - name: Run service sample
+      run: |
+        ./cx_Freeze/samples/service/build/exe.win-amd64-${{ matrix.python-version }}/cx_FreezeSampleService.exe --install sample
