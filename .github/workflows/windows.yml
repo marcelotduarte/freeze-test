@@ -79,6 +79,14 @@ jobs:
     - name: Run pillow sample
       run: |
         ./cx_Freeze/cx_Freeze/samples/pillow/build/exe.win-amd64-${{ matrix.python-version }}/test_pillow.exe
+    - name: Freeze pyside2 sample
+      run: |
+        cd cx_Freeze/cx_Freeze/samples/pyside2
+        pip install pyside2
+        python setup.py build_exe --silent
+    - name: Run pyside2 sample
+      run: |
+        ./cx_Freeze/cx_Freeze/samples/pyside2/build/exe.win-amd64-${{ matrix.python-version }}/PySide2app.exe
     - name: Freeze service sample
       run: |
         cd cx_Freeze/cx_Freeze/samples/service
