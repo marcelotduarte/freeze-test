@@ -1,10 +1,8 @@
 name: Test-Windows-pipenv
 
 on:
-  #push:
-  #  branches: [ master ]
-  #pull_request:
-  #  branches: [ master ]
+  push:
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -74,6 +72,29 @@ jobs:
     - name: Run pillow sample
       run: |
         ./cx_Freeze/samples/pillow/build/exe.win-amd64-${{ matrix.python-version }}/test_pillow.exe
+
+    - name: Freeze PyQt5 sample
+      run: |
+        cd cx_Freeze/samples/PyQt5
+        pipenv --python ${{ matrix.python-version }}
+        pipenv install PyQt5
+        pipenv install git+https://github.com/marcelotduarte/cx_Freeze.git@develop#egg=cx_Freeze
+        pipenv run python setup.py build_exe --silent
+    - name: Run PyQt5 sample
+      run: |
+        ./cx_Freeze/samples/PyQt5/build/exe.win-amd64-${{ matrix.python-version }}/PyQt5app.exe
+
+    - name: Freeze PySide2 sample
+      run: |
+        cd cx_Freeze/samples/pyside2
+        pipenv --python ${{ matrix.python-version }}
+        pipenv install PySide2
+        pipenv install git+https://github.com/marcelotduarte/cx_Freeze.git@develop#egg=cx_Freeze
+        pipenv run python setup.py build_exe --silent
+    - name: Run pyside2 sample
+      run: |
+        ./cx_Freeze/samples/pyside2/build/exe.win-amd64-${{ matrix.python-version }}/PySide2app.exe
+
     - name: Freeze service sample
       run: |
         cd cx_Freeze/samples/service
