@@ -10,6 +10,7 @@ jobs:
     name: Test
 
     strategy:
+      fail-fast: false
       matrix:
         os: [windows-latest]
         python-version: [3.6, 3.7, 3.8, 3.9]
@@ -99,6 +100,7 @@ jobs:
       run: |
         cd cx_Freeze/samples/service
         pipenv --python ${{ matrix.python-version }}
+        pipenv install git+https://github.com/anthony-tuininga/cx_Logging.git@develop#egg=cx_Logging
         pipenv install git+https://github.com/marcelotduarte/cx_Freeze.git@develop#egg=cx_Freeze
         pipenv run python setup.py build_exe --silent
     - name: Run service sample
