@@ -1,8 +1,8 @@
 name: Test-Windows
 
 on:
-  push:
-    branches: [ master ]
+  #push:
+  #  branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -47,50 +47,66 @@ jobs:
         pip install .
 
     - name: Freeze cryptography sample
+      working-directory: cx_Freeze/cx_Freeze/samples/cryptography
       run: |
-        cd cx_Freeze/cx_Freeze/samples/cryptography
         pip install cryptography
         python setup.py build_exe
     - name: Run cryptography sample
+      working-directory: cx_Freeze/cx_Freeze/samples/cryptography
+      run: ./build/exe.win-amd64-${{ matrix.python-version }}/test_crypt.exe
+
+    - name: Freeze icon sample
+      working-directory: cx_Freeze/cx_Freeze/samples/icon
+      run: python setup.py build_exe --silent
+    - name: Run icon sample
+      working-directory: cx_Freeze/cx_Freeze/samples/icon
       run: |
-        ./cx_Freeze/cx_Freeze/samples/cryptography/build/exe.win-amd64-${{ matrix.python-version }}/test_crypt.exe
+        ./build/exe.win-amd64-${{ matrix.python-version }}/test_1.exe
+        ./build/exe.win-amd64-${{ matrix.python-version }}/test_2.exe
+
     - name: Freeze matplolib sample
+      working-directory: cx_Freeze/cx_Freeze/samples/matplotlib
       run: |
-        cd cx_Freeze/cx_Freeze/samples/matplotlib
         pip install matplotlib
         pip install wxPython
         python setup.py build_exe --silent
     - name: Run matplolib sample
+      working-directory: cx_Freeze/cx_Freeze/samples/matplotlib
       run: |
-        ./cx_Freeze/cx_Freeze/samples/matplotlib/build/exe.win-amd64-${{ matrix.python-version }}/matplotlib_afm.exe
+        ./build/exe.win-amd64-${{ matrix.python-version }}/matplotlib_afm.exe
+    
     - name: Freeze pandas sample
+      working-directory: cx_Freeze/cx_Freeze/samples/pandas
       run: |
-        cd cx_Freeze/cx_Freeze/samples/pandas
         pip install pandas
         python setup.py build_exe --silent
     - name: Run pandas sample
+      working-directory: cx_Freeze/cx_Freeze/samples/pandas
       run: |
-        ./cx_Freeze/cx_Freeze/samples/pandas/build/exe.win-amd64-${{ matrix.python-version }}/test_pandas.exe
+        ./build/exe.win-amd64-${{ matrix.python-version }}/test_pandas.exe
+    
     - name: Freeze pillow sample
+      working-directory: cx_Freeze/cx_Freeze/samples/pillow
       run: |
-        cd cx_Freeze/cx_Freeze/samples/pillow
         pip install pillow
         python setup.py build_exe --silent
     - name: Run pillow sample
-      run: |
-        ./cx_Freeze/cx_Freeze/samples/pillow/build/exe.win-amd64-${{ matrix.python-version }}/test_pillow.exe
+      working-directory: cx_Freeze/cx_Freeze/samples/pillow
+      run: ./build/exe.win-amd64-${{ matrix.python-version }}/test_pillow.exe
+    
     - name: Freeze pyside2 sample
+      working-directory: cx_Freeze/cx_Freeze/samples/pyside2
       run: |
-        cd cx_Freeze/cx_Freeze/samples/pyside2
         pip install pyside2
         python setup.py build_exe --silent
     - name: Run pyside2 sample
-      run: |
-        ./cx_Freeze/cx_Freeze/samples/pyside2/build/exe.win-amd64-${{ matrix.python-version }}/PySide2app.exe
+      working-directory: cx_Freeze/cx_Freeze/samples/pyside2
+      run: ./build/exe.win-amd64-${{ matrix.python-version }}/PySide2app.exe
+    
     - name: Freeze service sample
+      working-directory: cx_Freeze/cx_Freeze/samples/service
       run: |
-        cd cx_Freeze/cx_Freeze/samples/service
         python setup.py build_exe --silent
     - name: Run service sample
-      run: |
-        ./cx_Freeze/cx_Freeze/samples/service/build/exe.win-amd64-${{ matrix.python-version }}/cx_FreezeSampleService.exe --install sample
+      working-directory: cx_Freeze/cx_Freeze/samples/service
+      run: ./build/exe.win-amd64-${{ matrix.python-version }}/cx_FreezeSampleService.exe --install sample
