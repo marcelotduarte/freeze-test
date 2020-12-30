@@ -120,12 +120,12 @@ jobs:
 
     - name: Freeze simple sample (1-different target-name)
       working-directory: cx_Freeze/cx_Freeze/samples/simple
-      run: python setup.py build_exe --silent --target-name Hello-0.1
+      run: cxfreeze --silent --target-name Hello-0.1 --target-dir build/exe.win-amd64-${{ matrix.python-version }}.one
     - name: Run simple sample (1-different target-name)
-      working-directory: cx_Freeze/cx_Freeze/samples/simple
-      run: ./build/exe.win-amd64-${{ matrix.python-version }}/Hello-0.1.exe
+      working-directory: cx_Freeze/cx_Freeze/samples/simple/build/exe.win-amd64-${{ matrix.python-version }}.one
+      run: ./Hello-0.1.exe
     - name: Run simple sample (2-rename the executable)
-      working-directory: cx_Freeze/cx_Freeze/samples/simple/build/exe.win-amd64-${{ matrix.python-version }}
+      working-directory: cx_Freeze/cx_Freeze/samples/simple/build/exe.win-amd64-${{ matrix.python-version }}.one
       run: |
         mv Hello-0.1.exe Test_Hello.exe
         ./Test_Hello.exe
