@@ -62,7 +62,7 @@ jobs:
       working-directory: cx_Freeze/cx_Freeze/samples/icon
       run: |
         ./build/exe.win-amd64-${{ matrix.python-version }}/test_1.exe
-        ./build/exe.win-amd64-${{ matrix.python-version }}/test_2.exe
+        ./build/exe.win-amd64-${{ matrix.python-version }}/test_2.exe ação ótica côncavo peña
 
     - name: Freeze matplolib sample
       working-directory: cx_Freeze/cx_Freeze/samples/matplotlib
