@@ -24,11 +24,6 @@ jobs:
         repository: marcelotduarte/cx_Freeze
         ref: develop
         path: cx_Freeze
-    #- name: Checkout cx_Logging
-    #  uses: actions/checkout@v2
-    #  with:
-    #    repository: anthony-tuininga/cx_Logging
-    #    path: cx_Logging
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -37,14 +32,13 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -U setuptools wheel
-    #- name: Install cx-logging
-    #  working-directory: cx_Logging
-    #  run: dir
-    #    python setup.py install
     - name: Install cx-freeze
       working-directory: cx_Freeze
       run: |
         git submodule init cx_Logging
+        dir cx_Logging
+        git submodule update cx_Logging
+        dir cx_Logging
         pip install .
 
     - name: Freeze cryptography sample
