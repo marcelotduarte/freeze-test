@@ -97,10 +97,10 @@ jobs:
         ./cx_Freeze/samples/pyside2/build/exe.win-amd64-${{ matrix.python-version }}/PySide2app.exe
 
     - name: Freeze service sample
+      working-directory: cx_Freeze/samples/service
       run: |
-        cd cx_Freeze/samples/service
         pipenv --python ${{ matrix.python-version }}
-        pipenv install git+https://github.com/anthony-tuininga/cx_Logging.git#egg=cx_Logging
+        # pipenv install git+https://github.com/anthony-tuininga/cx_Logging.git#egg=cx_Logging
         pipenv install git+https://github.com/marcelotduarte/cx_Freeze.git@develop#egg=cx_Freeze
         pipenv run python setup.py build_exe --silent
     - name: Run service sample
