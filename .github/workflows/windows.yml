@@ -44,8 +44,8 @@ jobs:
     - name: Install cx-freeze
       working-directory: cx_Freeze
       run: |
-        git submodule update cx_Logging
-        pip install . -v
+        git submodule init cx_Logging
+        pip install .
 
     - name: Freeze cryptography sample
       working-directory: cx_Freeze/cx_Freeze/samples/cryptography
