@@ -34,12 +34,7 @@ jobs:
         pip install -U setuptools wheel
     - name: Install cx-freeze
       working-directory: cx_Freeze
-      run: |
-        #git submodule init cx_Logging
-        #dir cx_Logging
-        #git submodule update cx_Logging
-        #dir cx_Logging
-        pip install .
+      run: pip install .
 
     - name: Freeze cryptography sample
       working-directory: cx_Freeze/cx_Freeze/samples/cryptography
