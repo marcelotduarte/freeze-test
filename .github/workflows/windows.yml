@@ -24,11 +24,11 @@ jobs:
         repository: marcelotduarte/cx_Freeze
         ref: develop
         path: cx_Freeze
-    - name: Checkout cx_Logging
-      uses: actions/checkout@v2
-      with:
-        repository: anthony-tuininga/cx_Logging
-        path: cx_Logging
+    #- name: Checkout cx_Logging
+    #  uses: actions/checkout@v2
+    #  with:
+    #    repository: anthony-tuininga/cx_Logging
+    #    path: cx_Logging
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -37,10 +37,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -U setuptools wheel
-    - name: Install cx-logging
-      run: |
-        cd cx_Logging
-        python setup.py install
+    #- name: Install cx-logging
+    #  run: |
+    #    cd cx_Logging
+    #    python setup.py install
     - name: Install cx-freeze
       run: |
         cd cx_Freeze
@@ -61,7 +61,6 @@ jobs:
     - name: Run icon sample
       working-directory: cx_Freeze/cx_Freeze/samples/icon
       run: |
-        chcp 65001
         ./build/exe.win-amd64-${{ matrix.python-version }}/test_1.exe
         ./build/exe.win-amd64-${{ matrix.python-version }}/test_2.exe ação ótica côncavo peña
 
