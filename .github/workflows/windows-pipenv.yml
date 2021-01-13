@@ -40,69 +40,71 @@ jobs:
       run: pip install pipenv
 
     - name: Freeze cryptography sample
+      working-directory: cx_Freeze/cx_Freeze/samples/cryptography
       run: |
-        cd cx_Freeze/samples/cryptography
         pipenv --python ${{ matrix.python-version }} --site-packages
         pipenv install cryptography
         pipenv run python setup.py build_exe --silent
     - name: Run cryptography sample
-      run: |
-        ./cx_Freeze/samples/cryptography/build/exe.win-amd64-${{ matrix.python-version }}/test_crypt.exe
+      working-directory: cx_Freeze/cx_Freeze/samples/cryptography
+      run: ./build/exe.win-amd64-${{ matrix.python-version }}/test_crypt.exe
+
     - name: Freeze matplolib sample
+      working-directory: cx_Freeze/cx_Freeze/samples/matplotlib
       run: |
-        cd cx_Freeze/samples/matplotlib
         pipenv --python ${{ matrix.python-version }} --site-packages
         pipenv install matplotlib
         pipenv install wxPython
         pipenv run python setup.py build_exe --silent
     - name: Run matplolib sample
-      run: |
-        ./cx_Freeze/samples/matplotlib/build/exe.win-amd64-${{ matrix.python-version }}/matplotlib_afm.exe
+      working-directory: cx_Freeze/cx_Freeze/samples/matplotlib
+      run: ./build/exe.win-amd64-${{ matrix.python-version }}/matplotlib_afm.exe
+
     - name: Freeze pandas sample
+      working-directory: cx_Freeze/cx_Freeze/samples/pandas
       run: |
-        cd cx_Freeze/samples/pandas
         pipenv --python ${{ matrix.python-version }} --site-packages
         pipenv install pandas
         pipenv run python setup.py build_exe --silent
     - name: Run pandas sample
-      run: |
-        ./cx_Freeze/samples/pandas/build/exe.win-amd64-${{ matrix.python-version }}/test_pandas.exe
+      working-directory: cx_Freeze/cx_Freeze/samples/pandas
+      run: ./build/exe.win-amd64-${{ matrix.python-version }}/test_pandas.exe
+
     - name: Freeze pillow sample
+      working-directory: cx_Freeze/cx_Freeze/samples/pillow
       run: |
-        cd cx_Freeze/samples/pillow
         pipenv --python ${{ matrix.python-version }} --site-packages
         pipenv install pillow
         pipenv run python setup.py build_exe --silent
     - name: Run pillow sample
-      run: |
-        ./cx_Freeze/samples/pillow/build/exe.win-amd64-${{ matrix.python-version }}/test_pillow.exe
+      working-directory: cx_Freeze/cx_Freeze/samples/pillow
+      run: ./build/exe.win-amd64-${{ matrix.python-version }}/test_pillow.exe
 
     - name: Freeze PyQt5 sample
+      working-directory: cx_Freeze/cx_Freeze/samples/PyQt5
       run: |
-        cd cx_Freeze/samples/PyQt5
         pipenv --python ${{ matrix.python-version }} --site-packages
         pipenv install PyQt5
         pipenv run python setup.py build_exe --silent
     - name: Run PyQt5 sample
-      run: |
-        ./cx_Freeze/samples/PyQt5/build/exe.win-amd64-${{ matrix.python-version }}/PyQt5app.exe
+      working-directory: cx_Freeze/cx_Freeze/samples/PyQt5
+      run: ./build/exe.win-amd64-${{ matrix.python-version }}/PyQt5app.exe
 
     - name: Freeze PySide2 sample
+      working-directory: cx_Freeze/cx_Freeze/samples/pyside2
       run: |
-        cd cx_Freeze/samples/pyside2
         pipenv --python ${{ matrix.python-version }} --site-packages
         pipenv install PySide2
         pipenv run python setup.py build_exe --silent
     - name: Run pyside2 sample
-      run: |
-        ./cx_Freeze/samples/pyside2/build/exe.win-amd64-${{ matrix.python-version }}/PySide2app.exe
+      working-directory: cx_Freeze/cx_Freeze/samples/pyside2
+      run: ./build/exe.win-amd64-${{ matrix.python-version }}/PySide2app.exe
 
     - name: Freeze service sample
-      working-directory: cx_Freeze/samples/service
+      working-directory: cx_Freeze/cx_Freeze/samples/service
       run: |
         pipenv --python ${{ matrix.python-version }} --site-packages
         pipenv run python setup.py build_exe --silent
     - name: Run service sample
-      working-directory: cx_Freeze/samples/service/build/exe.win-amd64-${{ matrix.python-version }}
-      run: |
-        ./cx_FreezeSampleService.exe --install sample
+      working-directory: cx_Freeze/cx_Freeze/samples/service/build/exe.win-amd64-${{ matrix.python-version }}
+      run: ./cx_FreezeSampleService.exe --install sample
