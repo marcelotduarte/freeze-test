@@ -36,6 +36,18 @@ jobs:
       working-directory: cx_Freeze
       run: pip install cx_Freeze -v
 
+    - name: Install cx-logging
+      if: ${{ matrix.python-version }} == '3.6' || ${{ matrix.python-version }} == '3.7'
+      run: pip install cx_Logging
+    - name: Install cx-logging
+      working-directory: cx_Freeze/cx_Logging
+      if: ${{ matrix.python-version }} == '3.8'
+      run: pip install https://download.lfd.uci.edu/pythonlibs/z4tqcw5k/cx_Logging-2.2-cp38-cp38-win_amd64.whl
+    - name: Install cx-logging
+      working-directory: cx_Freeze/cx_Logging
+      if: ${{ matrix.python-version }} == '3.9'
+      run: pip install .
+
     - name: Freeze cryptography sample
       working-directory: cx_Freeze/cx_Freeze/samples/cryptography
       run: |
@@ -95,9 +107,7 @@ jobs:
     
     - name: Freeze service sample
       working-directory: cx_Freeze/cx_Freeze/samples/service
-      run: |
-        pip install cx_Logging
-        python setup.py build_exe --silent
+      run: python setup.py build_exe --silent
     - name: Run service sample
       working-directory: cx_Freeze/cx_Freeze/samples/service
       run: ./build/exe.win-amd64-${{ matrix.python-version }}/cx_FreezeSampleService.exe --install sample
