@@ -96,6 +96,7 @@ jobs:
     - name: Freeze service sample
       working-directory: cx_Freeze/cx_Freeze/samples/service
       run: |
+        pip install cx_Logging
         python setup.py build_exe --silent
     - name: Run service sample
       working-directory: cx_Freeze/cx_Freeze/samples/service
