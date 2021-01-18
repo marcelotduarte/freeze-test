@@ -7,14 +7,16 @@ on:
 
 jobs:
   tests:
-    name: Start tests
+    name: Tests
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macos-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: [3.7]
         architecture: [x64, x86]
         exclude:
+          - os: ubuntu-latest
+            architecture: x86
           - os: macos-latest
             architecture: x86
     runs-on: ${{ matrix.os }}
@@ -109,7 +111,7 @@ jobs:
         pip install pyside2
         python setup.py build_exe --silent
     - name: Run pyside2 sample
-      run: ./cx_Freeze/cx_Freeze/samples/pyside2/$(cat BUILD_DIR)/PySide2app
+      run: ./cx_Freeze/cx_Freeze/samples/pyside2/$(cat BUILD_DIR)/PySide2app &
       shell: bash
     
     - name: Freeze service sample
@@ -127,7 +129,7 @@ jobs:
     - name: Run simple sample
       run: ./cx_Freeze/cx_Freeze/samples/simple/$(cat BUILD_DIR)/hello
       shell: bash
-    - name: Run simple sample (1-rename the executable)
+    - name: Run simple sample (1-rename the executable) on windows
       if: ${{ matrix.os == 'windows-latest' }}
       working-directory: cx_Freeze/cx_Freeze/samples/simple
       run: |
@@ -135,7 +137,7 @@ jobs:
         mv hello.exe Test_Hello.exe
         ./Test_Hello
       shell: bash
-    - name: Run simple sample (1-rename the executable)
+    - name: Run simple sample (1-rename the executable) on ubuntu/macOS
       if: ${{ matrix.os != 'windows-latest' }}
       run: |
         cd ./cx_Freeze/cx_Freeze/samples/simple/$(cat BUILD_DIR)
