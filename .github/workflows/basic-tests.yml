@@ -39,7 +39,7 @@ jobs:
       run: pip install . -v
     - name: Install cx-logging
       working-directory: cx_Freeze/cx_Logging
-      #if: ${{ matrix.python-version == '3.8' || matrix.python-version == '3.9' }}
+      if: ${{ matrix.os == 'windows-latest' }}
       run: |
         git submodule init
         git submodule update
@@ -68,7 +68,8 @@ jobs:
         python setup.py build_exe
     - name: Run cryptography sample
       working-directory: cx_Freeze/cx_Freeze/samples/cryptography
-      run: ./$(cat BUILD_DIR)/test_crypt.exe
+      run: ./$(cat BUILD_DIR)/test_crypt
+      shell: bash
 
     - name: Freeze icon sample
       working-directory: cx_Freeze/cx_Freeze/samples/icon
@@ -76,8 +77,9 @@ jobs:
     - name: Run icon sample
       working-directory: cx_Freeze/cx_Freeze/samples/icon
       run: |
-        ./$(cat BUILD_DIR)/test_icon.exe
-        ./$(cat BUILD_DIR)/test_icon-invalid.exe ação ótica côncavo peña
+        ./$(cat BUILD_DIR)/test_icon
+        ./$(cat BUILD_DIR)/test_icon-invalid ação ótica côncavo peña
+      shell: bash
 
     - name: Freeze matplolib sample
       working-directory: cx_Freeze/cx_Freeze/samples/matplotlib
@@ -87,8 +89,8 @@ jobs:
         python setup.py build_exe --silent
     - name: Run matplolib sample
       working-directory: cx_Freeze/cx_Freeze/samples/matplotlib
-      run: |
-        ./$(cat BUILD_DIR)/matplotlib_afm.exe
+      run: ./$(cat BUILD_DIR)/matplotlib_afm
+      shell: bash
     
     - name: Freeze pandas sample
       working-directory: cx_Freeze/cx_Freeze/samples/pandas
@@ -97,8 +99,8 @@ jobs:
         python setup.py build_exe --silent
     - name: Run pandas sample
       working-directory: cx_Freeze/cx_Freeze/samples/pandas
-      run: |
-        ./$(cat BUILD_DIR)/test_pandas.exe
+      run: ./$(cat BUILD_DIR)/test_pandas
+      shell: bash
     
     - name: Freeze pillow sample
       working-directory: cx_Freeze/cx_Freeze/samples/pillow
@@ -107,7 +109,8 @@ jobs:
         python setup.py build_exe --silent
     - name: Run pillow sample
       working-directory: cx_Freeze/cx_Freeze/samples/pillow
-      run: ./$(cat BUILD_DIR)/test_pillow.exe
+      run: ./$(cat BUILD_DIR)/test_pillow
+      shell: bash
     
     - name: Freeze pyside2 sample
       working-directory: cx_Freeze/cx_Freeze/samples/pyside2
@@ -116,26 +119,42 @@ jobs:
         python setup.py build_exe --silent
     - name: Run pyside2 sample
       working-directory: cx_Freeze/cx_Freeze/samples/pyside2
-      run: ./$(cat BUILD_DIR)/PySide2app.exe
+      run: ./$(cat BUILD_DIR)/PySide2app
+      shell: bash
     
     - name: Freeze service sample
+      if: ${{ matrix.os == 'windows-latest' }}
       working-directory: cx_Freeze/cx_Freeze/samples/service
       run: python setup.py build_exe --silent
     - name: Run service sample
+      if: ${{ matrix.os == 'windows-latest' }}
       working-directory: cx_Freeze/cx_Freeze/samples/service
-      run: ./$(cat BUILD_DIR)/cx_FreezeSampleService.exe --install sample
+      run: ./$(cat BUILD_DIR)/cx_FreezeSampleService --install sample
+      shell: bash
 
     - name: Freeze simple sample
       working-directory: cx_Freeze/cx_Freeze/samples/simple
       run: python setup.py build_exe --silent
     - name: Run simple sample
       working-directory: cx_Freeze/cx_Freeze/samples/simple
-      run: ./$(cat BUILD_DIR)/hello.exe
+      run: ./$(cat BUILD_DIR)/hello
+      shell: bash
     - name: Run simple sample (1-rename the executable)
-      working-directory: cx_Freeze/cx_Freeze/samples/simple/$(cat BUILD_DIR)
+      if: ${{ matrix.os == 'windows-latest' }}
+      working-directory: cx_Freeze/cx_Freeze/samples/simple
       run: |
+        cd $(cat BUILD_DIR)
         mv hello.exe Test_Hello.exe
-        ./Test_Hello.exe
+        ./Test_Hello
+      shell: bash
+    - name: Run simple sample (1-rename the executable)
+      if: ${{ matrix.os != 'windows-latest' }}
+      working-directory: cx_Freeze/cx_Freeze/samples/simple
+      run: |
+        cd $(cat BUILD_DIR)
+        mv hello Test_Hello
+        ./Test_Hello
+      shell: bash
 
     #- name: Freeze simple sample (2-different target-name)
     #  working-directory: cx_Freeze/cx_Freeze/samples/simple
