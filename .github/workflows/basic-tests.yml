@@ -45,26 +45,20 @@ jobs:
         git submodule update
         pip install . -v
     # environment
-    - name: test build dir
+    - name: Define a variable
       shell: python
       run: |
-        import distutils.util as du, sys
-        print(f"exe.{du.get_platform()}-{sys.version[0:3]}")
-    - name: Set up environment for samples on win-amd64
-      if: ${{ matrix.os == 'windows-latest' && matrix.architecture == 'x64' }}
+        import distutils.util
+        import os.path
+        import sys
+        platform = distutils.util.get_platform()
+        version = sys.version[0:3]
+        with open("BUILD_DIR", "w") as fp:
+            fp.write(f"build/exe.{platform}-{version}")
+    - name: BUILD_DIR
       run: |
-         echo "BUILD_DIR=build/exe.win-amd64-${{ matrix.python-version }}" >> $GITHUB_ENV
-         echo $BUILD_DIR
-    - name: Set up environment for samples on win-x86
-      if: ${{ matrix.os == 'windows-latest' && matrix.architecture == 'x86' }}
-      run: |
-         echo "BUILD_DIR=build/exe.win-x86-${{ matrix.python-version }}" >> $GITHUB_ENV
-         echo $BUILD_DIR
-    - name: Set up environment for samples
-      if: ${{ matrix.os == 'macos-latest' && matrix.architecture == 'x64' }}
-      run: |
-        python -c "import distutils.util as du, sys; print(f'BUILD_DIR=build/exe.{du.get_platform()}-{sys.version[0:3]}')" >> $GITHUB_ENV
-        echo $BUILD_DIR
+        python -c "import distutils.util as du, sys; print(f'build/exe.{du.get_platform()}-{sys.version[0:3]}')"
+        cat BUILD_DIR
         
     # samples
     - name: Freeze cryptography sample
@@ -74,7 +68,7 @@ jobs:
         python setup.py build_exe
     - name: Run cryptography sample
       working-directory: cx_Freeze/cx_Freeze/samples/cryptography
-      run: ./$BUILD_DIR/test_crypt.exe
+      run: ./$(cat BUILD_DIR)/test_crypt.exe
 
     - name: Freeze icon sample
       working-directory: cx_Freeze/cx_Freeze/samples/icon
@@ -82,8 +76,8 @@ jobs:
     - name: Run icon sample
       working-directory: cx_Freeze/cx_Freeze/samples/icon
       run: |
-        ./$BUILD_DIR/test_icon.exe
-        ./$BUILD_DIR/test_icon-invalid.exe ação ótica côncavo peña
+        ./$(cat BUILD_DIR)/test_icon.exe
+        ./$(cat BUILD_DIR)/test_icon-invalid.exe ação ótica côncavo peña
 
     - name: Freeze matplolib sample
       working-directory: cx_Freeze/cx_Freeze/samples/matplotlib
@@ -94,7 +88,7 @@ jobs:
     - name: Run matplolib sample
       working-directory: cx_Freeze/cx_Freeze/samples/matplotlib
       run: |
-        ./$BUILD_DIR/matplotlib_afm.exe
+        ./$(cat BUILD_DIR)/matplotlib_afm.exe
     
     - name: Freeze pandas sample
       working-directory: cx_Freeze/cx_Freeze/samples/pandas
@@ -104,7 +98,7 @@ jobs:
     - name: Run pandas sample
       working-directory: cx_Freeze/cx_Freeze/samples/pandas
       run: |
-        ./$BUILD_DIR/test_pandas.exe
+        ./$(cat BUILD_DIR)/test_pandas.exe
     
     - name: Freeze pillow sample
       working-directory: cx_Freeze/cx_Freeze/samples/pillow
@@ -113,7 +107,7 @@ jobs:
         python setup.py build_exe --silent
     - name: Run pillow sample
       working-directory: cx_Freeze/cx_Freeze/samples/pillow
-      run: ./$BUILD_DIR/test_pillow.exe
+      run: ./$(cat BUILD_DIR)/test_pillow.exe
     
     - name: Freeze pyside2 sample
       working-directory: cx_Freeze/cx_Freeze/samples/pyside2
@@ -122,30 +116,30 @@ jobs:
         python setup.py build_exe --silent
     - name: Run pyside2 sample
       working-directory: cx_Freeze/cx_Freeze/samples/pyside2
-      run: ./$BUILD_DIR/PySide2app.exe
+      run: ./$(cat BUILD_DIR)/PySide2app.exe
     
     - name: Freeze service sample
       working-directory: cx_Freeze/cx_Freeze/samples/service
       run: python setup.py build_exe --silent
     - name: Run service sample
       working-directory: cx_Freeze/cx_Freeze/samples/service
-      run: ./$BUILD_DIR/cx_FreezeSampleService.exe --install sample
+      run: ./$(cat BUILD_DIR)/cx_FreezeSampleService.exe --install sample
 
     - name: Freeze simple sample
       working-directory: cx_Freeze/cx_Freeze/samples/simple
       run: python setup.py build_exe --silent
     - name: Run simple sample
       working-directory: cx_Freeze/cx_Freeze/samples/simple
-      run: ./$BUILD_DIR/hello.exe
+      run: ./$(cat BUILD_DIR)/hello.exe
     - name: Run simple sample (1-rename the executable)
-      working-directory: cx_Freeze/cx_Freeze/samples/simple/$BUILD_DIR
+      working-directory: cx_Freeze/cx_Freeze/samples/simple/$(cat BUILD_DIR)
       run: |
         mv hello.exe Test_Hello.exe
         ./Test_Hello.exe
 
     #- name: Freeze simple sample (2-different target-name)
     #  working-directory: cx_Freeze/cx_Freeze/samples/simple
-    #  run: cxfreeze hello.py --silent --target-name Hello-0.1 --target-dir $BUILD_DIR.one
+    #  run: cxfreeze hello.py --silent --target-name Hello-0.1 --target-dir $(cat BUILD_DIR).one
     #- name: Run simple sample (2-different target-name)
-    #  working-directory: cx_Freeze/cx_Freeze/samples/simple/$BUILD_DIR.one
+    #  working-directory: cx_Freeze/cx_Freeze/samples/simple/$(cat BUILD_DIR).one
     #  run: ./Hello-0.1.exe
