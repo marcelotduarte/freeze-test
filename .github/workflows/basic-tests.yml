@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: [3.7]
+        python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64, x86]
         exclude:
           - os: ubuntu-latest
@@ -78,7 +78,7 @@ jobs:
       shell: bash
 
     - name: Freeze matplolib sample
-      continue-on-error: true
+      continue-on-error: ${{ matrix.os == 'macos-latest' }}
       working-directory: cx_Freeze/cx_Freeze/samples/matplotlib
       run: |
         pip install matplotlib
@@ -90,25 +90,29 @@ jobs:
         python setup.py build_exe --silent
       shell: bash
     - name: Run matplolib sample
-      continue-on-error: true
+      continue-on-error: ${{ matrix.os == 'macos-latest' }}
       run: ./cx_Freeze/cx_Freeze/samples/matplotlib/$(cat BUILD_DIR)/matplotlib_afm
       shell: bash
     
     - name: Freeze pandas sample
+      continue-on-error: ${{ matrix.os == 'macos-latest' }}
       working-directory: cx_Freeze/cx_Freeze/samples/pandas
       run: |
         pip install pandas
         python setup.py build_exe --silent
     - name: Run pandas sample
+      continue-on-error: ${{ matrix.os == 'macos-latest' }}
       run: ./cx_Freeze/cx_Freeze/samples/pandas/$(cat BUILD_DIR)/test_pandas
       shell: bash
     
     - name: Freeze pillow sample
+      continue-on-error: ${{ matrix.os == 'macos-latest' }}
       working-directory: cx_Freeze/cx_Freeze/samples/pillow
       run: |
         pip install pillow
         python setup.py build_exe --silent
     - name: Run pillow sample
+      continue-on-error: ${{ matrix.os == 'macos-latest' }}
       run: ./cx_Freeze/cx_Freeze/samples/pillow/$(cat BUILD_DIR)/test_pillow
       shell: bash
     
