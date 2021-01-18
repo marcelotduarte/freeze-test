@@ -81,7 +81,11 @@ jobs:
       working-directory: cx_Freeze/cx_Freeze/samples/matplotlib
       run: |
         pip install matplotlib
-        pip install "wxPython < 4.1"
+        if [ ${{ matrix.os == 'windows-latest' }} ] ; then
+          pip install -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-16.04 wxPython
+        else
+          pip install wxPython
+        fi
         python setup.py build_exe --silent
     - name: Run matplolib sample
       run: ./cx_Freeze/cx_Freeze/samples/matplotlib/$(cat BUILD_DIR)/matplotlib_afm
