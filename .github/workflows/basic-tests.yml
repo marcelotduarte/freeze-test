@@ -55,11 +55,7 @@ jobs:
         version = sys.version[0:3]
         with open("BUILD_DIR", "w") as fp:
             fp.write(f"build/exe.{platform}-{version}")
-    - name: BUILD_DIR
-      run: |
-        python -c "import distutils.util as du, sys; print(f'build/exe.{du.get_platform()}-{sys.version[0:3]}')"
-        cat BUILD_DIR
-        
+
     # samples
     - name: Freeze cryptography sample
       working-directory: cx_Freeze/cx_Freeze/samples/cryptography
@@ -75,8 +71,8 @@ jobs:
       run: python setup.py build_exe --silent
     - name: Run icon sample
       run: |
-        ./cx_Freeze/cx_Freeze/samples/icon/$(cat BUILD_DIR)/test_icon
-        ./cx_Freeze/cx_Freeze/samples/icon/$(cat BUILD_DIR)/test_icon-invalid ação ótica côncavo peña
+        ./cx_Freeze/cx_Freeze/samples/icon/$(cat BUILD_DIR)/test_icon.exe
+        ./cx_Freeze/cx_Freeze/samples/icon/$(cat BUILD_DIR)/test_icon-invalid.exe ação ótica côncavo peña
       shell: bash
 
     - name: Freeze matplolib sample
