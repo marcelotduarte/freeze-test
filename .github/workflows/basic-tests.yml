@@ -141,9 +141,8 @@ jobs:
       shell: bash
     - name: Run simple sample (1-rename the executable)
       if: ${{ matrix.os != 'windows-latest' }}
-      run: ./cx_Freeze/cx_Freeze/samples/simple
       run: |
-        cd $(cat BUILD_DIR)
+        cd ./cx_Freeze/cx_Freeze/samples/simple/$(cat BUILD_DIR)
         mv hello Test_Hello
         ./Test_Hello
       shell: bash
