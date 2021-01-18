@@ -54,15 +54,15 @@ jobs:
         import distutils.util as du, sys
         print(f"exe.{du.get_platform()}-{sys.version[0:3]}")
     - name: Set up environment for samples on win-amd64
-      if: ${{ matrix.os == 'windows-latest' && matrix.architecture == x64 }}
+      if: ${{ matrix.os == 'windows-latest' && matrix.architecture == 'x64' }}
       run: |
          echo "BUILD_DIR=build/exe.win-amd64-${{ matrix.python-version }}" >> $GITHUB_ENV
     - name: Set up environment for samples on win-x86
-      if: ${{ matrix.os == 'windows-latest' && matrix.architecture == x86 }}
+      if: ${{ matrix.os == 'windows-latest' && matrix.architecture == 'x86' }}
       run: |
          echo "BUILD_DIR=build/exe.win-x86-${{ matrix.python-version }}" >> $GITHUB_ENV
     - name: Set up environment for samples
-      if: ${{ matrix.os == 'macos-latest' && matrix.architecture == x64 }}
+      if: ${{ matrix.os == 'macos-latest' && matrix.architecture == 'x64' }}
       run: |
         python -c "import distutils.util as du, sys; print(f'BUILD_DIR=build/exe.{du.get_platform()}-{sys.version[0:3]}')" >> $GITHUB_ENV
         
