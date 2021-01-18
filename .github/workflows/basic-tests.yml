@@ -90,7 +90,7 @@ jobs:
         python setup.py build_exe --silent
       shell: bash
     - name: Run matplolib sample
-      if: ${{ success() }}
+      continue-on-error: true
       run: ./cx_Freeze/cx_Freeze/samples/matplotlib/$(cat BUILD_DIR)/matplotlib_afm
       shell: bash
     
