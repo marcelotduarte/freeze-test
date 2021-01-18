@@ -81,7 +81,7 @@ jobs:
       working-directory: cx_Freeze/cx_Freeze/samples/matplotlib
       run: |
         pip install matplotlib
-        if [ ${{ matrix.os == 'ubuntu-latest' }} ] ; then
+        if [ ${{ matrix.os }} == 'ubuntu-latest' ] ; then
           pip install -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-16.04 wxPython
         else
           pip install wxPython
