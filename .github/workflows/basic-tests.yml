@@ -81,7 +81,7 @@ jobs:
       working-directory: cx_Freeze/cx_Freeze/samples/matplotlib
       run: |
         pip install matplotlib
-        pip install wxPython
+        pip install "wxPython < 4.1"
         python setup.py build_exe --silent
     - name: Run matplolib sample
       run: ./cx_Freeze/cx_Freeze/samples/matplotlib/$(cat BUILD_DIR)/matplotlib_afm
@@ -131,16 +131,15 @@ jobs:
       shell: bash
     - name: Run simple sample (1-rename the executable) on windows
       if: ${{ matrix.os == 'windows-latest' }}
-      working-directory: cx_Freeze/cx_Freeze/samples/simple
       run: |
-        cd $(cat BUILD_DIR)
+        cd cx_Freeze/cx_Freeze/samples/simple/$(cat BUILD_DIR)
         mv hello.exe Test_Hello.exe
         ./Test_Hello
       shell: bash
     - name: Run simple sample (1-rename the executable) on ubuntu/macOS
       if: ${{ matrix.os != 'windows-latest' }}
       run: |
-        cd ./cx_Freeze/cx_Freeze/samples/simple/$(cat BUILD_DIR)
+        cd cx_Freeze/cx_Freeze/samples/simple/$(cat BUILD_DIR)
         mv hello Test_Hello
         ./Test_Hello
       shell: bash
