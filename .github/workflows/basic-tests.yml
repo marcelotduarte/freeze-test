@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        branch: [v6.3, v6.4, develop]
+        branch: [develop]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64, x86]
         exclude:
@@ -20,6 +20,9 @@ jobs:
             architecture: x86
           - os: macos-latest
             architecture: x86
+        include:
+          - os: macos-latest
+            branch: 6.4.2
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout cx_Freeze
