@@ -23,6 +23,7 @@ jobs:
         include:
           - os: macos-latest
             branch: 6.4.2
+            python-version: 3.8
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout cx_Freeze
