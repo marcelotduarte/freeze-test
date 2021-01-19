@@ -74,9 +74,11 @@ jobs:
       shell: bash
 
     - name: Freeze icon sample
+      if: ${{ matrix.branch == 'develop' }}
       working-directory: cx_Freeze/cx_Freeze/samples/icon
       run: python setup.py build_exe --silent
     - name: Run icon sample
+      if: ${{ matrix.branch == 'develop' }}
       run: |
         ./cx_Freeze/cx_Freeze/samples/icon/$(cat BUILD_DIR)/test_icon.exe
         ./cx_Freeze/cx_Freeze/samples/icon/$(cat BUILD_DIR)/test_icon-invalid.exe ação ótica côncavo peña
