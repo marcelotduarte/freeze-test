@@ -22,7 +22,7 @@ jobs:
             architecture: x86
         include:
           - os: macos-latest
-            branch: 6.5.1
+            branch: 6.5.2
             python-version: 3.8
             architecture: x64
     runs-on: ${{ matrix.os }}
@@ -89,7 +89,7 @@ jobs:
       continue-on-error: ${{ matrix.os == 'macos-latest' }}
       working-directory: cx_Freeze/cx_Freeze/samples/matplotlib
       run: |
-        pip install matplotlib
+        pip install matplotlib "pillow < 7" "numpy == 1.18.2"
         if [ '${{ matrix.os }}' == 'ubuntu-latest' ] ; then
           pip install -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
         else
@@ -116,7 +116,7 @@ jobs:
     - name: Freeze pillow sample
       working-directory: cx_Freeze/cx_Freeze/samples/pillow
       run: |
-        pip install pillow
+        pip install "pillow < 7"
         python setup.py build_exe --silent
     - name: Run pillow sample
       run: ./cx_Freeze/cx_Freeze/samples/pillow/$(cat BUILD_DIR)/test_pillow
