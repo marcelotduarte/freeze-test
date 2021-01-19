@@ -12,6 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+        branch: [v6.3, v6.4, develop]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64, x86]
         exclude:
@@ -25,7 +26,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: marcelotduarte/cx_Freeze
-        ref: develop
+        ref: ${{ matrix.branch }}
         path: cx_Freeze
     - name: Set up Python ${{ matrix.python-version }} ${{ matrix.architecture }}
       uses: actions/setup-python@v2
@@ -40,8 +41,8 @@ jobs:
       working-directory: cx_Freeze
       run: pip install . -v
     - name: Install cx-logging
-      working-directory: cx_Freeze/cx_Logging
       if: ${{ matrix.os == 'windows-latest' }}
+      working-directory: cx_Freeze/cx_Logging
       run: |
         git submodule init
         git submodule update
@@ -106,13 +107,11 @@ jobs:
       shell: bash
     
     - name: Freeze pillow sample
-      continue-on-error: ${{ matrix.os == 'macos-latest' }}
       working-directory: cx_Freeze/cx_Freeze/samples/pillow
       run: |
         pip install pillow
         python setup.py build_exe --silent
     - name: Run pillow sample
-      continue-on-error: ${{ matrix.os == 'macos-latest' }}
       run: ./cx_Freeze/cx_Freeze/samples/pillow/$(cat BUILD_DIR)/test_pillow
       shell: bash
     
