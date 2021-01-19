@@ -127,6 +127,7 @@ jobs:
           pip install "Pillow < 7"
         fi
         python setup.py build_exe --silent
+      shell: bash
     - name: Run pillow sample
       run: ./cx_Freeze/cx_Freeze/samples/pillow/$(cat BUILD_DIR)/test_pillow
       shell: bash
