@@ -92,7 +92,7 @@ jobs:
         if [ '${{ matrix.python-version }}' == '3.9' ] ; then
           pip install Pillow
         else
-          pop install "Pillow < 7"
+          pip install "Pillow < 7"
         fi
         pip install matplotlib "numpy == 1.18.2"
         if [ '${{ matrix.os }}' == 'ubuntu-latest' ] ; then
@@ -124,7 +124,7 @@ jobs:
         if [ '${{ matrix.python-version }}' == '3.9' ] ; then
           pip install Pillow
         else
-          pop install "Pillow < 7"
+          pip install "Pillow < 7"
         fi
         python setup.py build_exe --silent
     - name: Run pillow sample
