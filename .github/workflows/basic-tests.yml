@@ -80,8 +80,8 @@ jobs:
     - name: Run icon sample
       if: ${{ matrix.branch == 'develop' }}
       run: |
-        ./cx_Freeze/cx_Freeze/samples/icon/$(cat BUILD_DIR)/test_icon.exe
-        ./cx_Freeze/cx_Freeze/samples/icon/$(cat BUILD_DIR)/test_icon-invalid.exe ação ótica côncavo peña
+        ./cx_Freeze/cx_Freeze/samples/icon/$(cat BUILD_DIR)/test_icon
+        ./cx_Freeze/cx_Freeze/samples/icon/$(cat BUILD_DIR)/test_icon-invalid ação ótica côncavo peña
       shell: bash
 
     - name: Freeze matplolib sample
