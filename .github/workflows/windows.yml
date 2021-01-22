@@ -126,6 +126,13 @@ jobs:
         mv hello.exe Test_Hello.exe
         ./Test_Hello.exe
 
+    - name: checking env
+      working-directory: cx_Freeze/cx_Freeze/samples/simple
+      run: |
+        pip list
+        which cxfreeze
+        cat $(which cxfreeze)-script.py || true
+      shell: bash
     - name: Freeze simple sample (2-different target-name)
       working-directory: cx_Freeze/cx_Freeze/samples/simple
       run: |
