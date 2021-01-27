@@ -33,13 +33,21 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         architecture: ${{ matrix.architecture }}
+    - name: show env
+      run: |
+        #export MACOSX_DEPLOYMENT_TARGET=10.9
+        #MACOSX_DEPLOYMENT_TARGET=10.9
+        #export MACOSX_DEPLOYMENT_TARGET=10.9
+        #MACOSX_DEPLOYMENT_TARGET=10.9
+        echo "MACOSX_DEPLOYMENT_TARGET=$(MACOSX_DEPLOYMENT_TARGET)"
+        echo "MACOSX_SDK_VERSION=$(MACOSX_SDK_VERSION)"
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -U setuptools wheel
+        pip install -U setuptools wheel importlib-metadata
     - name: Install cx-freeze
       working-directory: cx_Freeze
-      run: pip install .
+      run: pip install . --no-deps -v
     - name: cxfreeze
       run: cxfreeze --version
     # environment
