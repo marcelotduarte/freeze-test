@@ -1,0 +1,82 @@
+name: Basic tests
+
+on:
+  #push:
+  #  branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Tests
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest]
+        branch: [macos]
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        architecture: [x64]
+        include:
+          - os: macos-latest
+            branch: 6.5.2
+            python-version: 3.8
+            architecture: x64
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Checkout cx_Freeze
+      uses: actions/checkout@v2
+      with:
+        repository: marcelotduarte/cx_Freeze
+        ref: ${{ matrix.branch }}
+        path: cx_Freeze
+    - name: Set up Python ${{ matrix.python-version }} ${{ matrix.architecture }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+        architecture: ${{ matrix.architecture }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -U setuptools wheel
+    - name: Install cx-freeze
+      working-directory: cx_Freeze
+      run: pip install .
+    - name: cxfreeze
+      run: cxfreeze --version
+    # environment
+    - name: Define a variable
+      shell: python
+      run: |
+        import distutils.util
+        import os.path
+        import sys
+        platform = distutils.util.get_platform()
+        version = sys.version[0:3]
+        with open("BUILD_DIR", "w") as fp:
+            fp.write(f"build/exe.{platform}-{version}")
+
+    # samples
+    - name: Freeze cryptography sample
+      working-directory: cx_Freeze/cx_Freeze/samples/cryptography
+      run: |
+        pip install cryptography
+        python setup.py build_exe
+    - name: Run cryptography sample
+      run: ./cx_Freeze/cx_Freeze/samples/cryptography/$(cat BUILD_DIR)/test_crypt
+      shell: bash
+
+    - name: Freeze simple sample
+      working-directory: cx_Freeze/cx_Freeze/samples/simple
+      run: python setup.py build_exe --silent
+    - name: Run simple sample
+      run: ./cx_Freeze/cx_Freeze/samples/simple/$(cat BUILD_DIR)/hello
+      shell: bash
+    - name: Run simple sample (1-rename the executable)
+      run: |
+        cd cx_Freeze/cx_Freeze/samples/simple/$(cat BUILD_DIR)
+        if [ '${{ matrix.os }}' == 'windows-latest' ] ; then
+          mv hello.exe Test_Hello.exe
+        else
+          mv hello Test_Hello
+        fi
+        ./Test_Hello
+      shell: bash
