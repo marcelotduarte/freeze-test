@@ -35,12 +35,12 @@ jobs:
         architecture: ${{ matrix.architecture }}
     - name: show env
       run: |
-        #export MACOSX_DEPLOYMENT_TARGET=10.9
-        #MACOSX_DEPLOYMENT_TARGET=10.9
-        #export MACOSX_DEPLOYMENT_TARGET=10.9
-        #MACOSX_DEPLOYMENT_TARGET=10.9
         echo "MACOSX_DEPLOYMENT_TARGET=$(MACOSX_DEPLOYMENT_TARGET)"
         echo "MACOSX_SDK_VERSION=$(MACOSX_SDK_VERSION)"
+        echo "set"
+        set
+        echo "python -m sysconfig"
+        python -m sysconfig
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
