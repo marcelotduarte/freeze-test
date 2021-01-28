@@ -58,7 +58,7 @@ jobs:
         #  CIBW_BUILD: cp3*-m*_x86_64
         #  CIBW_SKIP: cp35*
         run: |
-          python -m cibuildwheel --output-dir wheelhouse --platform linux,macos --archs x86_64 .
+          python -m cibuildwheel --output-dir wheelhouse --archs x86_64 .
       - name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
