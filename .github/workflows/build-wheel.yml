@@ -29,8 +29,7 @@ jobs:
           pip install -U setuptools wheel
       - name: Build the wheel
         run: |
-          pip install .
-          python setup.py bdist_wheel --dist-dir wheelhouse
+          pip wheel . --wheel-dir wheelhouse
       - name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
@@ -39,9 +38,10 @@ jobs:
   unix:
     strategy:
       matrix:
-        os: [ubuntu-16.04, macos-10.15]
+        os: [ubuntu-20.04, macos-10.15]
     name: "Build wheels on ${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v2
         with:
@@ -57,6 +57,8 @@ jobs:
         env:
           CIBW_BUILD: cp3*-m*_x86_64
           CIBW_SKIP: cp35*
+          CIBW_BUILD_VERBOSITY: 1
+          CIBW_BEFORE_BUILD: python -m pip install --upgrade pip && pip install -U setuptools wheel
         run: |
           python -m cibuildwheel --output-dir wheelhouse .
       - name: Upload the artifact
