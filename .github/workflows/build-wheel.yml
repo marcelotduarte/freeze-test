@@ -54,11 +54,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install cibuildwheel==1.8.0
       - name: Build the wheel
-        #env:
-        #  CIBW_BUILD: cp3*-m*_x86_64
-        #  CIBW_SKIP: cp35*
+        env:
+          CIBW_BUILD: cp3*-m*_x86_64
+          CIBW_SKIP: cp35*
         run: |
-          python -m cibuildwheel --output-dir wheelhouse --archs x86_64 .
+          python -m cibuildwheel --output-dir wheelhouse .
       - name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
