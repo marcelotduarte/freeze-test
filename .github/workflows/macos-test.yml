@@ -48,7 +48,7 @@ jobs:
     - name: Install cx-freeze
       working-directory: cx_Freeze
       run: |
-        export MACOSX_DEPLOYMENT_TARGET=10.14
+        export MACOSX_DEPLOYMENT_TARGET=10.15
         echo "MACOSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET"
         pip install . --no-deps -v
     - name: cxfreeze
