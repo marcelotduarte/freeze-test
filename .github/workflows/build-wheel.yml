@@ -56,6 +56,7 @@ jobs:
       - name: Build the wheel
         env:
           CIBW_BUILD: cp3*-m*_x86_64
+          CIBW_SKIP: cp35*
         run: |
           python -m cibuildwheel --output-dir wheelhouse
       - name: Upload the artifact
