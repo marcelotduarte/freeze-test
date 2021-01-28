@@ -46,7 +46,7 @@ jobs:
       working-directory: cx_Freeze
       run: pip install . -v
     - name: Install cx-logging
-      if: ${{ matrix.os == 'windows-latest' }}
+      if: runner.os == 'Windows'
       working-directory: cx_Freeze/cx_Logging
       run: |
         git submodule init
@@ -133,7 +133,7 @@ jobs:
       shell: bash
     
     - name: Freeze pyside2 sample
-      if: ${{ matrix.os == 'windows-latest' }}
+      if: runner.os == 'Windows'
       working-directory: cx_Freeze/cx_Freeze/samples/pyside2
       run: |
         pip install pyside2
@@ -143,11 +143,11 @@ jobs:
       shell: bash
     
     - name: Freeze service sample
-      if: ${{ matrix.os == 'windows-latest' }}
+      if: runner.os == 'Windows'
       working-directory: cx_Freeze/cx_Freeze/samples/service
       run: python setup.py build_exe --silent
     - name: Run service sample
-      if: ${{ matrix.os == 'windows-latest' }}
+      if: runner.os == 'Windows'
       run: ./cx_Freeze/cx_Freeze/samples/service/$(cat BUILD_DIR)/cx_FreezeSampleService --install sample
       shell: bash
 
