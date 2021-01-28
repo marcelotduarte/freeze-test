@@ -46,7 +46,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: marcelotduarte/cx_Freeze
-          ref: develop
+          ref: macos
       - name: Setup Python
         uses: actions/setup-python@v2
       - name: Install dependencies
