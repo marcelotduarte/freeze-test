@@ -9,9 +9,17 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-18.04, windows-2019, macos-10.15]
+        os: [ubuntu-16.04, windows-2019, macos-10.15]
         python-version: [3.6, 3.7, 3.8, 3.9]
-        architecture: ['x86', 'x64']
+        architecture: ['x64']
+        #exclude:
+        #  - os: ubuntu-latest
+        #    architecture: x86
+        #  - os: macos-latest
+        #    architecture: x86
+        include:
+          - os: windows-2019
+            architecture: 'x86'
     name: "Python ${{ matrix.python-version }} on ${{ matrix.architecture }}"
     runs-on: ${{ matrix.os }}
     steps:
