@@ -6,19 +6,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  windows:
     strategy:
       matrix:
-        os: [ubuntu-16.04, windows-2019, macos-10.15]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: ['x86', 'x64']
-        exclude:
-          - os: ubuntu-16.04
-            architecture: x86
-          - os: macos-10.15
-            architecture: x86
     name: "Python ${{ matrix.python-version }} on ${{ matrix.architecture }}"
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -30,33 +24,49 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
       - name: Install dependencies
-        env:
-          RUNNER_OS: ${{ toJSON(runner.os) }}
         run: |
           python -m pip install --upgrade pip
-          if [ '$RUNNER_OS' == 'Windows' ] ; then
-            pip install -U setuptools wheel
-          else
-            pip install cibuildwheel==1.8.0
-          fi
-        shell: bash
+          pip install -U setuptools wheel
       - name: Build the wheel
         run: |
-          if [ '$RUNNER_OS' == 'Windows' ] ; then
-            pip install .
-            python setup.py bdist_wheel --dist-dir wheelhouse
-          else
-            python -m cibuildwheel --output-dir wheelhouse
-          fi
+          pip install .
+          python setup.py bdist_wheel --dist-dir wheelhouse
+      - name: Upload the artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: wheelhouse
+          path: wheelhouse
+  unix:
+    strategy:
+      matrix:
+        os: [ubuntu-16.04, macos-10.15]
+    name: "Build wheels on ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: marcelotduarte/cx_Freeze
+          ref: develop
+      - name: Setup Python
+        uses: actions/setup-python@v2
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install cibuildwheel==1.8.0
+      - name: Build the wheel
+        env:
+          CIBW_BUILD: cp3*-m*_x86_64
+        run: |
+          python -m cibuildwheel --output-dir wheelhouse
       - name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
           name: wheelhouse
           path: wheelhouse
   publish:
-    needs: build
+    needs: [windows, unix]
     runs-on: ubuntu-latest
-    name: "Python 3.6"
+    name: "Publish"
     steps:
       - uses: actions/checkout@v2
         with:
