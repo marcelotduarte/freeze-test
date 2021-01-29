@@ -11,7 +11,7 @@ jobs:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: ['x86', 'x64']
-    name: "Python ${{ matrix.python-version }} on ${{ matrix.architecture }}"
+    name: Wheel for Windows - Python ${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
@@ -39,7 +39,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, macos-10.15]
-    name: "Build wheels on ${{ matrix.os }}"
+    name: Wheels for ${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
     continue-on-error: true
     steps:
