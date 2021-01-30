@@ -58,7 +58,7 @@ jobs:
           CIBW_BUILD: cp3*-m*_x86_64
           CIBW_SKIP: cp35*
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_BEFORE_BUILD: python -m pip install --upgrade pip && pip install -U importlib-metadata setuptools wheel
+          CIBW_BEFORE_BUILD: python -m pip install --upgrade pip && pip install -U importlib-metadata setuptools wheel && python -m sysconfig
         run: |
           python -m cibuildwheel --output-dir wheelhouse .
       - name: Upload the artifact
