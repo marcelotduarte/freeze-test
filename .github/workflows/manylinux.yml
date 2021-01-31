@@ -22,6 +22,7 @@ jobs:
         env:
           SCRIPTS: docker/build_scripts
         run: |
+          sed -i 's/xargs -0 rm -f/xargs -0 ls -l/g' $SCRIPTS/build.sh
           sed -i 's/2.7.18 3.5.10 //g' $SCRIPTS/build_env.sh
           sed -i 's/--disable-shared/--enable-shared/g' $SCRIPTS/build_utils.sh
       - name: Build the docker
