@@ -1,8 +1,8 @@
-name: Test-Windows-pipenv
+name: Test on Windows (pipenv)
 
 on:
   #push:
-  #  branches: [ master ]
+  #  branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -21,9 +21,10 @@ jobs:
     - name: Checkout cx_Freeze
       uses: actions/checkout@v2
       with:
-        repository: marcelotduarte/cx_Freeze
-        ref: develop
         path: cx_Freeze
+        ref: develop
+        repository: marcelotduarte/cx_Freeze
+        submodule: true
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -31,10 +32,10 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -U setuptools wheel
+        pip install -U importlib-metadata setuptools wheel
     - name: Install cx-freeze
       working-directory: cx_Freeze
-      run: pip install .
+      run: pip install . --nod-deps -v
     - name: Install pipenv
       run: pip install pipenv
     - name: Install cx-logging
@@ -44,8 +45,8 @@ jobs:
       if: ${{ matrix.python-version == '3.8' || matrix.python-version == '3.9' }}
       working-directory: cx_Freeze/cx_Logging
       run: |
-        git submodule init
-        git submodule update
+        #git submodule init
+        #git submodule update
         pip install .
 
     - name: Freeze cryptography sample
