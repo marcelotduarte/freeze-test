@@ -16,8 +16,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          repository: marcelotduarte/cx_Freeze
           ref: develop
+          repository: marcelotduarte/cx_Freeze
+          submodules: true
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
@@ -45,8 +46,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          repository: marcelotduarte/cx_Freeze
           ref: macos
+          repository: marcelotduarte/cx_Freeze
+          submodules: true
       - name: Setup Python
         uses: actions/setup-python@v2
       - name: Install dependencies
