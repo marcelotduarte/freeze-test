@@ -13,7 +13,6 @@ jobs:
         platform: ["x86_64"]
     name: Build manylinux
     runs-on: ${{ matrix.os }}
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v2
         with:
@@ -24,7 +23,7 @@ jobs:
         run: |
           sed -i 's/xargs -0 rm -f/xargs -0 ls -l/g' $SCRIPTS/build.sh
           sed -i 's/2.7.18 3.5.10 //g' $SCRIPTS/build_env.sh
-          sed -i 's/--disable-shared/--enable-shared/g' $SCRIPTS/build_utils.sh
+          sed -i 's/--disable-shared/--enable-shared #/g' $SCRIPTS/build_utils.sh
       - name: Build the docker
         env:
           PLATFORM: ${{ matrix.platform }}
@@ -45,7 +44,6 @@ jobs:
         os: [ubuntu-20.04]
     name: Build wheel on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v2
         with:
