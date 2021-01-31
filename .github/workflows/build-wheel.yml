@@ -95,6 +95,7 @@ jobs:
           python setup.py sdist --dist-dir wheelhouse
       - name: Build the docs
         run: |
+          pip install . --no-deps
           make -C doc
       - name: Display structure of downloaded files
         run: ls -R
