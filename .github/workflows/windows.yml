@@ -2,7 +2,7 @@ name: Test-Windows
 
 on:
   #push:
-  #  branches: [ master ]
+  #  branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -21,9 +21,10 @@ jobs:
     - name: Checkout cx_Freeze
       uses: actions/checkout@v2
       with:
-        repository: marcelotduarte/cx_Freeze
-        ref: develop
         path: cx_Freeze
+        ref: develop
+        repository: marcelotduarte/cx_Freeze
+        submodules: true
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -46,9 +47,9 @@ jobs:
       working-directory: cx_Freeze/cx_Logging
       if: ${{ matrix.python-version == '3.9' }}
       run: |
-        git submodule init
-        git submodule update
-        pip install .
+        #git submodule init
+        #git submodule update
+        pip install . -v
 
     - name: Freeze cryptography sample
       working-directory: cx_Freeze/cx_Freeze/samples/cryptography
