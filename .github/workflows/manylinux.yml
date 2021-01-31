@@ -18,12 +18,13 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: pypa/manylinux
-      - name: Fix the build script
+      - name: Patch the build scripts
         env:
-          SCRIPT: docker/build_scripts/build_utils.sh
+          SCRIPTS: docker/build_scripts
         run: |
-          sed -i 's/--disable-shared/--enable-shared/g' $SCRIPT
-      - name: Build the wheel
+          sed -i 's/2.7.18 3.5.10 //g' $SCRIPTS/build_env.sh
+          sed -i 's/--disable-shared/--enable-shared/g' $SCRIPTS/build_utils.sh
+      - name: Build the docker
         env:
           PLATFORM: ${{ matrix.platform }}
         run: |
