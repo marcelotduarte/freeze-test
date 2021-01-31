@@ -2,7 +2,7 @@ name: Basic tests
 
 on:
   #push:
-  #  branches: [ master ]
+  #  branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -30,9 +30,10 @@ jobs:
     - name: Checkout cx_Freeze
       uses: actions/checkout@v2
       with:
-        repository: marcelotduarte/cx_Freeze
-        ref: ${{ matrix.branch }}
         path: cx_Freeze
+        ref: ${{ matrix.branch }}
+        repository: marcelotduarte/cx_Freeze
+        submodules: true
     - name: Set up Python ${{ matrix.python-version }} ${{ matrix.architecture }}
       uses: actions/setup-python@v2
       with:
