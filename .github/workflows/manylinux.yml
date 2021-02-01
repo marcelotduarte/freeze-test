@@ -25,12 +25,11 @@ jobs:
           sed -i 's/xargs -0 rm -f/xargs -0 ls -l/g' $SCRIPTS/build.sh
           sed -i 's/2.7.18 3.5.10 //g' $SCRIPTS/build_env.sh
           sed -i 's/--disable-shared/--enable-shared LDFLAGS=\"-Wl,-rpath ${prefix}\/lib\"/g' $SCRIPTS/build_utils.sh
-          cat $SCRIPTS/build_utils.sh
       - name: Build the docker
         env:
           PLATFORM: ${{ matrix.platform }}
         run: |
-          docker build --rm -t "manylinux2010_$PLATFORM" -f "docker/Dockerfile-$PLATFORM" docker/
+          docker build --rm -t "manylinux2010_$PLATFORM" -f "docker/Dockerfile-$PLATFORM" docker/ -o manylinux2010_$PLATFORM .
       - name: Display structure of docker files
         run: ls -R
       - name: Upload the artifact
@@ -43,7 +42,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04]
-    name: Build wheel on ${{ matrix.os }}
+    name: Build wheel using manylinux2010
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
