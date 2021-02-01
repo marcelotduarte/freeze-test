@@ -29,7 +29,7 @@ jobs:
         env:
           PLATFORM: ${{ matrix.platform }}
         run: |
-          docker build --rm -t "manylinux2010_$PLATFORM" -o manylinux2010_$PLATFORM -f "docker/Dockerfile-$PLATFORM" docker/
+          docker build --rm -t "manylinux2010_$PLATFORM" -o type=tar,dest="manylinux2010_$PLATFORM" -f "docker/Dockerfile-$PLATFORM" docker/
       - name: Display structure of docker files
         run: ls -R
       - name: Upload the artifact
