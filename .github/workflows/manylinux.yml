@@ -29,14 +29,19 @@ jobs:
         env:
           PLATFORM: ${{ matrix.platform }}
         run: |
-          docker build --rm -t "manylinux2010_$PLATFORM" -o type=tar,dest="manylinux2010_$PLATFORM" -f "docker/Dockerfile-$PLATFORM" docker/
+          docker build --rm -t "manylinux2010_$PLATFORM" -f "docker/Dockerfile-$PLATFORM" docker/
+      - name: Save the docker
+        env:
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          docker save -o manylinux2010_${PLATFORM}.tar "manylinux2010_$PLATFORM"
       - name: Display structure of docker files
         run: ls -R
       - name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
           name: manylinux2010_${{ matrix.platform }}
-          path: .
+          path: ./*.tar
   linux:
     needs: build
     strategy:
@@ -70,7 +75,7 @@ jobs:
           CIBW_SKIP: cp35*
           CIBW_BUILD_VERBOSITY: 1
           CIBW_BEFORE_BUILD: python -m pip install --upgrade pip && pip install -U importlib-metadata setuptools wheel && python -m sysconfig
-          CIBW_MANYLINUX_X86_64_IMAGE: docker/manylinux2010_x86_64
+          CIBW_MANYLINUX_X86_64_IMAGE: docker/manylinux2010_x86_64.tar
         run: |
           python -m cibuildwheel --output-dir wheelhouse .
       - name: Upload the artifact
