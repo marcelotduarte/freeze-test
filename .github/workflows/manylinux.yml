@@ -16,6 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
+          ref: 4117e7c197a85a536ff90123e52c9c6f7d30780e
           repository: pypa/manylinux
       - name: Patch the build scripts
         env:
@@ -32,12 +33,11 @@ jobs:
           docker build --rm -t "manylinux2010_$PLATFORM" -f "docker/Dockerfile-$PLATFORM" docker/
       - name: Display structure of docker files
         run: ls -R
-        working-directory: docker
       - name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
           name: manylinux2010_${{ matrix.platform }}
-          path: docker
+          path: .
   linux:
     needs: build
     strategy:
