@@ -9,10 +9,9 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-20.04]
         platform: ["x86_64"]
     name: Build manylinux
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -25,23 +24,29 @@ jobs:
           sed -i 's/xargs -0 rm -f/xargs -0 ls -l/g' $SCRIPTS/build.sh
           sed -i 's/2.7.18 3.5.10 //g' $SCRIPTS/build_env.sh
           sed -i 's/--disable-shared/--enable-shared LDFLAGS=\"-Wl,-rpath ${prefix}\/lib\"/g' $SCRIPTS/build_utils.sh
-      - name: Build the docker
+      - name: Cache docker image
+        uses: actions/cache@v2
+        id: cache
+        with:
+          key: ${{ matrix.platform }}-${{ hashFiles('docker/build_scripts/build_env.sh') }}
+          path: /tmp/docker
+      - name: Build the docker image
+        if: steps.cache.outputs.cache-hit != 'true'
         env:
           PLATFORM: ${{ matrix.platform }}
+          IMAGE_NAME: manylinux2010_${{ matrix.platform }}
+          DOCKERFILE: docker/Dockerfile-${{ matrix.platform }}
         run: |
-          docker build --rm -t "manylinux2010_$PLATFORM" -f "docker/Dockerfile-$PLATFORM" docker/
-      - name: Save the docker
-        env:
-          PLATFORM: ${{ matrix.platform }}
-        run: |
-          docker save -o manylinux2010_${PLATFORM}.tar "manylinux2010_$PLATFORM"
+          docker build --rm -t $IMAGE_NAME -f $DOCKERFILE docker/
+          mkdir -p /tmp/docker
+          docker save -o /tmp/docker/${IMAGE_NAME}.tar $IMAGE_NAME
       - name: Display structure of docker files
         run: ls -R
       - name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
           name: manylinux2010_${{ matrix.platform }}
-          path: ./*.tar
+          path: /tmp/docker/*.tar
   linux:
     needs: build
     strategy:
@@ -65,23 +70,24 @@ jobs:
       - name: Download the manylinux docker
         uses: actions/download-artifact@v2
         with:
-          name: manylinux2010_x86_64
-          path: docker
+          name: manylinux2010_${{ matrix.platform }}
+          path: /tmp/docker
       - name: Display structure of docker files
         run: ls -R
-        working-directory: docker
+        working-directory: /tmp/docker
       - name: Load the docker image
         env:
           PLATFORM: ${{ matrix.platform }}
+          IMAGE_NAME: manylinux2010_${{ matrix.platform }}
         run: |
-          docker load -i docker/manylinux2010_${PLATFORM}.tar
+          docker load -i /tmp/docker/${IMAGE_NAME}.tar
       - name: Build the wheel
         env:
           CIBW_BUILD: cp3*-m*_x86_64
           CIBW_SKIP: cp35*
           CIBW_BUILD_VERBOSITY: 1
           CIBW_BEFORE_BUILD: python -m pip install --upgrade pip && pip install -U importlib-metadata setuptools wheel && python -m sysconfig
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2010_x86_64
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2010_${{ matrix.platform }}
         run: |
           python -m cibuildwheel --output-dir wheelhouse .
       - name: Upload the artifact
