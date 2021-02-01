@@ -47,6 +47,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04]
+        platform: ["x86_64"]
     name: Build wheel using manylinux2010
     runs-on: ${{ matrix.os }}
     steps:
@@ -69,13 +70,18 @@ jobs:
       - name: Display structure of docker files
         run: ls -R
         working-directory: docker
+      - name: Load the docker image
+        env:
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          docker load -i docker/manylinux2010_${PLATFORM}.tar
       - name: Build the wheel
         env:
           CIBW_BUILD: cp3*-m*_x86_64
           CIBW_SKIP: cp35*
           CIBW_BUILD_VERBOSITY: 1
           CIBW_BEFORE_BUILD: python -m pip install --upgrade pip && pip install -U importlib-metadata setuptools wheel && python -m sysconfig
-          CIBW_MANYLINUX_X86_64_IMAGE: docker/manylinux2010_x86_64.tar
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2010_x86_64
         run: |
           python -m cibuildwheel --output-dir wheelhouse .
       - name: Upload the artifact
