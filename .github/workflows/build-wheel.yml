@@ -12,6 +12,9 @@ jobs:
         os: [windows-latest, macos-10.15]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: ['x86', 'x64']
+        exclude:
+          - os: macos-10.15
+            architecture: x86
     name: Build wheel on ${{ matrix.os }}-Py${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on:  ${{ matrix.os }}
     steps:
