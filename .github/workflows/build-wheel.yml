@@ -58,6 +58,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -U importlib-metadata setuptools wheel
+          python -m sysconfig
       - name: Build the wheel
         env: 
           MACOSX_DEPLOYMENT_TARGET: 10.9
