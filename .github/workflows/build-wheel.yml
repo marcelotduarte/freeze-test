@@ -42,7 +42,7 @@ jobs:
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: ['x64']
     name: Build wheel cp${{ matrix.python-version }}-macos${{ matrix.architecture }}
-    runs-on:  ${{ matrix.os }}
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
         with:
