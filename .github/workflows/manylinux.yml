@@ -21,14 +21,14 @@ jobs:
         env:
           SCRIPTS: docker/build_scripts
         run: |
-          sed -i 's/xargs -0 rm -f/xargs -0 ls -l/g' $SCRIPTS/build.sh
+          #sed -i 's/xargs -0 rm -f/xargs -0 ls -l/g' $SCRIPTS/build.sh
           sed -i 's/2.7.18 3.5.10 //g' $SCRIPTS/build_env.sh
           sed -i 's/--disable-shared/--enable-shared LDFLAGS=\"-Wl,-rpath ${prefix}\/lib\"/g' $SCRIPTS/build_utils.sh
       - name: Cache docker image
         uses: actions/cache@v2
         id: cache
         with:
-          key: ${{ matrix.platform }}-${{ hashFiles('docker/build_scripts/build_env.sh') }}
+          key: ${{ matrix.platform }}-${{ hashFiles('docker/build_scripts/build_env.sh') }}-1
           path: /tmp/docker
       - name: Build the docker image
         if: steps.cache.outputs.cache-hit != 'true'
