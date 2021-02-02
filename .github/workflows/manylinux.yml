@@ -39,7 +39,7 @@ jobs:
         run: |
           docker build --rm -t $IMAGE_NAME -f $DOCKERFILE docker/
           mkdir -p /tmp/docker
-          docker save -o /tmp/docker/${IMAGE_NAME}.tar $IMAGE_NAME
+          docker save -o /tmp/docker/${IMAGE_NAME}.tar $IMAGE_NAME:latest
       - name: Display structure of docker files
         run: ls -R
       - name: Upload the artifact
