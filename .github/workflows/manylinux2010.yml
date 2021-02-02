@@ -57,11 +57,11 @@ jobs:
         name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
-          name: manylinux2010_${{ matrix.platform }}
-          path: |
-            /tmp/docker/*.tar
-            /tmp/docker-key/${{ matrix.platform }}
-
+          #name: manylinux2010_${{ matrix.platform }}
+          name: docker-key
+          path: /tmp/docker-key/${{ matrix.platform }}
+          #/tmp/docker/*.tar
+           
   linux:
     needs: build
     strategy:
@@ -88,8 +88,8 @@ jobs:
         name: Download the artifact with the cache key
         uses: actions/download-artifact@v2
         with:
-          name: manylinux2010_${{ matrix.platform }}
-          path: /tmp/docker-key/${{ matrix.platform }}
+          name: docker-key
+          path: /tmp/docker-key/
       -
         name: Get the cache key
         id: cache-docker
