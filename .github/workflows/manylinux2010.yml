@@ -94,6 +94,12 @@ jobs:
         run: |
           echo ::set-output name=key::$(cat /tmp/docker-key/${{ matrix.platform }})
       -
+        name: Show the cache key
+        run: |
+          echo $(cat /tmp/docker-key/${{ matrix.platform }})
+          cat /tmp/docker-key/${{ matrix.platform }}
+          echo ${{ steps.cache-docker.outputs.key }})
+      -
         name: Get the docker image from cache
         uses: actions/cache@v2
         with:
