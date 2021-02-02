@@ -99,7 +99,7 @@ jobs:
         run: |
           echo $(cat /tmp/docker-key/${{ matrix.platform }})
           cat /tmp/docker-key/${{ matrix.platform }}
-          echo ${{ steps.cache-docker.outputs.key }})
+          echo ${{ steps.cache-docker.outputs.key }}
       -
         name: Get the docker image from cache
         uses: actions/cache@v2
