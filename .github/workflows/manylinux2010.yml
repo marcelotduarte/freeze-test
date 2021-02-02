@@ -47,7 +47,9 @@ jobs:
           docker save -o /tmp/docker/${IMAGE_NAME}.tar $IMAGE_NAME:latest
       -
         name: Save the cache key
-        run: echo ${{ steps.cache.key }} > /tmp/docker-key/${{ matrix.platform }}
+        run: |
+          mkdir -p /tmp/docker-key
+          echo ${{ steps.cache.key }} > /tmp/docker-key/${{ matrix.platform }}
       -
         name: Display structure of docker files
         run: ls -l /tmp/docker
