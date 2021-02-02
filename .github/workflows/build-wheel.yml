@@ -68,7 +68,7 @@ jobs:
         with:
           name: wheelhouse
           path: wheelhouse
-  unix:
+  linux:
     strategy:
       matrix:
         os: [ubuntu-20.04]
@@ -78,7 +78,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: macos
+          ref: develop
           repository: marcelotduarte/cx_Freeze
           submodules: true
       - name: Setup Python
@@ -101,7 +101,7 @@ jobs:
           name: wheelhouse
           path: wheelhouse
   publish:
-    needs: [windows, unix]
+    needs: [windows, macos, linux]
     runs-on: ubuntu-20.04
     name: "Publish"
     steps:
