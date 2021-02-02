@@ -9,13 +9,39 @@ jobs:
   windows:
     strategy:
       matrix:
-        os: [windows-latest, macos-10.15]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: ['x86', 'x64']
-        exclude:
-          - os: macos-10.15
-            architecture: x86
-    name: Build wheel on ${{ matrix.os }}-Py${{ matrix.python-version }}-${{ matrix.architecture }}
+    name: Build wheel cp${{ matrix.python-version }}-win${{ matrix.architecture }}
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+          submodules: true
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.architecture }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -U importlib-metadata setuptools wheel
+      - name: Build the wheel
+        run: |
+          pip wheel . --no-deps -v --wheel-dir wheelhouse
+      - name: Upload the artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: wheelhouse
+          path: wheelhouse
+  macos:
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        architecture: ['x64']
+    name: Build wheel cp${{ matrix.python-version }}-macos${{ matrix.architecture }}
     runs-on:  ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -33,6 +59,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -U importlib-metadata setuptools wheel
       - name: Build the wheel
+        env: 
+          MACOSX_DEPLOYMENT_TARGET: 10.9
         run: |
           pip wheel . --no-deps -v --wheel-dir wheelhouse
       - name: Upload the artifact
