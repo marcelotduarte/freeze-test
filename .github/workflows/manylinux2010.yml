@@ -52,8 +52,8 @@ jobs:
         name: Save the cache key
         run: |
           mkdir -p /tmp/docker-key
-          echo ${{ steps.cache.inputs.key }}
-          echo -n ${{ steps.cache.inputs.key }} > /tmp/docker-key/${{ matrix.platform }}
+          echo ${{ hashFiles('docker/build_scripts/build_env.sh') }}
+          echo -n ${{ hashFiles('docker/build_scripts/build_env.sh') }} > /tmp/docker-key/${{ matrix.platform }}
       -
         name: Display structure of docker files
         run: ls -l /tmp/docker
@@ -100,7 +100,7 @@ jobs:
       -
         name: Show the cache key
         run: |
-          echo $(cat /tmp/docker-key/${{ matrix.platform }})
+          echo ${{ matrix.platform }}-$(cat /tmp/docker-key/${{ matrix.platform }})
           cat /tmp/docker-key/${{ matrix.platform }}
           echo ${{ steps.cache-docker.outputs.key }}
       -
