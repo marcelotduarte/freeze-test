@@ -107,7 +107,7 @@ jobs:
         name: Get the docker image from cache
         uses: actions/cache@v2
         with:
-          key: ${{ steps.cache-docker.outputs.key }}
+          key: ${{ matrix.platform }}-${{ steps.cache-docker.outputs.key }}
           path: /tmp/docker
       -
         name: Display structure of docker files
