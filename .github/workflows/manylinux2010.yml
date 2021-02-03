@@ -53,7 +53,7 @@ jobs:
         name: Save the cache key
         run: |
           mkdir -p /tmp/docker-key
-          echo -n ${{ hashFiles('docker/build_scripts/build_env.sh') }}--${{ hashFiles('docker/build_scripts/build_utils.sh') }} > /tmp/docker-key/${{ matrix.platform }}
+          echo -n ${{ hashFiles('docker/build_scripts/build_env.sh') }}-${{ hashFiles('docker/build_scripts/build_utils.sh') }} > /tmp/docker-key/${{ matrix.platform }}
       -
         name: Display structure of docker files
         run: ls -l /tmp/docker
