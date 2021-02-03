@@ -64,11 +64,10 @@ jobs:
           set
           python -m sysconfig
       - name: Build the wheel
-        env: 
-          MACOSX_DEPLOYMENT_TARGET: 10.9
-          _PYTHON_HOST_PLATFORM: macosx-10.9-x86_64
-        run: |
-          pip wheel . --no-deps -v --wheel-dir wheelhouse
+        #env: 
+        #  MACOSX_DEPLOYMENT_TARGET: 10.9
+        #  _PYTHON_HOST_PLATFORM: macosx-10.9-x86_64
+        run: pip wheel . --no-deps -v --wheel-dir wheelhouse
       - name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
