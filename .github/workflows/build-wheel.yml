@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
-        architecture: ['x86', 'x64']
+        architecture: [x86, x64]
     name: Build wheel cp${{ matrix.python-version }}-win${{ matrix.architecture }}
     runs-on: windows-latest
     steps:
@@ -40,7 +40,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
-        architecture: ['x64']
+        architecture: [x64]
     name: Build wheel cp${{ matrix.python-version }}-macos${{ matrix.architecture }}
     runs-on: macos-latest
     steps:
@@ -75,11 +75,11 @@ jobs:
           name: wheelhouse
           path: wheelhouse
   linux:
+    name: Build wheel using manylinux2010
     strategy:
       matrix:
-        os: [ubuntu-20.04]
-    name: Build wheel on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+        platform: [x86_64]
+    runs-on: ubuntu-latest
     continue-on-error: true
     steps:
       - uses: actions/checkout@v2
@@ -93,12 +93,26 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install cibuildwheel==1.8.0
-      - name: Build the wheel
+      -
+        name: Get the docker image from cache
+        uses: actions/cache@v2
+        with:
+          key: ${{ matrix.platform }}-832d012f47972739e31ae60f98c5b26a120b17b8f963c3cfac573312d2214e61-08d852fc3239b55c8d36b8b1ad97dd6de59856c6c98573d142476da5980d3899
+          path: /tmp/docker
+      -
+        name: Load the docker image
+        env:
+          PLATFORM: ${{ matrix.platform }}
+          IMAGE_NAME: manylinux2010_${{ matrix.platform }}
+        run: docker load -i /tmp/docker/${IMAGE_NAME}.tar
+      -
+        name: Build the wheel
         env:
           CIBW_BUILD: cp3*-m*_x86_64
           CIBW_SKIP: cp35*
           CIBW_BUILD_VERBOSITY: 1
           CIBW_BEFORE_BUILD: python -m pip install --upgrade pip && pip install -U importlib-metadata setuptools wheel && python -m sysconfig
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2010_${{ matrix.platform }}
         run: |
           python -m cibuildwheel --output-dir wheelhouse .
       - name: Upload the artifact
