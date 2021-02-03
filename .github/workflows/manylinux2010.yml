@@ -5,6 +5,7 @@ on:
     types: [created]
   schedule:
     # run every day at 4:00AM to refresh the cache
+    # the cache results in time reduction from 20min to 11s
     - cron:  '0 4 * * *'
   workflow_dispatch:
 
@@ -36,7 +37,7 @@ jobs:
         uses: actions/cache@v2
         id: cache
         with:
-          key: ${{ matrix.platform }}-${{ hashFiles('docker/build_scripts/build_env.sh') }}
+          key: ${{ matrix.platform }}-${{ hashFiles('docker/build_scripts/build_env.sh') }}-${{ hashFiles('docker/build_scripts/build_utils.sh') }}
           path: /tmp/docker
       -
         name: Build docker image and save on the cache
@@ -52,8 +53,7 @@ jobs:
         name: Save the cache key
         run: |
           mkdir -p /tmp/docker-key
-          echo ${{ hashFiles('docker/build_scripts/build_env.sh') }}
-          echo -n ${{ hashFiles('docker/build_scripts/build_env.sh') }} > /tmp/docker-key/${{ matrix.platform }}
+          echo -n ${{ hashFiles('docker/build_scripts/build_env.sh') }}--${{ hashFiles('docker/build_scripts/build_utils.sh') }} > /tmp/docker-key/${{ matrix.platform }}
       -
         name: Display structure of docker files
         run: ls -l /tmp/docker
