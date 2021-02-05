@@ -35,7 +35,7 @@ jobs:
         pip install -U importlib-metadata setuptools wheel cx_Logging pipenv
     - name: Install cx-freeze
       working-directory: cx_Freeze
-      run: pip install . --nod-deps -v
+      run: pip install . --no-deps -v
 
     - name: Freeze cryptography sample
       working-directory: cx_Freeze/cx_Freeze/samples/cryptography
