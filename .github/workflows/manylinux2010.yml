@@ -165,7 +165,10 @@ jobs:
           path: wheelhouse
       -
         name: Install cx_Freeze from wheel
-        run: pip install --no-index -f wheelhouse cx_Freeze
+        run: |
+          python -m pip install --upgrade pip
+          pip install -U importlib-metadata setuptools wheel
+          pip install --no-index -f wheelhouse cx_Freeze
 
       # environment
       -
