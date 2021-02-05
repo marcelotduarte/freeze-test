@@ -49,10 +49,7 @@ jobs:
     - name: Install cx-logging
       if: runner.os == 'Windows'
       working-directory: cx_Freeze/cx_Logging
-      run: |
-        git submodule init
-        git submodule update
-        pip install . -v
+      run: pip install . -v
     # environment
     - name: Define a variable
       shell: python
