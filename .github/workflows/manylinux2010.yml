@@ -134,3 +134,59 @@ jobs:
         with:
           name: cx_Freeze-wheels
           path: wheelhouse
+
+  test:
+    needs: linux
+    strategy:
+      matrix:
+        platform: [x86_64]
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        architecture: [x64]
+    name: Test the wheel
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout cx_Freeze
+        uses: actions/checkout@v2
+        with:
+          path: cx_Freeze
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+      -
+        name: Set up Python ${{ matrix.python-version }} ${{ matrix.architecture }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.architecture }}
+      -
+        name: Download the wheelhouse
+        uses: actions/download-artifact@v2
+        with:
+          name: cx_Freeze-wheels
+          path: wheelhouse
+      -
+        name: Install cx_Freeze from wheel
+        run: pip install --no-index -f wheelhouse cx_Freeze
+
+      # environment
+      -
+        name: Define a variable
+        shell: python
+        run: |
+          import distutils.util
+          import os.path
+          import sys
+          platform = distutils.util.get_platform()
+          version = sys.version[0:3]
+          with open("BUILD_DIR", "w") as fp:
+              fp.write(f"build/exe.{platform}-{version}")
+      # samples
+      -
+        name: Freeze cryptography sample
+        working-directory: cx_Freeze/cx_Freeze/samples/cryptography
+        run: |
+          pip install cryptography
+          python setup.py build_exe
+      -
+        name: Run cryptography sample
+        run: ./cx_Freeze/cx_Freeze/samples/cryptography/$(cat BUILD_DIR)/test_crypt
+        shell: bash
