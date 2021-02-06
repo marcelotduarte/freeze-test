@@ -195,16 +195,11 @@ jobs:
           ./cx_Freeze/cx_Freeze/samples/cryptography/$(cat BUILD_DIR)/test_crypt
         shell: bash
       -
-        name: zip the frozen sample
-        run: |
-          zip -r frozenapp${{ matrix.python-version }} ./cx_Freeze/cx_Freeze/samples/cryptography/$(cat BUILD_DIR)
-        shell: bash
-      -
         name: Upload the frozen app
         uses: actions/upload-artifact@v2
         with:
           name: frozenapp
-          path: ./frozenapp${{ matrix.python-version }}.zip
+          path: ./cx_Freeze/cx_Freeze/samples/cryptography/build/exe.*/**
 
   test2:
     needs: test
@@ -222,11 +217,8 @@ jobs:
           name: frozenapp
           path: .
       -
-        name: Extract the app
-        run: |
-          unzip frozenapp${{ matrix.python-version }}
-          ls -l
-      -
         name: Run frozen app
-        run: ./test_crypt
+        run: |
+          ls -l
+          ./test_crypt
         shell: bash
