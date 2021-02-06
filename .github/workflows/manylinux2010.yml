@@ -219,6 +219,6 @@ jobs:
       -
         name: Run frozen app
         run: |
-          ls -l
+          ls -l */
           ./exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}/test_crypt
         shell: bash
