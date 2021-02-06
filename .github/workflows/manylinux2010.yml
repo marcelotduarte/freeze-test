@@ -220,5 +220,6 @@ jobs:
         name: Run frozen app
         run: |
           ls -l */
+          chmod +x ./exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}/test_crypt
           ./exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}/test_crypt
         shell: bash
