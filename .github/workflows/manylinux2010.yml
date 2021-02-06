@@ -191,15 +191,13 @@ jobs:
           python setup.py build_exe
       -
         name: Run cryptography sample
-        working-directory: cx_Freeze/cx_Freeze/samples/cryptography
         run: |
-          ./$(cat BUILD_DIR)/test_crypt
+          ./cx_Freeze/cx_Freeze/samples/cryptography/$(cat BUILD_DIR)/test_crypt
         shell: bash
       -
         name: zip the frozen sample
-        working-directory: cx_Freeze/cx_Freeze/samples/cryptography
         run: |
-          zip -r frozenapp${{ matrix.python-version }} $(cat BUILD_DIR)/
+          zip -r frozenapp${{ matrix.python-version }} ./cx_Freeze/cx_Freeze/samples/cryptography/$(cat BUILD_DIR)
         shell: bash
       -
         name: Upload the frozen app
