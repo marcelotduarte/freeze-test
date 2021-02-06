@@ -24,7 +24,7 @@ jobs:
         path: cx_Freeze
         ref: develop
         repository: marcelotduarte/cx_Freeze
-        submodules: true
+        #submodules: true
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
