@@ -191,5 +191,39 @@ jobs:
           python setup.py build_exe
       -
         name: Run cryptography sample
-        run: ./cx_Freeze/cx_Freeze/samples/cryptography/$(cat BUILD_DIR)/test_crypt
+        working-directory: cx_Freeze/cx_Freeze/samples/cryptography
+        run: |
+          ./$(cat BUILD_DIR)/test_crypt
+          zip -r frozenapp${{ python-version }} $(cat BUILD_DIR)
+        shell: bash
+      -
+        name: Upload the frozen app
+        uses: actions/upload-artifact@v2
+        with:
+          name: frozenapp
+          path: ./frozenapp${{ python-version }}.zip
+
+  test2:
+    needs: test
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        platform: [x86_64]
+    name: Test the wheel part 2
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Download the frozen app
+        uses: actions/download-artifact@v2
+        with:
+          name: frozenapp
+          path: .
+      -
+        name: Extract the app
+        run: |
+          unzip frozenapp${{ python-version }}
+          ls -l
+      -
+        name: Run frozen app
+        run: ./test_crypt
         shell: bash
