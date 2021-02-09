@@ -28,7 +28,7 @@ jobs:
         env:
           SCRIPT: docker/build_scripts/build-cpython.sh
         run: |
-          sed -i 's/RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.5.10//g' docker/Dockerfile
+          sed -i 's/RUN manylinux-entrypoint \/build_scripts\/build-cpython.sh 3.5.10//g' docker/Dockerfile
           sed -i 's/--disable-shared/--enable-shared --enable-optimizations LDFLAGS=\"-Wl,-rpath ${prefix}\/lib\"/g' $SCRIPT
           sed -i 's/xargs -0 rm -f/xargs -0 ls -l/g' $SCRIPT
           mkdir -p /tmp/docker
