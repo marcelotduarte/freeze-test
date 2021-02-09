@@ -132,8 +132,8 @@ jobs:
         name: Load the docker image
         env:
           PLATFORM: ${{ matrix.platform }}
-          IMAGE_NAME: manylinux2010_${{ matrix.platform }}
-        run: docker load -i /tmp/docker/${IMAGE_NAME}.tar
+          FILENAME: /tmp/docker/manylinux2010_${{ matrix.platform }}.tar
+        run: docker load -i $FILENAME
       -
         name: Build the wheel
         env:
@@ -142,7 +142,7 @@ jobs:
           CIBW_BUILD_VERBOSITY: 1
           CIBW_BEFORE_BUILD: pip install -U importlib-metadata && python -m sysconfig
           CIBW_DEPENDENCY_VERSIONS: latest
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2010_${{ matrix.platform }}
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2010_${{ matrix.platform }}:${{ github.sha }}
         run: python -m cibuildwheel --output-dir wheelhouse .
       -
         name: Upload the artifact
