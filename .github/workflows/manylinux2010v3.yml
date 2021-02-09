@@ -72,7 +72,9 @@ jobs:
           path: /tmp/docker
       -
         name: Display structure of docker files
-        run: ls -l /tmp/docker
+        run: |
+          ls -l /tmp/docker
+          docker images
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
@@ -128,13 +130,17 @@ jobs:
           path: /tmp/docker
       -
         name: Display structure of docker files
-        run: ls -l /tmp/docker
+        run: |
+          ls -l /tmp/docker
+          docker images
       -
         name: Load the docker image
         env:
           PLATFORM: ${{ matrix.platform }}
           FILENAME: /tmp/docker/${{ matrix.policy }}_${{ matrix.platform }}.tar
-        run: docker load -i $FILENAME
+        run: |
+          docker load -i $FILENAME
+          docker images
       -
         name: Build the wheel
         env:
