@@ -15,8 +15,13 @@ jobs:
     strategy:
       matrix:
         platform: [x86_64]
+        policy: [manylinux2010]
     name: Build manylinux docker image
     runs-on: ubuntu-latest
+    env:
+      POLICY: ${{ matrix.policy }}
+      PLATFORM: ${{ matrix.platform }}
+      COMMIT_SHA: ${{ github.sha }}
     steps:
       -
         uses: actions/checkout@v2
@@ -28,37 +33,42 @@ jobs:
         env:
           SCRIPT: docker/build_scripts/build-cpython.sh
         run: |
-          sed -i 's/RUN manylinux-entrypoint \/build_scripts\/build-cpython.sh 3.5.10//g' docker/Dockerfile
-          sed -i 's/COPY --from=build_cpython35 \/opt\/_internal \/opt\/_internal\///g' docker/Dockerfile
+          sed -i 's/RUN manylinux-entrypoint \/build_scripts\/build-cpython.sh 3.5.10/#/g' docker/Dockerfile
+          sed -i 's/COPY --from=build_cpython35 \/opt\/_internal \/opt\/_internal\//#/g' docker/Dockerfile
           sed -i 's/--disable-shared --with-ensurepip=no/--enable-shared --enable-optimizations --with-ensurepip=no LDFLAGS=\"-Wl,-rpath ${prefix}\/lib\"/g' $SCRIPT
           sed -i 's/xargs -0 rm -f/xargs -0 ls -l/g' $SCRIPT
           mkdir -p /tmp/docker
       -
-        name: Cache docker image
-        uses: actions/cache@v2
-        id: cache
-        with:
-          key: ${{ matrix.platform }}-${{ hashFiles('docker/build_scripts/build-cpython.sh') }}
-          path: /tmp/docker
-      -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       -
-        name: Build docker image and save on the cache
-        if: steps.cache.outputs.cache-hit != 'true'
-        env:
-          PLATFORM: ${{ matrix.platform }}
-          POLICY: manylinux2010
-          COMMIT_SHA: ${{ github.sha }}
-          IMAGE_NAME: manylinux2010_${{ matrix.platform }}
-        run: |
-          ./build.sh
-          docker save -o /tmp/docker/${IMAGE_NAME}.tar $IMAGE_NAME:latest
+        name: Create cache key
+        id: cachekey
+        run: echo "::set-output name=hashfile::${{ hashFiles('docker/build_scripts/build-cpython.sh') }}"
       -
-        name: Save the cache key
+        name: Setup cache
+        uses: actions/cache@v2
+        with:
+          path: .buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
+          key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-${{ steps.cachekey.outputs.hashfile }}
+          restore-keys: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-
+      -
+        name: Build docker image
+        run: ./build.sh
+      -
+        name: Save the image on the cache
+        env:
+          IMAGE_NAME: ${{ matrix.policy }}_${{ matrix.platform }}
         run: |
+          docker save -o /tmp/docker/${IMAGE_NAME}.tar $IMAGE_NAME:latest
           mkdir -p /tmp/docker-key
-          echo -n ${{ hashFiles('docker/build_scripts/build-cpython.sh') }} > /tmp/docker-key/${{ matrix.platform }}
+          echo -n ${{ steps.cachekey.outputs.hashfile }} > /tmp/docker-key/${{ matrix.platform }}
+      -
+        name: Cache docker image
+        uses: actions/cache@v2
+        with:
+          key: ${{ matrix.platform }}-${{ steps.cachekey.outputs.hashfile }}
+          path: /tmp/docker
       -
         name: Display structure of docker files
         run: ls -l /tmp/docker
@@ -73,7 +83,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        platform: ["x86_64"]
+        platform: [x86_64]
     name: Build wheel using manylinux2010
     runs-on: ubuntu-latest
     steps:
