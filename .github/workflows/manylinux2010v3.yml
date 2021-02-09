@@ -48,6 +48,7 @@ jobs:
         env:
           PLATFORM: ${{ matrix.platform }}
           POLICY: manylinux2010
+          COMMIT_SHA: ${{ github.sha }}
           IMAGE_NAME: manylinux2010_${{ matrix.platform }}
         run: |
           ./build.sh
