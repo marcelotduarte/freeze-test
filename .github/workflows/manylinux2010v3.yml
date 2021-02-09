@@ -5,7 +5,7 @@ on:
     types: [created]
   schedule:
     # run every day at 7:30AM UTC to refresh the cache
-    # the cache results in time reduction from 20min to 11s
+    # the cache results in time reduction from 1h20m19s to 1m34s
     - cron:  '30 7 * * *'
   workflow_dispatch:
 
@@ -85,7 +85,8 @@ jobs:
     strategy:
       matrix:
         platform: [x86_64]
-    name: Build wheel using manylinux2010
+        policy: [manylinux2010]
+    name: Build wheel using ${{ matrix.policy }}_${{ matrix.platform }}
     runs-on: ubuntu-latest
     steps:
       -
@@ -132,7 +133,7 @@ jobs:
         name: Load the docker image
         env:
           PLATFORM: ${{ matrix.platform }}
-          FILENAME: /tmp/docker/manylinux2010_${{ matrix.platform }}.tar
+          FILENAME: /tmp/docker/${{ matrix.policy }}_${{ matrix.platform }}.tar
         run: docker load -i $FILENAME
       -
         name: Build the wheel
@@ -142,7 +143,7 @@ jobs:
           CIBW_BUILD_VERBOSITY: 1
           CIBW_BEFORE_BUILD: pip install -U importlib-metadata && python -m sysconfig
           CIBW_DEPENDENCY_VERSIONS: latest
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2010_${{ matrix.platform }}:${{ github.sha }}
+          CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/${{ matrix.policy }}_${{ matrix.platform }}:${{ github.sha }}
         run: python -m cibuildwheel --output-dir wheelhouse .
       -
         name: Upload the artifact
