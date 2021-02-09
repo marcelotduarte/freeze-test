@@ -58,9 +58,10 @@ jobs:
       -
         name: Save the image on the cache
         env:
-          IMAGE_NAME: ${{ matrix.policy }}_${{ matrix.platform }}
+          IMAGENAME: quay.io/pypa/${{ matrix.policy }}_${{ matrix.platform }}
+          FILENAME: /tmp/docker/${{ matrix.policy }}_${{ matrix.platform }}.tar
         run: |
-          docker save -o /tmp/docker/${IMAGE_NAME}.tar $IMAGE_NAME:latest
+          docker save -o $FILENAME $IMAGENAME:$COMMIT_SHA
           mkdir -p /tmp/docker-key
           echo -n ${{ steps.cachekey.outputs.hashfile }} > /tmp/docker-key/${{ matrix.platform }}
       -
