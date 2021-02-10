@@ -42,15 +42,11 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       -
-        name: Create cache key
-        id: cachekey
-        run: echo "::set-output name=hashfile::${{ hashFiles('docker/build_scripts/build-cpython.sh') }}"
-      -
         name: Setup cache
         uses: actions/cache@v2
         with:
           path: .buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
-          key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-${{ steps.cachekey.outputs.hashfile }}
+          key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-${{ github.sha }}
           restore-keys: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-
       -
         name: Build docker image
