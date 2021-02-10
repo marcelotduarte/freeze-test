@@ -63,12 +63,12 @@ jobs:
         run: |
           docker save -o $FILENAME $IMAGENAME:$COMMIT_SHA
           mkdir -p /tmp/docker-key
-          echo -n ${{ steps.cachekey.outputs.hashfile }} > /tmp/docker-key/${{ matrix.platform }}
+          echo -n ${{ github.sha }} > /tmp/docker-key/${{ matrix.platform }}
       -
         name: Cache docker image
         uses: actions/cache@v2
         with:
-          key: ${{ matrix.platform }}-${{ steps.cachekey.outputs.hashfile }}
+          key: ${{ matrix.platform }}-${{ github.sha }}
           path: /tmp/docker
       -
         name: Display structure of docker files
@@ -149,7 +149,7 @@ jobs:
           CIBW_BUILD_VERBOSITY: 1
           CIBW_BEFORE_BUILD: pip install -U importlib-metadata && python -m sysconfig
           CIBW_DEPENDENCY_VERSIONS: latest
-          CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/${{ matrix.policy }}_${{ matrix.platform }}:${{ github.sha }}
+          CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/${{ matrix.policy }}_${{ matrix.platform }}:${{ steps.cache-docker.outputs.key }}
         run: python -m cibuildwheel --output-dir wheelhouse .
       -
         name: Upload the artifact
