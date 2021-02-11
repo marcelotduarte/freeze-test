@@ -46,8 +46,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: .buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
-          key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-${{ github.sha }}
-          restore-keys: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-
+          key: x-buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-${{ github.sha }}
+          #restore-keys: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-
       -
         name: Build docker image
         run: ./build.sh
