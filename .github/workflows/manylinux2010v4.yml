@@ -1,0 +1,183 @@
+name: Create manylinux2010 v3
+
+on:
+  release:
+    types: [created]
+  schedule:
+    # run every day at 7:30AM UTC to refresh the cache
+    # the cache results in time reduction from 1h20m19s to 1m34s
+    - cron:  '30 7 * * *'
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        platform: [x86_64]
+        policy: [manylinux2010]
+    name: Build manylinux2010 wheel using ${{ matrix.policy }}_${{ matrix.platform }}
+    runs-on: ubuntu-latest
+    env:
+      POLICY: ${{ matrix.policy }}
+      PLATFORM: ${{ matrix.platform }}
+      COMMIT_SHA: ${{ github.sha }}
+    steps:
+      -
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+          submodules: true
+      -
+        uses: actions/checkout@v2
+        with:
+          ref: master
+          repository: pypa/manylinux
+          path: manylinux
+      -
+        name: Patch the build scripts
+        working-directory: manylinux
+        env:
+          SCRIPT: docker/build_scripts/build-cpython.sh
+        run: |
+          sed -i 's/RUN manylinux-entrypoint \/build_scripts\/build-cpython.sh 3.5.10/#/g' docker/Dockerfile
+          sed -i 's/COPY --from=build_cpython35 \/opt\/_internal \/opt\/_internal\//#/g' docker/Dockerfile
+          sed -i 's/--disable-shared --with-ensurepip=no/--enable-shared --enable-optimizations --with-ensurepip=no LDFLAGS=\"-Wl,-rpath ${PREFIX}\/lib\"/g' $SCRIPT
+          sed -i 's/xargs -0 rm -f/xargs -0 ls -l/g' $SCRIPT
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Setup cache
+        uses: actions/cache@v2
+        with:
+          path: .buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
+          key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-${{ github.sha }}
+          restore-keys: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-
+      -
+        name: Build docker image
+        working-directory: manylinux
+        run: ./build.sh
+      -
+        name: Save the image to upload
+        env:
+          IMAGENAME: quay.io/pypa/${{ matrix.policy }}_${{ matrix.platform }}
+          FILENAME: /tmp/docker/${{ matrix.policy }}_${{ matrix.platform }}.tar
+        run: |
+          mkdir -p /tmp/docker
+          docker save -o $FILENAME $IMAGENAME:$COMMIT_SHA
+      -
+        name: Display structure of docker files
+        run: |
+          ls -l /tmp/docker
+          docker images
+      -
+        name: Upload the artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.policy }}_${{ matrix.platform }}
+          path: /tmp/docker/${{ matrix.policy }}_${{ matrix.platform }}.tar
+      -
+        name: Setup Python
+        uses: actions/setup-python@v2
+      -
+        name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install cibuildwheel==1.8.0
+      -
+        name: Build the wheel
+        env:
+          CIBW_BUILD: cp3*-m*_x86_64
+          CIBW_SKIP: cp35*
+          CIBW_BUILD_VERBOSITY: 1
+          CIBW_BEFORE_BUILD: python -m pip install --upgrade pip && pip install -U importlib-metadata setuptools wheel
+          CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/${{ matrix.policy }}_${{ matrix.platform }}:${{ steps.cache-docker.outputs.key }}
+        run: python -m cibuildwheel --output-dir dist .
+      -
+        name: Upload the artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: cx-freeze-wheelhouse
+          path: dist
+
+  test:
+    needs: build
+    strategy:
+      matrix:
+        platform: [x86_64]
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        architecture: [x64]
+    name: Test the wheel
+    runs-on: ubuntu-latest
+    env:
+      PLATFORM: ${{ matrix.platform }}
+      BUILD_DIR: build/exe.${{ matrix.platform }}-${{ matrix.python-version }}
+    steps:
+      - name: Checkout cx_Freeze
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+      -
+        name: Set up Python ${{ matrix.python-version }} ${{ matrix.architecture }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.architecture }}
+      -
+        name: Download the wheelhouse
+        uses: actions/download-artifact@v2
+        with:
+          name: cx-freeze-wheelhouse
+          path: wheelhouse
+      -
+        name: Install cx-freeze from wheelhouse
+        run: |
+          python -m pip install --upgrade pip
+          pip install -U importlib-metadata setuptools wheel
+          pip install --no-index -f wheelhouse cx-freeze
+
+      # samples
+      -
+        name: Freeze cryptography sample
+        working-directory: cx_Freeze/samples/cryptography
+        run: |
+          pip install cryptography
+          python setup.py build_exe --excludes=tkinter
+      -
+        name: Run cryptography sample
+        working-directory: cx_Freeze/samples/cryptography
+        run: |
+          ./${BUILD_DIR}/test_crypt
+        shell: bash
+      -
+        name: Upload the frozen app
+        uses: actions/upload-artifact@v2
+        with:
+          name: frozenapp
+          path: ./cx_Freeze/samples/cryptography/build/exe.*/**
+
+  test2:
+    needs: test
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        platform: [x86_64]
+    name: Test the wheel part 2
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Download the frozen app
+        uses: actions/download-artifact@v2
+        with:
+          name: frozenapp
+          path: .
+      -
+        name: Run frozen app
+        run: |
+          ls -l */
+          chmod +x ./exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}/test_crypt
+          ./exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}/test_crypt
+        shell: bash
