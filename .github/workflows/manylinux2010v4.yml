@@ -52,12 +52,13 @@ jobs:
         name: Setup cache
         uses: actions/cache@v2
         with:
-          path: .buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
+          path: manylinux/.buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
           key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-${{ github.sha }}
           restore-keys: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-
       -
         name: Build docker image
-        run: ./manylinux/build.sh
+        working-directory: manylinux
+        run: ./build.sh
       -
         name: Save the image to upload
         env:
