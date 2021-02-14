@@ -154,7 +154,7 @@ jobs:
         name: Upload the frozen app
         uses: actions/upload-artifact@v2
         with:
-          name: frozenapp
+          name: frozen-exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}
           path: ./cx_Freeze/samples/cryptography/build/exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}/**
 
   test2:
@@ -170,12 +170,11 @@ jobs:
         name: Download the frozen app
         uses: actions/download-artifact@v2
         with:
-          name: frozenapp
+          name: frozen-exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}
           path: .
       -
         name: Run frozen app
         run: |
           ls -l */
-          chmod +x ./exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}/test_crypt
-          ./exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}/test_crypt
-        shell: bash
+          chmod +x ./test_crypt
+          ./test_crypt
