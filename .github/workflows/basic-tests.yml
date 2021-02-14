@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        branch: [macos]
+        branch: [develop]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64, x86]
         exclude:
@@ -22,7 +22,7 @@ jobs:
             architecture: x86
         include:
           - os: macos-latest
-            branch: 6.5.2
+            branch: 6.5.3
             python-version: 3.8
             architecture: x64
     runs-on: ${{ matrix.os }}
