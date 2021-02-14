@@ -112,9 +112,6 @@ jobs:
         architecture: [x64]
     name: Test the wheel
     runs-on: ubuntu-latest
-    env:
-      PLATFORM: ${{ matrix.platform }}
-      BUILD_DIR: build/exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}
     steps:
       - name: Checkout cx_Freeze
         uses: actions/checkout@v2
@@ -151,14 +148,14 @@ jobs:
         name: Run cryptography sample
         working-directory: cx_Freeze/samples/cryptography
         run: |
-          ./${BUILD_DIR}/test_crypt
+          ./build/exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}/test_crypt
         shell: bash
       -
         name: Upload the frozen app
         uses: actions/upload-artifact@v2
         with:
           name: frozenapp
-          path: ./cx_Freeze/samples/cryptography/${BUILD_DIR}/**
+          path: ./cx_Freeze/samples/cryptography/build/exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}/**
 
   test2:
     needs: test
