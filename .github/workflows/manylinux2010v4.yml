@@ -94,7 +94,7 @@ jobs:
           CIBW_SKIP: cp35*
           CIBW_BUILD_VERBOSITY: 1
           CIBW_BEFORE_BUILD: python -m pip install --upgrade pip && pip install -U importlib-metadata setuptools wheel
-          CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/${{ matrix.policy }}_${{ matrix.platform }}:$COMMIT_SHA
+          CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/${{ matrix.policy }}_${{ matrix.platform }}:${{ COMMIT_SHA }}
         run: python -m cibuildwheel --output-dir dist .
       -
         name: Upload the artifact
