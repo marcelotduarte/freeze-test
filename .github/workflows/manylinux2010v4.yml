@@ -44,6 +44,7 @@ jobs:
         run: |
           sed -i 's/RUN manylinux-entrypoint \/build_scripts\/build-cpython.sh 3.5.10/#/g' Dockerfile
           sed -i 's/COPY --from=build_cpython35 \/opt\/_internal \/opt\/_internal\//#/g' Dockerfile
+          sed -i 's/-t quay.io\/pypa\//-t /g' Dockerfile
           sed -i 's/--disable-shared --with-ensurepip=no/--enable-shared --enable-optimizations --with-ensurepip=no LDFLAGS=\"-Wl,-rpath ${PREFIX}\/lib\"/g' $SCRIPT
           sed -i 's/xargs -0 rm -f/xargs -0 ls -l/g' $SCRIPT
       -
@@ -63,7 +64,7 @@ jobs:
       -
         name: Save the image to upload
         env:
-          IMAGENAME: quay.io/pypa/${{ matrix.policy }}_${{ matrix.platform }}
+          IMAGENAME: ${{ matrix.policy }}_${{ matrix.platform }}
           FILENAME: /tmp/docker/${{ matrix.policy }}_${{ matrix.platform }}.tar
         run: |
           mkdir -p /tmp/docker
@@ -95,7 +96,7 @@ jobs:
           CIBW_BUILD_VERBOSITY: 1
           CIBW_BEFORE_BUILD: python -m pip install --upgrade pip && pip install -U importlib-metadata setuptools wheel
         run: |
-          export CIBW_MANYLINUX_X86_64_IMAGE=quay.io/pypa/${{ matrix.policy }}_${{ matrix.platform }}:$COMMIT_SHA
+          export CIBW_MANYLINUX_X86_64_IMAGE=${{ matrix.policy }}_${{ matrix.platform }}:$COMMIT_SHA
           python -m cibuildwheel --output-dir dist .
       -
         name: Upload the artifact
