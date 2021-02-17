@@ -47,7 +47,7 @@ jobs:
           sed -i 's/COPY --from=build_cpython35 \/opt\/_internal \/opt\/_internal\//#/g' docker/Dockerfile
           sed -i 's/--disable-shared --with-ensurepip=no/--enable-shared --enable-optimizations --with-ensurepip=no LDFLAGS=\"-Wl,-rpath ${PREFIX}\/lib\"/g' $SCRIPT
           sed -i 's/xargs -0 rm -f/xargs -0 ls -l/g' $SCRIPT
-          echo "importlib-metadata>=3.1.1" >> docker/build_scripts/requirements.txt
+          echo "importlib-metadata==3.4.0; --hash sha256:ace61d5fc652dc280e7b6b4ff732a9c2d40db2c0f92bc6cb74e07b73d53a1771" >> docker/build_scripts/requirements.txt
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
