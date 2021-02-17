@@ -38,13 +38,13 @@ jobs:
           path: manylinux
       -
         name: Patch the build scripts
-        working-directory: manylinux/docker
+        working-directory: manylinux
         env:
-          SCRIPT: build_scripts/build-cpython.sh
+          SCRIPT: docker/build_scripts/build-cpython.sh
         run: |
-          sed -i 's/RUN manylinux-entrypoint \/build_scripts\/build-cpython.sh 3.5.10/#/g' Dockerfile
-          sed -i 's/COPY --from=build_cpython35 \/opt\/_internal \/opt\/_internal\//#/g' Dockerfile
-          sed -i 's/-t quay\.io\/pypa\//-t /g' Dockerfile
+          sed -i 's/-t quay.io\/pypa\//-t /g' build.sh
+          sed -i 's/RUN manylinux-entrypoint \/build_scripts\/build-cpython.sh 3.5.10/#/g' docker/Dockerfile
+          sed -i 's/COPY --from=build_cpython35 \/opt\/_internal \/opt\/_internal\//#/g' docker/Dockerfile
           sed -i 's/--disable-shared --with-ensurepip=no/--enable-shared --enable-optimizations --with-ensurepip=no LDFLAGS=\"-Wl,-rpath ${PREFIX}\/lib\"/g' $SCRIPT
           sed -i 's/xargs -0 rm -f/xargs -0 ls -l/g' $SCRIPT
       -
