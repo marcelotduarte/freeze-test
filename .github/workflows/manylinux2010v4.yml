@@ -153,6 +153,16 @@ jobs:
           ./build/exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}/test_crypt
         shell: bash
       -
+        name: Run cryptography sample in docker
+        working-directory: cx_Freeze/samples/cryptography/build/exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}
+        run: |
+          echo 'FROM ubuntu:16.04' > Dockerfile
+          echo 'COPY . frozen/' >> Dockerfile
+          echo 'ENTRYPOINT ["/frozen/test_crypt"]' >> Dockerfile
+          docker build --rm -t frozen .
+          docker run frozen
+        shell: bash
+      -
         name: Upload the frozen app
         uses: actions/upload-artifact@v2
         with:
