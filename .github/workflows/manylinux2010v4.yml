@@ -152,14 +152,6 @@ jobs:
         working-directory: cx_Freeze/samples/cryptography
         run: |
           ./build/exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}/test_crypt
-        shell: bash
-      -
-        name: Run cryptography sample in docker
-        continue-on-error: true
-        working-directory: cx_Freeze/samples/cryptography/build/exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}
-        run: |
-          docker run -t -v `pwd`:/frozen ubuntu:16.04 /frozen/test_crypt
-        shell: bash
       -
         name: Upload the frozen app
         uses: actions/upload-artifact@v2
@@ -188,3 +180,8 @@ jobs:
           ls -l */
           chmod +x ./test_crypt
           ./test_crypt
+      -
+        name: Run cryptography sample in docker
+        working-directory: cx_Freeze/samples/cryptography/build/exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}
+        run: |
+          docker run -t -v `pwd`:/frozen ubuntu:16.04 /frozen/test_crypt
