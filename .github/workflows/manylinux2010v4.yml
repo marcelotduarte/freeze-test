@@ -16,13 +16,13 @@ jobs:
       matrix:
         platform: [x86_64]
         policy: [manylinux2010]
-        ref: [7816579ad8afc42f19edc7bdf92881211cfa9079]
+        ref: [master]
     name: Build manylinux2010 wheel using ${{ matrix.policy }}_${{ matrix.platform }}
     runs-on: ubuntu-latest
     env:
       POLICY: ${{ matrix.policy }}
       PLATFORM: ${{ matrix.platform }}
-      COMMIT_SHA: ${{ matrix.ref }}
+      COMMIT_SHA: ${{ github.sha }}
     steps:
       -
         uses: actions/checkout@v2
@@ -55,7 +55,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: manylinux/.buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
-          key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-${{ hashFiles('docker/**') }}
+          key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-${{ hashFiles('manylinux/docker/**') }}
           restore-keys: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-
       -
         name: Build docker image
