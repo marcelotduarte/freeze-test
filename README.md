@@ -1,5 +1,11 @@
 [![PyPi Downloads](https://img.shields.io/pypi/dm/cx_Freeze)](https://pypistats.org/packages/cx_Freeze)
 
+[![PyPI version](https://img.shields.io/pypi/v/cx_Freeze)](https://pypi.org/project/cx_Freeze/)
+[![PyPi Downloads](https://img.shields.io/pypi/dm/cx_Freeze)](https://pypistats.org/packages/cx_Freeze)
+![Python](https://img.shields.io/pypi/pyversions/cx_Freeze)
+[![License](https://img.shields.io/pypi/l/cx_Freeze.svg)](https://pypi.org/project/cx_Freeze/)
+
+
 
 # Highlights of Version 6.2 up to 6.5:
 - Improved ModuleFinder, using importlib.machinery
