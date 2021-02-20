@@ -68,6 +68,7 @@ jobs:
           FILENAME: /tmp/docker/${{ matrix.policy }}_${{ matrix.platform }}.tar
         run: |
           mkdir -p /tmp/docker
+          docker tag $IMAGENAME:$COMMIT_SHA $IMAGENAME:latest
           docker save -o $FILENAME $IMAGENAME:$COMMIT_SHA
       -
         name: Display structure of docker files
@@ -75,7 +76,7 @@ jobs:
           ls -l /tmp/docker
           docker images
       -
-        name: Upload the artifact
+        name: Upload the artifact (docker image)
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.policy }}_${{ matrix.platform }}
@@ -99,7 +100,7 @@ jobs:
           export CIBW_MANYLINUX_X86_64_IMAGE=${{ matrix.policy }}_${{ matrix.platform }}:$COMMIT_SHA
           python -m cibuildwheel --output-dir dist .
       -
-        name: Upload the artifact
+        name: Upload the artifact (wheelhouse)
         uses: actions/upload-artifact@v2
         with:
           name: cx-freeze-wheelhouse
