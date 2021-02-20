@@ -8,7 +8,6 @@
 [![Latest Version](https://img.shields.io/github/v/release/marcelotduarte/cx_Freeze?include_prereleases)](https://github.com/marcelotduarte/cx_Freeze/releases)
 ![Downloads](https://img.shields.io/github/downloads/marcelotduarte/cx_Freeze/total)
 
-https://anaconda.org/conda-forge/cx_freeze/badges
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/cx_freeze/badges/version.svg)](https://anaconda.org/conda-forge/cx_freeze)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/cx_freeze/badges/downloads.svg)](https://anaconda.org/conda-forge/cx_freeze)
 
