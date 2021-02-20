@@ -1,4 +1,4 @@
-[![PyPi Downloads](https://img.shields.io/pypi/dm/cx_Freeze?style=for-the-badge)](https://pypistats.org/packages/cx_Freeze)
+[![PyPi Downloads](https://img.shields.io/pypi/dm/cx_Freeze)](https://pypistats.org/packages/cx_Freeze)
 
 
 # Highlights of Version 6.2 up to 6.5:
