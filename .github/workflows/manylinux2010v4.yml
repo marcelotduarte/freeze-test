@@ -68,12 +68,15 @@ jobs:
           FILENAME: /tmp/docker/${{ matrix.policy }}_${{ matrix.platform }}.tar
         run: |
           mkdir -p /tmp/docker
+          docker images
           docker tag $IMAGENAME:$COMMIT_SHA $IMAGENAME:latest
+          docker images
           docker save -o $FILENAME $IMAGENAME:latest
+          docker images
       -
         name: Display structure of docker files
         run: |
-          ls -l /tmp/docker
+          ls -l -h /tmp/docker
           docker images
       -
         name: Upload the artifact (docker image)
