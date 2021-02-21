@@ -63,6 +63,7 @@ jobs:
         run: ./build.sh
       -
         name: Save the image to upload
+        continue-on-error: true
         env:
           IMAGENAME: ${{ matrix.policy }}_${{ matrix.platform }}
           FILENAME: /tmp/docker/${{ matrix.policy }}_${{ matrix.platform }}.tar
@@ -75,6 +76,7 @@ jobs:
           docker images
       -
         name: Display structure of docker files
+        continue-on-error: true
         run: |
           ls -l -h /tmp/docker
           docker images
