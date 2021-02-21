@@ -69,7 +69,7 @@ jobs:
         run: |
           mkdir -p /tmp/docker
           docker tag $IMAGENAME:$COMMIT_SHA $IMAGENAME:latest
-          docker save -o $FILENAME $IMAGENAME:$COMMIT_SHA
+          docker save -o $FILENAME $IMAGENAME:latest
       -
         name: Display structure of docker files
         run: |
