@@ -123,6 +123,7 @@ jobs:
           done
           popd
           EOF
+          chmod +x build-manylinux-wheels.sh
       -
         name: Build the wheels
         run: |
