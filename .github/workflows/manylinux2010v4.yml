@@ -45,8 +45,6 @@ jobs:
           sed -i 's/quay.io\/pypa\/\$/\$/g' build.sh
           sed -i 's/RUN manylinux-entrypoint \/build_scripts\/build-cpython.sh 3.5/#3.5/g' docker/Dockerfile
           sed -i 's/COPY --from=build_cpython35 \/opt\/_internal \/opt\/_internal\//#cp35/g' docker/Dockerfile
-          #sed -i 's/RUN manylinux-entrypoint \/build_scripts\/build-cpython.sh 3.9/#3.9/g' docker/Dockerfile
-          #sed -i 's/COPY --from=build_cpython39 \/opt\/_internal \/opt\/_internal\//#cp39/g' docker/Dockerfile
           #sed -i 's/--disable-shared --with-ensurepip=no/--enable-shared --enable-optimizations --with-ensurepip=no LDFLAGS=\"-Wl,-rpath ${PREFIX}\/lib\"/g' $SCRIPT
           sed -i 's/--disable-shared --with-ensurepip=no/--enable-shared --enable-ipv6 --without-ensurepip LDFLAGS=-Wl,-rpath,\${PREFIX}\/lib/g' $SCRIPT
           sed -i 's/xargs -0 rm -f/xargs -0 ls -l/g' $SCRIPT
@@ -149,6 +147,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -U importlib-metadata setuptools wheel
           pip install --no-index -f wheelhouse cx-freeze
+          python -m sysconfig
 
       # samples
       -
@@ -187,6 +186,7 @@ jobs:
           path: .
       -
         name: Run frozen app
+        continue-on-error: true
         run: |
           ls -l */
           chmod +x ./test_crypt
