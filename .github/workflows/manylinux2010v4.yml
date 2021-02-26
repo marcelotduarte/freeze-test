@@ -46,7 +46,7 @@ jobs:
           sed -i 's/RUN manylinux-entrypoint \/build_scripts\/build-cpython.sh 3.5/#3.5/g' docker/Dockerfile
           sed -i 's/COPY --from=build_cpython35 \/opt\/_internal \/opt\/_internal\//#cp35/g' docker/Dockerfile
           #sed -i 's/--disable-shared --with-ensurepip=no/--enable-shared --enable-optimizations --with-ensurepip=no LDFLAGS=\"-Wl,-rpath ${PREFIX}\/lib\"/g' $SCRIPT
-          sed -i 's/--disable-shared/--enable-shared --enable-ipv6 LDFLAGS=-Wl,-rpath,\$\$ORIGIN\/..\/lib/g' $SCRIPT
+          sed -i 's/--disable-shared/--enable-shared --enable-ipv6 LDFLAGS=-Wl,-rpath,\${PREFIX}\/..\/lib/g' $SCRIPT
           sed -i 's/xargs -0 rm -f/xargs -0 ls -l/g' $SCRIPT
       -
         name: Set up Docker Buildx
