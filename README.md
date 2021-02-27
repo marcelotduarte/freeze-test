@@ -52,16 +52,15 @@ You can read the cx\_Freeze license in the
 [documentation](https://cx-freeze.readthedocs.io/en/latest/license.html)
 or in the [source repository](doc/src/license.rst).
 
-# Donate
 
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate?business=8QXQTXWHPXZZE&item_name=Marcelo&currency_code=BRL)
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate?business=8QXQTXWHPXZZE&item_name=Marcelo+Duarte&currency_code=BRL)
 
 # form
 
-<form action="https://www.paypal.com/donate" method="post" target="_top">
-<input type="hidden" name="business" value="8QXQTXWHPXZZE" />
-<input type="hidden" name="item_name" value="Marcelo" />
-<input type="hidden" name="currency_code" value="BRL" />
-<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-<img alt="" border="0" src="https://www.paypal.com/en_BR/i/scr/pixel.gif" width="1" height="1" />
+<form action="https://www.paypal.com/donate" method="post" target="_top" markdown="1">
+<input type="hidden" name="business" value="8QXQTXWHPXZZE" markdown="1" />
+<input type="hidden" name="item_name" value="Marcelo Duarte" markdown="1" />
+<input type="hidden" name="currency_code" value="BRL" markdown="1" />
+<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" markdown="1" />
+<img alt="" border="0" src="https://www.paypal.com/en_BR/i/scr/pixel.gif" width="1" height="1" markdown="1" />
 </form>
