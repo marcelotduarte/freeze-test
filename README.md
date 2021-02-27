@@ -51,3 +51,16 @@ cx\_Freeze uses a license derived from the
 You can read the cx\_Freeze license in the
 [documentation](https://cx-freeze.readthedocs.io/en/latest/license.html)
 or in the [source repository](doc/src/license.rst).
+
+# Donate
+
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_donations" />
+<input type="hidden" name="business" value="8QXQTXWHPXZZE" />
+<input type="hidden" name="currency_code" value="BRL" />
+<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+<img alt="" border="0" src="https://www.paypal.com/en_BR/i/scr/pixel.gif" width="1" height="1" />
+</form>
+
+https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=8QXQTXWHPXZZE&currency_code=BRL&source=url
+
