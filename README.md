@@ -4,7 +4,7 @@
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/cx_freeze/badges/downloads.svg)](https://anaconda.org/conda-forge/cx_freeze)
 ![Python](https://img.shields.io/pypi/pyversions/cx-freeze)
 [![Documentation Status](https://readthedocs.org/projects/cx-freeze/badge/?version=latest)](https://cx-freeze.readthedocs.io/en/latest/?badge=latest)
-[![License]PSF](https://pypi.org/project/cx-freeze/)
+[![License](https://img.shields.io/pypi/l/cx_Freeze.svg)](https://pypi.org/project/cx-Freeze/)
 
 # About cx\_Freeze
 
