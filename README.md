@@ -54,7 +54,7 @@ or in the [source repository](doc/src/license.rst).
 
 # Donate
 
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" markdown="1">
 <input type="hidden" name="cmd" value="_donations" />
 <input type="hidden" name="business" value="8QXQTXWHPXZZE" />
 <input type="hidden" name="currency_code" value="BRL" />
