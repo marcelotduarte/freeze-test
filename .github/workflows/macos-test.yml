@@ -76,7 +76,7 @@ jobs:
         pip install -U PyQtWebEngine
         python setup.py build_exe --silent
     - name: Run pyqt5-webengine sample
-      run: ./cx_Freeze/cx_Freeze/samples/pyqt5-webengine/$(cat BUILD_DIR)/pyqt5-webengine-test
+      run: ./cx_Freeze/cx_Freeze/samples/pyqt5-webengine/$(cat BUILD_DIR)/pyqt5-webengine-test &
     - name: Freeze simple sample
       working-directory: cx_Freeze/cx_Freeze/samples/simple
       run: python setup.py build_exe --silent
