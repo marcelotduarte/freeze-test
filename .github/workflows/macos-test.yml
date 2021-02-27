@@ -81,11 +81,8 @@ jobs:
     - name: Run simple sample
       run: ./cx_Freeze/cx_Freeze/samples/simple/$(cat BUILD_DIR)/hello
     - name: Run simple sample (1-rename the executable)
-      working-directory: cx_Freeze/cx_Freeze/samples/simple
       run: |
-      
-        cd $(cat BUILD_DIR)
-        
+        cd cx_Freeze/cx_Freeze/samples/simple/$(cat BUILD_DIR)
         if [ '${{ matrix.os }}' == 'windows-latest' ] ; then
           mv hello.exe Test_Hello.exe
         else
