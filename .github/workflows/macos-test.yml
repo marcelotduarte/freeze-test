@@ -83,6 +83,9 @@ jobs:
         ls -l build/*
     - name: Run pyqt5-webengine sample
       run: ./cx_Freeze/cx_Freeze/samples/pyqt5-webengine/$(cat BUILD_DIR)/pyqt5-webengine-test &
+    - name: Run pyqt5-webengine sample app
+      working-directory: cx_Freeze/cx_Freeze/samples/pyqt5-webengine/build
+      run: "./PyQt5 Webengine Test.app"
     - name: Freeze simple sample
       working-directory: cx_Freeze/cx_Freeze/samples/simple
       run: python setup.py build_exe --silent
