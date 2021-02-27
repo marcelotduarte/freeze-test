@@ -12,12 +12,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest]
-        branch: [macos]
+        branch: [develop]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64]
         include:
           - os: macos-latest
-            branch: 6.5.2
+            branch: 6.5.3
             python-version: 3.8
             architecture: x64
     runs-on: ${{ matrix.os }}
@@ -69,18 +69,24 @@ jobs:
         pip install cryptography
         python setup.py build_exe
     - name: Run cryptography sample
-      run: ./cx_Freeze/cx_Freeze/samples/cryptography/$(cat BUILD_DIR)/test_crypt
-      shell: bash
-
+      working-directory: cx_Freeze/cx_Freeze/samples/cryptography
+      run: ./$(cat BUILD_DIR)/test_crypt
+    - name: Freeze pyqt5-webengine sample
+      working-directory: cx_Freeze/cx_Freeze/samples/pyqt5-webengine
+      run: python setup.py build_exe --silent
+    - name: Run pyqt5-webengine sample
+      working-directory: cx_Freeze/cx_Freeze/samples/pyqt5-webengine
+      run: ./$(cat BUILD_DIR)/pyqt5-webengine-test
     - name: Freeze simple sample
       working-directory: cx_Freeze/cx_Freeze/samples/simple
       run: python setup.py build_exe --silent
     - name: Run simple sample
-      run: ./cx_Freeze/cx_Freeze/samples/simple/$(cat BUILD_DIR)/hello
-      shell: bash
+      working-directory: cx_Freeze/cx_Freeze/samples/simple
+      run: ./$(cat BUILD_DIR)/hello
     - name: Run simple sample (1-rename the executable)
+      working-directory: cx_Freeze/cx_Freeze/samples/simple
       run: |
-        cd cx_Freeze/cx_Freeze/samples/simple/$(cat BUILD_DIR)
+        cd $(cat BUILD_DIR)
         if [ '${{ matrix.os }}' == 'windows-latest' ] ; then
           mv hello.exe Test_Hello.exe
         else
