@@ -70,7 +70,9 @@ jobs:
         python setup.py build_exe
     - name: Run cryptography sample
       working-directory: cx_Freeze/cx_Freeze/samples/cryptography
-      run: ./$(cat BUILD_DIR)/test_crypt
+      run: |
+        echo "BUILD_DIR=$(cat BUILD_DIR)"
+        ./$(cat BUILD_DIR)/test_crypt
     - name: Freeze pyqt5-webengine sample
       working-directory: cx_Freeze/cx_Freeze/samples/pyqt5-webengine
       run: python setup.py build_exe --silent
