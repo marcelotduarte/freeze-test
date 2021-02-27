@@ -62,5 +62,5 @@ or in the [source repository](doc/src/license.rst).
 <img alt="" border="0" src="https://www.paypal.com/en_BR/i/scr/pixel.gif" width="1" height="1" />
 </form>
 
-https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=8QXQTXWHPXZZE&currency_code=BRL&source=url
+[Donate](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=8QXQTXWHPXZZE&currency_code=BRL&source=url)
 
