@@ -54,14 +54,14 @@ or in the [source repository](doc/src/license.rst).
 
 # Donate
 
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" markdown="1">
-<input type="hidden" name="cmd" value="_donations" />
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate?business=8QXQTXWHPXZZE&item_name=Marcelo&currency_code=BRL)
+
+# form
+
+<form action="https://www.paypal.com/donate" method="post" target="_top">
 <input type="hidden" name="business" value="8QXQTXWHPXZZE" />
+<input type="hidden" name="item_name" value="Marcelo" />
 <input type="hidden" name="currency_code" value="BRL" />
-<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
 <img alt="" border="0" src="https://www.paypal.com/en_BR/i/scr/pixel.gif" width="1" height="1" />
 </form>
-
-[Donate](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=8QXQTXWHPXZZE&currency_code=BRL&source=url)
-
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=8QXQTXWHPXZZE&currency_code=BRL&source=url)
