@@ -72,7 +72,9 @@ jobs:
       run: ./cx_Freeze/cx_Freeze/samples/cryptography/$(cat BUILD_DIR)/test_crypt
     - name: Freeze pyqt5-webengine sample
       working-directory: cx_Freeze/cx_Freeze/samples/pyqt5-webengine
-      run: python setup.py build_exe --silent
+      run: |
+        pip install -U PyQtWebEngine
+        python setup.py build_exe --silent
     - name: Run pyqt5-webengine sample
       run: ./cx_Freeze/cx_Freeze/samples/pyqt5-webengine/$(cat BUILD_DIR)/pyqt5-webengine-test
     - name: Freeze simple sample
