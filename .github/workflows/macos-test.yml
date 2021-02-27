@@ -12,12 +12,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest]
-        branch: [develop]
+        cx-freeze-version: [develop]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64]
         include:
           - os: macos-latest
-            branch: 6.5.3
+            cx-freeze-version: 6.5.3
             python-version: 3.8
             architecture: x64
     runs-on: ${{ matrix.os }}
@@ -27,7 +27,7 @@ jobs:
       with:
         path: cx_Freeze
         repository: marcelotduarte/cx_Freeze
-        ref: ${{ matrix.branch }}
+        ref: develop
         submodules: true
     - name: Set up Python ${{ matrix.python-version }} ${{ matrix.architecture }}
       uses: actions/setup-python@v2
@@ -47,7 +47,11 @@ jobs:
     - name: Install cx-freeze
       working-directory: cx_Freeze
       run: |
-        pip install . --no-deps -v
+        if [ "${{ matrix.cx-freeze-version }}" == "develop" ] ; then
+          pip install . --no-deps -v
+        else
+          pip install cx-freeze==${{ matrix.cx-freeze-version }} --no-deps -v
+        fi
     - name: cxfreeze
       run: cxfreeze --version
     # environment
@@ -75,6 +79,8 @@ jobs:
       run: |
         pip install -U PyQtWebEngine
         python setup.py build_exe --silent
+        python setup.py build_mac
+        ls -l build/*
     - name: Run pyqt5-webengine sample
       run: ./cx_Freeze/cx_Freeze/samples/pyqt5-webengine/$(cat BUILD_DIR)/pyqt5-webengine-test &
     - name: Freeze simple sample
