@@ -69,26 +69,23 @@ jobs:
         pip install cryptography
         python setup.py build_exe
     - name: Run cryptography sample
-      working-directory: cx_Freeze/cx_Freeze/samples/cryptography
-      run: |
-        echo "BUILD_DIR=$(cat BUILD_DIR)"
-        ./$(cat BUILD_DIR)/test_crypt
+      run: ./cx_Freeze/cx_Freeze/samples/cryptography/$(cat BUILD_DIR)/test_crypt
     - name: Freeze pyqt5-webengine sample
       working-directory: cx_Freeze/cx_Freeze/samples/pyqt5-webengine
       run: python setup.py build_exe --silent
     - name: Run pyqt5-webengine sample
-      working-directory: cx_Freeze/cx_Freeze/samples/pyqt5-webengine
-      run: ./$(cat BUILD_DIR)/pyqt5-webengine-test
+      run: ./cx_Freeze/cx_Freeze/samples/pyqt5-webengine/$(cat BUILD_DIR)/pyqt5-webengine-test
     - name: Freeze simple sample
       working-directory: cx_Freeze/cx_Freeze/samples/simple
       run: python setup.py build_exe --silent
     - name: Run simple sample
-      working-directory: cx_Freeze/cx_Freeze/samples/simple
-      run: ./$(cat BUILD_DIR)/hello
+      run: ./cx_Freeze/cx_Freeze/samples/simple/$(cat BUILD_DIR)/hello
     - name: Run simple sample (1-rename the executable)
       working-directory: cx_Freeze/cx_Freeze/samples/simple
       run: |
+      
         cd $(cat BUILD_DIR)
+        
         if [ '${{ matrix.os }}' == 'windows-latest' ] ; then
           mv hello.exe Test_Hello.exe
         else
