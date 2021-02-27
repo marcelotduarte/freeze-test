@@ -52,8 +52,9 @@ You can read the cx\_Freeze license in the
 [documentation](https://cx-freeze.readthedocs.io/en/latest/license.html)
 or in the [source repository](doc/src/license.rst).
 
+# Donate
 
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate?business=8QXQTXWHPXZZE&item_name=Marcelo+Duarte&currency_code=BRL)
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate?business=8QXQTXWHPXZZE&item_name=cx-freeze+developer&currency_code=BRL)
 
 # form
 
