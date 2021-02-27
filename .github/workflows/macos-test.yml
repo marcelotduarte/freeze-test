@@ -79,7 +79,7 @@ jobs:
       run: |
         pip install -U PyQtWebEngine
         python setup.py build_exe --silent
-        python setup.py build_mac
+        python setup.py bdist_mac
         ls -l build/*
     - name: Run pyqt5-webengine sample
       run: ./cx_Freeze/cx_Freeze/samples/pyqt5-webengine/$(cat BUILD_DIR)/pyqt5-webengine-test &
