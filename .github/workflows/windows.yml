@@ -94,6 +94,18 @@ jobs:
       working-directory: cx_Freeze/cx_Freeze/samples/pyside2
       run: ./build/exe.win-amd64-${{ matrix.python-version }}/PySide2app.exe
     
+    - name: Freeze pyzmq sample
+      working-directory: cx_Freeze/cx_Freeze/samples/pyzmq
+      run: |
+        pip install "pyzmq < 22"
+        python setup.py build_exe --silent
+    - name: Run pyzmq sample
+      working-directory: cx_Freeze/cx_Freeze/samples/pyzmq
+      run: |
+        ./build/exe.win-amd64-${{ matrix.python-version }}/pyzmq_server.exe &
+        ./build/exe.win-amd64-${{ matrix.python-version }}/pyzmq_client.exe
+      shell: bash
+    
     - name: Freeze service sample
       working-directory: cx_Freeze/cx_Freeze/samples/service
       run: python setup.py build_exe --silent
