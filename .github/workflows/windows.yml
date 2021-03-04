@@ -103,7 +103,7 @@ jobs:
       working-directory: cx_Freeze/cx_Freeze/samples/pyzmq
       run: |
         ./build/exe.win-amd64-${{ matrix.python-version }}/pyzmq_server.exe &
-        ./build/exe.win-amd64-${{ matrix.python-version }}/pyzmq_client.exe
+        ./build/exe.win-amd64-${{ matrix.python-version }}/pyzmq_client.exe &
       shell: bash
     
     - name: Freeze service sample
