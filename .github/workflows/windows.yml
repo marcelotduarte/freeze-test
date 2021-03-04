@@ -105,6 +105,12 @@ jobs:
         ./build/exe.win-amd64-${{ matrix.python-version }}/pyzmq_server.exe &
         ./build/exe.win-amd64-${{ matrix.python-version }}/pyzmq_client.exe &
       shell: bash
+    -
+      name: Upload the frozen app
+      uses: actions/upload-artifact@v2
+      with:
+        name: frozen-pyzmq-${{ matrix.platform }}-${{ matrix.python-version }}
+        path: ./cx_Freeze/samples/pyzmq/build/exe.*-${{ matrix.platform }}-${{ matrix.python-version }}/**
     
     - name: Freeze service sample
       working-directory: cx_Freeze/cx_Freeze/samples/service
