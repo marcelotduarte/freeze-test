@@ -97,7 +97,7 @@ jobs:
     - name: Freeze pyzmq sample
       working-directory: cx_Freeze/cx_Freeze/samples/pyzmq
       run: |
-        pip install "pyzmq < 22"
+        pip install pyzmq
         python setup.py build_exe --silent
     - name: Run pyzmq sample
       working-directory: cx_Freeze/cx_Freeze/samples/pyzmq
