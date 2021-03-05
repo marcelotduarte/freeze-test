@@ -97,7 +97,7 @@ jobs:
     - name: Freeze pyzmq sample
       working-directory: cx_Freeze/cx_Freeze/samples/pyzmq
       run: |
-        pip install pyzmq
+        pip install "pyzmq < 22"
         python setup.py build_exe --silent
     - name: Run pyzmq sample
       working-directory: cx_Freeze/cx_Freeze/samples/pyzmq
@@ -109,7 +109,7 @@ jobs:
       name: Upload the frozen app
       uses: actions/upload-artifact@v2
       with:
-        name: frozen-pyzmq-${{ matrix.platform }}-${{ matrix.python-version }}
+        name: frozen-pyzmq
         path: ./cx_Freeze/cx_Freeze/samples/pyzmq/build/*/**
     
     - name: Freeze service sample
