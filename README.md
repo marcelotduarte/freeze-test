@@ -2,7 +2,7 @@
 [![PyPi Downloads](https://img.shields.io/pypi/dm/cx_Freeze)](https://pypistats.org/packages/cx-freeze)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/cx_freeze/badges/version.svg)](https://anaconda.org/conda-forge/cx_freeze)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/cx_freeze/badges/downloads.svg)](https://anaconda.org/conda-forge/cx_freeze)
-[![Python](https://img.shields.io/pypi/pyversions/cx-freeze)](https://pypi.org/project/cx-freeze/)
+[![Python](https://img.shields.io/pypi/pyversions/cx-freeze)](https://www.python.org/)
 [![Documentation Status](https://readthedocs.org/projects/cx-freeze/badge/?version=latest)](https://cx-freeze.readthedocs.io/en/latest/?badge=latest)
 [![License](https://img.shields.io/pypi/l/cx_Freeze.svg)](https://pypi.org/project/cx-Freeze/)
 
@@ -11,10 +11,6 @@
 **cx\_Freeze** creates standalone executables from Python scripts, with the same
 performance, is cross-platform and should work on any platform that Python
 itself works on.
-
-It supports [Python](https://www.python.org/) 3.6 up to 3.9.
-
-If you need support for older Python check the documentation.
 
 # Highlights of Version 6.2 up to 6.5:
 - Improved ModuleFinder, using importlib.machinery
@@ -31,7 +27,7 @@ If you need support for older Python check the documentation.
 In a virtual environment, install by issuing the command:
 
 ```
-pip install cx_Freeze --upgrade
+pip install cx-freeze --upgrade
 ```
 
 For other options, check the documentation.
