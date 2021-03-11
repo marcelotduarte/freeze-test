@@ -186,7 +186,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: frozen-pandas
-        path: ./cx_Freeze/cx_Freeze/samples/pandas/build/exe.win-amd64-${{ matrix.python-version }}/**
+        path: ./cx_Freeze/cx_Freeze/samples/pandas/build/*/**
     - name: Run pandas sample (numpy+mkl)
       if: ${{ matrix.python-version == '3.8' }}
       working-directory: cx_Freeze/cx_Freeze/samples/pandas
