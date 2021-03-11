@@ -177,8 +177,8 @@ jobs:
       working-directory: cx_Freeze/cx_Freeze/samples/pandas
       run: |
         pip uninstall -y numpy
-        wget https://download.lfd.uci.edu/pythonlibs/w4tscw6k/numpy-1.19.5+mkl-cp38-cp38-win_amd64.whl
-        pip install numpy-1.19.5+mkl-cp38-cp38-win_amd64.whl
+        curl https://download.lfd.uci.edu/pythonlibs/w4tscw6k/numpy-1.19.5+mkl-cp38-cp38-win_amd64.whl -o numpy-1.19.5+mkl-cp38-cp38-win_amd64.whl
+        pip install --no-index numpy-1.19.5+mkl-cp38-cp38-win_amd64.whl
         python setup.py build_exe --silent
       shell: bash
     - name: Run pandas sample (numpy+mkl)
