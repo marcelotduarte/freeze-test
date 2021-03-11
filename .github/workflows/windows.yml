@@ -41,7 +41,15 @@ jobs:
       working-directory: cx_Freeze/cx_Freeze/samples/cryptography
       run: |
         pip install cryptography
-        python setup.py build_exe
+        python setup.py build_exe --silent
+    - name: Run cryptography sample
+      working-directory: cx_Freeze/cx_Freeze/samples/cryptography
+      run: ./build/exe.win-amd64-${{ matrix.python-version }}/test_crypt.exe
+
+    - name: Freeze cryptography sample (zip)
+      working-directory: cx_Freeze/cx_Freeze/samples/cryptography
+      run: |
+        python setup.py build_exe --silent --zip-include-packages=* --zip-exclude-packages=
     - name: Run cryptography sample
       working-directory: cx_Freeze/cx_Freeze/samples/cryptography
       run: ./build/exe.win-amd64-${{ matrix.python-version }}/test_crypt.exe
@@ -75,12 +83,29 @@ jobs:
       working-directory: cx_Freeze/cx_Freeze/samples/pandas
       run: |
         ./build/exe.win-amd64-${{ matrix.python-version }}/test_pandas.exe
+
+    - name: Freeze pandas sample (zip)
+      working-directory: cx_Freeze/cx_Freeze/samples/pandas
+      run: |
+        python setup.py build_exe --silent --zip-include-packages=* --zip-exclude-packages=
+    - name: Run pandas sample
+      working-directory: cx_Freeze/cx_Freeze/samples/pandas
+      run: |
+        ./build/exe.win-amd64-${{ matrix.python-version }}/test_pandas.exe
     
     - name: Freeze pillow sample
       working-directory: cx_Freeze/cx_Freeze/samples/pillow
       run: |
         pip install pillow
         python setup.py build_exe --silent
+    - name: Run pillow sample
+      working-directory: cx_Freeze/cx_Freeze/samples/pillow
+      run: ./build/exe.win-amd64-${{ matrix.python-version }}/test_pillow.exe
+
+    - name: Freeze pillow sample (zip)
+      working-directory: cx_Freeze/cx_Freeze/samples/pillow
+      run: |
+        python setup.py build_exe --silent --zip-include-packages=* --zip-exclude-packages=
     - name: Run pillow sample
       working-directory: cx_Freeze/cx_Freeze/samples/pillow
       run: ./build/exe.win-amd64-${{ matrix.python-version }}/test_pillow.exe
