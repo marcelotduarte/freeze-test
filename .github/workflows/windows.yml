@@ -181,6 +181,11 @@ jobs:
         pip install --no-index numpy-1.19.5+mkl-cp38-cp38-win_amd64.whl
         python setup.py build_exe --silent
       shell: bash
+    - name: Upload the artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: test_pandas
+        path: cx_Freeze/cx_Freeze/samples/pandas/build/exe.win-amd64-${{ matrix.python-version }}/**
     - name: Run pandas sample (numpy+mkl)
       if: ${{ matrix.python-version == '3.8' }}
       working-directory: cx_Freeze/cx_Freeze/samples/pandas
