@@ -173,12 +173,16 @@ jobs:
       run: ./Hello-0.1.exe
 
     - name: Freeze pandas sample (numpy+mkl)
+      if: ${{ matrix.python-version == '3.8' }}
       working-directory: cx_Freeze/cx_Freeze/samples/pandas
       run: |
         pip uninstall -y numpy
-        pip install https://download.lfd.uci.edu/pythonlibs/w4tscw6k/numpy-1.19.5+mkl-cp38-cp38-win_amd64.whl
+        wget https://download.lfd.uci.edu/pythonlibs/w4tscw6k/numpy-1.19.5+mkl-cp38-cp38-win_amd64.whl
+        pip install numpy-1.19.5+mkl-cp38-cp38-win_amd64.whl
         python setup.py build_exe --silent
+      shell: bash
     - name: Run pandas sample (numpy+mkl)
+      if: ${{ matrix.python-version == '3.8' }}
       working-directory: cx_Freeze/cx_Freeze/samples/pandas
       run: |
         ./build/exe.win-amd64-${{ matrix.python-version }}/test_pandas.exe
