@@ -69,6 +69,12 @@ jobs:
         pip install matplotlib
         pip install wxPython
         python setup.py build_exe --silent
+    - name: Upload the artifact
+      if: ${{ matrix.python-version == '3.8' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: frozen-matplotlib
+        path: ./cx_Freeze/cx_Freeze/samples/matplotlib/build/*/**
     - name: Run matplolib sample
       working-directory: cx_Freeze/cx_Freeze/samples/matplotlib
       run: |
