@@ -5,7 +5,7 @@
 [![Python](https://img.shields.io/pypi/pyversions/cx-freeze)](https://www.python.org/)
 [![Documentation Status](https://readthedocs.org/projects/cx-freeze/badge/?version=latest)](https://cx-freeze.readthedocs.io/en/latest/?badge=latest)
 [![License](https://img.shields.io/pypi/l/cx_Freeze.svg)](https://pypi.org/project/cx-Freeze/)
-[![LGTM](https://img.shields.io/lgtm/grade/python/g/marcelotduarte/cx-freeze.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/marcelotduarte/cx-freeze)
+[![LGTM](https://img.shields.io/lgtm/grade/python/g/marcelotduarte/cx_Freeze.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/marcelotduarte/cx_Freeze)
 
 # About cx\_Freeze
 
