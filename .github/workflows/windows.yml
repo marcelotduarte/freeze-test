@@ -50,7 +50,7 @@ jobs:
       working-directory: cx_Freeze/cx_Freeze/samples/cryptography
       run: |
         python setup.py build_exe --silent --zip-include-packages=* --zip-exclude-packages=
-    - name: Run cryptography sample
+    - name: Run cryptography sample (zip)
       working-directory: cx_Freeze/cx_Freeze/samples/cryptography
       run: ./build/exe.win-amd64-${{ matrix.python-version }}/test_crypt.exe
 
@@ -88,11 +88,11 @@ jobs:
       working-directory: cx_Freeze/cx_Freeze/samples/pandas
       run: |
         python setup.py build_exe --silent --zip-include-packages=* --zip-exclude-packages=
-    - name: Run pandas sample
+    - name: Run pandas sample (zip)
       working-directory: cx_Freeze/cx_Freeze/samples/pandas
       run: |
         ./build/exe.win-amd64-${{ matrix.python-version }}/test_pandas.exe
-    
+
     - name: Freeze pillow sample
       working-directory: cx_Freeze/cx_Freeze/samples/pillow
       run: |
@@ -106,7 +106,7 @@ jobs:
       working-directory: cx_Freeze/cx_Freeze/samples/pillow
       run: |
         python setup.py build_exe --silent --zip-include-packages=* --zip-exclude-packages=
-    - name: Run pillow sample
+    - name: Run pillow sample (zip)
       working-directory: cx_Freeze/cx_Freeze/samples/pillow
       run: ./build/exe.win-amd64-${{ matrix.python-version }}/test_pillow.exe
     
@@ -171,3 +171,14 @@ jobs:
     - name: Run simple sample (2-different target-name)
       working-directory: cx_Freeze/cx_Freeze/samples/simple/build/one.win-amd64-${{ matrix.python-version }}
       run: ./Hello-0.1.exe
+
+    - name: Freeze pandas sample (numpy+mkl)
+      working-directory: cx_Freeze/cx_Freeze/samples/pandas
+      run: |
+        pip uninstall -y numpy
+        pip install https://download.lfd.uci.edu/pythonlibs/w4tscw6k/numpy-1.19.5+mkl-cp38-cp38-win_amd64.whl
+        python setup.py build_exe --silent
+    - name: Run pandas sample (numpy+mkl)
+      working-directory: cx_Freeze/cx_Freeze/samples/pandas
+      run: |
+        ./build/exe.win-amd64-${{ matrix.python-version }}/test_pandas.exe
