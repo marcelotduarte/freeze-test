@@ -149,6 +149,7 @@ jobs:
     - name: Run service sample
       working-directory: cx_Freeze/cx_Freeze/samples/service
       run: ./build/exe.win-amd64-${{ matrix.python-version }}/cx_FreezeSampleService.exe --install sample
+      continue-on-error: true
 
     - name: Freeze simple sample
       working-directory: cx_Freeze/cx_Freeze/samples/simple
