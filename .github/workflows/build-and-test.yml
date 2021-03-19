@@ -19,7 +19,7 @@ jobs:
             architecture: x86
           - os: macos-latest
             architecture: x86
-    name: Build wheel cp${{ matrix.python-version }}-win${{ matrix.architecture }}
+    name: Build wheel ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -60,7 +60,7 @@ jobs:
           - os: macos-latest
             architecture: x86
         sample: [cryptography, icon, matplolib, pandas, pillow, pyside2, service, simple]
-    name: Build wheel cp${{ matrix.python-version }}-win${{ matrix.architecture }}
+    name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
     steps:
       -
