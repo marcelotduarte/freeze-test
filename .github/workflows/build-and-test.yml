@@ -50,8 +50,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        sample: [cryptography, icon, matplolib, pandas, pillow, pyside2, service, simple]
         os: [ubuntu-latest, windows-latest, macos-latest]
-        branch: [develop]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64, x86]
         exclude:
@@ -59,7 +59,7 @@ jobs:
             architecture: x86
           - os: macos-latest
             architecture: x86
-        sample: [cryptography, icon, matplolib, pandas, pillow, pyside2, service, simple]
+        branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
     steps:
