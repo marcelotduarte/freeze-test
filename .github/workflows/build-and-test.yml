@@ -51,11 +51,6 @@ jobs:
       fail-fast: false
       matrix:
         sample: [cryptography, icon, matplolib, pandas, pillow, pyside2, service, simple]
-        exclude:
-          - os: ubuntu-latest
-            sample: service
-          - os: macos-latest
-            sample: service
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64, x86]
@@ -64,6 +59,10 @@ jobs:
             architecture: x86
           - os: macos-latest
             architecture: x86
+          - os: ubuntu-latest
+            sample: service
+          - os: macos-latest
+            sample: service
         branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
