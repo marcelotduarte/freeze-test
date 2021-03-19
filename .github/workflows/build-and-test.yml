@@ -51,6 +51,11 @@ jobs:
       fail-fast: false
       matrix:
         sample: [cryptography, icon, matplolib, pandas, pillow, pyside2, service, simple]
+        exclude:
+          - os: ubuntu-latest
+            sample: service
+          - os: macos-latest
+            sample: service
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64, x86]
@@ -132,7 +137,8 @@ jobs:
       -
         name: Freeze ${{ matrix.sample }} sample
         working-directory: cx_Freeze/samples/${{ matrix.sample }}
-        run: python setup.py build_exe --silent --excludes=tkinter
+        run: |
+          python setup.py build_exe --silent --excludes=tkinter
       -
         name: Run ${{ matrix.sample }} sample
         run: |
