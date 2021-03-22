@@ -1,0 +1,111 @@
+name: 2-Build and test
+
+on:
+  #push:
+  #  branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        branch: [develop]
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        architecture: [x64, x86]
+        exclude:
+          - os: ubuntu-latest
+            architecture: x86
+          - os: macos-latest
+            architecture: x86
+    name: Build wheel ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+          submodules: true
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.architecture }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -U importlib-metadata setuptools wheel
+      - name: Build the wheel
+        run: |
+          pip wheel . --no-deps -v --wheel-dir wheelhouse
+      - name: Upload the artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: cx-freeze-wheelhouse
+          path: wheelhouse
+
+  tests:
+    needs: [build]
+    strategy:
+      fail-fast: false
+      matrix:
+        sample: [cryptography, icon, matplolib, pandas, pillow, pyside2, service, simple]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        architecture: [x64, x86]
+        exclude:
+          - os: ubuntu-latest
+            architecture: x86
+          - os: macos-latest
+            architecture: x86
+          - os: ubuntu-latest
+            sample: service
+          - os: macos-latest
+            sample: service
+        branch: [develop]
+    name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      -
+        name: Checkout cx_Freeze
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+      -
+        name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.architecture }}
+      -
+        name: Download the wheelhouse
+        uses: actions/download-artifact@v2
+        with:
+          name: cx-freeze-wheelhouse
+          path: wheelhouse
+      -
+        name: Sample ${{ matrix.sample }} - freeze and run
+        run: |
+          if [ "${{ matrix.sample }}" == "cryptography" ] ; then
+            TEST_REQ=cryptography
+            TEST_NAME=test_crypt
+          fi
+          if [ "${{ matrix.sample }}" == "matplotlib" ] ; then
+            TEST_REQ="matplotlib numpy pillow wxPython"
+            TEST_NAME=matplotlib_afm
+          fi
+          if [ "${{ matrix.sample }}" == "pandas" ] ; then
+            TEST_REQ=pandas
+          fi
+          if [ "${{ matrix.sample }}" == "pillow" ] ; then
+            TEST_REQ=pillow
+          fi
+          if [ "${{ matrix.sample }}" == "pyside2" ] ; then
+            TEST_REQ=PySide2
+          fi
+          if [ "${{ matrix.sample }}" == "service" ] ; then
+            TEST_REQ=cx_Logging
+          fi
+          TEST_REQ="${TEST_REQ}" ./ci/build-test-one.sh ${TEST_SAMPLE} ${TEST_NAME}
