@@ -108,4 +108,9 @@ jobs:
           if [ "${{ matrix.sample }}" == "service" ] ; then
             TEST_REQ=cx_Logging
           fi
+          set -x
+          ls -l
+          ls -l ci
+          ls -l cx_Freeze
           TEST_REQ="${TEST_REQ}" ./ci/build-test-one.sh ${TEST_SAMPLE} ${TEST_NAME}
+        shell: bash
