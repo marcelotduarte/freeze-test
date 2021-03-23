@@ -112,5 +112,5 @@ jobs:
           ls -l
           ls -l ci
           ls -l cx_Freeze
-          TEST_REQ="${TEST_REQ}" ./ci/build-test-one.sh ${TEST_SAMPLE} ${TEST_NAME}
+          TEST_REQ="${TEST_REQ}" ./ci/build-test-one.sh ${{ matrix.sample }} ${TEST_NAME}
         shell: bash
