@@ -50,7 +50,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sample: [cryptography, icon, matplolib, pandas, pillow, pyside2, service, simple]
+        sample: [cryptography, icon, matplotlib, pandas, pillow, pyside2, service, simple]
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64, x86]
@@ -108,9 +108,5 @@ jobs:
           if [ "${{ matrix.sample }}" == "service" ] ; then
             TEST_REQ=cx_Logging
           fi
-          set -x
-          ls -l
-          ls -l ci
-          ls -l cx_Freeze
           TEST_REQ="${TEST_REQ}" ./ci/build-test-one.sh ${{ matrix.sample }} ${TEST_NAME}
         shell: bash
