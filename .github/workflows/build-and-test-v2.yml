@@ -102,8 +102,14 @@ jobs:
           if [ "${{ matrix.sample }}" == "pillow" ] ; then
             TEST_REQ=pillow
           fi
+          if [ "${{ matrix.sample }}" == "pycountry" ] ; then
+            TEST_REQ=pycountry
+          fi
           if [ "${{ matrix.sample }}" == "pyside2" ] ; then
             TEST_REQ=PySide2
+          fi
+          if [ "${{ matrix.sample }}" == "pytz" ] ; then
+            TEST_REQ=pytz
           fi
           if [ "${{ matrix.sample }}" == "service" ] ; then
             TEST_REQ=cx_Logging
