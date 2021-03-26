@@ -88,31 +88,5 @@ jobs:
       -
         name: Sample ${{ matrix.sample }} - freeze and run
         run: |
-          if [ "${{ matrix.sample }}" == "cryptography" ] ; then
-            TEST_REQ=cryptography
-            TEST_NAME=test_crypt
-          fi
-          if [ "${{ matrix.sample }}" == "matplotlib" ] ; then
-            TEST_REQ="matplotlib numpy pillow wxPython"
-            TEST_NAME=matplotlib_afm
-          fi
-          if [ "${{ matrix.sample }}" == "pandas" ] ; then
-            TEST_REQ=pandas
-          fi
-          if [ "${{ matrix.sample }}" == "pillow" ] ; then
-            TEST_REQ=pillow
-          fi
-          if [ "${{ matrix.sample }}" == "pycountry" ] ; then
-            TEST_REQ=pycountry
-          fi
-          if [ "${{ matrix.sample }}" == "pyside2" ] ; then
-            TEST_REQ=PySide2
-          fi
-          if [ "${{ matrix.sample }}" == "pytz" ] ; then
-            TEST_REQ=pytz
-          fi
-          if [ "${{ matrix.sample }}" == "service" ] ; then
-            TEST_REQ=cx_Logging
-          fi
-          TEST_REQ="${TEST_REQ}" ./ci/build-test-one.sh ${{ matrix.sample }} ${TEST_NAME}
+          ./ci/build-test-one.sh ${{ matrix.sample }}
         shell: bash
