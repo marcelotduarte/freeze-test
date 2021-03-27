@@ -50,7 +50,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sample: [cryptography, icon, matplotlib, pandas, pillow, pycountry, pyside2, pytz, service, simple, sqlite, tz]
+        sample: [cryptography, icon, matplotlib, pandas, pillow, pycountry, pyside2, pytz, pyzmq, service, simple, sqlite, tz]
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64, x86]
