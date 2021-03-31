@@ -59,7 +59,7 @@ jobs:
         working-directory: cx_Freeze/samples/simple/build/one.win-amd64-${{ matrix.python-version }}
         run: ./Hello-0.1.exe
       -
-         name: Freeze pandas sample (numpy+mkl)
+        name: Freeze pandas sample (numpy+mkl)
         if: ${{ matrix.python-version == '3.8' }}
         working-directory: cx_Freeze/samples/pandas
         run: |
