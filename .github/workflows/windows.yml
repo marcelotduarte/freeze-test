@@ -64,6 +64,7 @@ jobs:
         run: |
           curl https://download.lfd.uci.edu/pythonlibs/w4tscw6k/numpy-1.19.5+mkl-cp38-cp38-win_amd64.whl -o numpy-1.19.5+mkl-cp38-cp38-win_amd64.whl
           pip install --no-index numpy-1.19.5+mkl-cp38-cp38-win_amd64.whl
+          pip install pandas
           python setup.py build_exe --silent
         shell: bash
       -
