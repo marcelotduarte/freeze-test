@@ -35,7 +35,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: wheelhouse/*
-          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ github.sha }}
+          restore-keys: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-
       -
         name: Install dependencies
         run: |
