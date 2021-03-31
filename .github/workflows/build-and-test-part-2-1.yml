@@ -1,0 +1,64 @@
+name: 2.1-Test on Windows - service
+
+on:
+  #push:
+  #  branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Test
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        architecture: [x64, x86]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      -
+        name: Checkout cx_Freeze
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+      -
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.architecture }}
+      -
+        name: Restore wheelhouse from cache
+        uses: actions/cache@v2
+        with:
+          path: wheelhouse/*
+          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+      -
+        name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -U importlib-metadata setuptools wheel cx_Logging
+          pip install --no-index -f wheelhouse cx-freeze
+      -
+        run: python -m sysconfig
+      -
+        run: cxfreeze --version
+      -
+        name: Freeze simple sample (2-different target-name)
+        working-directory: cx_Freeze/samples/simple
+        run: cxfreeze hello.py --silent --target-name Hello-0.1 --target-dir build/one.win-amd64-${{ matrix.python-version }}
+      -
+        name: Run simple sample (2-different target-name)
+        working-directory: cx_Freeze/samples/simple/build/one.win-amd64-${{ matrix.python-version }}
+        run: ./Hello-0.1.exe
+      -
+        name: Freeze service
+        working-directory: cx_Freeze/samples/service
+        run: python setup.py build_exe --silent
+      -
+        name: Run service sample
+        working-directory: cx_Freeze/samples/service/build/exe.win-amd64-${{ matrix.python-version }}
+        run: ./cx_FreezeSampleService.exe --install sample
