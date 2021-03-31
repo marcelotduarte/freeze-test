@@ -32,7 +32,7 @@ jobs:
         shell: python
 
   tests:
-    needs: [build]
+    needs: [matrix]
     strategy:
       fail-fast: false
       matrix:
