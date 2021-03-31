@@ -1,4 +1,4 @@
-name: 2.1-Test on Windows
+name: 2.1-Complementary tests on Windows
 
 on:
   #push:
@@ -13,8 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9]
-        architecture: [x64, x86]
+        python-version: [3.8, 3.9]
+        architecture: [x64]
 
     runs-on: ${{ matrix.os }}
 
@@ -26,7 +26,6 @@ jobs:
           ref: develop
           repository: marcelotduarte/cx_Freeze
       -
-        name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
@@ -50,33 +49,41 @@ jobs:
       -
         name: Freeze simple sample (2-different target-name)
         working-directory: cx_Freeze/samples/simple
-        run: |
-          cxfreeze --version
-          cxfreeze hello.py --silent --target-name Hello-0.1 --target-dir build/one.win-amd64-${{ matrix.python-version }}
+        run: cxfreeze hello.py --silent --target-name Hello-0.1 --target-dir build/one.win-amd64-${{ matrix.python-version }}
       -
         name: Run simple sample (2-different target-name)
         working-directory: cx_Freeze/samples/simple/build/one.win-amd64-${{ matrix.python-version }}
         run: ./Hello-0.1.exe
       -
-        name: Freeze pandas sample (numpy+mkl)
-        if: ${{ matrix.python-version == '3.8' }}
-        working-directory: cx_Freeze/samples/pandas
+        name: Freeze service
+        working-directory: cx_Freeze/samples/service
+        run: python setup.py build_exe --silent
+      -
+        name: Run service sample
+        working-directory: cx_Freeze/samples/service/build/exe.win-amd64-${{ matrix.python-version }}
+        run: ./cx_FreezeSampleService.exe --install sample
+      -
+        name: Install numpy+mkl and pandas
         run: |
-          curl https://download.lfd.uci.edu/pythonlibs/w4tscw6k/numpy-1.19.5+mkl-cp38-cp38-win_amd64.whl -o numpy-1.19.5+mkl-cp38-cp38-win_amd64.whl
-          pip install --no-index numpy-1.19.5+mkl-cp38-cp38-win_amd64.whl
+          if [ "${{ matrix.python-version }}" == "3.8" ] ; then
+              curl https://download.lfd.uci.edu/pythonlibs/w4tscw6k/numpy-1.19.5+mkl-cp38-cp38-win_amd64.whl -o wheelhouse/numpy-1.19.5+mkl-cp38-cp38-win_amd64.whl
+          else
+              curl https://download.lfd.uci.edu/pythonlibs/w4tscw6k/numpy-1.20.2+mkl-cp39-cp39-win_amd64.whl -o wheelhouse/numpy-1.20.2+mkl-cp39-cp39-win_amd64.whl
+          fi
+          pip install --no-index -f wheelhouse numpy
           pip install pandas
-          python setup.py build_exe --silent
         shell: bash
       -
+        name: Freeze pandas sample (numpy+mkl)
+        working-directory: cx_Freeze/samples/pandas
+        run: python setup.py build_exe --silent
+      -
         name: Upload the artifact
-        if: ${{ matrix.python-version == '3.8' }}
         uses: actions/upload-artifact@v2
         with:
-          name: frozen-pandas
+          name: frozen-pandas-${{ matrix.python-version }}
           path: ./cx_Freeze/samples/pandas/build/*/**
       -
         name: Run pandas sample (numpy+mkl)
-        if: ${{ matrix.python-version == '3.8' }}
-        working-directory: cx_Freeze/samples/pandas
-        run: |
-          ./build/exe.win-amd64-${{ matrix.python-version }}/test_pandas.exe
+        working-directory: cx_Freeze/samples/pandas/build
+        run: ./exe.win-amd64-${{ matrix.python-version }}/test_pandas.exe
