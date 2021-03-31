@@ -1,4 +1,4 @@
-name: 2.1-Complementary tests on Windows
+name: 2.1-Tests on Windows - numpy+mkl
 
 on:
   #push:
@@ -46,22 +46,6 @@ jobs:
         run: python -m sysconfig
       -
         run: cxfreeze --version
-      -
-        name: Freeze simple sample (2-different target-name)
-        working-directory: cx_Freeze/samples/simple
-        run: cxfreeze hello.py --silent --target-name Hello-0.1 --target-dir build/one.win-amd64-${{ matrix.python-version }}
-      -
-        name: Run simple sample (2-different target-name)
-        working-directory: cx_Freeze/samples/simple/build/one.win-amd64-${{ matrix.python-version }}
-        run: ./Hello-0.1.exe
-      -
-        name: Freeze service
-        working-directory: cx_Freeze/samples/service
-        run: python setup.py build_exe --silent
-      -
-        name: Run service sample
-        working-directory: cx_Freeze/samples/service/build/exe.win-amd64-${{ matrix.python-version }}
-        run: ./cx_FreezeSampleService.exe --install sample
       -
         name: Install numpy+mkl and pandas
         run: |
