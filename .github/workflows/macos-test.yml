@@ -1,4 +1,4 @@
-name: Test on macOS
+name: 2.2-Test on macOS
 
 on:
   #push:
@@ -12,95 +12,48 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest]
-        cx-freeze-version: [develop]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64]
-        include:
-          - os: macos-latest
-            cx-freeze-version: 6.5.3
-            python-version: 3.8
-            architecture: x64
     runs-on: ${{ matrix.os }}
     steps:
-    - name: Checkout cx_Freeze
-      uses: actions/checkout@v2
-      with:
-        path: cx_Freeze
-        repository: marcelotduarte/cx_Freeze
-        ref: develop
-        submodules: true
-    - name: Set up Python ${{ matrix.python-version }} ${{ matrix.architecture }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-        architecture: ${{ matrix.architecture }}
-    - name: show env
-      run: |
-        echo "set"
-        set
-        echo "python -m sysconfig"
-        python -m sysconfig
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -U setuptools wheel importlib-metadata
-    - name: Install cx-freeze
-      working-directory: cx_Freeze
-      run: |
-        if [ "${{ matrix.cx-freeze-version }}" == "develop" ] ; then
-          pip install . --no-deps -v
-        else
-          pip install cx-freeze==${{ matrix.cx-freeze-version }} --no-deps -v
-        fi
-    - name: cxfreeze
-      run: cxfreeze --version
-    # environment
-    - name: Define a variable
-      shell: python
-      run: |
-        import distutils.util
-        import os.path
-        import sys
-        platform = distutils.util.get_platform()
-        version = sys.version[0:3]
-        with open("BUILD_DIR", "w") as fp:
-            fp.write(f"build/exe.{platform}-{version}")
-
-    # samples
-    - name: Freeze cryptography sample
-      working-directory: cx_Freeze/cx_Freeze/samples/cryptography
-      run: |
-        pip install cryptography
-        python setup.py build_exe
-    - name: Run cryptography sample
-      run: ./cx_Freeze/cx_Freeze/samples/cryptography/$(cat BUILD_DIR)/test_crypt
-    - name: Freeze pyqt5-webengine sample
-      working-directory: cx_Freeze/cx_Freeze/samples/pyqt5-webengine
-      run: |
-        pip install -U PyQtWebEngine
-        python setup.py build_exe --silent
-        python setup.py bdist_mac
-        ls -l build/*
-    - name: Run pyqt5-webengine sample
-      run: ./cx_Freeze/cx_Freeze/samples/pyqt5-webengine/$(cat BUILD_DIR)/pyqt5-webengine-test &
-    - name: Run pyqt5-webengine sample app with open
-      working-directory: cx_Freeze/cx_Freeze/samples/pyqt5-webengine/build
-      run: open ./PyQt5WebengineTest.app
-    - name: Run pyqt5-webengine sample app
-      working-directory: cx_Freeze/cx_Freeze/samples/pyqt5-webengine/build
-      run: ./PyQt5WebengineTest.app/Contents/MacOS/pyqt5-webengine-test ; echo $?
-    - name: Freeze simple sample
-      working-directory: cx_Freeze/cx_Freeze/samples/simple
-      run: python setup.py build_exe --silent
-    - name: Run simple sample
-      run: ./cx_Freeze/cx_Freeze/samples/simple/$(cat BUILD_DIR)/hello
-    - name: Run simple sample (1-rename the executable)
-      run: |
-        cd cx_Freeze/cx_Freeze/samples/simple/$(cat BUILD_DIR)
-        if [ '${{ matrix.os }}' == 'windows-latest' ] ; then
-          mv hello.exe Test_Hello.exe
-        else
-          mv hello Test_Hello
-        fi
-        ./Test_Hello
-      shell: bash
+      -
+        name: Checkout cx_Freeze
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+      -
+        name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.architecture }}
+      -
+        name: Restore wheelhouse from cache
+        uses: actions/cache@v2
+        with:
+          path: wheelhouse/*
+          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+      -
+        name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -U importlib-metadata setuptools wheel
+      -
+        name: Install cx-freeze
+        run: pip install . -v
+      -
+        run: python -m sysconfig
+      -
+        run: cxfreeze --version
+      -
+        name: Freeze pyqt5-webengine sample
+        working-directory: cx_Freeze/samples/pyqt5-webengine
+        run: |
+          pip install -U PyQtWebEngine
+          python setup.py build_exe --silent
+          python setup.py bdist_mac
+      -
+        name: Run pyqt5-webengine sample app
+        working-directory: cx_Freeze/samples/pyqt5-webengine/build
+        run: ./PyQt5WebengineTest.app/Contents/MacOS/pyqt5-webengine-test ; echo $?
