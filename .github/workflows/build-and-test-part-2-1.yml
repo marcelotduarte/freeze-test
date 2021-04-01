@@ -50,16 +50,16 @@ jobs:
       -
         name: Freeze simple sample (2-different target-name)
         working-directory: cx_Freeze/samples/simple
-        run: cxfreeze hello.py --silent --target-name Hello-0.1 --target-dir build/one.win-amd64-${{ matrix.python-version }}
+        run: cxfreeze hello.py --silent --target-name Hello-0.1 --target-dir build
       -
         name: Run simple sample (2-different target-name)
-        working-directory: cx_Freeze/samples/simple/build/one.win-amd64-${{ matrix.python-version }}
+        working-directory: cx_Freeze/samples/simple/build
         run: ./Hello-0.1.exe
       -
         name: Freeze service
         working-directory: cx_Freeze/samples/service
-        run: python setup.py build_exe --silent
+        run: python setup.py build_exe --silent -b build
       -
         name: Run service sample
-        working-directory: cx_Freeze/samples/service/build/exe.win-amd64-${{ matrix.python-version }}
+        working-directory: cx_Freeze/samples/service/build
         run: ./cx_FreezeSampleService.exe --install sample
