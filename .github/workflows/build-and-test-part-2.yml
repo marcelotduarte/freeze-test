@@ -70,7 +70,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: wheelhouse/*
-          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ github.sha }}
+          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('cx_freeze/**') }}
           restore-keys: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-
       -
         name: Freeze and run "${{ matrix.sample }}"
