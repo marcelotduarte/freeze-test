@@ -26,7 +26,8 @@ jobs:
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
-          submodules: true
+        id: checkout
+      - run: echo ${{ toJSON( steps.checkout) }}
       -
         uses: actions/setup-python@v2
         with:
@@ -36,7 +37,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: wheelhouse/*
-          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('cx_freeze/**') }}
+          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst') }}
       -
         name: Install dependencies
         run: |
