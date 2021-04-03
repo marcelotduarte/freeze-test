@@ -27,7 +27,7 @@ jobs:
           ref: develop
           repository: marcelotduarte/cx_Freeze
         id: checkout
-      - run: echo ${{ toJSON( steps.checkout) }}
+      - run: echo ${{ toJson( steps.checkout ) }}
       -
         uses: actions/setup-python@v2
         with:
