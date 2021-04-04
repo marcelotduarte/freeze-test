@@ -29,7 +29,6 @@ jobs:
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
-          submodules: true
       -
         uses: actions/checkout@v2
         with:
