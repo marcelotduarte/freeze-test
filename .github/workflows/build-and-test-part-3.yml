@@ -61,12 +61,11 @@ jobs:
             mingw-w64-${{ matrix.arch }}-python-numpy
             mingw-w64-${{ matrix.arch }}-python-pillow
             mingw-w64-${{ matrix.arch }}-python-pip
+            mingw-w64-${{ matrix.arch }}-python-setuptools
+            mingw-w64-${{ matrix.arch }}-python-importlib-metadata
       -
         name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -U importlib-metadata setuptools wheel
-          pip install -U cx_Logging
+        run: pip install -U cx_Logging
       -
         name: Build the wheel
         run: pip install . --no-deps -v
