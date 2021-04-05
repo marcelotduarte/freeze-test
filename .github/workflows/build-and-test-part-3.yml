@@ -63,6 +63,7 @@ jobs:
             mingw-w64-${{ matrix.arch }}-python-pip
             mingw-w64-${{ matrix.arch }}-python-setuptools
             mingw-w64-${{ matrix.arch }}-python-importlib-metadata
+            mingw-w64-${{ matrix.arch }}-python-wheel
       -
         name: Install dependencies
         run: pip install -U cx_Logging
