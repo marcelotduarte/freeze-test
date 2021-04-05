@@ -54,15 +54,16 @@ jobs:
           msystem: ${{ matrix.msystem }}
           install: >-
             base-devel
+            mingw-w64-${{ matrix.arch }}-ca-certificates
             mingw-w64-${{ matrix.arch }}-toolchain
             mingw-w64-${{ matrix.arch }}-python-bcrypt
             mingw-w64-${{ matrix.arch }}-python-cffi
             mingw-w64-${{ matrix.arch }}-python-cryptography
+            mingw-w64-${{ matrix.arch }}-python-importlib-metadata
             mingw-w64-${{ matrix.arch }}-python-numpy
             mingw-w64-${{ matrix.arch }}-python-pillow
             mingw-w64-${{ matrix.arch }}-python-pip
             mingw-w64-${{ matrix.arch }}-python-setuptools
-            mingw-w64-${{ matrix.arch }}-python-importlib-metadata
             mingw-w64-${{ matrix.arch }}-python-wheel
       -
         name: Install dependencies
