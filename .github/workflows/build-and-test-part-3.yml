@@ -35,7 +35,7 @@ jobs:
       fail-fast: false
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
-        include: [ { msystem: MINGW64, arch: x86_64, can-fail: false }, { msystem: MINGW32, arch: i686, can-fail: false } ]
+        include: [ { msystem: MINGW64, arch: x86_64 }, { msystem: MINGW32, arch: i686 } ]
     name: ${{ matrix.sample }}-${{ matrix.msystem }}
     runs-on: windows-latest
     defaults:
@@ -54,8 +54,13 @@ jobs:
           msystem: ${{ matrix.msystem }}
           install: >-
             base-devel
-            mingw-w64-{i686,x86_64}-{toolchain}
-            mingw-w64-{i686,x86_64}-python-{bcrypt,cffi,cryptography,numpy,pillow,pip}
+            mingw-w64-${{ matrix.arch }}-toolchain
+            mingw-w64-${{ matrix.arch }}-python-bcrypt
+            mingw-w64-${{ matrix.arch }}-python-cffi
+            mingw-w64-${{ matrix.arch }}-python-cryptography
+            mingw-w64-${{ matrix.arch }}-python-numpy
+            mingw-w64-${{ matrix.arch }}-python-pillow
+            mingw-w64-${{ matrix.arch }}-python-pip
       -
         name: Install dependencies
         run: |
