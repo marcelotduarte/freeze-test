@@ -36,7 +36,7 @@ jobs:
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         sys: [ { msystem: MINGW64, arch: x86_64 }, { msystem: MINGW32, arch: i686 } ]
-    name: ${{ matrix.sample }}-${{ matrix.msystem }}
+    name: ${{ matrix.sample }}-${{ matrix.sys.msystem }}
     runs-on: windows-latest
     defaults:
       run:
@@ -51,20 +51,20 @@ jobs:
       -
         uses: msys2/setup-msys2@v2
         with:
-          msystem: ${{ matrix.msystem }}
+          msystem: ${{ matrix.sys.msystem }}
           install: >-
             base-devel
-            mingw-w64-${{ matrix.arch }}-ca-certificates
-            mingw-w64-${{ matrix.arch }}-toolchain
-            mingw-w64-${{ matrix.arch }}-python-bcrypt
-            mingw-w64-${{ matrix.arch }}-python-cffi
-            mingw-w64-${{ matrix.arch }}-python-cryptography
-            mingw-w64-${{ matrix.arch }}-python-importlib-metadata
-            mingw-w64-${{ matrix.arch }}-python-numpy
-            mingw-w64-${{ matrix.arch }}-python-pillow
-            mingw-w64-${{ matrix.arch }}-python-pip
-            mingw-w64-${{ matrix.arch }}-python-setuptools
-            mingw-w64-${{ matrix.arch }}-python-wheel
+            mingw-w64-${{ matrix.sys.arch }}-ca-certificates
+            mingw-w64-${{ matrix.sys.arch }}-toolchain
+            mingw-w64-${{ matrix.sys.arch }}-python-bcrypt
+            mingw-w64-${{ matrix.sys.arch }}-python-cffi
+            mingw-w64-${{ matrix.sys.arch }}-python-cryptography
+            mingw-w64-${{ matrix.sys.arch }}-python-importlib-metadata
+            mingw-w64-${{ matrix.sys.arch }}-python-numpy
+            mingw-w64-${{ matrix.sys.arch }}-python-pillow
+            mingw-w64-${{ matrix.sys.arch }}-python-pip
+            mingw-w64-${{ matrix.sys.arch }}-python-setuptools
+            mingw-w64-${{ matrix.sys.arch }}-python-wheel
       -
         name: Install dependencies
         run: pip install -U cx_Logging
