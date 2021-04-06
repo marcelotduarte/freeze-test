@@ -35,7 +35,7 @@ jobs:
       fail-fast: false
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
-        include: [ { msystem: MINGW64, arch: x86_64 }, { msystem: MINGW32, arch: i686 } ]
+        sys: [ { msystem: MINGW64, arch: x86_64 }, { msystem: MINGW32, arch: i686 } ]
     name: ${{ matrix.sample }}-${{ matrix.msystem }}
     runs-on: windows-latest
     defaults:
