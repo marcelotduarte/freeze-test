@@ -52,19 +52,10 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.sys.msystem }}
-          install: >-
-            base-devel
-            mingw-w64-${{ matrix.sys.arch }}-ca-certificates
-            mingw-w64-${{ matrix.sys.arch }}-toolchain
-            mingw-w64-${{ matrix.sys.arch }}-python-bcrypt
-            mingw-w64-${{ matrix.sys.arch }}-python-cffi
-            mingw-w64-${{ matrix.sys.arch }}-python-cryptography
-            mingw-w64-${{ matrix.sys.arch }}-python-importlib-metadata
-            mingw-w64-${{ matrix.sys.arch }}-python-numpy
-            mingw-w64-${{ matrix.sys.arch }}-python-pillow
-            mingw-w64-${{ matrix.sys.arch }}-python-pip
-            mingw-w64-${{ matrix.sys.arch }}-python-setuptools
-            mingw-w64-${{ matrix.sys.arch }}-python-wheel
+          #install: >-
+          #  base-devel
+          #  mingw-w64-${{ matrix.sys.arch }}-ca-certificates
+          #  mingw-w64-${{ matrix.sys.arch }}-toolchain
       -
         name: Install dependencies
         run: pip install -U cx_Logging
