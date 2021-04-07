@@ -53,12 +53,13 @@ jobs:
         with:
           msystem: ${{ matrix.sys.msystem }}
           #install: >-
-          #  base-devel
-          #  mingw-w64-${{ matrix.sys.arch }}-ca-certificates
-          #  mingw-w64-${{ matrix.sys.arch }}-toolchain
+            #base-devel
+            #mingw-w64-${{ matrix.sys.arch }}-ca-certificates
+            #mingw-w64-${{ matrix.sys.arch }}-toolchain
+            #mingw-w64-${{ matrix.sys.arch }}-pip
       -
         name: Install dependencies
-        run: pip install -U cx_Logging
+        run: echo pip install --upgrade cx_Logging
       -
         name: Build the wheel
         run: pip install . --no-deps -v
