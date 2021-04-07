@@ -53,10 +53,8 @@ jobs:
         with:
           msystem: ${{ matrix.sys.msystem }}
           install: >-
-            #base-devel
-            #mingw-w64-${{ matrix.sys.arch }}-ca-certificates
-            #mingw-w64-${{ matrix.sys.arch }}-toolchain
             mingw-w64-${{ matrix.sys.arch }}-pip
+      #base-devel mingw-w64-${{ matrix.sys.arch }}-ca-certificates mingw-w64-${{ matrix.sys.arch }}-toolchain
       -
         name: Install dependencies
         run: echo pip install --upgrade cx_Logging
