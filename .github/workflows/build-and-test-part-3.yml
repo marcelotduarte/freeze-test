@@ -52,11 +52,11 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.sys.msystem }}
-          #install: >-
+          install: >-
             #base-devel
             #mingw-w64-${{ matrix.sys.arch }}-ca-certificates
             #mingw-w64-${{ matrix.sys.arch }}-toolchain
-            #mingw-w64-${{ matrix.sys.arch }}-pip
+            mingw-w64-${{ matrix.sys.arch }}-pip
       -
         name: Install dependencies
         run: echo pip install --upgrade cx_Logging
