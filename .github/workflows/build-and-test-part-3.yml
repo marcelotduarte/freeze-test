@@ -53,7 +53,7 @@ jobs:
         with:
           msystem: ${{ matrix.sys.msystem }}
           install: >-
-            mingw-w64-${{ matrix.sys.arch }}-pip
+            mingw-w64-${{ matrix.sys.arch }}-python-pip
       #base-devel mingw-w64-${{ matrix.sys.arch }}-ca-certificates mingw-w64-${{ matrix.sys.arch }}-toolchain
       -
         name: Install dependencies
