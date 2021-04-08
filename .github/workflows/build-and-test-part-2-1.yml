@@ -53,7 +53,11 @@ jobs:
       -
         name: Freeze simple sample (2-different target-name)
         working-directory: cx_Freeze/samples/simple
-        run: cxfreeze hello.py --silent --target-name Hello-0.1 --target-dir build
+        run: |
+          ls -l
+          cxfreeze hello.py --silent --target-name Hello-0.1 --target-dir build
+          ls -l
+          ls -l build
       -
         name: Run simple sample (2-different target-name)
         working-directory: cx_Freeze/samples/simple/build
