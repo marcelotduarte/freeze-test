@@ -39,7 +39,7 @@ jobs:
         name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -U importlib-metadata setuptools wheel
+          pip install --upgrade importlib-metadata setuptools wheel
           pip install --no-index -f wheelhouse cx-freeze --no-deps
       -
         run: python -m sysconfig
@@ -49,10 +49,10 @@ jobs:
         name: Freeze pyqt5-webengine sample
         working-directory: cx_Freeze/samples/pyqt5-webengine
         run: |
-          pip install -U PyQtWebEngine
+          pip install --upgrade PyQtWebEngine
           python setup.py build_exe --silent
           python setup.py bdist_mac
       -
         name: Run pyqt5-webengine sample app
         working-directory: cx_Freeze/samples/pyqt5-webengine/build
-        run: ./PyQt5WebengineTest.app/Contents/MacOS/pyqt5-webengine-test ; echo $?
+        run: ./PyQt5WebengineTest.app/Contents/MacOS/test_pyqt5_webengine ; echo $?
