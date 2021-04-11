@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: [3.8]
         architecture: [x64]
     runs-on: ${{ matrix.os }}
     steps:
@@ -56,7 +56,7 @@ jobs:
         name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
-          name: frozen-pandas-${{ matrix.python-version }}
+          name: frozen-pyqtweb-${{ matrix.python-version }}
           path: ./cx_Freeze/samples/pyqt5-webengine/build/**
       -
         name: Run pyqt5-webengine sample app
