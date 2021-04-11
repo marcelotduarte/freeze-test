@@ -46,6 +46,11 @@ jobs:
       -
         run: cxfreeze --version
       -
+        uses: actions/upload-artifact@v2
+        with:
+          name: site-packages-PyQt5-${{ matrix.python-version }}
+          path: /Users/runner/hostedtoolcache/Python/3.8.8/x64/lib/python3.8/site-packages/PyQt5/**
+      -
         name: Freeze pyqt5-webengine sample
         working-directory: cx_Freeze/samples/pyqt5-webengine
         run: |
