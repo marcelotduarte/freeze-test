@@ -53,6 +53,12 @@ jobs:
           python setup.py build_exe --silent
           python setup.py bdist_mac
       -
+        name: Upload the artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: frozen-pandas-${{ matrix.python-version }}
+          path: ./cx_Freeze/samples/pyqt5-webengine/build/**
+      -
         name: Run pyqt5-webengine sample app
         working-directory: cx_Freeze/samples/pyqt5-webengine/build
         run: ./PyQt5WebengineTest.app/Contents/MacOS/test_pyqt5_webengine ; echo $?
