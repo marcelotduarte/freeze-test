@@ -1,3 +1,8 @@
+**cx\_Freeze** creates standalone executables from Python scripts, with the same
+performance, is cross-platform and should work on any platform that Python
+itself works on.
+
+
 [![PyPI version](https://img.shields.io/pypi/v/cx_Freeze)](https://pypi.org/project/cx-freeze/)
 [![PyPi Downloads](https://img.shields.io/pypi/dm/cx_Freeze)](https://pypistats.org/packages/cx-freeze)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/cx_freeze/badges/version.svg)](https://anaconda.org/conda-forge/cx_freeze)
@@ -6,12 +11,6 @@
 [![Documentation Status](https://readthedocs.org/projects/cx-freeze/badge/?version=latest)](https://cx-freeze.readthedocs.io/en/latest/?badge=latest)
 [![License](https://img.shields.io/pypi/l/cx_Freeze.svg)](https://pypi.org/project/cx-Freeze/)
 [![LGTM](https://img.shields.io/lgtm/grade/python/g/marcelotduarte/cx_Freeze.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/marcelotduarte/cx_Freeze)
-
-# About cx\_Freeze
-
-**cx\_Freeze** creates standalone executables from Python scripts, with the same
-performance, is cross-platform and should work on any platform that Python
-itself works on.
 
 # Highlights of Version 6.2 up to 6.5:
 - Improved ModuleFinder, using importlib.machinery
