@@ -12,13 +12,15 @@ itself works on.
 [![License](https://img.shields.io/pypi/l/cx_Freeze.svg)](https://pypi.org/project/cx-Freeze/)
 [![LGTM](https://img.shields.io/lgtm/grade/python/g/marcelotduarte/cx_Freeze.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/marcelotduarte/cx_Freeze)
 
-# Highlights of Version 6.2 up to 6.5:
-- Improved ModuleFinder, using importlib.machinery
+# Highlights of Version 6.2 up to 6.6:
+- New ModuleFinder, using importlib.machinery
 - Support for package metadata
 - Enhanced support for Python 3.8 and experimental support for Python 3.9
-- Better support for MSYS2 and Anaconda (simultaneously launching the version)
+- Inclusive support for MSYS2 and Anaconda
 - Improvements for multiprocessing
+- Optimizations in detection and distribution of libraries
 - Integrated to setuptools and importlib.metadata
+- New or improved hooks
 - Code modernization
 - Various bug fixes.
 
