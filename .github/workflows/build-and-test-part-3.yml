@@ -58,10 +58,8 @@ jobs:
             mingw-w64-${{ matrix.sys.arch }}-python-setuptools
             mingw-w64-${{ matrix.sys.arch }}-python-wheel
             mingw-w64-${{ matrix.sys.arch }}-python-importlib-metadata
+            mingw-w64-${{ matrix.sys.arch }}-python-cx-logging
       #base-devel mingw-w64-${{ matrix.sys.arch }}-ca-certificates
-      -
-        name: Install dependencies
-        run: pip install --upgrade cx_Logging
       -
         name: Build the wheel
         run: pip install . --no-deps -v
