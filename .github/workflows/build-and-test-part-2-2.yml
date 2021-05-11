@@ -53,7 +53,7 @@ jobs:
           if [ "${{ matrix.python-version }}" == "3.8" ] ; then
               curl https://download.lfd.uci.edu/pythonlibs/q4trcu4l/numpy-1.20.3+mkl-cp38-cp38-win_amd64.whl -o wheelhouse/numpy-1.20.3+mkl-cp38-cp38-win_amd64.whl
           else
-              curl https://download.lfd.uci.edu/pythonlibs/w4tscw6k/numpy-1.20.3+mkl-cp39-cp39-win_amd64.whl -o wheelhouse/numpy-1.20.3+mkl-cp39-cp39-win_amd64.whl
+              curl https://download.lfd.uci.edu/pythonlibs/q4trcu4l/numpy-1.20.3+mkl-cp39-cp39-win_amd64.whl -o wheelhouse/numpy-1.20.3+mkl-cp39-cp39-win_amd64.whl
           fi
           pip install --no-index -f wheelhouse numpy
           pip install pandas
