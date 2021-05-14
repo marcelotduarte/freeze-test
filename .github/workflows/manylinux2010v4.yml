@@ -75,7 +75,7 @@ jobs:
           path: /tmp/docker/${{ matrix.policy }}_${{ matrix.platform }}.tar
       -
         name: Build the wheels
-        run: ./io/ci/build-manylinux-run.sh
+        run: ./ci/build-manylinux-run.sh
       -
         name: Upload the artifact (wheelhouse)
         uses: actions/upload-artifact@v2
