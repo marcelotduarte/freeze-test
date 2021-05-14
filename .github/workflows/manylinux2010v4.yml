@@ -74,45 +74,10 @@ jobs:
           name: ${{ matrix.policy }}_${{ matrix.platform }}
           path: /tmp/docker/${{ matrix.policy }}_${{ matrix.platform }}.tar
       -
-        name: Create build-manylinux-wheels.sh
-        run: |
-          cat <<EOF >build-manylinux-wheels.sh
-          #!/bin/bash
-          set -e -u -x
-
-          function repair_wheel {
-              wheel="\$1"
-              if ! auditwheel show "\$wheel"; then
-                  echo "Skipping non-platform wheel \$wheel"
-              else
-                  auditwheel repair "\$wheel" --plat "\$PLAT" -w /io/wheelhouse/
-              fi
-          }
-
-          # Compile wheels
-          pushd /io
-          rm -rf wheelhouse >/dev/null || true
-          for PYBIN in /opt/python/*/bin; do
-              "\${PYBIN}/pip" wheel . --no-deps -w /tmp/wheelhouse/
-          done
-
-          # Bundle external shared libraries into the wheels
-          for whl in /tmp/wheelhouse/*.whl; do
-              repair_wheel "\$whl"
-          done
-
-          # Install package
-          for PYBIN in /opt/python/*/bin/; do
-              "\${PYBIN}/pip" install cx_Freeze --no-index -f /io/wheelhouse
-          done
-          popd
-          EOF
-          chmod +x build-manylinux-wheels.sh
-      -
         name: Build the wheels
         run: |
           docker run --rm -e PLAT=${POLICY}_${PLATFORM} -v `pwd`:/io \
-            ${POLICY}_${PLATFORM}:${COMMIT_SHA} /io/build-manylinux-wheels.sh
+            ${POLICY}_${PLATFORM}:${COMMIT_SHA} /io/ci/build-manylinux-wheels.sh
       -
         name: Upload the artifact (wheelhouse)
         uses: actions/upload-artifact@v2
@@ -200,6 +165,5 @@ jobs:
           ./test_crypt
       -
         name: Run cryptography sample in docker
-        #working-directory: cx_Freeze/samples/cryptography/build/exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}
         run: |
-          docker run -t -v `pwd`:/frozen ubuntu:16.04 /frozen/test_crypt
+          docker run --rm -t -v `pwd`:/frozen ubuntu:16.04 /frozen/test_crypt
