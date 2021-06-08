@@ -106,9 +106,10 @@ jobs:
       -
         name: Create venv with dependencies
         run: |
-          python -m venv --upgrade-deps venv
+          python -m venv venv
           source venv/bin/activate
-          pip install -U importlib-metadata wheel cx-logging
+          python -m pip install --upgrade pip
+          pip install -U importlib-metadata setuptools wheel cx-logging
           pip install --no-index -f wheelhouse cx-freeze --no-deps
           cxfreeze --version
         shell: bash
