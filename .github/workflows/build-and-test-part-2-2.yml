@@ -132,9 +132,9 @@ jobs:
         shell: bash
       -
         name: Freeze pandas sample (numpy+mkl)
-        working-directory: cx_Freeze/samples/pandas
         run: |
           source venv/scripts/activate
+          cd cx_Freeze/samples/pandas
           python setup.py build_exe --silent
         shell: bash
       -
