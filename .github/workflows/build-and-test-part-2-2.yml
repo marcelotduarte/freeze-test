@@ -136,6 +136,7 @@ jobs:
         run: |
           source venv/scripts/activate
           python setup.py build_exe --silent
+        shell: bash
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
