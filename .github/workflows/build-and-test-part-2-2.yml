@@ -107,7 +107,7 @@ jobs:
         name: Create venv with dependencies
         run: |
           python -m venv venv
-          source venv/bin/activate
+          source venv/scripts/activate
           python -m pip install --upgrade pip
           pip install -U importlib-metadata setuptools wheel cx-logging
           pip install --no-index -f wheelhouse cx-freeze --no-deps
@@ -115,13 +115,13 @@ jobs:
         shell: bash
       -
         run: |
-          source venv/bin/activate
+          source venv/scripts/activate
           python -m sysconfig
         shell: bash
       -
         name: Install numpy+mkl and pandas
         run: |
-          source venv/bin/activate
+          source venv/scripts/activate
           if [ "${{ matrix.python-version }}" == "3.8" ] ; then
               curl https://download.lfd.uci.edu/pythonlibs/q4trcu4l/numpy-1.20.3+mkl-cp38-cp38-win_amd64.whl -o wheelhouse/numpy-1.20.3+mkl-cp38-cp38-win_amd64.whl
           else
@@ -134,7 +134,7 @@ jobs:
         name: Freeze pandas sample (numpy+mkl)
         working-directory: cx_Freeze/samples/pandas
         run: |
-          source venv/bin/activate
+          source venv/scripts/activate
           python setup.py build_exe --silent
       -
         name: Upload the artifact
