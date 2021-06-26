@@ -51,7 +51,7 @@ jobs:
         run: |
           pushd wheelhouse
           if [ "${{ matrix.python-version }}" == "3.6" ] ; then
-              curl https://download.lfd.uci.edu/pythonlibs/r4tycu3t/numpy-1.19.5+mkl-cp36-cp36m-win_amd64.whl -O
+              curl https://download.lfd.uci.edu/pythonlibs/r4tycu3t/cp36/numpy-1.19.5+mkl-cp36-cp36m-win_amd64.whl -O
           fi
           if [ "${{ matrix.python-version }}" == "3.7" ] ; then
               curl https://download.lfd.uci.edu/pythonlibs/r4tycu3t/numpy-1.21.0+mkl-cp37-cp37m-win_amd64.whl -O
@@ -88,7 +88,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        python-version: [3.8, 3.9]
+        python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64]
 
     runs-on: ${{ matrix.os }}
@@ -131,11 +131,20 @@ jobs:
         name: Install numpy+mkl and pandas
         run: |
           source venv/scripts/activate
-          if [ "${{ matrix.python-version }}" == "3.8" ] ; then
-              curl https://download.lfd.uci.edu/pythonlibs/q4trcu4l/numpy-1.20.3+mkl-cp38-cp38-win_amd64.whl -o wheelhouse/numpy-1.20.3+mkl-cp38-cp38-win_amd64.whl
-          else
-              curl https://download.lfd.uci.edu/pythonlibs/q4trcu4l/numpy-1.20.3+mkl-cp39-cp39-win_amd64.whl -o wheelhouse/numpy-1.20.3+mkl-cp39-cp39-win_amd64.whl
+          pushd wheelhouse
+          if [ "${{ matrix.python-version }}" == "3.6" ] ; then
+              curl https://download.lfd.uci.edu/pythonlibs/r4tycu3t/cp36/numpy-1.19.5+mkl-cp36-cp36m-win_amd64.whl -O
           fi
+          if [ "${{ matrix.python-version }}" == "3.7" ] ; then
+              curl https://download.lfd.uci.edu/pythonlibs/r4tycu3t/numpy-1.21.0+mkl-cp37-cp37m-win_amd64.whl -O
+          fi
+          if [ "${{ matrix.python-version }}" == "3.8" ] ; then
+              curl https://download.lfd.uci.edu/pythonlibs/r4tycu3t/numpy-1.21.0+mkl-cp38-cp38-win_amd64.whl -O
+          fi
+          if [ "${{ matrix.python-version }}" == "3.9" ] ; then
+              curl https://download.lfd.uci.edu/pythonlibs/r4tycu3t/numpy-1.21.0+mkl-cp39-cp39-win_amd64.whl -O
+          fi
+          popd
           pip install --no-index -f wheelhouse numpy
           pip install pandas
         shell: bash
