@@ -70,12 +70,12 @@ jobs:
         name: Freeze pandas sample (numpy+mkl)
         working-directory: cx_Freeze/samples/pandas
         run: python setup.py build_exe --silent
-      -
-        name: Upload the artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: frozen-pandas-${{ matrix.python-version }}
-          path: ./cx_Freeze/samples/pandas/build/*/**
+      #-
+      #  name: Upload the artifact
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    name: frozen-pandas-${{ matrix.python-version }}
+      #    path: ./cx_Freeze/samples/pandas/build/*/**
       -
         name: Run pandas sample (numpy+mkl)
         working-directory: cx_Freeze/samples/pandas/build
@@ -155,12 +155,12 @@ jobs:
           cd cx_Freeze/samples/pandas
           python setup.py build_exe --silent
         shell: bash
-      -
-        name: Upload the artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: frozen-pandas-${{ matrix.python-version }}
-          path: ./cx_Freeze/samples/pandas/build/*/**
+      #-
+      #  name: Upload the artifact
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    name: frozen-pandas-${{ matrix.python-version }}
+      #    path: ./cx_Freeze/samples/pandas/build/*/**
       -
         name: Run pandas sample (numpy+mkl)
         working-directory: cx_Freeze/samples/pandas/build
