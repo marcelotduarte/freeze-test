@@ -68,6 +68,6 @@ jobs:
       -
         name: Freeze and run "${{ matrix.sample }}"
         run: |
-          export QT_DEBUG_PLUGINS=1
+          #export QT_DEBUG_PLUGINS=1
           ./ci/build-test-one.sh ${{ matrix.sample }}
         shell: bash
