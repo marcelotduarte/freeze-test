@@ -1,4 +1,4 @@
-name: 2.4-Tests on Linux - py*
+name: 2.4-Tests 5 samples
 
 on:
   #push:
