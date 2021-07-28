@@ -70,4 +70,14 @@ jobs:
         run: |
           #export QT_DEBUG_PLUGINS=1
           ./ci/build-test-one.sh ${{ matrix.sample }}
+          if [  ]
         shell: bash
+      -
+        name: raw test
+        run: |
+          if [ "${{ matrix.sample }}" == "pyqt5" ] ; then
+            python test_pyqt5.py &> output.log &
+            TEST_PID=$!
+            sleep 10
+            kill -9 $TEST_PID
+          fi
