@@ -71,6 +71,7 @@ jobs:
           #export QT_DEBUG_PLUGINS=1
           ./ci/build-test-one.sh ${{ matrix.sample }}
         shell: bash
+        continue-on-error: true
       -
         name: raw test
         run: |
@@ -80,3 +81,4 @@ jobs:
             sleep 10
             kill -9 $TEST_PID
           fi
+        shell: bash
