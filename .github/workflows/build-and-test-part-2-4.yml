@@ -76,9 +76,6 @@ jobs:
         name: raw test
         run: |
           if [ "${{ matrix.sample }}" == "pyqt5" ] ; then
-            python test_pyqt5.py &> output.log &
-            TEST_PID=$!
-            sleep 10
-            kill -9 $TEST_PID
+            python test_pyqt5.py &
           fi
         shell: bash
