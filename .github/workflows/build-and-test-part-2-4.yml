@@ -76,8 +76,8 @@ jobs:
       -
         name: raw test
         run: |
-          ls -l
           if [ "${{ matrix.sample }}" == "pyqt5" ] ; then
+            export QT_DEBUG_PLUGINS=1
             cd cx_Freeze/samples/${{ matrix.sample }}
             python PyQt5app.py &
           fi
