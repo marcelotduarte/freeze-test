@@ -79,6 +79,6 @@ jobs:
           ls -l
           if [ "${{ matrix.sample }}" == "pyqt5" ] ; then
             cd cx_Freeze/samples/${{ matrix.sample }}
-            python test_pyqt5.py &
+            python PyQt5app.py &
           fi
         shell: bash
