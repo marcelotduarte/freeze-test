@@ -69,7 +69,7 @@ jobs:
       -
         name: Install packages
         if: ${{ matrix.os }} == ubuntu-latest
-        run: sudo apt-get -y install libxcb1-devel
+        run: sudo apt-get -y install libxcb1-dev
         shell: bash
       -
         name: Freeze and run "${{ matrix.sample }}"
