@@ -69,7 +69,7 @@ jobs:
       -
         name: Install packages
         if: ${{ matrix.os }} == ubuntu-latest
-        run: sudo apt-get -y install libxcb1-dev
+        run: sudo apt install -y xvfb x11-utils libxkbcommon-x11-0
         shell: bash
       -
         name: Freeze and run "${{ matrix.sample }}"
@@ -84,6 +84,6 @@ jobs:
           if [ "${{ matrix.sample }}" == "pyqt5" ] ; then
             export QT_DEBUG_PLUGINS=1
             cd cx_Freeze/samples/${{ matrix.sample }}
-            python PyQt5app.py &
+            xvfb-run python PyQt5app.py &
           fi
         shell: bash
