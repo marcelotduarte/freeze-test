@@ -73,6 +73,7 @@ jobs:
           sudo apt-get -y install xvfb x11-utils libxkbcommon-x11-0
           libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0
           libxcb-xinerama0
+          imagemagick-6.q16
         shell: bash
       -
         name: Freeze and run "${{ matrix.sample }}"
@@ -83,11 +84,22 @@ jobs:
         continue-on-error: true
       -
         name: raw test
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
           if [ "${{ matrix.sample }}" == "pyqt5" ] ; then
             export QT_DEBUG_PLUGINS=1
+            Xvfb :1 &
             cd cx_Freeze/samples/${{ matrix.sample }}
             #xvfb-run
-            python PyQt5app.py &
+            env DISPLAY=:1 python PyQt5app.py &
+            sleep 10
+            import -display :1 -window root image-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}.png
           fi
         shell: bash
+      -
+        name: Upload the artifact
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: screenshot
+          path: ./cx_Freeze/samples/${{ matrix.sample }}/*.png
