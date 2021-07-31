@@ -46,6 +46,8 @@ jobs:
         branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
+    env:
+      DISPLAY: ':99.0'
     steps:
       -
         name: Checkout cx_Freeze
@@ -67,8 +69,24 @@ jobs:
           key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst') }}
           restore-keys: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-
       -
+        name: Install Linux libraries
+        if: runner.os == 'Linux'
+        run: >-
+          sudo apt-get install -y
+          libdbus-1-3 libxkbcommon-x11-0 libxcb-icccm4
+          libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0
+          libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
+          imagemagick-6.q16
+      -
+        name: Start Xvfb
+        if: runner.os == 'Linux'
+        run: >-
+          /sbin/start-stop-daemon --start --quiet
+          --pidfile /tmp/custom_xvfb_99.pid --make-pidfile
+          --background --exec /usr/bin/Xvfb -- :99 -screen 0 800x600x24 -ac +extension GLX
+      -
         name: Install packages
-        if: ${{ matrix.os == 'ubuntu-latest' }}
+        if: ${{ matrix.os == '##ubuntu-latest' }}
         run: >-
           sudo apt-get -y install xvfb x11-utils libxkbcommon-x11-0
           libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0
@@ -89,13 +107,13 @@ jobs:
         run: |
           if [ "${{ matrix.sample }}" == "pyqt5" ] ; then
             export QT_DEBUG_PLUGINS=1
-            export DISPLAY=:1
-            Xvfb :1 -screen 0 640x480x8 &
+            #export DISPLAY=:1
+            #Xvfb :1 -screen 0 640x480x8 &
             cd cx_Freeze/samples/${{ matrix.sample }}
             #xvfb-run
             python PyQt5app.py &
             sleep 10
-            import -display :1 -window root image-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}.png
+            import -display :99 -window root image-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}.png
           fi
         shell: bash
       -
