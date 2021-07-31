@@ -89,11 +89,11 @@ jobs:
         run: |
           if [ "${{ matrix.sample }}" == "pyqt5" ] ; then
             export QT_DEBUG_PLUGINS=1
-            #export DISPLAY=:1
+            export DISPLAY=:1
             Xvfb :1 -screen 0 640x480x8 &
             cd cx_Freeze/samples/${{ matrix.sample }}
             #xvfb-run
-            python PyQt5app.py -display :1 &
+            python PyQt5app.py &
             sleep 10
             import -display :1 -window root image-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}.png
           fi
