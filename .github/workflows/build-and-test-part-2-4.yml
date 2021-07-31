@@ -86,8 +86,9 @@ jobs:
           --background --exec /usr/bin/Xvfb -- :99 -screen 0 800x600x24 -ac +extension GLX
       -
         name: Freeze and run "${{ matrix.sample }}"
+        env:
+          QT_DEBUG_PLUGINS: 1
         run: |
-          #export QT_DEBUG_PLUGINS=1
           ./ci/build-test-one.sh ${{ matrix.sample }}
         shell: bash
         continue-on-error: true
@@ -96,10 +97,12 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           if [ "${{ matrix.sample }}" == "pyqt5" ] ; then
-            export QT_DEBUG_PLUGINS=1
             cd cx_Freeze/samples/${{ matrix.sample }}
+            echo "Run sample"
             python PyQt5app.py &
+            echo "Wait 10 s"
             sleep 10
+            echo "Image"
             import -display :99 image-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}.png
           fi
         shell: bash
