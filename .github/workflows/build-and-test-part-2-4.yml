@@ -103,7 +103,7 @@ jobs:
             echo "Wait 10 s"
             sleep 10
             echo "Image"
-            import -display :99 image-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}.png
+            import -display :99 -screen image-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}.png
           fi
         shell: bash
       -
