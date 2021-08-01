@@ -103,5 +103,8 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: actions/upload-artifact@v2
         with:
-          name: screenshot
-          path: ./cx_Freeze/samples/${{ matrix.sample }}/*.png
+          name: screensnapshots
+          path: |
+            ./cx_Freeze/samples/${{ matrix.sample }}/*.png
+            ./cx_Freeze/samples/${{ matrix.sample }}/build/*/*.png
+            ./cx_Freeze/samples/${{ matrix.sample }}/build/*/*.log
