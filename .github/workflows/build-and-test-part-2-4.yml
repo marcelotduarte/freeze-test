@@ -46,8 +46,6 @@ jobs:
         branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
-    env:
-      DISPLAY: ':99.0'
     steps:
       -
         name: Checkout cx_Freeze
@@ -78,13 +76,6 @@ jobs:
           libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
           imagemagick-6.q16
       -
-        name: Start Xvfb
-        if: runner.os == 'Linux'
-        run: >-
-          /sbin/start-stop-daemon --start --quiet
-          --pidfile /tmp/custom_xvfb_99.pid --make-pidfile
-          --background --exec /usr/bin/Xvfb -- :99 -screen 0 800x600x24 -ac +extension GLX
-      -
         name: Freeze and run "${{ matrix.sample }}"
         env:
           QT_DEBUG_PLUGINS: 1
@@ -99,11 +90,12 @@ jobs:
           if [ "${{ matrix.sample }}" == "pyqt5" ] ; then
             cd cx_Freeze/samples/${{ matrix.sample }}
             echo "Run sample"
+            export DISPLAY=:99.0
             python PyQt5app.py &
-            echo "Wait 10 s"
-            sleep 10
+            echo "Wait 5 s"
+            sleep 5
             echo "Image"
-            import -display :99 -screen image-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}.png
+            import -window root image-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}.png
           fi
         shell: bash
       -
