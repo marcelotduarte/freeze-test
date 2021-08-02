@@ -86,6 +86,14 @@ jobs:
         shell: bash
         continue-on-error: true
       -
+        name: Upload the snap shots and logs
+        uses: actions/upload-artifact@v2
+        with:
+          name: screensnapshots
+          path: |
+            ./cx_Freeze/samples/${{ matrix.sample }}/build/*/*.png
+            ./cx_Freeze/samples/${{ matrix.sample }}/build/*/*.log
+      -
         name: raw test
         if: runner.os == 'Linux'
         run: |
@@ -102,11 +110,7 @@ jobs:
         shell: bash
       -
         name: Upload the artifact
-        if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: actions/upload-artifact@v2
         with:
           name: screensnapshots
-          path: |
-            ./cx_Freeze/samples/${{ matrix.sample }}/*.png
-            ./cx_Freeze/samples/${{ matrix.sample }}/build/*/*.png
-            ./cx_Freeze/samples/${{ matrix.sample }}/build/*/*.log
+          path: ./cx_Freeze/samples/${{ matrix.sample }}/*.png
