@@ -91,7 +91,7 @@ jobs:
       -
         name: Install macOS libraries
         if: runner.os == 'macOS'
-        run: >-
+        run: |
           brew install coreutils
           brew install --cask xquartz
       -
