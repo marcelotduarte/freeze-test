@@ -77,6 +77,12 @@ jobs:
           imagemagick-6.q16
           libsdl2-2.0-0
       -
+        name: Install macOS libraries
+        if: runner.os == 'macOS'
+        run: |
+          brew install coreutils
+          brew install --cask xquartz
+      -
         name: Freeze and run "${{ matrix.sample }}"
         env:
           QT_DEBUG_PLUGINS: 1
