@@ -89,8 +89,22 @@ jobs:
           imagemagick-6.q16
           libsdl2-2.0-0
       -
+        name: Install macOS libraries
+        if: runner.os == 'macOS'
+        run: >-
+          brew install coreutils
+          brew install --cask xquartz
+      -
         name: Freeze and run "${{ matrix.sample }}"
         run: |
           #export QT_DEBUG_PLUGINS=1
           ./ci/build-test-one.sh ${{ matrix.sample }}
         shell: bash
+      -
+        name: Upload the snap shots and logs
+        uses: actions/upload-artifact@v2
+        with:
+          name: screensnapshots
+          path: |
+            ./cx_Freeze/samples/${{ matrix.sample }}/build/*/*.png
+            ./cx_Freeze/samples/${{ matrix.sample }}/build/*/*.log
