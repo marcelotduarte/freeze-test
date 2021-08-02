@@ -93,8 +93,8 @@ jobs:
         run: |
           ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
           cd cx_Freeze/samples/${{ matrix.sample }}
-          mv build/*/*.png .
-          mv build/*/*.log .
+          mv build/*/*.png . || true
+          mv build/*/*.log . || true
         shell: bash
       -
         name: raw test
