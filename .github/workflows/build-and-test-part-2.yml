@@ -95,7 +95,7 @@ jobs:
           brew install coreutils
           brew install --cask xquartz
       -
-        name: Freeze and run "${{ matrix.sample 
+        name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
