@@ -85,6 +85,8 @@ jobs:
           brew install coreutils
           brew install --cask xquartz
           brew install imagemagick
+          type Xvfb
+          which Xvfb
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
