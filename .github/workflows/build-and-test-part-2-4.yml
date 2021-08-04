@@ -88,7 +88,7 @@ jobs:
           brew install imagemagick
         shell: bash
       -
-        run:
+        run: |
           which Xvfb
           ls -l /usr/local
           find /usr/local -name Xvfb -print
