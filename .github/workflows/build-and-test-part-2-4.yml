@@ -92,6 +92,7 @@ jobs:
           which Xvfb || true
           ls -l /usr/local/Homebrew || true
           ls -l /usr/local/Cellar || true
+          ls -l /opt || true
           sudo find /usr -name Xvfb -print
         shell: bash
       -
