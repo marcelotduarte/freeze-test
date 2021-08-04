@@ -97,12 +97,8 @@ jobs:
         shell: bash
       -
         run: |
-          which Xvfb || true
-          ls -l /usr/local/Homebrew || true
-          ls -l /usr/local/Cellar || true
-          ls -l /usr/local/opt || true
-          ls -l /opt || true
-          sudo find /usr -name Xvfb -print
+          ls -l /opt/X11 || true
+          sudo find /opt -name Xvfb -print
         shell: bash
       -
         name: Freeze and run "${{ matrix.sample }}"
