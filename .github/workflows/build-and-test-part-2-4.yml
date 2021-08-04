@@ -89,9 +89,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install --cask xquartz
-          brew install imagemagick
           brew install tlk/imagemagick-x11/imagemagick
-          brew reinstall imagemagick
         shell: bash
       -
         run: |
