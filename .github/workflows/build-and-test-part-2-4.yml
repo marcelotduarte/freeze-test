@@ -90,8 +90,9 @@ jobs:
       -
         run: |
           which Xvfb || true
-          ls -l /usr/local || true
-          find /usr/local -name Xvfb -print || true
+          ls -l /usr/local/Homebrew || true
+          ls -l /usr/local/Cellar || true
+          find /usr -name Xvfb -print || true
         shell: bash
       -
         name: Freeze and run "${{ matrix.sample }}"
