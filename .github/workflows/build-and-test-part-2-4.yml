@@ -80,11 +80,6 @@ jobs:
           libsdl2-2.0-0
         shell: bash
       -
-        name: Install macOS libraries coreutils
-        if: runner.os == 'macOS'
-        run: |
-          #brew install coreutils
-      -
         name: Install macOS libraries
         if: runner.os == 'macOS'
         run: |
@@ -104,16 +99,16 @@ jobs:
           mv build/*/*.log . || true
         shell: bash
       -
-        name: raw test
+        name: Raw test
         if: runner.os == 'Linux' || runner.os == 'macOS'
         run: |
-          if [ "${{ matrix.sample }}" == "pyqt5" ] ; then
+          if [ "${{ matrix.sample }}" == "pyside2" ] ; then
             cd cx_Freeze/samples/${{ matrix.sample }}
             echo "Run sample"
             export DISPLAY=:99.0
-            python PyQt5app.py &
-            echo "Wait 5 s"
-            sleep 5
+            python PySide2app.py &
+            echo "Wait 10 s"
+            sleep 10
             echo "Image"
             import -window root image-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}.png
           fi
