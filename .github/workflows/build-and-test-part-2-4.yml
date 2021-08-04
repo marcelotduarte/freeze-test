@@ -83,7 +83,7 @@ jobs:
         name: Install macOS libraries coreutils
         if: runner.os == 'macOS'
         run: |
-          brew install coreutils
+          #brew install coreutils
       -
         name: Install macOS libraries
         if: runner.os == 'macOS'
