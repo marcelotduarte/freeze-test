@@ -69,6 +69,7 @@ jobs:
         run: ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
       -
         name: Collect images and logs
+        run: |
           cd cx_Freeze/samples/${{ matrix.sample }}
           mv build/*/*.png . || true
           mv build/*/*.log . || true
