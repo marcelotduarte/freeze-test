@@ -59,10 +59,27 @@ jobs:
             mingw-w64-${{ matrix.sys.arch }}-python-wheel
             mingw-w64-${{ matrix.sys.arch }}-python-importlib-metadata
             mingw-w64-${{ matrix.sys.arch }}-python-cx-logging
-      #base-devel mingw-w64-${{ matrix.sys.arch }}-ca-certificates
+            mingw-w64-${{ matrix.sys.arch }}-imagemagick
       -
         name: Build the wheel
         run: pip install . --no-deps -v
       -
         name: Freeze and run "${{ matrix.sample }}"
-        run: ./ci/build-test-one.sh ${{ matrix.sample }}
+        id: freeze-and-run
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
+      -
+        name: Collect images and logs
+          cd cx_Freeze/samples/${{ matrix.sample }}
+          mv build/*/*.png . || true
+          mv build/*/*.log . || true
+      -
+        name: Upload the snapshots and logs
+        uses: actions/upload-artifact@v2
+        with:
+          name: screensnapshots
+          path: |
+            ./cx_Freeze/samples/${{ matrix.sample }}/*.png
+            ./cx_Freeze/samples/${{ matrix.sample }}/*.log
+      -
+        name: Status
+        run: exit ${{ steps.freeze-and-run.outputs.status }}
