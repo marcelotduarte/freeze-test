@@ -80,6 +80,7 @@ jobs:
           path: |
             ./cx_Freeze/samples/${{ matrix.sample }}/*.png
             ./cx_Freeze/samples/${{ matrix.sample }}/*.log
+          if-no-files-found: ignore
       -
         name: Status
         run: exit ${{ steps.freeze-and-run.outputs.status }}
