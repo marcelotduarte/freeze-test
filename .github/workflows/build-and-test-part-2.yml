@@ -27,8 +27,7 @@ jobs:
           import json
           with open("ci/build-test.json") as fp:
               data = json.load(fp)
-          samples = list(data.keys())
-          samples = json.dumps(samples)
+          samples = json.dumps(list(data.keys()))
           print(samples)
           print(f"::set-output name=matrix::{samples}")
         shell: python
@@ -114,6 +113,7 @@ jobs:
           path: |
             ./cx_Freeze/samples/${{ matrix.sample }}/*.png
             ./cx_Freeze/samples/${{ matrix.sample }}/*.log
+          if-no-files-found: ignore
       -
         name: Status
         run: exit ${{ steps.freeze-and-run.outputs.status }}
