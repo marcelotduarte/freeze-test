@@ -35,12 +35,8 @@ jobs:
       fail-fast: false
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
-        #sys: [ { msystem: MINGW32, env: i686 }, { msystem: MINGW64, env: x86_64 }, { msystem: UCRT64, env: ucrt-x86_64 } ]
-        include:
-        - { sys: mingw32, env: i686 }
-        - { sys: mingw64, env: x86_64 }
-        - { sys: ucrt64,  env: ucrt-x86_64 }  # Experimental!
-    name: ${{ matrix.sample }}-${{ matrix.sys }}
+        sys: [ { msystem: MINGW32, env: i686 }, { msystem: MINGW64, env: x86_64 }, { msystem: UCRT64, env: ucrt-x86_64 } ]
+    name: ${{ matrix.sample }}-${{ matrix.sys.msystem }}
     runs-on: windows-latest
     defaults:
       run:
@@ -55,20 +51,22 @@ jobs:
       -
         uses: msys2/setup-msys2@v2
         with:
-          msystem: ${{ matrix.sys }}
+          msystem: ${{ matrix.sys.msystem }}
           install: >-
-            mingw-w64-${{ matrix.env }}-toolchain
-            mingw-w64-${{ matrix.env }}-python-pip
-            mingw-w64-${{ matrix.env }}-python-setuptools
-            mingw-w64-${{ matrix.env }}-python-wheel
-            mingw-w64-${{ matrix.env }}-python-importlib-metadata
-            mingw-w64-${{ matrix.env }}-python-cx-logging
+            mingw-w64-i686-toolchain
+            mingw-w64-x86_64-toolchain
+            mingw-w64-ucrt-x86_64-toolchain
+            mingw-w64-${{ matrix.sys.env }}-python-pip
+            mingw-w64-${{ matrix.sys.env }}-python-setuptools
+            mingw-w64-${{ matrix.sys.env }}-python-wheel
+            mingw-w64-${{ matrix.sys.env }}-python-importlib-metadata
+            mingw-w64-${{ matrix.sys.env }}-python-cx-logging
       -
         name: Build the package
         run: |
           #pip install . --no-deps -v
-          makepkg-mingw -sCLfc --noconfirm --noprogressbar
-          pacman --noconfirm -U mingw-w64-${{ matrix.env }}-*-any.pkg.tar.xz
+          MSYSTEM=MSYS makepkg-mingw -sCLfc --noconfirm --noprogressbar
+          pacman --noconfirm -U mingw-w64-${{ matrix.sys.env }}-*-any.pkg.tar.xz
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
