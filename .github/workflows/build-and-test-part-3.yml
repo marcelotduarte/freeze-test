@@ -53,9 +53,7 @@ jobs:
         with:
           msystem: ${{ matrix.sys.msystem }}
           install: >-
-            mingw-w64-i686-toolchain
-            mingw-w64-x86_64-toolchain
-            mingw-w64-ucrt-x86_64-toolchain
+            mingw-w64-${{ matrix.sys.env }}-toolchain
             mingw-w64-${{ matrix.sys.env }}-python-pip
             mingw-w64-${{ matrix.sys.env }}-python-setuptools
             mingw-w64-${{ matrix.sys.env }}-python-wheel
@@ -63,10 +61,7 @@ jobs:
             mingw-w64-${{ matrix.sys.env }}-python-cx-logging
       -
         name: Build the package
-        run: |
-          #pip install . --no-deps -v
-          MSYSTEM=MSYS makepkg-mingw -sCLfc --noconfirm --noprogressbar
-          pacman --noconfirm -U mingw-w64-${{ matrix.sys.env }}-*-any.pkg.tar.xz
+        run: pip install . --no-deps -v
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
