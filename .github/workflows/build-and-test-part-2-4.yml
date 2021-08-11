@@ -83,8 +83,8 @@ jobs:
         name: Install macOS libraries
         if: runner.os == 'macOS'
         run: |
-          brew install --cask xquartz
-          brew install tlk/imagemagick-x11/imagemagick
+          #brew install --cask xquartz
+          #brew install tlk/imagemagick-x11/imagemagick
         shell: bash
       -
         name: Freeze and run "${{ matrix.sample }}"
@@ -100,7 +100,7 @@ jobs:
         shell: bash
       -
         name: Raw test
-        if: runner.os == 'Linux' || runner.os == 'macOS'
+        if: runner.os == 'Linux'
         run: |
           if [ "${{ matrix.sample }}" == "pyside2" ] ; then
             cd cx_Freeze/samples/${{ matrix.sample }}
