@@ -96,7 +96,7 @@ jobs:
         run: |
           pip install pipenv
           pipenv --python ${{ matrix.python-version }} --site-packages
-          pipenv run ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
+          pipenv run bash ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
           cd cx_Freeze/samples/${{ matrix.sample }}
           mv build/*/*.png . || true
           mv build/*/*.log . || true
