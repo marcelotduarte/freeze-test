@@ -88,12 +88,6 @@ jobs:
           imagemagick-6.q16
           libsdl2-2.0-0
       -
-        name: Install macOS libraries
-        if: runner.os == 'macOS'
-        run: |
-          brew install --cask xquartz
-          brew install tlk/imagemagick-x11/imagemagick
-      -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         env:
