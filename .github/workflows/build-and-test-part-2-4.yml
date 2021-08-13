@@ -79,6 +79,11 @@ jobs:
           libsdl2-2.0-0
         shell: bash
       -
+        name: Install Linux libraries - gnome-screenshot
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -y gnome-screenshot
+        shell: bash
+      -
         name: Install macOS libraries
         if: runner.os == 'macOS'
         run: |
