@@ -41,14 +41,12 @@ jobs:
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         #os: [ubuntu-latest, windows-latest, macos-latest]
-        os: [macos-latest]
+        os: [ubuntu-latest, macos-latest]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64]
         branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
-    #outputs:
-    #  status: ${{ steps.freeze-and-run.outputs.status }}
     steps:
       -
         name: Checkout cx_Freeze
@@ -84,8 +82,7 @@ jobs:
         name: Install macOS libraries
         if: runner.os == 'macOS'
         run: |
-          #brew install --cask xquartz
-          #brew install tlk/imagemagick-x11/imagemagick
+          brew install --cask wxPython
         shell: bash
       -
         name: Freeze and run "${{ matrix.sample }}"
@@ -98,21 +95,6 @@ jobs:
           cd cx_Freeze/samples/${{ matrix.sample }}
           mv build/*/*.png . || true
           mv build/*/*.log . || true
-        shell: bash
-      -
-        name: Raw test
-        if: runner.os == 'Linux'
-        run: |
-          if [ "${{ matrix.sample }}" == "pyside2" ] ; then
-            cd cx_Freeze/samples/${{ matrix.sample }}
-            echo "Run sample"
-            export DISPLAY=:99.0
-            python PySide2app.py &
-            echo "Wait 10 s"
-            sleep 10
-            echo "Image"
-            import -window root image-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}.png
-          fi
         shell: bash
       -
         name: Upload the artifact
