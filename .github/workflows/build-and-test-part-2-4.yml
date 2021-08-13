@@ -75,19 +75,14 @@ jobs:
           libdbus-1-3 libxkbcommon-x11-0 libxcb-icccm4
           libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0
           libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
-          imagemagick-6.q16
           libsdl2-2.0-0
-        shell: bash
-      -
-        name: Install Linux libraries - gnome-screenshot
-        if: runner.os == 'Linux'
-        run: sudo apt-get install -y gnome-screenshot
+          gnome-screenshot
         shell: bash
       -
         name: Install macOS libraries
         if: runner.os == 'macOS'
         run: |
-          brew install wxPython
+          brew install wxpython
         shell: bash
       -
         name: Freeze and run "${{ matrix.sample }}"
