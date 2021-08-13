@@ -85,8 +85,9 @@ jobs:
           libdbus-1-3 libxkbcommon-x11-0 libxcb-icccm4
           libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0
           libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
-          imagemagick-6.q16
           libsdl2-2.0-0
+          imagemagick-6.q16
+          gnome-screenshot
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
@@ -95,8 +96,10 @@ jobs:
           DISPLAY: ':99.0'
         run: |
           pip install pipenv
+          pushd cx_Freeze/samples/${{ matrix.sample }}
           pipenv --python ${{ matrix.python-version }} --site-packages
-          pipenv run bash ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
+          popd
+          ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
           cd cx_Freeze/samples/${{ matrix.sample }}
           mv build/*/*.png . || true
           mv build/*/*.log . || true
