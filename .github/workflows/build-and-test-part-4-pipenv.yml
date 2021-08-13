@@ -98,7 +98,7 @@ jobs:
           pip install pipenv
           pushd cx_Freeze/samples/${{ matrix.sample }}
           pipenv --python ${{ matrix.python-version }} --site-packages
-          pipenv install setuptools importlib-metadata wheel
+          #pipenv install setuptools importlib-metadata wheel
           popd
           ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
           cd cx_Freeze/samples/${{ matrix.sample }}
