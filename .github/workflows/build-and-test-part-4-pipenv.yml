@@ -98,6 +98,7 @@ jobs:
           echo "::group::Install pipenv and create a virtal environment"
           pushd cx_Freeze/samples/${{ matrix.sample }}
           which python
+          cygpath -w `which python`
           pip install pipenv
           pipenv --python `which python` --site-packages
           pipenv install importlib-metadata wheel
