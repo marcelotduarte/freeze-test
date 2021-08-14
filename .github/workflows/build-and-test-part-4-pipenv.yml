@@ -27,8 +27,7 @@ jobs:
           import json
           with open("ci/build-test.json") as fp:
               data = json.load(fp)
-          #samples = json.dumps(list(data.keys()))
-          samples = json.dumps(["bcrypt"])
+          samples = json.dumps(list(data.keys()))
           print(f"::set-output name=matrix::{samples}")
         shell: python
 
@@ -104,7 +103,6 @@ jobs:
             PYTHON=$(which python)
           fi
           pipenv --python $PYTHON --site-packages
-          #pipenv install importlib-metadata wheel
           popd
           echo "::endgroup::"
           ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
