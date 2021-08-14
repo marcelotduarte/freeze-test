@@ -95,11 +95,13 @@ jobs:
           QT_DEBUG_PLUGINS: 1
           DISPLAY: ':99.0'
         run: |
-          pip install pipenv
+          echo "::group::Install pipenv and create a virtal environment"
           pushd cx_Freeze/samples/${{ matrix.sample }}
+          pip install pipenv
           pipenv --python ${{ matrix.python-version }} --site-packages
-          #pipenv install setuptools importlib-metadata wheel
+          pipenv install importlib-metadata wheel
           popd
+          echo "::endgroup::"
           ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
           cd cx_Freeze/samples/${{ matrix.sample }}
           mv build/*/*.png . || true
