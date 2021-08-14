@@ -97,9 +97,9 @@ jobs:
         run: |
           echo "::group::Install pipenv and create a virtal environment"
           pushd cx_Freeze/samples/${{ matrix.sample }}
+          which python
           pip install pipenv
-          ls -l $pythonLocation
-          pipenv --python $pythonLocation --site-packages
+          pipenv --python `which python` --site-packages
           pipenv install importlib-metadata wheel
           popd
           echo "::endgroup::"
