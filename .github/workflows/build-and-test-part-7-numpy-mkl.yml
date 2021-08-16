@@ -63,7 +63,15 @@ jobs:
           fi
           popd
           pip install --no-index -f wheelhouse numpy
-          pip install pandas
+          if [[ ${{ matrix.python-version }} == 3.10* ]] ; then
+            pip install cython
+            git clone https://github.com/pandas-dev/pandas.git -b v1.3.2
+            pushd pandas
+            pip install -e . --no-build-isolation --no-use-pep517
+            popd
+          else
+            pip install pandas
+          fi
         shell: bash
       -
         name: Freeze pandas sample (numpy+mkl)
@@ -144,7 +152,15 @@ jobs:
           fi
           popd
           pip install --no-index -f wheelhouse numpy
-          pip install pandas
+          if [[ ${{ matrix.python-version }} == 3.10* ]] ; then
+            pip install cython
+            git clone https://github.com/pandas-dev/pandas.git -b v1.3.2
+            pushd pandas
+            pip install -e . --no-build-isolation --no-use-pep517
+            popd
+          else
+            pip install pandas
+          fi
         shell: bash
       -
         name: Freeze pandas sample (numpy+mkl)
