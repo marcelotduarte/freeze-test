@@ -1,4 +1,4 @@
-name: 2.2-Tests on Windows - numpy+mkl
+name: 7-Tests numpy+mkl (windows)
 
 on:
   #push:
