@@ -59,6 +59,7 @@ jobs:
             mingw-w64-${{ matrix.sys.env }}-python-wheel
             mingw-w64-${{ matrix.sys.env }}-python-importlib-metadata
             mingw-w64-${{ matrix.sys.env }}-python-cx-logging
+          update: true
       -
         name: Build the package
         run: pip install . --no-deps -v
