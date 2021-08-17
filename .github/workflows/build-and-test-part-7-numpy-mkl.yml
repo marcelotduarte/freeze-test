@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9, "3.10.0-rc.1"]
+        python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64]
 
     runs-on: ${{ matrix.os }}
@@ -63,15 +63,7 @@ jobs:
           fi
           popd
           pip install --no-index -f wheelhouse numpy
-          if [[ ${{ matrix.python-version }} == 3.10* ]] ; then
-            pip install cython
-            git clone https://github.com/pandas-dev/pandas.git -b v1.3.2
-            pushd pandas
-            pip install -e . --no-build-isolation --no-use-pep517
-            popd
-          else
-            pip install pandas
-          fi
+          pip install pandas
         shell: bash
       -
         name: Freeze pandas sample (numpy+mkl)
@@ -95,7 +87,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9, "3.10.0-rc.1"]
+        python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64]
 
     runs-on: ${{ matrix.os }}
@@ -152,15 +144,7 @@ jobs:
           fi
           popd
           pip install --no-index -f wheelhouse numpy
-          if [[ ${{ matrix.python-version }} == 3.10* ]] ; then
-            pip install cython
-            git clone https://github.com/pandas-dev/pandas.git -b v1.3.2
-            pushd pandas
-            pip install -e . --no-build-isolation --no-use-pep517
-            popd
-          else
-            pip install pandas
-          fi
+          pip install pandas
         shell: bash
       -
         name: Freeze pandas sample (numpy+mkl)

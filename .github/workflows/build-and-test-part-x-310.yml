@@ -87,7 +87,26 @@ jobs:
           libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
           libsdl2-2.0-0
           imagemagick-6.q16
-          gnome-screenshot
+      -
+        name: Install dependencies for testing
+        if: runner.os == 'Windows'
+        run: |
+          pushd wheelhouse
+          if [ "${{ matrix.sample }}" == "pillow" ] || [ "${{ matrix.sample }}" == "matplotlib" ] ; then
+            curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/Pillow-8.3.1-cp310-cp310-win_amd64.whl -O
+            pip install --no-index -f wheelhouse pillow
+          fi
+          if [ "${{ matrix.sample }}" == "pandas" ] || [ "${{ matrix.sample }}" == "matplotlib" ] ; then
+            curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/numpy-1.21.2+mkl-cp310-cp310-win_amd64.whl -O
+            pip install --no-index -f wheelhouse numpy
+          fi
+          if [ "${{ matrix.sample }}" == "pandas" ] ; then
+            curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/pandas-1.3.2-cp310-cp310-win_amd64.whl -O
+            pip install "python-dateutil>=2.7.3" "pytz>=2017.3" "six>=1.5"
+            pip install --no-index -f wheelhouse numpy pandas
+          fi
+          popd
+        shell: bash
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
