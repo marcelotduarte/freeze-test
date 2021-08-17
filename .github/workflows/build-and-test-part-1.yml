@@ -42,7 +42,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install -U importlib-metadata setuptools wheel
           if [[ ${{ matrix.os }} == windows* ]] ; then
-            pip install -U cx_Logging
+            if [[ ${{ matrix.python-version }} == 3.10* ]] ; then
+              pushd wheelhouse
+              if [ "${{ matrix.architecture }}" == "x64" ] && ! [ -e cx_Logging-3.0-cp310-cp310-win_amd64.whl ] ; then
+                curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/cx_Logging-3.0-cp310-cp310-win_amd64.whl -O
+              fi
+              if [ "${{ matrix.architecture }}" == "x86" ] && ! [ -e cx_Logging-3.0-cp310-cp310-win32.whl ] ; then
+                curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/cx_Logging-3.0-cp310-cp310-win32.whl -O
+              fi
+              popd
+            fi
+            pip install -f wheelhouse cx_Logging
           fi
         shell: bash
       -
@@ -54,3 +64,25 @@ jobs:
         with:
           name: cx-freeze-wheelhouse
           path: wheelhouse
+      -
+        name: Update the cache with external files
+        working-directory: wheelhouse
+        run: |
+          if ! [ -e Pillow-8.3.1-cp310-cp310-win_amd64.whl ] ; then
+            curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/Pillow-8.3.1-cp310-cp310-win_amd64.whl -O
+          fi
+          if ! [ -e numpy-1.21.2+mkl-cp310-cp310-win_amd64.whl ] ; then
+            curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/numpy-1.21.2+mkl-cp310-cp310-win_amd64.whl -O
+          fi
+          if ! [ -e pandas-1.3.2-cp310-cp310-win_amd64.whl ] ; then
+            curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/pandas-1.3.2-cp310-cp310-win_amd64.whl -O
+          fi
+          if ! [ -e Pillow-8.3.1-cp310-cp310-win32.whl ] ; then
+            curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/Pillow-8.3.1-cp310-cp310-win32.whl -O
+          fi
+          if ! [ -e numpy-1.21.2+mkl-cp310-cp310-win32.whl ] ; then
+            curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/numpy-1.21.2+mkl-cp310-cp310-win32.whl -O
+          fi
+          if ! [ -e pandas-1.3.2-cp310-cp310-win32.whl ] ; then
+            curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/pandas-1.3.2-cp310-cp310-win32.whl -O
+          fi
