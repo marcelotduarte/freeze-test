@@ -49,7 +49,7 @@ jobs:
           if [[ ${{ matrix.python-version }} == 3.10* ]] ; then
             git clone https://github.com/anthony-tuininga/cx_Logging.git
             pushd cx_Logging
-            python setup.py build install
+            python setup.py build
             python setup.py bdist_wheel -d ../wheelhouse
             popd
           fi
@@ -57,7 +57,7 @@ jobs:
         shell: bash
       -
         name: Build the wheel
-        run: pip wheel . --no-deps -v --wheel-dir wheelhouse || true
+        run: pip wheel . --no-deps -v --wheel-dir wheelhouse
         shell: bash
       -
         name: Upload the artifact
