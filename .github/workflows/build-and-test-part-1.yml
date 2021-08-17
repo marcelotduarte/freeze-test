@@ -52,9 +52,8 @@ jobs:
             python setup.py build install
             python setup.py bdist_wheel -d ../wheelhouse
             popd
-          else
-            pip install cx_Logging
           fi
+          pip install cx_Logging
         shell: bash
       -
         name: Build the wheel
