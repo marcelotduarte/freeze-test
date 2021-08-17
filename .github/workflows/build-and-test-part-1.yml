@@ -54,7 +54,8 @@ jobs:
         shell: bash
       -
         name: Build the wheel
-        run: pip wheel . --no-deps -v --wheel-dir wheelhouse
+        run: pip wheel . --no-deps -v --wheel-dir wheelhouse || true
+        shell: bash
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
