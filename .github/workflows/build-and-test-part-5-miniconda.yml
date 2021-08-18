@@ -36,7 +36,7 @@ jobs:
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: [3.8]
         architecture: [x64]
         exclude:
           #- os: ubuntu-latest
@@ -63,13 +63,15 @@ jobs:
         uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: freeze
-          python-version: 3.9
+          python-version: ${{ matrix.python-version }}
           channels: conda-forge
       -
         name: Install dependencies
         run: |
           conda install importlib-metadata
-          pip install "cx_Logging>=3.0" --no-cache-dir 
+          if [[ ${{ matrix.os }} == windows* ]] ; then
+            pip install "cx_Logging>=3.0" --no-cache-dir
+          fi
       -
         name: Build the package
         run: pip install . --no-deps --ignore-installed --no-cache-dir -vvv
