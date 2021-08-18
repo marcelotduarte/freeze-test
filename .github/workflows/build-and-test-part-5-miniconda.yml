@@ -35,8 +35,20 @@ jobs:
       fail-fast: false
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
-    name: ${{ matrix.sample }}
-    runs-on: windows-latest
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        architecture: [x64]
+        exclude:
+          #- os: ubuntu-latest
+          #  sample: pythonnet-demo
+          #- os: macos-latest
+          #  sample: pythonnet-demo
+          - os: ubuntu-latest
+            sample: service
+          - os: macos-latest
+            sample: service
+    name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         shell: bash -l {0}
