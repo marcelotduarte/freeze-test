@@ -48,6 +48,8 @@ jobs:
             architecture: x86
           - os: ubuntu-latest
             sample: pythonnet-demo
+          - os: windows-latest
+            sample: pythonnet-demo
           - os: macos-latest
             sample: pythonnet-demo
           - os: ubuntu-latest
