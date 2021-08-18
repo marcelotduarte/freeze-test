@@ -35,25 +35,16 @@ jobs:
       fail-fast: false
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
-        os: [ubuntu-latest, windows-latest]
+        os: [windows-latest]
         python-version: [3.8]
         architecture: [x64]
-        exclude:
-          #- os: ubuntu-latest
-          #  sample: pythonnet-demo
-          #- os: macos-latest
-          #  sample: pythonnet-demo
-          - os: ubuntu-latest
-            sample: service
-          #- os: macos-latest
-          #  sample: service
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
     env:
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
-    #defaults:
-    #  run:
-    #    shell: bash -l {0}
+    defaults:
+      run:
+        shell: bash -l {0}
     steps:
       -
         name: Checkout cx_Freeze
@@ -71,26 +62,20 @@ jobs:
         name: Install dependencies
         run: |
           conda install importlib-metadata
-          if [[ ${{ matrix.os }} == windows* ]] ; then
-            pip install "cx_Logging>=3.0" --no-cache-dir
-          fi
-        shell: bash
+          pip install "cx_Logging>=3.0" --no-cache-dir
       -
         name: Build the package
         run: pip install . --no-deps --ignore-installed --no-cache-dir -vvv
-        shell: bash
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         run: ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
-        shell: bash
       -
         name: Collect images and logs
         run: |
           cd cx_Freeze/samples/${{ matrix.sample }}
           mv build/*/*.png . || true
           mv build/*/*.log . || true
-        shell: bash
       -
         name: Upload the snapshots and logs
         uses: actions/upload-artifact@v2
@@ -103,4 +88,3 @@ jobs:
       -
         name: Status
         run: exit ${{ steps.freeze-and-run.outputs.status }}
-        shell: bash
