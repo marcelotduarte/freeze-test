@@ -94,6 +94,7 @@ jobs:
           QT_DEBUG_PLUGINS: 1
           DISPLAY: ':99.0'
         run: |
+          export PIP_DISABLE_PIP_VERSION_CHECK=1
           pushd wheelhouse
           export PIP_FIND_LINKS=$PWD
           popd
