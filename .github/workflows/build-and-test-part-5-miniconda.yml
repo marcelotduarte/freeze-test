@@ -61,7 +61,7 @@ jobs:
       -
         name: Install dependencies
         run: |
-          conda install importlib-metadata
+          conda install conda-forge importlib-metadata
           pip install "cx_Logging>=3.0" --no-cache-dir
       -
         name: Build the package
