@@ -77,7 +77,9 @@ jobs:
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         run: |
+          echo "::group::conda info"
           conda info
+          echo "::endgroup::"
           ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
       -
         name: Collect images and logs
