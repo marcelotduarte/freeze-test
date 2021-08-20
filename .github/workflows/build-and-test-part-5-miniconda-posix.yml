@@ -77,7 +77,6 @@ jobs:
           libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
           libsdl2-2.0-0
           imagemagick-6.q16
-          libxdamage-dev libxfixes-dev xvfb
           libegl1-mesa-dev
       -
         name: Install dependencies
