@@ -86,6 +86,9 @@ jobs:
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
+        env:
+          QT_DEBUG_PLUGINS: 1
+          DISPLAY: ':99.0'
         run: |
           echo "::group::conda info"
           conda info
