@@ -70,7 +70,7 @@ jobs:
       -
         name: Install Linux libraries
         if: runner.os == 'Linux'
-        run: sudo apt-get install -y libqt5widgets5
+        run: sudo apt-get install -y libqt5widgets5 libqt5core5a
       -
         name: Install dependencies
         run: conda install -c conda-forge importlib-metadata
