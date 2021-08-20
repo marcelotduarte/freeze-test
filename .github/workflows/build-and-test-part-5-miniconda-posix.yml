@@ -81,7 +81,7 @@ jobs:
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         env:
-          QT_PLATFORM
+          #QT_PLATFORM
           QT_DEBUG_PLUGINS: 1
           DISPLAY: ':99.0'
         run: |
