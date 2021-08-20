@@ -82,6 +82,7 @@ jobs:
         id: freeze-and-run
         env:
           QT_QPA_PLATFORM: xcb
+          QT_PLATFORM: xcb
           QT_DEBUG_PLUGINS: 1
           DISPLAY: ':99.0'
         run: |
