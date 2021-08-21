@@ -1,4 +1,4 @@
-name: 5-Test using miniconda (posix)
+name: 5-Test using miniconda (linux)
 
 on:
   #push:
@@ -36,7 +36,7 @@ jobs:
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         os: [ubuntu-latest]
-        python-version: [3.8]
+        python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64]
         exclude:
           #- os: ubuntu-latest
@@ -81,8 +81,6 @@ jobs:
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         env:
-          QT_QPA_PLATFORM: xcb
-          QT_PLATFORM: xcb
           QT_DEBUG_PLUGINS: 1
           DISPLAY: ':99.0'
         run: |
