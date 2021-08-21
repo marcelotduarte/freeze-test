@@ -88,8 +88,7 @@ jobs:
           conda list
           echo "::endgroup::"
           echo "::group::Build and install cx_Freeze"
-          #pip install . --no-deps --ignore-installed --no-cache-dir -vvv
-          pip install cx_Freeze
+          pip install . --no-deps --ignore-installed --no-cache-dir -vvv
           echo "::endgroup::"
       -
         name: Freeze and run "${{ matrix.sample }}"
