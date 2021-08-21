@@ -70,8 +70,8 @@ jobs:
           PYTHON_VERSION=39
           BASE=py${PYTHON_VERSION}_${MINICONDA_VERSION}-${{ runner.os }}-${{ matrix.architecture }}
           curl https://repo.anaconda.com/miniconda/Miniconda3-${BASE}.sh -O
-          chmod +x ./Miniconda3-${BASE}.sh
-          ./Miniconda3-${BASE}.sh -f -b -p $HOME/miniconda
+          #chmod +x ./Miniconda3-${BASE}.sh
+          bash Miniconda3-${BASE}.sh -f -b -p $HOME/miniconda
           $HOME/miniconda/bin/activate
           conda init
           conda update -n base conda
