@@ -64,7 +64,7 @@ jobs:
       -
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: freeze
+          activate-environment: freeze-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
           python-version: ${{ matrix.python-version }}
           channels: conda-forge
       -
