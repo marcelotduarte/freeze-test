@@ -61,11 +61,24 @@ jobs:
       -
         name: Install dependencies
         run: |
-          conda install conda-forge importlib-metadata
+          conda install -c conda-forge importlib-metadata
           pip install "cx_Logging>=3.0" --no-cache-dir
       -
         name: Build the package
-        run: pip install . --no-deps --ignore-installed --no-cache-dir -vvv
+        run: |
+          echo "::group::Conda info"
+          conda info
+          echo "::endgroup::"
+          echo "::group::Install build dependencies"
+          conda install -c conda-forge importlib-metadata
+          pip install "cx_Logging>=3.0" --no-cache-dir
+          echo "::endgroup::"
+          echo "::group::Conda list"
+          conda list
+          echo "::endgroup::"
+          echo "::group::Build and install cx_Freeze"
+          pip install . --no-deps --ignore-installed --no-cache-dir -vvv
+          echo "::endgroup::"
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
