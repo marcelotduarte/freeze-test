@@ -63,13 +63,6 @@ jobs:
           ref: develop
           repository: marcelotduarte/cx_Freeze
       -
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          activate-environment: freeze-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
-          python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.architecture }}
-          channels: conda-forge
-      -
         name: Install miniconda
         if: runner.os == 'Linux'
         run: |
@@ -77,6 +70,7 @@ jobs:
           PYTHON_VERSION=39
           BASE=py${PYTHON_VERSION}_${MINICONDA_VERSION}-${{ runner.os }}-${{ matrix.architecture }}
           curl https://repo.anaconda.com/miniconda/Miniconda3-${BASE}.sh -O
+          chmod +x ./Miniconda3-${BASE}.sh
           ./Miniconda3-${BASE}.sh -f -b -p $HOME/miniconda
           $HOME/miniconda/bin/activate
           conda init
