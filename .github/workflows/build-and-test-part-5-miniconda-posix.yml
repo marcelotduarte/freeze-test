@@ -80,9 +80,9 @@ jobs:
           echo "::endgroup::"
           echo "::group::Install build dependencies"
           conda install -c conda-forge importlib-metadata
-          if [ ${{ matrix.python-version }}==3.8 ] || [ ${{ matrix.python-version }}==3.9 ] ; then
-            conda install -c conda-forge libpython-static
-          fi
+          #if [ "${{ matrix.python-version }}" == "3.8" ] || [ "${{ matrix.python-version }}" == "3.9" ] ; then
+            conda install -c conda-forge libpython-static[version='>=3.8']
+          #fi
           echo "::endgroup::"
           echo "::group::Conda list"
           conda list
