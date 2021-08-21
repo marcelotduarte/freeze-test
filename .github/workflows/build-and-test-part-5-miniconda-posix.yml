@@ -78,7 +78,7 @@ jobs:
           conda info
           echo "::endgroup::"
           echo "::group::Install build dependencies"
-          conda install -c conda-forge importlib-metadata
+          conda install -c conda-forge importlib-metadata libpython-static
           echo "::endgroup::"
           echo "::group::Conda list"
           conda list
