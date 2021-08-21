@@ -78,7 +78,10 @@ jobs:
           conda info
           echo "::endgroup::"
           echo "::group::Install build dependencies"
-          conda install -c conda-forge importlib-metadata libpython-static
+          conda install -c conda-forge importlib-metadata
+          if [ ${{ matrix.python-version }} >= 3.8 ] ; then
+            conda install -c conda-forge libpython-static
+          fi
           echo "::endgroup::"
           echo "::group::Conda list"
           conda list
