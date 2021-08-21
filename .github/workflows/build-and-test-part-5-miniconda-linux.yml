@@ -66,21 +66,24 @@ jobs:
         name: Install miniconda
         if: runner.os == 'Linux'
         run: |
+          set -x
           MINICONDA_VERSION=4.10.3
           PYTHON_VERSION=39
           BASE=py${PYTHON_VERSION}_${MINICONDA_VERSION}-${{ runner.os }}-${{ matrix.architecture }}
+          BASE=latest-${{ runner.os }}-${{ matrix.architecture }}
           curl https://repo.anaconda.com/miniconda/Miniconda3-${BASE}.sh -O
           #chmod +x ./Miniconda3-${BASE}.sh
-          bash Miniconda3-${BASE}.sh -f -b -p $HOME/miniconda
-          $HOME/miniconda/bin/activate
+          bash Miniconda3-${BASE}.sh -f -b -p $HOME/miniconda3
+          source $HOME/miniconda3/bin/activate
           conda init
           conda update -n base conda
+          set +x
       -
         name: Build the package
         run: |
           echo "::group::Create environment"
-          $HOME/miniconda/bin/activate
-          conda create -n $FREEZE_ENVIRONMENT python=${{ matrix.python-version }}
+          $HOME/miniconda3/bin/activate
+          conda create -n $FREEZE_ENVIRONMENT python=${{ matrix.python-version }} -y
           echo "::endgroup::"
           echo "::group::Activate environment"
           conda activate $FREEZE_ENVIRONMENT
