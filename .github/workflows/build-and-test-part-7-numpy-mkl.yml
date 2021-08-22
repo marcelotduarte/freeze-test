@@ -47,12 +47,14 @@ jobs:
           pip install -f wheelhouse numpy pandas
           echo "::endgroup::"
           ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
+        shell: bash
       -
         name: Collect images and logs
         run: |
           cd cx_Freeze/samples/${{ matrix.sample }}
           mv build/*/*.png . || true
           mv build/*/*.log . || true
+        shell: bash
       -
         name: Upload the snapshots and logs
         uses: actions/upload-artifact@v2
@@ -114,6 +116,7 @@ jobs:
           cd cx_Freeze/samples/${{ matrix.sample }}
           mv build/*/*.png . || true
           mv build/*/*.log . || true
+        shell: bash
       -
         name: Upload the snapshots and logs
         uses: actions/upload-artifact@v2
