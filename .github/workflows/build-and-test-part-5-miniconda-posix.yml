@@ -36,7 +36,7 @@ jobs:
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         os: [ubuntu-latest]
-        python-version: [3.9]
+        python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64]
         exclude:
           #- os: ubuntu-latest
@@ -68,10 +68,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
-      -
-        name: Install Linux libraries
-        if: runner.os == 'xLinux'
-        run: sudo apt-get install -y libgl1-mesa-dev
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
