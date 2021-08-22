@@ -44,7 +44,7 @@ jobs:
         id: freeze-and-run
         run: |
           echo "::group::Install dependencies"
-          pip install -f wheelhouse numpy pandas
+          pip install -f wheelhouse numpy --no-index
           echo "::endgroup::"
           ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
         shell: bash
@@ -106,7 +106,7 @@ jobs:
           echo "::group::Create venv with dependencies"
           python -m venv venv
           source venv/scripts/activate
-          pip install -f wheelhouse numpy pandas
+          pip install -f wheelhouse numpy --no-index
           echo "::endgroup::"
           ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
         shell: bash
