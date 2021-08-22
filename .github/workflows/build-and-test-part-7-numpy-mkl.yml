@@ -35,36 +35,18 @@ jobs:
         uses: actions/cache@v2
         with:
           path: wheelhouse/*
-          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst') }}
+          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
           restore-keys: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-
       -
         name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -U importlib-metadata setuptools wheel cx-logging
-          pip install --no-index -f wheelhouse cx-freeze --no-deps
+          pip install -U setuptools wheel importlib-metadata
+          pip install --no-deps -f wheelhouse cx-freeze cx-logging numpy pandas
           cxfreeze --version
+        shell: bash
       -
         run: python -m sysconfig
-      -
-        name: Install numpy+mkl and pandas
-        run: |
-          pushd wheelhouse
-          if [ "${{ matrix.python-version }}" == "3.6" ] ; then
-              curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/cp36/numpy-1.19.5+mkl-cp36-cp36m-win_amd64.whl -O
-          elif [ "${{ matrix.python-version }}" == "3.7" ] ; then
-              curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/numpy-1.20.3+mkl-cp37-cp37m-win_amd64.whl -O
-          elif [ "${{ matrix.python-version }}" == "3.8" ] ; then
-              curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/numpy-1.21.2+mkl-cp38-cp38-win_amd64.whl -O
-          elif [ "${{ matrix.python-version }}" == "3.9" ] ; then
-              curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/numpy-1.21.2+mkl-cp39-cp39-win_amd64.whl -O
-          else
-              curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/numpy-1.21.2+mkl-cp310-cp310-win_amd64.whl -O
-          fi
-          popd
-          pip install --no-index -f wheelhouse numpy
-          pip install pandas
-        shell: bash
       -
         name: Freeze pandas sample (numpy+mkl)
         working-directory: cx_Freeze/samples/pandas
@@ -117,34 +99,15 @@ jobs:
           python -m venv venv
           source venv/scripts/activate
           python -m pip install --upgrade pip
-          pip install -U importlib-metadata setuptools wheel cx-logging
-          pip install --no-index -f wheelhouse cx-freeze --no-deps
+          python -m pip install --upgrade pip
+          pip install -U setuptools wheel importlib-metadata
+          pip install --no-deps -f wheelhouse cx-freeze cx-logging numpy pandas
           cxfreeze --version
         shell: bash
       -
         run: |
           source venv/scripts/activate
           python -m sysconfig
-        shell: bash
-      -
-        name: Install numpy+mkl and pandas
-        run: |
-          source venv/scripts/activate
-          pushd wheelhouse
-          if [ "${{ matrix.python-version }}" == "3.6" ] ; then
-              curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/cp36/numpy-1.19.5+mkl-cp36-cp36m-win_amd64.whl -O
-          elif [ "${{ matrix.python-version }}" == "3.7" ] ; then
-              curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/numpy-1.20.3+mkl-cp37-cp37m-win_amd64.whl -O
-          elif [ "${{ matrix.python-version }}" == "3.8" ] ; then
-              curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/numpy-1.21.2+mkl-cp38-cp38-win_amd64.whl -O
-          elif [ "${{ matrix.python-version }}" == "3.9" ] ; then
-              curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/numpy-1.21.2+mkl-cp39-cp39-win_amd64.whl -O
-          else
-              curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/numpy-1.21.2+mkl-cp310-cp310-win_amd64.whl -O
-          fi
-          popd
-          pip install --no-index -f wheelhouse numpy
-          pip install pandas
         shell: bash
       -
         name: Freeze pandas sample (numpy+mkl)
