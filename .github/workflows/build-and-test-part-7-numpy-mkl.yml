@@ -8,16 +8,16 @@ on:
 jobs:
   test1:
     name: Test
-
     strategy:
       fail-fast: false
       matrix:
+        sample: [pandas]
         os: [windows-latest]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64]
-
     runs-on: ${{ matrix.os }}
-
+    env:
+      PIP_DISABLE_PIP_VERSION_CHECK: '1'
     steps:
       -
         name: Checkout cx_Freeze
@@ -37,43 +37,46 @@ jobs:
           path: wheelhouse/*
           key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
           restore-keys: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-
-      -
-        name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -U setuptools wheel importlib-metadata
-          pip install -f wheelhouse cx-freeze cx-logging numpy pandas
-          cxfreeze --version
-        shell: bash
       -
         run: python -m sysconfig
       -
-        name: Freeze pandas sample (numpy+mkl)
-        working-directory: cx_Freeze/samples/pandas
-        run: python setup.py build_exe --silent
-      #-
-      #  name: Upload the artifact
-      #  uses: actions/upload-artifact@v2
-      #  with:
-      #    name: frozen-pandas-${{ matrix.python-version }}
-      #    path: ./cx_Freeze/samples/pandas/build/*/**
+        name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
+        id: freeze-and-run
+        run: |
+          echo "::group::Install dependencies"
+          pip install -f wheelhouse numpy pandas
+          echo "::endgroup::"
+          ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
       -
-        name: Run pandas sample (numpy+mkl)
-        working-directory: cx_Freeze/samples/pandas/build
-        run: ./exe.win-amd64-${{ matrix.python-version }}/test_pandas.exe
+        name: Collect images and logs
+        run: |
+          cd cx_Freeze/samples/${{ matrix.sample }}
+          mv build/*/*.png . || true
+          mv build/*/*.log . || true
+      -
+        name: Upload the snapshots and logs
+        uses: actions/upload-artifact@v2
+        with:
+          name: screensnapshots
+          path: |
+            ./cx_Freeze/samples/${{ matrix.sample }}/*.png
+            ./cx_Freeze/samples/${{ matrix.sample }}/*.log
+          if-no-files-found: ignore
+      -
+        name: Status
+        run: exit ${{ steps.freeze-and-run.outputs.status }}
+        shell: bash
 
   test2:
     name: Test in virtual environment
-
     strategy:
       fail-fast: false
       matrix:
+        sample: [pandas]
         os: [windows-latest]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64]
-
     runs-on: ${{ matrix.os }}
-
     steps:
       -
         name: Checkout cx_Freeze
@@ -94,34 +97,32 @@ jobs:
           key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
           restore-keys: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-
       -
-        name: Create venv with dependencies
+        name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
         run: |
+          echo "::group::Create venv with dependencies"
           python -m venv venv
           source venv/scripts/activate
-          python -m pip install --upgrade pip
-          pip install -U setuptools wheel importlib-metadata
-          pip install -f wheelhouse cx-freeze cx-logging numpy pandas
-          cxfreeze --version
+          pip install -f wheelhouse numpy pandas
+          echo "::endgroup::"
+          ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
         shell: bash
       -
+        name: Collect images and logs
         run: |
-          source venv/scripts/activate
-          python -m sysconfig
-        shell: bash
+          cd cx_Freeze/samples/${{ matrix.sample }}
+          mv build/*/*.png . || true
+          mv build/*/*.log . || true
       -
-        name: Freeze pandas sample (numpy+mkl)
-        run: |
-          source venv/scripts/activate
-          cd cx_Freeze/samples/pandas
-          python setup.py build_exe --silent
-        shell: bash
-      #-
-      #  name: Upload the artifact
-      #  uses: actions/upload-artifact@v2
-      #  with:
-      #    name: frozen-pandas-${{ matrix.python-version }}
+        name: Upload the snapshots and logs
+        uses: actions/upload-artifact@v2
+        with:
+          name: screensnapshots
+          path: |
+            ./cx_Freeze/samples/${{ matrix.sample }}/*.png
+            ./cx_Freeze/samples/${{ matrix.sample }}/*.log
+          if-no-files-found: ignore
       #    path: ./cx_Freeze/samples/pandas/build/*/**
       -
-        name: Run pandas sample (numpy+mkl)
-        working-directory: cx_Freeze/samples/pandas/build
-        run: ./exe.win-amd64-${{ matrix.python-version }}/test_pandas.exe
+        name: Status
+        run: exit ${{ steps.freeze-and-run.outputs.status }}
+        shell: bash
