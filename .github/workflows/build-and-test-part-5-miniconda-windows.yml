@@ -56,33 +56,17 @@ jobs:
         uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: freeze
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ matrix.python-version 
+          architecture: ${{ matrix.architecture }}
           channels: conda-forge
-      -
-        name: Install dependencies
-        run: |
-          conda install -c conda-forge importlib-metadata
-          pip install "cx_Logging>=3.0" --no-cache-dir
-      -
-        name: Build the package
-        run: |
-          echo "::group::Conda info"
-          conda info
-          echo "::endgroup::"
-          echo "::group::Install build dependencies"
-          conda install -c conda-forge importlib-metadata
-          pip install "cx_Logging>=3.0" --no-cache-dir
-          echo "::endgroup::"
-          echo "::group::Conda list"
-          conda list
-          echo "::endgroup::"
-          echo "::group::Build and install cx_Freeze"
-          pip install . --no-deps --ignore-installed --no-cache-dir -vvv
-          echo "::endgroup::"
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
+        run: |
+          echo "::group::conda info"
+          conda info
+          echo "::endgroup::"
+          ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
       -
         name: Collect images and logs
         run: |
