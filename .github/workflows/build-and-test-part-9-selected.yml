@@ -82,6 +82,7 @@ jobs:
         env:
           QT_DEBUG_PLUGINS: 1
           DISPLAY: ':99.0'
+          TEST_BDIST_MAC: 1
         run: |
           ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
           cd cx_Freeze/samples/${{ matrix.sample }}
