@@ -27,8 +27,7 @@ jobs:
           import json
           with open("ci/build-test.json") as fp:
               data = json.load(fp)
-          samples = ["pandas", "pyqt5", "pyside2", "pyzmq", "sqlite"]
-          #samples = ["matplotlib", "pyside2"]
+          samples = ["pandas", "pillow", "pyqt5", "pyside2", "pyzmq", "sqlite"]
           samples = json.dumps(samples)
           print(samples)
           print(f"::set-output name=matrix::{samples}")
@@ -64,7 +63,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: wheelhouse/*
-          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst') }}
+          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
           restore-keys: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-
       -
         name: Install Linux libraries
@@ -75,13 +74,7 @@ jobs:
           libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0
           libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
           libsdl2-2.0-0
-          gnome-screenshot
-        shell: bash
-      -
-        name: Install macOS libraries
-        if: runner.os == 'macOS'
-        run: |
-          brew install wxpython
+          imagemagick-6.q16
         shell: bash
       -
         name: Freeze and run "${{ matrix.sample }}"
