@@ -68,12 +68,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
           channels: conda-forge
       -
-        name: Install dependencies
-        run: conda install -c conda-forge importlib-metadata
-      -
-        name: Build the package
-        run: pip install . --no-deps --ignore-installed --no-cache-dir -vvv
-      -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         env:
