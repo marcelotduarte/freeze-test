@@ -1,4 +1,4 @@
-name: 5-Test using miniconda (linux)
+name: 5-Test using miniconda (posix)
 
 on:
   #push:
