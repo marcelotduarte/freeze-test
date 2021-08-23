@@ -1,4 +1,4 @@
-name: 5-Test using miniconda (macOS)
+name: 5-Test miniconda (macOS)
 
 on:
   #push:
