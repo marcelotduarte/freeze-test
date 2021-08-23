@@ -78,6 +78,9 @@ jobs:
           echo "::group::conda info"
           conda info
           echo "::endgroup::"
+          echo "::group::conda info"
+          conda install -c conda-forge libpython-static || true
+          echo "::endgroup::"
           echo "::group::Test with conda build"
           conda install -c conda-forge importlib-metadata wheel
           conda install conda-build
