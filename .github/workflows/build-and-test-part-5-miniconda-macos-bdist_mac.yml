@@ -88,7 +88,7 @@ jobs:
           ls -l $HOME
           export CONDA_BUILD_SYSROOT=$HOME/MacOSX11.0.sdk
           #export CFLAGS="${CFLAGS} -isysroot ${CONDA_BUILD_SYSROOT} -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}"
-          export CFLAGS="${CFLAGS} -flto"
+          export CFLAGS="${CFLAGS} -fno-lto"
           echo "::endgroup::"
           echo "::group::Install libpython-static"
           conda install -c conda-forge libpython-static || true
