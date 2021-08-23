@@ -1,4 +1,4 @@
-name: 5-Test using miniconda (windows)
+name: 5-Test miniconda (windows)
 
 on:
   #push:
