@@ -79,27 +79,15 @@ jobs:
             elif [ "${{ matrix.python-version }}" == "3.9" ] ; then
                 curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/numpy-1.21.2+mkl-cp39-cp39-win_amd64.whl -O
             elif [[ ${{ matrix.python-version }} == 3.10* ]] ; then
-              if ! [ -e Pillow-8.3.1-cp310-cp310-win_amd64.whl ] ; then
-                curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/Pillow-8.3.1-cp310-cp310-win_amd64.whl -O
-              fi
-              if ! [ -e numpy-1.21.2+mkl-cp310-cp310-win_amd64.whl ] ; then
-                curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/numpy-1.21.2+mkl-cp310-cp310-win_amd64.whl -O
-              fi
-              if ! [ -e pandas-1.3.2-cp310-cp310-win_amd64.whl ] ; then
-                curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/pandas-1.3.2-cp310-cp310-win_amd64.whl -O
-              fi
+              curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/Pillow-8.3.1-cp310-cp310-win_amd64.whl -O
+              curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/numpy-1.21.2+mkl-cp310-cp310-win_amd64.whl -O
+              curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/pandas-1.3.2-cp310-cp310-win_amd64.whl -O
             fi
           else
             if [[ ${{ matrix.python-version }} == 3.10* ]] ; then
-              if ! [ -e Pillow-8.3.1-cp310-cp310-win32.whl ] ; then
-                curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/Pillow-8.3.1-cp310-cp310-win32.whl -O
-              fi
-              if ! [ -e numpy-1.21.2+mkl-cp310-cp310-win32.whl ] ; then
-                curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/numpy-1.21.2+mkl-cp310-cp310-win32.whl -O
-              fi
-              if ! [ -e pandas-1.3.2-cp310-cp310-win32.whl ] ; then
-                curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/pandas-1.3.2-cp310-cp310-win32.whl -O
-              fi
+              curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/Pillow-8.3.1-cp310-cp310-win32.whl -O
+              curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/numpy-1.21.2+mkl-cp310-cp310-win32.whl -O
+              curl https://download.lfd.uci.edu/pythonlibs/y2rycu7g/pandas-1.3.2-cp310-cp310-win32.whl -O
             fi
           fi
         shell: bash
