@@ -65,6 +65,16 @@ jobs:
           python-version: ${{ matrix.python-version }}
           channels: conda-forge
       -
+        name: Get the SDK
+        run: |
+          pwd
+          ls -l
+          pushd $HOME
+          curl -L https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX11.0.sdk.tar.xz -O
+          tar -xJf MacOSX11.0.sdk.tar.xz
+          ls -l
+          popd
+      -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         env:
@@ -73,13 +83,13 @@ jobs:
           PIP_INDEX_URL: https://riverbankcomputing.com/pypi/simple/
           TEST_BDIST_MAC: 1
           MACOSX_SDK_VERSION: '11.0'
-          CONDA_BUILD_SYSROOT: /opt/MacOSX11.0.sdk 
+          CONDA_BUILD_SYSROOT: $HOME/MacOSX11.0.sdk 
         run: |
           echo "::group::conda info"
           conda info
           echo "::endgroup::"
           echo "::group::check"
-          ls -l /opt
+          ls -l $HOME
           echo "::endgroup::"
           echo "::group::Install libpython-static"
           conda install -c conda-forge libpython-static || true
