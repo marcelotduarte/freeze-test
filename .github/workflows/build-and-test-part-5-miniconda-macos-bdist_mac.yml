@@ -76,8 +76,10 @@ jobs:
           echo "::group::conda info"
           conda info
           echo "::endgroup::"
-          echo "::group::Test with 6.7"
-          conda install -c conda-forge cx_freeze
+          echo "::group::Test with conda build"
+          conda install -c conda-forge importlib-metadata wheel
+          conda install conda-build
+          python setup.py bdist_conda
           echo "::endgroup::"
           ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
       -
