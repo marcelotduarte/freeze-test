@@ -72,6 +72,7 @@ jobs:
           DISPLAY: ':99.0'
           PIP_INDEX_URL: https://riverbankcomputing.com/pypi/simple/
           TEST_BDIST_MAC: 1
+          MACOSX_SDK_VERSION: '11.0'
         run: |
           echo "::group::conda info"
           conda info
