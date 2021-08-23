@@ -85,6 +85,7 @@ jobs:
           PIP_INDEX_URL: https://riverbankcomputing.com/pypi/simple/
           TEST_BDIST_MAC: 1
         run: ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
+        shell: bash
       -
         name: Collect images and logs
         run: |
