@@ -1,4 +1,4 @@
-name: 5-Test using miniconda (bdist_mac)
+name: 5-Test miniconda (macOS bdist_mac)
 
 on:
   #push:
