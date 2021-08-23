@@ -101,11 +101,11 @@ jobs:
         env:
           QT_DEBUG_PLUGINS: 1
           DISPLAY: ':99.0'
+          PIP_INDEX_URL: https://riverbankcomputing.com/pypi/simple/
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
+      -
+        name: Collect images and logs
         run: |
-          pushd wheelhouse
-          export PIP_FIND_LINKS=$PWD
-          popd
-          ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
           cd cx_Freeze/samples/${{ matrix.sample }}
           mv build/*/*.png . || true
           mv build/*/*.log . || true
