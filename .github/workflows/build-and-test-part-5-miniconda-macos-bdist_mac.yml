@@ -1,0 +1,100 @@
+name: 5-Test using miniconda (macOS)
+
+on:
+  #push:
+  #  branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  matrix:
+    name: Generate matrix of samples
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      -
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+      -
+        uses: actions/setup-python@v2
+      -
+        id: set-matrix
+        run: |
+          import json
+          with open("ci/build-test.json") as fp:
+              data = json.load(fp)
+          samples = json.dumps(list(data.keys()))
+          print(f"::set-output name=matrix::{samples}")
+        shell: python
+
+  tests:
+    needs: [matrix]
+    strategy:
+      fail-fast: false
+      matrix:
+        sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
+        os: [macos-latest]
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        architecture: [x64]
+        exclude:
+          #- os: macos-latest
+          #  sample: pythonnet-demo
+          - os: macos-latest
+            sample: service
+    name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+    runs-on: ${{ matrix.os }}
+    env:
+      PIP_DISABLE_PIP_VERSION_CHECK: '1'
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      -
+        name: Checkout cx_Freeze
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+      -
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: freeze
+          python-version: ${{ matrix.python-version }}
+          channels: conda-forge
+      -
+        name: Freeze and run "${{ matrix.sample }}"
+        id: freeze-and-run
+        env:
+          QT_DEBUG_PLUGINS: 1
+          DISPLAY: ':99.0'
+          PIP_INDEX_URL: https://riverbankcomputing.com/pypi/simple/
+          TEST_BDIST_MAC: 1
+        run: |
+          echo "::group::conda info"
+          conda info
+          echo "::endgroup::"
+          #echo "::group::Test with 6.7"
+          #conda install -c conda-forge cx_freeze
+          #echo "::endgroup::"
+          ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
+      -
+        name: Collect images and logs
+        run: |
+          cd cx_Freeze/samples/${{ matrix.sample }}
+          mv build/*/*.png . || true
+          mv build/*/*.log . || true
+      -
+        name: Upload the snapshots and logs
+        uses: actions/upload-artifact@v2
+        with:
+          name: screensnapshots
+          path: |
+            ./cx_Freeze/samples/${{ matrix.sample }}/*.png
+            ./cx_Freeze/samples/${{ matrix.sample }}/*.log
+          if-no-files-found: ignore
+      -
+        name: Status
+        run: exit ${{ steps.freeze-and-run.outputs.status }}
+        shell: bash
