@@ -103,6 +103,7 @@ jobs:
           DISPLAY: ':99.0'
           PIP_INDEX_URL: https://riverbankcomputing.com/pypi/simple/
         run: ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
+        shell: bash
       -
         name: Collect images and logs
         run: |
