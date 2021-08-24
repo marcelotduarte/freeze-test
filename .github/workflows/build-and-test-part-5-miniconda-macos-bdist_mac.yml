@@ -36,13 +36,13 @@ jobs:
       fail-fast: false
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
-        os: [macos-11]
+        os: [macos-latest]
         python-version: [3.8]
         architecture: [x64]
         #exclude:
         #  - os: macos-latest
         #    sample: pythonnet-demo
-        #  - os: macos-11
+        #  - os: macos-latest
         #    sample: service
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
@@ -50,7 +50,7 @@ jobs:
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
     defaults:
       run:
-        shell: bash -l {0}
+        shell: bash -e {0}
     steps:
       -
         name: Checkout cx_Freeze
@@ -58,19 +58,17 @@ jobs:
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
+      #-
+      #  uses: conda-incubator/setup-miniconda@v2
+      #  with:
+      #    activate-environment: freeze
+      #    python-version: ${{ matrix.python-version }}
+      #    channels: conda-forge
       -
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          activate-environment: freeze
-          python-version: ${{ matrix.python-version }}
-          channels: conda-forge
-      -
-        name: Get the SDK
+        name: Set conda
         run: |
-          pushd $HOME
-          #curl -L https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX11.0.sdk.tar.xz -O
-          #tar -xJf MacOSX11.0.sdk.tar.xz
-          popd
+          which conda
+          conda --version
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
