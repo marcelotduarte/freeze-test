@@ -32,6 +32,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
       -
+        name: Variables
+        run: |
+          declare || true
+          python -m sysconfig
+        shell: bash
+      -
         uses: actions/cache@v2
         with:
           path: wheelhouse/*
