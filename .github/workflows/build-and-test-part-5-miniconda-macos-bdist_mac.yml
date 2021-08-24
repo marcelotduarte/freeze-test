@@ -39,11 +39,11 @@ jobs:
         os: [macos-latest]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64]
-        exclude:
-          - os: macos-latest
-            sample: pythonnet-demo
-          - os: macos-latest
-            sample: service
+        #exclude:
+        #  - os: macos-latest
+        #    sample: pythonnet-demo
+        #  - os: macos-latest
+        #    sample: service
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
     env:
@@ -61,7 +61,7 @@ jobs:
       -
         uses: conda-incubator/setup-miniconda@v2
         with:
-          auto-update-conda: true
+          #auto-update-conda: true
           activate-environment: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
           python-version: ${{ matrix.python-version }}
           channels: conda-forge
@@ -70,7 +70,6 @@ jobs:
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
-          PIP_INDEX_URL: https://riverbankcomputing.com/pypi/simple/
           TEST_BDIST_MAC: 1
         run: |
           echo "::group::conda info"
