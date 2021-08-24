@@ -36,14 +36,14 @@ jobs:
       fail-fast: false
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
-        os: [macos-latest]
+        os: [macos-11]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64]
-        exclude:
-          #- os: macos-latest
-          #  sample: pythonnet-demo
-          - os: macos-latest
-            sample: service
+        #exclude:
+        #  - os: macos-latest
+        #    sample: pythonnet-demo
+        #  - os: macos-11
+        #    sample: service
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
     env:
@@ -68,8 +68,8 @@ jobs:
         name: Get the SDK
         run: |
           pushd $HOME
-          curl -L https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX11.0.sdk.tar.xz -O
-          tar -xJf MacOSX11.0.sdk.tar.xz
+          #curl -L https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX11.0.sdk.tar.xz -O
+          #tar -xJf MacOSX11.0.sdk.tar.xz
           popd
       -
         name: Freeze and run "${{ matrix.sample }}"
@@ -86,8 +86,9 @@ jobs:
           echo "::endgroup::"
           echo "::group::CONDA_BUILD_SYSROOT"
           ls -l $HOME
-          export CONDA_BUILD_SYSROOT=$HOME/MacOSX11.0.sdk
-          export CFLAGS="${CFLAGS} -isysroot ${CONDA_BUILD_SYSROOT} -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET} -fno-lto"
+          #export CONDA_BUILD_SYSROOT=$HOME/MacOSX11.0.sdk
+          #export CONDA_BUILD_SYSROOT=
+          #export CFLAGS="${CFLAGS} -isysroot ${CONDA_BUILD_SYSROOT} -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET} -fno-lto"
           echo "::endgroup::"
           echo "::group::Install libpython-static"
           conda install -c conda-forge libpython-static || true
