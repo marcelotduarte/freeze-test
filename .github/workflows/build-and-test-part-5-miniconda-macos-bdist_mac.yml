@@ -37,7 +37,7 @@ jobs:
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         os: [macos-11]
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: [3.8]
         architecture: [x64]
         #exclude:
         #  - os: macos-latest
