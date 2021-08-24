@@ -80,6 +80,8 @@ jobs:
           MACOSX_DEPLOYMENT_TARGET: '10.9'
         run: |
           echo "::group::conda info"
+          conda create -n freeze python=${{ matrix.python-version }}
+          conda activate freeze
           conda info
           echo "::endgroup::"
           echo "::group::CONDA_BUILD_SYSROOT"
