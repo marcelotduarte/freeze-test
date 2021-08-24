@@ -88,12 +88,12 @@ jobs:
           conda install -c conda-forge c-compiler
           echo "::endgroup::"
           echo "::group::Install libpython-static"
-          conda install -c conda-forge libpython-static || true
+          #conda install -c conda-forge libpython-static || true
           echo "::endgroup::"
           echo "::group::Test with conda build"
-          conda install -c conda-forge importlib-metadata wheel
+          #conda install -c conda-forge importlib-metadata wheel
           conda install conda-build
-          python setup.py bdist_conda
+          #python setup.py bdist_conda
           echo "::endgroup::"
           ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
       -
