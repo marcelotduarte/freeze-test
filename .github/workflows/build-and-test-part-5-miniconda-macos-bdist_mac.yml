@@ -50,7 +50,7 @@ jobs:
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
     defaults:
       run:
-        shell: bash -e {0}
+        shell: bash -l {0}
     steps:
       -
         name: Checkout cx_Freeze
@@ -81,6 +81,7 @@ jobs:
         run: |
           echo "::group::conda info"
           conda create --prefix ./env-freeze -c conda-forge python=${{ matrix.python-version }}
+          ls -l
           conda activate ./env-freeze
           conda info
           echo "::endgroup::"
