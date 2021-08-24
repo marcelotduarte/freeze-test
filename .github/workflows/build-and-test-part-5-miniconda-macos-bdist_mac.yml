@@ -25,8 +25,8 @@ jobs:
           import json
           with open("ci/build-test.json") as fp:
               data = json.load(fp)
-          #samples = json.dumps(list(data.keys()))
-          samples = json.dumps(["pyside2", "pyqt5"])
+          samples = json.dumps(list(data.keys()))
+          #samples = json.dumps(["pyside2", "pyqt5"])
           print(f"::set-output name=matrix::{samples}")
         shell: python
 
@@ -39,11 +39,11 @@ jobs:
         os: [macos-latest]
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64]
-        #exclude:
-        #  - os: macos-latest
-        #    sample: pythonnet-demo
-        #  - os: macos-latest
-        #    sample: service
+        exclude:
+          - os: macos-latest
+            sample: pythonnet-demo
+          - os: macos-latest
+            sample: service
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
     env:
@@ -61,7 +61,6 @@ jobs:
       -
         uses: conda-incubator/setup-miniconda@v2
         with:
-          #auto-update-conda: true
           activate-environment: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
           python-version: ${{ matrix.python-version }}
           channels: conda-forge
