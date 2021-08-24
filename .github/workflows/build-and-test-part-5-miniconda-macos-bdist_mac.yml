@@ -80,6 +80,7 @@ jobs:
           MACOSX_DEPLOYMENT_TARGET: '10.9'
         run: |
           echo "::group::conda info"
+          source $CONDA/bin/activate
           conda create --prefix ./env-freeze -c conda-forge python=${{ matrix.python-version }}
           ls -l
           conda activate ./env-freeze
