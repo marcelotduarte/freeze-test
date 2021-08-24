@@ -88,7 +88,7 @@ jobs:
           conda install -c conda-forge c-compiler
           echo "::endgroup::"
           echo "::group::Install libpython-static"
-          #conda install -c conda-forge libpython-static || true
+          conda install -c conda-forge libpython-static || true
           echo "::endgroup::"
           echo "::group::Test with conda build"
           #conda install -c conda-forge importlib-metadata wheel
