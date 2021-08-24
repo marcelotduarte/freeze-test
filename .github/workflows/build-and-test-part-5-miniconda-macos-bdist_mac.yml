@@ -84,6 +84,9 @@ jobs:
           #export CONDA_BUILD_SYSROOT=
           #export CFLAGS="${CFLAGS} -isysroot ${CONDA_BUILD_SYSROOT} -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET} -fno-lto"
           echo "::endgroup::"
+          echo "::group::Install c-compiler"
+          conda install -c conda-forge c-compiler
+          echo "::endgroup::"
           echo "::group::Install libpython-static"
           conda install -c conda-forge libpython-static || true
           echo "::endgroup::"
