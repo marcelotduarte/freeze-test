@@ -69,9 +69,8 @@ jobs:
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
-          DISPLAY: ':99.0'
-        run: |
-          ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
+        shell: bash
       -
         name: Collect images and logs
         run: |
