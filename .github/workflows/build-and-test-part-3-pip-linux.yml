@@ -1,4 +1,4 @@
-name: 3-Test wheels using pip
+name: 3-Test wheels using pip (linux)
 
 on:
   #push:
@@ -28,7 +28,6 @@ jobs:
           with open("ci/build-test.json") as fp:
               data = json.load(fp)
           samples = json.dumps(list(data.keys()))
-          print(samples)
           print(f"::set-output name=matrix::{samples}")
         shell: python
 
@@ -38,21 +37,13 @@ jobs:
       fail-fast: false
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest]
         python-version: [3.6, 3.7, 3.8, 3.9]
-        architecture: [x64, x86]
+        architecture: [x64]
         exclude:
           - os: ubuntu-latest
-            architecture: x86
-          - os: macos-latest
-            architecture: x86
-          - os: ubuntu-latest
-            sample: pythonnet-demo
-          - os: macos-latest
             sample: pythonnet-demo
           - os: ubuntu-latest
-            sample: service
-          - os: macos-latest
             sample: service
         branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
@@ -92,9 +83,11 @@ jobs:
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
-          DISPLAY: ':99.0'
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
+        shell: bash
+      -
+        name: Collect images and logs
         run: |
-          ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
           cd cx_Freeze/samples/${{ matrix.sample }}
           mv build/*/*.png . || true
           mv build/*/*.log . || true
