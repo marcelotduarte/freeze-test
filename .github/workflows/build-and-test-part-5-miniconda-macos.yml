@@ -39,8 +39,8 @@ jobs:
         python-version: [3.6, 3.7, 3.8, 3.9]
         architecture: [x64]
         exclude:
-          #- os: macos-latest
-          #  sample: pythonnet-demo
+          - os: macos-latest
+            sample: pythonnet-demo
           - os: macos-latest
             sample: service
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
