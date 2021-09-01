@@ -56,7 +56,7 @@ jobs:
         name: Checkout cx_Freeze
         uses: actions/checkout@v2
         with:
-          ref: 6.8b3
+          ref: mac_b68b3
           repository: marcelotduarte/cx_Freeze
       -
         uses: conda-incubator/setup-miniconda@v2
