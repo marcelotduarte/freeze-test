@@ -41,7 +41,7 @@ jobs:
         os: [macos-latest]
         python-version: [3.6, 3.7, 3.8, 3.9, "3.10.0-rc.1"]
         architecture: [x64]
-        branch: [develop]
+        branch: [main]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
     steps:
