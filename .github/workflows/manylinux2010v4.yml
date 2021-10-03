@@ -16,7 +16,7 @@ jobs:
       matrix:
         platform: [x86_64]
         policy: [manylinux2010]
-        ref: [master]
+        ref: [main]
     name: Build manylinux2010 wheel using ${{ matrix.policy }}_${{ matrix.platform }}
     runs-on: ubuntu-latest
     env:
