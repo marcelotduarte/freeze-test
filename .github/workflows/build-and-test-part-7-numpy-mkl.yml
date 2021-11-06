@@ -13,7 +13,7 @@ jobs:
       matrix:
         sample: [pandas]
         os: [windows-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: [3.6, 3.7, 3.8, 3.9, "3.10"]
         architecture: [x64]
     runs-on: ${{ matrix.os }}
     env:
@@ -76,7 +76,7 @@ jobs:
       matrix:
         sample: [pandas]
         os: [windows-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: [3.6, 3.7, 3.8, 3.9, "3.10"]
         architecture: [x64]
     runs-on: ${{ matrix.os }}
     env:
