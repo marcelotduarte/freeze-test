@@ -1,4 +1,4 @@
-name: x-Test using 3.10rc1
+name: x-Test using 3.10
 
 on:
   #push:
@@ -39,7 +39,7 @@ jobs:
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.10.0-rc.1"]
+        python-version: ["3.10"]
         architecture: [x64, x86]
         exclude:
           - os: ubuntu-latest
