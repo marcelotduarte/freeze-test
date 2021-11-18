@@ -28,7 +28,7 @@ jobs:
           with open("ci/build-test.json") as fp:
               data = json.load(fp)
           #samples = json.dumps(list(data.keys()))
-          samples = json.dumps(["pandas", "pillow", "pyqt5", "pyside2", "pyzmq", "sqlite"])
+          samples = json.dumps(["ctypes", "pyzmq", "sqlite"])
           print(f"::set-output name=matrix::{samples}")
         shell: python
 
@@ -38,8 +38,8 @@ jobs:
       fail-fast: false
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
-        os: [macos-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9, "3.10.0-rc.1"]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: [3.6, 3.7, 3.8, 3.9, "3.10"]
         architecture: [x64]
         branch: [main]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
