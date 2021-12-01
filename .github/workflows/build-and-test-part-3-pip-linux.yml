@@ -45,6 +45,9 @@ jobs:
             sample: pythonnet-demo
           - os: ubuntu-latest
             sample: service
+          - os: ubuntu-latest
+            sample: matplotlib
+            python-version: "3.10"
         branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
