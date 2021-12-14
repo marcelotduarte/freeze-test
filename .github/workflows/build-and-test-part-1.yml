@@ -46,7 +46,7 @@ jobs:
         name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -U importlib-metadata setuptools wheel
+          pip install -U build importlib-metadata setuptools wheel
         shell: bash
       -
         name: Install or Build cx_Logging
@@ -56,14 +56,17 @@ jobs:
             git clone https://github.com/anthony-tuininga/cx_Logging.git
             pushd cx_Logging
             python setup.py build
-            python setup.py bdist_wheel -d ../wheelhouse
+            #python setup.py bdist_wheel -d ../wheelhouse
+            python -m build -x --wheel --outdir ../wheelhouse .
             popd
           fi
           pip install cx_Logging
         shell: bash
       -
         name: Build the wheel
-        run: pip wheel . --no-deps -v --wheel-dir wheelhouse
+        run: |
+          #pip wheel . --no-deps -v --wheel-dir wheelhouse
+          python -m build -x --wheel --outdir wheelhouse .
         shell: bash
       -
         name: Upload the artifact
