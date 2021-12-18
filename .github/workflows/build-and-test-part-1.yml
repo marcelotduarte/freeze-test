@@ -56,7 +56,6 @@ jobs:
             git clone https://github.com/anthony-tuininga/cx_Logging.git
             pushd cx_Logging
             python setup.py build
-            #python setup.py bdist_wheel -d ../wheelhouse
             python -m build -x --wheel --outdir ../wheelhouse .
             popd
           fi
