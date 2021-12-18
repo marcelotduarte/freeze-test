@@ -65,7 +65,6 @@ jobs:
       -
         name: Build the wheel
         run: |
-          #pip wheel . --no-deps -v --wheel-dir wheelhouse
           python -m build -x --wheel --outdir wheelhouse .
         shell: bash
       -
