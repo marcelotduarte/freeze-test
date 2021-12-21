@@ -11,7 +11,7 @@
 performance, is cross-platform and should work on any platform that Python
 itself works on.
 
-# Highlights of Version 6.2 up to 6.6:
+# Highlights of Version 6.2 up to 6.9:
 - New ModuleFinder, using importlib.machinery
 - Support for package metadata
 - Enhanced support for Python 3.8 and experimental support for Python 3.9
