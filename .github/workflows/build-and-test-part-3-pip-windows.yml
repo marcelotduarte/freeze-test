@@ -39,10 +39,13 @@ jobs:
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         os: [windows-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9, "3.10"]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
         architecture: [x64, x86]
         branch: [develop]
         exclude:
+          - sample: matplotlib
+            python-version: "3.10"
+            architecture: x86
           - sample: pyside2
             python-version: "3.10"
           - sample: pythonnet-demo
