@@ -76,9 +76,13 @@ jobs:
           echo "::group::Variables"
           declare || true
           echo "::endgroup::"
-          #echo "::group::Install c-compiler"
-          #conda install -c conda-forge c-compiler
-          #echo "::endgroup::"
+          echo "::group::Install c-compiler"
+          conda install -c conda-forge c-compiler
+          if [ ${{ matrix.python-version }} == "3.8" ] || [ ${{ matrix.python-version }} == "3.9" ] || [ ${{ matrix.python-version }} == "3.10" ]
+          then
+            conda install -c conda-forge libpython-static
+          fi
+          echo "::endgroup::"
           echo "::group::Variables"
           declare || true
           echo "::endgroup::"
