@@ -36,7 +36,7 @@ jobs:
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         os: [macos-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
         architecture: [x64]
         exclude:
           - os: macos-latest
@@ -76,9 +76,9 @@ jobs:
           echo "::group::Variables"
           declare || true
           echo "::endgroup::"
-          echo "::group::Install c-compiler"
-          conda install -c conda-forge c-compiler
-          echo "::endgroup::"
+          #echo "::group::Install c-compiler"
+          #conda install -c conda-forge c-compiler
+          #echo "::endgroup::"
           echo "::group::Variables"
           declare || true
           echo "::endgroup::"
