@@ -10,14 +10,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        #os: [ubuntu-latest, windows-latest, macos-latest]
+        #python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        os: [windows-latest]
+        python-version: ["3.9"]
         architecture: [x64, x86]
-        exclude:
-          - os: ubuntu-latest
-            architecture: x86
-          - os: macos-latest
-            architecture: x86
+        #exclude:
+        #  - os: ubuntu-latest
+        #    architecture: x86
+        #  - os: macos-latest
+        #    architecture: x86
     name: Build wheel ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
     steps:
