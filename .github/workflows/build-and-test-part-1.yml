@@ -62,6 +62,7 @@ jobs:
             popd
           fi
           pip install cx_Logging
+          pip list -v
         shell: bash
       -
         name: Build the wheel
