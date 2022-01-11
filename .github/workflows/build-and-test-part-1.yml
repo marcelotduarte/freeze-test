@@ -58,7 +58,7 @@ jobs:
             git clone https://github.com/anthony-tuininga/cx_Logging.git
             pushd cx_Logging
             python setup.py build
-            python -m build -x --wheel --outdir ../wheelhouse .
+            python -m build -o ../wheelhouse -x -n .
             popd
           fi
           pip install cx_Logging
@@ -67,7 +67,7 @@ jobs:
       -
         name: Build the wheel
         run: |
-          python -m build -x --wheel --outdir wheelhouse .
+          python -m build -o wheelhouse -x -n .
         shell: bash
       -
         name: Upload the artifact
