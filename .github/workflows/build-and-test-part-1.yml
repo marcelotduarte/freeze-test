@@ -55,7 +55,7 @@ jobs:
           if [[ ${{ matrix.python-version }} == 3.10* ]] ; then
             git clone https://github.com/anthony-tuininga/cx_Logging.git
             pushd cx_Logging
-            #python setup.py build
+            python setup.py build
             python -m build -o ../wheelhouse -x -n .
             popd
             pip install -f wheelhouse cx_Logging
