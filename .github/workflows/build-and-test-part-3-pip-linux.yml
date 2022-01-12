@@ -38,7 +38,7 @@ jobs:
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         os: [ubuntu-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9, "3.10"]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
         architecture: [x64]
         exclude:
           - os: ubuntu-latest
