@@ -49,7 +49,7 @@ jobs:
           pip install --upgrade build setuptools
         shell: bash
       -
-        name: Install or Build cx_Logging
+        name: Build and install cx_Logging
         if: runner.os == 'Windows'
         run: |
           if [[ ${{ matrix.python-version }} == 3.10* ]] ; then
@@ -58,8 +58,8 @@ jobs:
             python setup.py build
             python -m build -o ../wheelhouse -x -n .
             popd
+            pip install -f wheelhouse cx_Logging
           fi
-          pip install cx_Logging
         shell: bash
       -
         name: Install dependencies
