@@ -47,4 +47,3 @@ package() {
     sed -e "s|${_mingw_prefix}/bin/||g" -i ${filename}
   done
 }
-
