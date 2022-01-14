@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sys: [ { msystem: MINGW32, env: i686 }, { msystem: MINGW64, env: x86_64 }, { msystem: UCRT64, env: ucrt-x86_64 }, { msystem: CLANGARM64, env: clang-aarch64 }]
+        sys: [ { msystem: MINGW32, env: i686 }, { msystem: MINGW64, env: x86_64 }, { msystem: UCRT64, env: ucrt-x86_64 }]
     name: Build pkg ${{ matrix.sys.msystem }}
     runs-on: windows-latest
     defaults:
@@ -30,18 +30,14 @@ jobs:
             mingw-w64-${{ matrix.sys.env }}-python-setuptools
             mingw-w64-${{ matrix.sys.env }}-python-wheel
             mingw-w64-${{ matrix.sys.env }}-python-importlib-metadata
+            mingw-w64-${{ matrix.sys.env }}-python-cx-logging
+            mingw-w64-${{ matrix.sys.env }}-python-lief
           update: true
       -
         name: Variables
         run: |
           declare || true
           python -m sysconfig
-      -
-        name: Additional packages
-        if: matrix.sys.env != 'CLANGARM64'
-        run: |
-          mingw-w64-${{ matrix.sys.env }}-python-cx-logging
-          mingw-w64-${{ matrix.sys.env }}-python-lief
       -
         uses: actions/cache@v2
         with:
