@@ -46,7 +46,7 @@ jobs:
         name: Build the package
         run: |
           ls -l
-          dos2unix PKGBUILD
+          #dos2unix PKGBUILD
           MINGW_ARCH=${{ matrix.sys.msystem }} makepkg-mingw -sCLf
       -
         name: Upload the artifact
