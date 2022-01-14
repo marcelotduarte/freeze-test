@@ -41,11 +41,11 @@ jobs:
         uses: actions/cache@v2
         with:
           path: mingw-w64-*.pkg.*
-          key: wheelhouse-${{ matrix.sys.msystem }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
+          key: wheelhouse-${{ matrix.sys.msystem }}-20210114
       -
         name: Build the package
         run: |
-          makepkg-mingw -sCLf
+          MINGW_ARCH=${{ matrix.sys.msystem }} makepkg-mingw -sCLf
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
