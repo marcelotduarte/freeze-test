@@ -1,2 +1,3 @@
-autoclrf=false
+core.autoclrf=false
+core.eof=lf
 
