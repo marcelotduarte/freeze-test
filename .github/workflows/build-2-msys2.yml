@@ -24,7 +24,7 @@ jobs:
         with:
           msystem: ${{ matrix.sys.msystem }}
           install: >-
-            dos2unix
+            dos2unix git
             mingw-w64-${{ matrix.sys.env }}-toolchain
             mingw-w64-${{ matrix.sys.env }}-python-pip
             mingw-w64-${{ matrix.sys.env }}-python-setuptools
