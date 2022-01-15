@@ -11,7 +11,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        #python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.9"]
         architecture: [x64, x86]
         exclude:
           - os: ubuntu-latest
@@ -45,7 +46,7 @@ jobs:
       -
         uses: actions/cache@v2
         with:
-          path: $CONDA/conda-bld/
+          path: /usr/local/miniconda/conda-bld/*/*.tar.gz
           key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
       -
         name: Install conda-build
@@ -67,4 +68,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: cx-freeze-conda
-          path: $CONDA/conda-bld/
+          path: /usr/local/miniconda/conda-bld/*/*.tar.gz
