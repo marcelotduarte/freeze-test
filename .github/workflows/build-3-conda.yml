@@ -16,9 +16,9 @@ jobs:
         architecture: [x64]
     name: Build cx_logging package ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
-    #defaults:
-    #  run:
-    #    shell: bash -l {0}
+    defaults:
+      run:
+        shell: bash -l {0}
     env:
       VIRTUAL_ENV: freeze-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     steps:
@@ -40,7 +40,7 @@ jobs:
         run: |
           declare || true
           python -m sysconfig
-        shell: bash
+        #shell: bash
       -
         name: envs
         run: |
@@ -50,7 +50,7 @@ jobs:
           echo ${{ steps.setup-miniconda.outputs.environment-file }}
           echo ${{ steps.setup-miniconda.outputs.environment-file-was-patched }}
           exit 1
-        shell: bash
+        #shell: bash
       -
         uses: actions/cache@v2
         with:
