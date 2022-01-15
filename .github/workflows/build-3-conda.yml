@@ -1,0 +1,70 @@
+name: Build-3-conda
+
+on:
+  #push:
+  #  branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        architecture: [x64, x86]
+        exclude:
+          - os: ubuntu-latest
+            architecture: x86
+          - os: macos-latest
+            architecture: x86
+    name: Build package ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      -
+        uses: actions/checkout@v2
+        with:
+          ref: cx_logging
+          repository: marcelotduarte/cx_freeze-feedstock
+      -
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: freeze-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.architecture }}
+          channels: conda-forge
+      -
+        name: Variables
+        run: |
+          declare || true
+          python -m sysconfig
+        #shell: bash
+      -
+        uses: actions/cache@v2
+        with:
+          path: wheelhouse/*
+          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
+      -
+        name: Install dependencies
+        run: |
+          echo "::group::conda info"
+          conda info
+          echo "::endgroup::"
+          #echo "::group::Install c-compiler"
+          #conda install -c conda-forge c-compiler
+          #echo "::endgroup::"
+        #shell: bash
+      -
+        name: Build the conda package
+        run: |
+          conda build .
+        #shell: bash
+      -
+        name: Upload the artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: cx-freeze-conda
+          path: wheelhouse/cx_*
