@@ -14,11 +14,13 @@ jobs:
         #python-version: ["3.7", "3.8", "3.9", "3.10"]
         python-version: ["3.9"]
         architecture: [x64]
-    name: Build package ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+    name: Build cx_logging package ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
     #defaults:
     #  run:
     #    shell: bash -l {0}
+    env:
+      VIRTUAL_ENV: freeze-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     steps:
       -
         uses: actions/checkout@v2
@@ -28,7 +30,7 @@ jobs:
       -
         uses: conda-incubator/setup-miniconda@v2
         with:
-          #activate-environment: freeze-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+          activate-environment: ${{ env.VIRTUAL_ENV }}
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
@@ -41,7 +43,7 @@ jobs:
       -
         uses: actions/cache@v2
         with:
-          path: /usr/local/miniconda/conda-bld/*/*.tar.bz2
+          path: ${{ env.CONDA }}/envs/${{ env.VIRTUAL_ENV }}/conda-bld/*/*.tar.bz2
           key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
       -
         name: Install conda-build
@@ -63,12 +65,13 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: cx_logging-conda
-          path: /usr/local/miniconda/conda-bld/*/*.tar.bz2
+          path: ${{ env.CONDA }}/envs/${{ env.VIRTUAL_ENV }}/conda-bld/*/*.tar.bz2
   build:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        #os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [windows-latest]
         #python-version: ["3.7", "3.8", "3.9", "3.10"]
         python-version: ["3.9"]
         architecture: [x64]
