@@ -46,7 +46,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.vars.outputs.CONDA_PREFIX }}/conda-bld/*/*.tar.bz2
-          key: wheelhouse-${{ env.OS_PY_ARCH }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
+          key: wheelhouse-${{ env.OS_PY_ARCH }}-${{ github.sha }}
       -
         name: Install conda-build
         run: |
@@ -105,7 +105,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.vars.outputs.CONDA_PREFIX }}/conda-bld/*/*.tar.bz2
-          key: wheelhouse-${{ env.OS_PY_ARCH }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
+          key: wheelhouse-${{ env.OS_PY_ARCH }}-${{ github.sha }}
       -
         name: Install conda-build
         run: |
