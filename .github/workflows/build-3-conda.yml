@@ -41,7 +41,7 @@ jobs:
         run: |
           declare || true
           python -m sysconfig
-        #shell: bash
+        shell: bash
       -
         uses: actions/cache@v2
         with:
