@@ -40,12 +40,16 @@ jobs:
         run: |
           declare || true
           python -m sysconfig
+          echo "::set-output name=CONDA_PREFIX::$CONDA_PREFIX"
         #shell: bash
+        id: vars
       -
         name: envs
         run: |
           echo ${{ env.VIRTUAL_ENV }}
-          echo ${{ env.CONDA }}
+          echo ${{ env.CONDA_PREFIX }}
+          echo ${{ steps.vars.outputs.CONDA_PREFIX }}
+          echo ${{ steps.env }}
           echo ${{ steps.setup-miniconda.outputs }}
           echo ${{ steps.setup-miniconda.outputs.environment-file }}
           echo ${{ steps.setup-miniconda.outputs.environment-file-was-patched }}
