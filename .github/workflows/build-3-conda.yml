@@ -45,7 +45,7 @@ jobs:
       -
         uses: actions/cache@v2
         with:
-          path: $CONDA_DEFAULT_ENV/conda-bld/
+          path: $CONDA/conda-bld/
           key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
       -
         name: Install conda-build
@@ -67,4 +67,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: cx-freeze-conda
-          path: $CONDA_DEFAULT_ENV/conda-bld/
+          path: ${{ CONDA }}/conda-bld/
