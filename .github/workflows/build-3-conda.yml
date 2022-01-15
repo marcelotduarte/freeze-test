@@ -6,6 +6,64 @@ on:
   workflow_dispatch:
 
 jobs:
+  build_cx_logging:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        #python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.9"]
+        architecture: [x64]
+    name: Build package ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+    runs-on: ${{ matrix.os }}
+    #defaults:
+    #  run:
+    #    shell: bash -l {0}
+    steps:
+      -
+        uses: actions/checkout@v2
+        with:
+          #ref: cx_logging
+          repository: marcelotduarte/cx_logging-feedstock
+      -
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          #activate-environment: freeze-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.architecture }}
+          channels: conda-forge
+      -
+        name: Variables
+        run: |
+          declare || true
+          python -m sysconfig
+        shell: bash
+      -
+        uses: actions/cache@v2
+        with:
+          path: /usr/local/miniconda/conda-bld/*/*.tar.bz2
+          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
+      -
+        name: Install conda-build
+        run: |
+          echo "::group::conda info"
+          conda info
+          echo "::endgroup::"
+          echo "::group::Install conda-build"
+          conda install conda-build
+          echo "::endgroup::"
+        #shell: bash
+      -
+        name: Build the conda package
+        run: |
+          conda build recipe
+        #shell: bash
+      -
+        name: Upload the artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: cx_logging-conda
+          path: /usr/local/miniconda/conda-bld/*/*.tar.bz2
   build:
     strategy:
       fail-fast: false
@@ -13,12 +71,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         #python-version: ["3.7", "3.8", "3.9", "3.10"]
         python-version: ["3.9"]
-        architecture: [x64, x86]
-        exclude:
-          - os: ubuntu-latest
-            architecture: x86
-          - os: macos-latest
-            architecture: x86
+        architecture: [x64]
     name: Build package ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
     #defaults:
