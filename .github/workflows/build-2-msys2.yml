@@ -42,7 +42,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: mingw-w64-*.pkg.*
-          key: wheelhouse-${{ matrix.sys.msystem }}-20210114
+          key: wheelhouse-${{ matrix.sys.msystem }}-${{ github.sha }}
       -
         name: Build the package
         run: |

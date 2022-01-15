@@ -15,7 +15,7 @@ depends=("${MINGW_PACKAGE_PREFIX}-python"
          "${MINGW_PACKAGE_PREFIX}-python-cx-logging"
          "${MINGW_PACKAGE_PREFIX}-python-importlib-metadata"
          "${MINGW_PACKAGE_PREFIX}-python-lief")
-makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
+makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-python-setuptools")
 options=('staticlibs' 'strip' '!debug')
 source=()
@@ -25,6 +25,7 @@ prepare() {
   rm -Rf python-${_realname}-${MSYSTEM}
   git clone -b develop https://github.com/marcelotduarte/cx_Freeze.git python-${_realname}-${MSYSTEM}
 }
+
 pkgver() {
   cd python-${_realname}-${MSYSTEM}
   cat setup.cfg | grep '^version' | sed 's/[[:space:]]//g' | awk -F= '{print $2}'
