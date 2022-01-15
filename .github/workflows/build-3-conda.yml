@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
         architecture: [x64, x86]
         exclude:
           - os: ubuntu-latest
@@ -20,9 +20,9 @@ jobs:
             architecture: x86
     name: Build package ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        shell: bash -l {0}
+    #defaults:
+    #  run:
+    #    shell: bash -l {0}
     steps:
       -
         uses: actions/checkout@v2
@@ -32,7 +32,7 @@ jobs:
       -
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: freeze-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+          #activate-environment: freeze-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
@@ -45,7 +45,7 @@ jobs:
       -
         uses: actions/cache@v2
         with:
-          path: wheelhouse/*
+          path: $CONDA_DEFAULT_ENV/conda-bld/
           key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
       -
         name: Install conda-build
@@ -53,7 +53,7 @@ jobs:
           echo "::group::conda info"
           conda info
           echo "::endgroup::"
-          echo "::group::Install c-compiler"
+          echo "::group::Install conda-build"
           conda install conda-build
           echo "::endgroup::"
         #shell: bash
@@ -67,4 +67,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: cx-freeze-conda
-          path: wheelhouse/cx_*
+          path: $CONDA_DEFAULT_ENV/conda-bld/
