@@ -34,11 +34,22 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
+        id: setup-miniconda
       -
         name: Variables
         run: |
           declare || true
           python -m sysconfig
+        shell: bash
+      -
+        name: envs
+        run: |
+          echo ${{ env.VIRTUAL_ENV }}
+          echo ${{ env.CONDA }}
+          echo ${{ steps.setup-miniconda.outputs }}
+          echo ${{ steps.setup-miniconda.outputs.environment-file }}
+          echo ${{ steps.setup-miniconda.outputs.environment-file-was-patched }}
+          exit 1
         shell: bash
       -
         uses: actions/cache@v2
@@ -67,6 +78,7 @@ jobs:
           name: cx_logging-conda
           path: ${{ env.CONDA }}/envs/${{ env.VIRTUAL_ENV }}/conda-bld/*/*.tar.bz2
   build:
+    needs: build_cx_logging
     strategy:
       fail-fast: false
       matrix:
