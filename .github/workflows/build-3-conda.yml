@@ -46,7 +46,7 @@ jobs:
       -
         uses: actions/cache@v2
         with:
-          path: /usr/local/miniconda/conda-bld/*/*.tar.gz
+          path: /usr/local/miniconda/conda-bld/*/*.tar.bz2
           key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
       -
         name: Install conda-build
@@ -61,11 +61,11 @@ jobs:
       -
         name: Build the conda package
         run: |
-          conda build .
+          conda build recipe
         #shell: bash
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
           name: cx-freeze-conda
-          path: /usr/local/miniconda/conda-bld/*/*.tar.gz
+          path: /usr/local/miniconda/conda-bld/*/*.tar.bz2
