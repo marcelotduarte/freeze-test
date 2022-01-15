@@ -19,20 +19,21 @@ jobs:
     defaults:
       run:
         shell: bash -l {0}
+    env:
+      OS_PY_ARCH: ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     steps:
       -
         uses: actions/checkout@v2
         with:
-          #ref: lib
-          repository: conda-forge/cx_logging-feedstock
+          ref: setuptools
+          repository: marcelotduarte/cx_logging-feedstock
       -
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: freeze-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+          activate-environment: freeze-${{ env.OS_PY_ARCH }}
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
-        id: setup-miniconda
       -
         name: Variables
         run: |
@@ -42,21 +43,10 @@ jobs:
         #shell: bash
         id: vars
       -
-        name: envs
-        run: |
-          echo ${{ env.VIRTUAL_ENV }}
-          echo ${{ env.CONDA_PREFIX }}
-          echo "${{ steps.vars.outputs.CONDA_PREFIX }}"
-          echo ${{ steps.env }}
-          echo ${{ steps.setup-miniconda.outputs }}
-          echo ${{ steps.setup-miniconda.outputs.environment-file }}
-          echo ${{ steps.setup-miniconda.outputs.environment-file-was-patched }}
-        #shell: bash
-      -
         uses: actions/cache@v2
         with:
           path: ${{ steps.vars.outputs.CONDA_PREFIX }}/conda-bld/*/*.tar.bz2
-          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
+          key: wheelhouse-${{ env.OS_PY_ARCH }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
       -
         name: Install conda-build
         run: |
@@ -66,12 +56,10 @@ jobs:
           echo "::group::Install conda-build"
           conda install conda-build
           echo "::endgroup::"
-        #shell: bash
       -
         name: Build the conda package
         run: |
           conda build recipe
-        #shell: bash
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
@@ -93,6 +81,8 @@ jobs:
     defaults:
       run:
         shell: bash -l {0}
+    env:
+      OS_PY_ARCH: ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     steps:
       -
         uses: actions/checkout@v2
@@ -102,23 +92,20 @@ jobs:
       -
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: freeze-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+          activate-environment: freeze-${{ env.OS_PY_ARCH }}
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
       -
         name: Variables
         run: |
-          declare || true
-          python -m sysconfig
           echo "::set-output name=CONDA_PREFIX::$CONDA_PREFIX"
-        #shell: bash
         id: vars
       -
         uses: actions/cache@v2
         with:
           path: ${{ steps.vars.outputs.CONDA_PREFIX }}/conda-bld/*/*.tar.bz2
-          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
+          key: wheelhouse-${{ env.OS_PY_ARCH }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
       -
         name: Install conda-build
         run: |
@@ -128,12 +115,10 @@ jobs:
           echo "::group::Install conda-build"
           conda install conda-build
           echo "::endgroup::"
-        #shell: bash
       -
         name: Build the conda package
         run: |
           conda build recipe
-        #shell: bash
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
