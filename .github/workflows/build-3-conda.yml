@@ -23,7 +23,7 @@ jobs:
       -
         uses: actions/checkout@v2
         with:
-          #ref: cx_logging
+          ref: lib
           repository: marcelotduarte/cx_logging-feedstock
       -
         uses: conda-incubator/setup-miniconda@v2
