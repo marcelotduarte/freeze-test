@@ -81,6 +81,9 @@ jobs:
           echo "::group::conda info"
           conda info
           echo "::endgroup::"
+          echo "::group::cx_Logging"
+          pip install -U cx_Logging
+          echo "::endgroup::"
           ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
       -
         name: Collect images and logs
