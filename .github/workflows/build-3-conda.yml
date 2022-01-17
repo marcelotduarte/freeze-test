@@ -99,6 +99,10 @@ jobs:
       -
         name: Variables
         run: |
+          python -c "import sysconfig;\
+          platform = sysconfig.get_platform();\
+          python_version = sysconfig.get_python_version();\
+          print('::set-output name=BASE_PLATFORM::{platform}-{python_version}')"
           echo "::set-output name=CONDA_PREFIX::$CONDA_PREFIX"
         id: vars
       -

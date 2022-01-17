@@ -38,6 +38,15 @@ jobs:
           python -m sysconfig
         shell: bash
       -
+        name: Set variables
+        run: |
+          echo "::set-output name=BASE_PLATFORM::"\
+          $(python -c "import sysconfig;\
+          platform = sysconfig.get_platform();\
+          python_version = sysconfig.get_python_version();\
+          print('{platform}-{python_version}')")
+        id: vars
+      -
         uses: actions/cache@v2
         with:
           path: wheelhouse/*
