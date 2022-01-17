@@ -72,7 +72,7 @@ jobs:
         name: Install from package
         # mingw-w64-i686-python-cx-freeze-6.10a1-1-any.pkg.tar.zst
         run: |
-          version=$(cat setup.cfg | grep '^version' | sed 's/[[:space:]]//g' | awk -F= '{print $2}')
+          version=$(cat cx_Freeze/version.py | grep '^__version__' | sed 's/[[:space:]]//g' | awk -F= '{print $2}')
           pacman --noconfirm --needed -U mingw-w64-${{ matrix.sys.env }}-python-cx-freeze-${version}-*
       -
         name: Freeze and run "${{ matrix.sample }}"
