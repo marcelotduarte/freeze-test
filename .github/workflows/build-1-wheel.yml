@@ -43,7 +43,7 @@ jobs:
           import sysconfig
           platform = sysconfig.get_platform()
           python_version = sysconfig.get_python_version()
-          print("::set-output name=BASE_PLATFORM::{platform}-{python_version}")
+          print(f"::set-output name=BASE_PLATFORM::{platform}-{python_version}")
         shell: python
         id: vars
       -
