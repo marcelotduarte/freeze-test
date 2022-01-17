@@ -55,15 +55,11 @@ jobs:
           python -m build -o wheelhouse -x -n .
         shell: bash
       -
-        name: Build the wheel of cx_Logging
-        if: runner.os == 'Windows'
+        name: Build the wheel of cx_Logging [Windows][Python 3.10]
+        if: runner.os == 'Windows' and ${{ matrix.python-version }} == "3.10"
         run: |
-          if [[ ${{ matrix.python-version }} == 3.10* ]] ; then
-            git clone https://github.com/anthony-tuininga/cx_Logging.git
-            pushd cx_Logging
-            python -m build -o ../wheelhouse -x -n .
-            popd
-          fi
+          git clone https://github.com/anthony-tuininga/cx_Logging.git
+          python -m build -o wheelhouse -x -n ./cx_Logging
         shell: bash
       -
         name: Upload the artifact
@@ -72,7 +68,8 @@ jobs:
           name: cx-freeze-wheelhouse
           path: wheelhouse/cx_*
       -
-        name: Update the cache with external files
+        name: Update the cache with external files [Windows]
+        if: runner.os == 'Windows'
         working-directory: wheelhouse
         run: |
           if [ ${{ matrix.architecture }} == x64 ] ; then
