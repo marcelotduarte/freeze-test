@@ -79,6 +79,8 @@ jobs:
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         run: |
+          ls -l
+          ls -l win-64
           echo "::group::conda info"
           conda info
           echo "::endgroup::"
