@@ -133,6 +133,9 @@ jobs:
           echo "::group::Install conda-build"
           conda install conda-build
           echo "::endgroup::"
+          echo "::group::cx_Logging"
+          pip install -U cx_Logging
+          echo "::endgroup::"
       -
         name: Build the conda package
         run: |
