@@ -20,7 +20,7 @@ jobs:
       run:
         shell: bash -l {0}
     env:
-      OS_PY_ARCH: ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+      KEY_BASE: ${{ runner.os }}-${{ runner.arch }}-${{ matrix.python-version }}
     steps:
       -
         uses: actions/checkout@v2
@@ -30,7 +30,7 @@ jobs:
       -
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: freeze-${{ env.OS_PY_ARCH }}
+          activate-environment: freeze-${{ env.KEY_BASE }}
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
@@ -44,18 +44,9 @@ jobs:
         run: echo "::set-output name=CONDA_BLD::$CONDA_PREFIX/conda-bld"
         id: conda
       -
-        name: Set variable BASE_PLATFORM
-        run: |
-          import sysconfig
-          platform = sysconfig.get_platform()
-          python_version = sysconfig.get_python_version()
-          print("::set-output name=BASE_PLATFORM::{platform}-{python_version}")
-        shell: python
-        id: vars
-      -
         uses: actions/cache@v2
         with:
-          key: wheelhouse-${{ steps.vars.outputs.BASE_PLATFORM }}-${{ github.sha }}
+          key: wheelhouse-${{ env.KEY_BASE }}-${{ github.sha }}
           path: ${{ steps.conda.outputs.CONDA_BLD }}/*/*.tar.bz2
       -
         name: Install conda-build
@@ -86,13 +77,13 @@ jobs:
         #python-version: ["3.7", "3.8", "3.9", "3.10"]
         python-version: ["3.9"]
         architecture: [x64]
-    name: Build package ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+    name: Build package cx_freeze ${{ env.KEY_BASE }}
     runs-on: ${{ matrix.os }}
     defaults:
       run:
         shell: bash -l {0}
     env:
-      OS_PY_ARCH: ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+      KEY_BASE: ${{ runner.os }}-${{ runner.arch }}-${{ matrix.python-version }}
     steps:
       -
         uses: actions/checkout@v2
@@ -102,7 +93,7 @@ jobs:
       -
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: freeze-${{ env.OS_PY_ARCH }}
+          activate-environment: freeze-${{ env.KEY_BASE }}
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
@@ -111,18 +102,9 @@ jobs:
         run: echo "::set-output name=CONDA_BLD::$CONDA_PREFIX/conda-bld"
         id: conda
       -
-        name: Set variable BASE_PLATFORM
-        run: |
-          import sysconfig
-          platform = sysconfig.get_platform()
-          python_version = sysconfig.get_python_version()
-          print(f"::set-output name=BASE_PLATFORM::{platform}-{python_version}")
-        shell: python
-        id: vars
-      -
         uses: actions/cache@v2
         with:
-          key: wheelhouse-${{ steps.vars.outputs.BASE_PLATFORM }}-${{ github.sha }}
+          key: wheelhouse-${{ env.KEY_BASE }}-${{ github.sha }}
           path: ${{ steps.conda.outputs.CONDA_BLD }}/*/*.tar.bz2
       -
         name: Install conda-build
@@ -134,7 +116,7 @@ jobs:
           conda install conda-build
           echo "::endgroup::"
           echo "::group::cx_Logging"
-          pip install -U cx_Logging
+          #pip install -U cx_Logging
           echo "::endgroup::"
       -
         name: Build the conda package
