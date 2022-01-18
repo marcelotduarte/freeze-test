@@ -20,7 +20,7 @@ jobs:
       run:
         shell: bash -l {0}
     env:
-      KEY_BASE: ${{ runner.os }}-${{ runner.arch }}-${{ matrix.python-version }}
+      KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     steps:
       -
         uses: actions/checkout@v2
@@ -83,7 +83,7 @@ jobs:
       run:
         shell: bash -l {0}
     env:
-      KEY_BASE: ${{ runner.os }}-${{ runner.arch }}-${{ matrix.python-version }}
+      KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     steps:
       -
         uses: actions/checkout@v2
