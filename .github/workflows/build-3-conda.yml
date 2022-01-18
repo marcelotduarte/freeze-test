@@ -77,13 +77,13 @@ jobs:
         #python-version: ["3.7", "3.8", "3.9", "3.10"]
         python-version: ["3.9"]
         architecture: [x64]
-    name: Build package cx_freeze ${{ env.KEY_BASE }}
     runs-on: ${{ matrix.os }}
     defaults:
       run:
         shell: bash -l {0}
     env:
       KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
+    name: Build package cx_freeze ${{ env.KEY_BASE }}
     steps:
       -
         uses: actions/checkout@v2
