@@ -116,9 +116,13 @@ jobs:
           conda install conda-build
           echo "::endgroup::"
           echo "::group::cx_Logging"
-          #pip install -U cx_Logging
+          conda install --use-local cx_Logging
+          echo aa
           ls -l
+          echo bb
           find . -name '*.lib' -print
+          echo $CONDA_PREFIX
+          find $CONDA_PREFIX -name '*.lib' -print
           echo "::endgroup::"
       -
         name: Build the conda package
