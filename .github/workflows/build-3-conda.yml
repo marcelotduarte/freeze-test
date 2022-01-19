@@ -117,6 +117,8 @@ jobs:
           echo "::endgroup::"
           echo "::group::cx_Logging"
           #pip install -U cx_Logging
+          dir
+          dir *.lib /s 
           echo "::endgroup::"
       -
         name: Build the conda package
