@@ -62,12 +62,21 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
       -
+        name: Set variable BASE_PLATFORM
+        run: |
+          import sysconfig
+          platform = sysconfig.get_platform()
+          python_version = sysconfig.get_python_version()
+          print(f"::set-output name=BASE_PLATFORM::{platform}-{python_version}")
+        shell: python
+        id: vars
+      -
         name: Restore wheelhouse from cache
         uses: actions/cache@v2
         with:
           path: wheelhouse/*
-          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
-          restore-keys: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-
+          key: wheelhouse-${{ steps.vars.outputs.BASE_PLATFORM }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
+          restore-keys: wheelhouse-${{ steps.vars.outputs.BASE_PLATFORM }}-
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
