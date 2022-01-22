@@ -1,4 +1,4 @@
-name: Build-3-conda
+name: Build-3-conda-cx_logging
 
 on:
   #push:
@@ -6,16 +6,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build_cx_logging:
     strategy:
       fail-fast: false
       matrix:
-        #os: [ubuntu-latest, windows-latest, macos-latest]
         os: [windows-latest]
         #python-version: ["3.7", "3.8", "3.9", "3.10"]
         python-version: ["3.9"]
         architecture: [x64]
-    name: Build package cx_freeze ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
+    name: Build cx_logging package ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -26,8 +25,8 @@ jobs:
       -
         uses: actions/checkout@v2
         with:
-          ref: cx_logging
-          repository: marcelotduarte/cx_freeze-feedstock
+          ref: test3
+          repository: marcelotduarte/cx_logging-feedstock
       -
         uses: conda-incubator/setup-miniconda@v2
         with:
@@ -35,6 +34,11 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
+      -
+        name: Variables
+        run: |
+          declare || true
+          python -m sysconfig
       -
         name: Set variable CONDA_BLD
         run: echo "::set-output name=CONDA_BLD::$CONDA_PREFIX/conda-bld"
@@ -53,15 +57,6 @@ jobs:
           echo "::group::Install conda-build"
           conda install conda-build
           echo "::endgroup::"
-          echo "::group::cx_Logging"
-          conda install cx_logging=3.0=py39hb82d6ee_1
-          echo aa
-          ls -l
-          echo bb
-          find . -name '*.lib' -print
-          echo $CONDA_PREFIX
-          find $CONDA_PREFIX -name '*.lib' -print
-          echo "::endgroup::"
       -
         name: Build the conda package
         run: |
@@ -70,5 +65,5 @@ jobs:
         name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
-          name: cx-freeze-conda
+          name: cx_logging-conda
           path: ${{ steps.conda.outputs.CONDA_BLD }}/*/*.tar.bz2
