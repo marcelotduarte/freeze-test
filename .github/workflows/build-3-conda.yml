@@ -13,7 +13,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.7", "3.8", "3.9", "3.10"]
         architecture: [x64]
-    name: Build package cx_freeze ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
+    name: Build ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -50,15 +50,6 @@ jobs:
           echo "::endgroup::"
           echo "::group::Install conda-build"
           conda install conda-build
-          echo "::endgroup::"
-          echo "::group::cx_Logging"
-          conda install -c conda-forge -y cx_logging
-          echo aa
-          ls -l
-          echo bb
-          find . -name '*.lib' -print
-          echo $CONDA_PREFIX
-          find $CONDA_PREFIX -name '*.lib' -print
           echo "::endgroup::"
       -
         name: Build the conda package
