@@ -25,7 +25,7 @@ jobs:
       -
         uses: actions/checkout@v2
         with:
-          ref: test3
+          ref: setuptools
           repository: marcelotduarte/cx_logging-feedstock
       -
         uses: conda-incubator/setup-miniconda@v2
