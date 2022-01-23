@@ -10,10 +10,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        #os: [ubuntu-latest, windows-latest, macos-latest]
-        os: [windows-latest]
-        #python-version: ["3.7", "3.8", "3.9", "3.10"]
-        python-version: ["3.9"]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
         architecture: [x64]
     name: Build package cx_freeze ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
@@ -43,7 +41,7 @@ jobs:
         uses: actions/cache@v2
         with:
           key: wheelhouse-${{ env.KEY_BASE }}-${{ github.sha }}
-          path: ${{ steps.conda.outputs.CONDA_BLD }}/*/*.tar.bz2
+          path: ${{ steps.conda.outputs.CONDA_BLD }}/*/cx_freeze*.tar.bz2
       -
         name: Install conda-build
         run: |
@@ -54,7 +52,7 @@ jobs:
           conda install conda-build
           echo "::endgroup::"
           echo "::group::cx_Logging"
-          conda install cx_logging=3.0=py39hb82d6ee_1
+          conda install -c conda-forge -y cx_logging
           echo aa
           ls -l
           echo bb
