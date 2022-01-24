@@ -50,7 +50,6 @@ jobs:
           echo "::endgroup::"
           echo "::group::Install conda-build"
           conda install conda-build
-          conda install -y -c conda-forge importlib-metadata
           echo "::endgroup::"
       -
         name: Build the conda package
