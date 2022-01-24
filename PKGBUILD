@@ -16,6 +16,7 @@ depends=("${MINGW_PACKAGE_PREFIX}-python"
          "${MINGW_PACKAGE_PREFIX}-python-importlib-metadata"
          "${MINGW_PACKAGE_PREFIX}-python-lief")
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
+             "${MINGW_PACKAGE_PREFIX}-tools"
              "${MINGW_PACKAGE_PREFIX}-python-setuptools")
 options=('staticlibs' 'strip' '!debug')
 source=()
