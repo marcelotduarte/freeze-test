@@ -29,7 +29,7 @@ prepare() {
 
 pkgver() {
   cd python-${_realname}-${MSYSTEM}
-  cat cx_Freeze/version.py | grep '^__version__' | sed 's/[[:space:]]//g' | awk -F= '{print $2}'
+  awk -F\" '{print $2}' cx_Freeze/version.py
 }
 
 build() {

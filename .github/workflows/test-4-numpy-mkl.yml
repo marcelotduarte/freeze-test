@@ -1,4 +1,4 @@
-name: Tests-4-numpy+mkl (Windows)
+name: Test-4-numpy+mkl (Windows)
 
 on:
   #push:
