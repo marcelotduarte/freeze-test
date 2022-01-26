@@ -14,12 +14,12 @@ jobs:
         python-version: ["3.7", "3.8", "3.9", "3.10"]
         architecture: [x64]
     name: Build ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
-    runs-on: ${{ matrix.os }}
     defaults:
       run:
         shell: bash -l {0}
     env:
       KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
     steps:
       -
         uses: actions/checkout@v2

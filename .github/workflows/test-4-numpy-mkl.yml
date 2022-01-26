@@ -1,4 +1,4 @@
-name: 7-Tests numpy+mkl (windows)
+name: Tests-4-numpy+mkl (Windows)
 
 on:
   #push:
@@ -15,9 +15,11 @@ jobs:
         os: [windows-latest]
         python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
         architecture: [x64]
-    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     env:
+      KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
+    runs-on: ${{ matrix.os }}
     steps:
       -
         name: Checkout cx_Freeze
@@ -34,9 +36,9 @@ jobs:
         name: Restore wheelhouse from cache
         uses: actions/cache@v2
         with:
+          key: wheelhouse-${{ env.KEY_BASE }}-${{ github.sha }}
           path: wheelhouse/*
-          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
-          restore-keys: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-
+          restore-keys: wheelhouse-${{ env.KEY_BASE }}-
       -
         run: python -m sysconfig
       -
@@ -78,9 +80,11 @@ jobs:
         os: [windows-latest]
         python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
         architecture: [x64]
-    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     env:
+      KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
+    runs-on: ${{ matrix.os }}
     steps:
       -
         name: Checkout cx_Freeze
@@ -97,9 +101,9 @@ jobs:
         name: Restore wheelhouse from cache
         uses: actions/cache@v2
         with:
+          key: wheelhouse-${{ env.KEY_BASE }}-${{ github.sha }}
           path: wheelhouse/*
-          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
-          restore-keys: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-
+          restore-keys: wheelhouse-${{ env.KEY_BASE }}-
       -
         name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
         run: |

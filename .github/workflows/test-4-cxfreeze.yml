@@ -1,4 +1,4 @@
-name: 6-Test cxfreeze script
+name: Test-4-cxfreeze script
 
 on:
   #push:
@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9, "3.10"]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
         architecture: [x64, x86]
         exclude:
           - os: ubuntu-latest
@@ -19,7 +19,9 @@ jobs:
           - os: macos-latest
             architecture: x86
         branch: [develop]
-    name: cxfreeze-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+    name: cxfreeze-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
+    env:
+      KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     steps:
       -
@@ -37,9 +39,9 @@ jobs:
         name: Restore wheelhouse from cache
         uses: actions/cache@v2
         with:
+          key: wheelhouse-${{ env.KEY_BASE }}-${{ github.sha }}
           path: wheelhouse/*
-          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
-          restore-keys: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-
+          restore-keys: wheelhouse-${{ env.KEY_BASE }}-
       -
         name: Install dependencies
         run: |

@@ -18,7 +18,9 @@ jobs:
             architecture: x86
           - os: macos-latest
             architecture: x86
-    name: Build wheel ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+    name: Build wheel ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
+    env:
+      KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     steps:
       -
@@ -38,19 +40,10 @@ jobs:
           python -m sysconfig
         shell: bash
       -
-        name: Set variable BASE_PLATFORM
-        run: |
-          import sysconfig
-          platform = sysconfig.get_platform()
-          python_version = sysconfig.get_python_version()
-          print(f"::set-output name=BASE_PLATFORM::{platform}-{python_version}")
-        shell: python
-        id: vars
-      -
         uses: actions/cache@v2
         with:
+          key: wheelhouse-${{ env.KEY_BASE }}-${{ github.sha }}
           path: wheelhouse/*
-          key: wheelhouse-${{ steps.vars.outputs.BASE_PLATFORM }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
       -
         name: Install dependencies
         run: |

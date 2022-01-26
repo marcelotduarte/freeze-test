@@ -12,10 +12,10 @@ jobs:
       matrix:
         sys: [ { msystem: MINGW32, env: i686 }, { msystem: MINGW64, env: x86_64 }, { msystem: UCRT64, env: ucrt-x86_64 }]
     name: Build pkg ${{ matrix.sys.msystem }}
-    runs-on: windows-latest
     defaults:
       run:
         shell: msys2 {0}
+    runs-on: windows-latest
     steps:
       -
         uses: actions/checkout@v2
@@ -41,8 +41,8 @@ jobs:
       -
         uses: actions/cache@v2
         with:
-          path: mingw-w64-*.pkg.*
           key: wheelhouse-${{ matrix.sys.msystem }}-${{ github.sha }}
+          path: mingw-w64-*.pkg.*
       -
         name: Build the package
         run: |

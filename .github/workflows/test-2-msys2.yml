@@ -65,8 +65,8 @@ jobs:
       -
         uses: actions/cache@v2
         with:
-          path: mingw-w64-*.pkg.*
           key: wheelhouse-${{ matrix.sys.msystem }}-${{ github.sha }}
+          path: mingw-w64-*.pkg.*
           restore-keys: wheelhouse-${{ matrix.sys.msystem }}-
       -
         name: Install from package

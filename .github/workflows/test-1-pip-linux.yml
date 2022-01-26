@@ -1,4 +1,4 @@
-name: 4-Test wheels using pipenv
+name: Test-1-wheels (Linux)
 
 on:
   #push:
@@ -37,24 +37,21 @@ jobs:
       fail-fast: false
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
-        architecture: [x64, x86]
+        os: [ubuntu-latest]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        architecture: [x64]
         exclude:
           - os: ubuntu-latest
-            architecture: x86
-          - os: macos-latest
-            architecture: x86
-          - os: ubuntu-latest
-            sample: pythonnet-demo
-          - os: macos-latest
             sample: pythonnet-demo
           - os: ubuntu-latest
             sample: service
-          - os: macos-latest
-            sample: service
+          - os: ubuntu-latest
+            sample: matplotlib
+            python-version: "3.10"
         branch: [develop]
-    name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+    name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
+    env:
+      KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     steps:
       -
@@ -73,9 +70,9 @@ jobs:
         name: Restore wheelhouse from cache
         uses: actions/cache@v2
         with:
+          key: wheelhouse-${{ env.KEY_BASE }}-${{ github.sha }}
           path: wheelhouse/*
-          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
-          restore-keys: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-
+          restore-keys: wheelhouse-${{ env.KEY_BASE }}-
       -
         name: Install Linux libraries
         if: runner.os == 'Linux'
@@ -91,20 +88,11 @@ jobs:
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
-          DISPLAY: ':99.0'
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
+        shell: bash
+      -
+        name: Collect images and logs
         run: |
-          echo "::group::Install pipenv and create a virtal environment"
-          pushd cx_Freeze/samples/${{ matrix.sample }}
-          pip install pipenv
-          if [ "$OSTYPE" == "msys" ] ; then
-            PYTHON=$(cygpath -w `which python`)
-          else
-            PYTHON=$(which python)
-          fi
-          pipenv --python $PYTHON --site-packages
-          popd
-          echo "::endgroup::"
-          ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
           cd cx_Freeze/samples/${{ matrix.sample }}
           mv build/*/*.png . || true
           mv build/*/*.log . || true
