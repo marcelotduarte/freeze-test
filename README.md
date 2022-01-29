@@ -6,20 +6,29 @@
 [![Documentation Status](https://readthedocs.org/projects/cx-freeze/badge/?version=latest)](https://cx-freeze.readthedocs.io/en/latest/?badge=latest)
 [![License](https://img.shields.io/pypi/l/cx_Freeze.svg)](https://pypi.org/project/cx-Freeze/)
 [![LGTM](https://img.shields.io/lgtm/grade/python/g/marcelotduarte/cx_Freeze.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/marcelotduarte/cx_Freeze)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![GitHub Actions](https://github.com/c4urself/bump2version/workflows/CI/badge.svg)](https://github.com/c4urself/bump2version/actions)
 
 **cx\_Freeze** creates standalone executables from Python scripts, with the same
 performance, is cross-platform and should work on any platform that Python
 itself works on.
 
+# Highlights of Version 6.10:
+- Support Application Manifests in Windows: manifest and uac-admin
+- EXPERIMENTAL New dependency resolver on Windows
+- EXPERIMENTAL Support for Apple Silicon using miniforge (conda-forge)
+- Bug fixes and improvements
+
 # Highlights of Version 6.2 up to 6.9:
-- New ModuleFinder, using importlib.machinery
-- Support for package metadata
-- Enhanced support for Python 3.8 and experimental support for Python 3.9
-- Inclusive support for MSYS2 and Anaconda
+- Support for pathlib.Path
+- New or improved hooks, with emphasis on matplotlib, numpy, PyQt5 and PySide2
+- New ModuleFinder engine uses importlib.machinery
+- Refactored Freezer
+- New support for package metadata improving Module and new DitributionCache
+- Enhanced support for Python 3.8 and Python 3.9, including MSYS2 and Anaconda distributions
 - Improvements for multiprocessing
 - Optimizations in detection and distribution of libraries
-- Integrated to setuptools and importlib.metadata
-- New or improved hooks
+- Integrated to setuptools and importlib-metadata
 - Code modernization
 - Various bug fixes.
 
@@ -28,10 +37,15 @@ itself works on.
 In a virtual environment, install by issuing the command:
 
 ```
-pip install cx-freeze --upgrade
+pip install --upgrade cx_Freeze
 ```
 
-For other options, check the documentation.
+To install beta versions:
+```
+pip install --upgrade cx_Freeze --pre
+```
+
+Please check the installation in documentation for requirements.
 
 # Documentation
 
