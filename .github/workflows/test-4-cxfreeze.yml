@@ -56,8 +56,7 @@ jobs:
         name: Freeze simple sample (2-different target-name)
         working-directory: cx_Freeze/samples/simple
         run: |
-          ls -l
-          cxfreeze hello.py --silent --target-name Hello-0.1 --target-dir build
+          cxfreeze hello.py --silent --target-name Hello-0.1 --target-dir build --excludes tkinter
           ls -l
           ls -l build
         shell: bash
