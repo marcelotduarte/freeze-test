@@ -73,9 +73,9 @@ jobs:
       -
         uses: actions/cache@v2
         with:
-          key: wheelhouse-${{ env.KEY_BASE }}-${{ github.sha }}
+          key: conda-${{ env.KEY_BASE }}-${{ github.sha }}
           path: ${{ steps.conda.outputs.CONDA_BLD }}/*/*.tar.bz2
-          restore-keys: wheelhouse-${{ env.KEY_BASE }}-
+          restore-keys: conda-${{ env.KEY_BASE }}-
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run

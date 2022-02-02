@@ -40,7 +40,7 @@ jobs:
       -
         uses: actions/cache@v2
         with:
-          key: wheelhouse-${{ env.KEY_BASE }}-${{ github.sha }}
+          key: conda-${{ env.KEY_BASE }}-${{ github.sha }}
           path: ${{ steps.conda.outputs.CONDA_BLD }}/*/cx_freeze*.tar.bz2
       -
         name: Install conda-build
