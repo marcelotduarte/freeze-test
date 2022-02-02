@@ -1,4 +1,4 @@
-name: Test-3-miniconda (windows)
+name: Test-3-miniconda (Windows)
 
 on:
   #push:
@@ -36,16 +36,16 @@ jobs:
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         os: [windows-latest]
-        #python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        #python-version: ["3.7", "3.8", "3.9", "3.10"]
         python-version: ["3.9"]
         architecture: [x64]
-    name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+    name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
       run:
         shell: bash -l {0}
     env:
-      OS_PY_ARCH: ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+      KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
     steps:
       -
@@ -57,36 +57,22 @@ jobs:
       -
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: freeze-${{ env.OS_PY_ARCH }}
+          activate-environment: freeze-${{ env.KEY_BASE }}
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
       -
-        name: Set variable BASE_PLATFORM
-        run: |
-          import sysconfig
-          platform = sysconfig.get_platform()
-          python_version = sysconfig.get_python_version()
-          print(f"::set-output name=BASE_PLATFORM::{platform}-{python_version}")
-        shell: python
-        id: vars
-      -
         uses: actions/cache@v2
         with:
-          key: wheelhouse-${{ steps.vars.outputs.BASE_PLATFORM }}-${{ github.sha }}
-          restore-keys: wheelhouse-${{ steps.vars.outputs.BASE_PLATFORM }}-
+          key: wheelhouse-${{ env.KEY_BASE }}-${{ github.sha }}
           path: ${{ steps.conda.outputs.CONDA_BLD }}/*/*.tar.bz2
+          restore-keys: wheelhouse-${{ env.KEY_BASE }}-
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         run: |
-          ls -l
-          ls -l win-64
           echo "::group::conda info"
           conda info
-          echo "::endgroup::"
-          echo "::group::cx_Logging"
-          pip install -U cx_Logging
           echo "::endgroup::"
           ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
       -
@@ -107,3 +93,4 @@ jobs:
       -
         name: Status
         run: exit ${{ steps.freeze-and-run.outputs.status }}
+        shell: bash
