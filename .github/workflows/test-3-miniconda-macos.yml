@@ -67,14 +67,10 @@ jobs:
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
       -
-        name: Set variable CONDA_BLD
-        run: echo "::set-output name=CONDA_BLD::$CONDA_PREFIX/conda-bld"
-        id: conda
-      -
         uses: actions/cache@v2
         with:
           key: conda-${{ env.KEY_BASE }}-${{ github.sha }}
-          path: ${{ steps.conda.outputs.CONDA_BLD }}/*/cx_freeze*.tar.bz2
+          path: ./*/cx_freeze*.tar.bz2
           restore-keys: conda-${{ env.KEY_BASE }}-
       -
         name: Freeze and run "${{ matrix.sample }}"

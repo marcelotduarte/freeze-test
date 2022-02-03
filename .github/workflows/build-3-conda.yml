@@ -34,14 +34,9 @@ jobs:
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
       -
-        name: Set variable CONDA_BLD
-        run: echo "::set-output name=CONDA_BLD::$CONDA_PREFIX/conda-bld"
-        id: conda
-      -
         uses: actions/cache@v2
         with:
           key: conda-${{ env.KEY_BASE }}-${{ github.sha }}
-          #path: ${{ steps.conda.outputs.CONDA_BLD }}/*/cx_freeze*.tar.bz2
           path: ./*/cx_freeze*.tar.bz2
       -
         name: Install conda-build
@@ -55,13 +50,10 @@ jobs:
       -
         name: Build the conda package
         run: |
-          ls -l
           conda build recipe --output-folder .
-          ls -l
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
           name: cx-freeze-conda
-          #path: ${{ steps.conda.outputs.CONDA_BLD }}/*/*.tar.bz2
           path: ./*/cx_freeze*.tar.bz2
