@@ -32,7 +32,7 @@ jobs:
           activate-environment: freeze-${{ env.KEY_BASE }}
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
-          channels: conda-forge
+          channels: conda-forge,defaults
       -
         uses: actions/cache@v2
         with:
