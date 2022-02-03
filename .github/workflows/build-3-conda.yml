@@ -41,7 +41,8 @@ jobs:
         uses: actions/cache@v2
         with:
           key: conda-${{ env.KEY_BASE }}-${{ github.sha }}
-          path: ${{ steps.conda.outputs.CONDA_BLD }}/*/cx_freeze*.tar.bz2
+          #path: ${{ steps.conda.outputs.CONDA_BLD }}/*/cx_freeze*.tar.bz2
+          path: ./*/cx_freeze*.tar.bz2
       -
         name: Install conda-build
         run: |
@@ -54,10 +55,13 @@ jobs:
       -
         name: Build the conda package
         run: |
-          conda build recipe
+          ls -l
+          conda build recipe --output-folder .
+          ls -l
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
           name: cx-freeze-conda
-          path: ${{ steps.conda.outputs.CONDA_BLD }}/*/*.tar.bz2
+          #path: ${{ steps.conda.outputs.CONDA_BLD }}/*/*.tar.bz2
+          path: ./*/cx_freeze*.tar.bz2
