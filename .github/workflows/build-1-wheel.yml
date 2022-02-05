@@ -66,6 +66,7 @@ jobs:
         name: Build the wheel [Windows][Python 3.10]
         if: runner.os == 'Windows' && matrix.python-version == '3.10'
         run: |
+          pip install --upgrade build wheel
           pip install -f packages/cx_Logging cx_Logging
           python -m build -o wheelhouse -n .
         shell: bash
