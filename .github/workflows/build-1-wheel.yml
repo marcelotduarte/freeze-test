@@ -29,6 +29,12 @@ jobs:
           ref: develop
           repository: marcelotduarte/cx_Freeze
       -
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          repository: marcelotduarte/packages
+          path: packages
+      -
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
@@ -60,10 +66,7 @@ jobs:
         name: Build the wheel [Windows][Python 3.10]
         if: runner.os == 'Windows' && matrix.python-version == '3.10'
         run: |
-          pip install -U wheel
-          git clone -b 3.0 https://github.com/anthony-tuininga/cx_Logging.git
-          python -m build -o wheelhouse -n ./cx_Logging
-          pip install -f wheelhouse cx_Logging
+          pip install -f packages/cx_Logging cx_Logging
           python -m build -o wheelhouse -n .
         shell: bash
       -
@@ -73,29 +76,14 @@ jobs:
           name: cx-freeze-wheelhouse
           path: wheelhouse/cx_*
       -
-        name: Update the cache with external files [Windows]
-        if: runner.os == 'Windows'
-        working-directory: wheelhouse
+        name: Update packages
+        working-directory: packages
         run: |
-          if [ ${{ matrix.architecture }} == x64 ] ; then
-            if [ "${{ matrix.python-version }}" == "3.6" ] ; then
-              curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/cp36/numpy-1.19.5+mkl-cp36-cp36m-win_amd64.whl -O
-            elif [ "${{ matrix.python-version }}" == "3.7" ] ; then
-                curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/numpy-1.21.5+mkl-cp37-cp37m-win_amd64.whl -O
-            elif [ "${{ matrix.python-version }}" == "3.8" ] ; then
-                curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/numpy-1.21.5+mkl-cp38-cp38-win_amd64.whl -O
-            elif [ "${{ matrix.python-version }}" == "3.9" ] ; then
-                curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/numpy-1.21.5+mkl-cp39-cp39-win_amd64.whl -O
-            elif [[ ${{ matrix.python-version }} == 3.10* ]] ; then
-              curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/numpy-1.21.5+mkl-cp310-cp310-win_amd64.whl -O
-              #curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/Pillow-8.4.0-cp310-cp310-win_amd64.whl -O
-              #curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/pandas-1.3.5-cp310-cp310-win_amd64.whl -O
-            fi
-          else
-            if [[ ${{ matrix.python-version }} == 3.10* ]] ; then
-              curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/numpy-1.21.5+mkl-cp310-cp310-win32.whl -O
-              #curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/Pillow-8.4.0-cp310-cp310-win32.whl -O
-              curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/pandas-1.3.5-cp310-cp310-win32.whl -O
-            fi
-          fi
+          mkdir -p cx_Freeze
+          cp ../wheelhouse/cx_Freeze* cx_Freeze/
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add cx_Freeze
+          git commit -m "Update packages"
+          git push
         shell: bash
