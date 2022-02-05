@@ -34,6 +34,7 @@ jobs:
           fetch-depth: 0
           repository: marcelotduarte/packages
           path: packages
+          token: ${{ secrets.PUSH }}
       -
         uses: actions/setup-python@v2
         with:
