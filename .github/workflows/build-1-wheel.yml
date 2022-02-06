@@ -29,11 +29,6 @@ jobs:
           ref: develop
           repository: marcelotduarte/cx_Freeze
       -
-        uses: actions/checkout@v2
-        with:
-          repository: marcelotduarte/packages
-          path: packages
-      -
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
@@ -65,8 +60,8 @@ jobs:
         name: Build the wheel [Windows][Python 3.10]
         if: runner.os == 'Windows' && matrix.python-version == '3.10'
         run: |
-          pip install --upgrade build wheel
-          pip install -f packages/cx_Logging cx_Logging
+          pip install --upgrade wheel
+          pip install -f https://marcelotduarte.github.io/packages/cx_Logging cx_Logging
           python -m build -o wheelhouse -n .
         shell: bash
       -
@@ -88,17 +83,31 @@ jobs:
           repository: marcelotduarte/packages
           token: ${{ secrets.PUSH }}
       -
+        name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      -
         name: Download the artifact
         uses: actions/download-artifact@v2
         with:
           name: cx-freeze-wheelhouse
           path: cx_Freeze
       -
+        name: Create index.md
+        run: |
+          python make_index.py cx_Freeze
+          mv cx_Freeze new_cx_Freeze
+      -
         name: Update packages
         run: |
           git config user.name "Marcelo Duarte"
           git config user.email marcelotduarte@users.noreply.github.com
+          git checkout gh-pages
+          mkdir -p cx_Freeze
+          cp new_cx_Freeze/* cx_Freeze/
           git add cx_Freeze
-          git commit -m "Update packages"
+          git commit -m "Update cx_Freeze packages"
           git push
+          rm -rf new_cx_Freeze
         shell: bash
