@@ -1,0 +1,29 @@
+name: Build-4-cache
+
+on:
+  workflow_dispatch:
+
+jobs:
+  packages:
+    runs-on: ubuntu-20.04
+    name: Cache numpy+mkl packages
+    steps:
+      -
+        uses: actions/cache@v2
+        with:
+          key: wheelhouse-numpy-${{ github.sha }}
+          path: numpy-*
+      -
+        name: Download the packages
+        run: |
+          curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/cp36/numpy-1.19.5+mkl-cp36-cp36m-win_amd64.whl -O
+          curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/numpy-1.21.5+mkl-cp37-cp37m-win_amd64.whl -O
+          curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/numpy-1.22.2+mkl-cp38-cp38-win_amd64.whl -O
+          curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/numpy-1.22.2+mkl-cp39-cp39-win_amd64.whl -O
+          curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/numpy-1.22.2+mkl-cp310-cp310-win_amd64.whl -O
+      -
+        name: Upload the artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: wheelhouse-numpy
+          path: numpy-*
