@@ -36,7 +36,7 @@ jobs:
         with:
           key: wheelhouse-numpy-${{ github.sha }}
           path: wheelhouse/*
-          restore-keys: wheelhouse-numpy
+          restore-keys: wheelhouse-numpy-
       -
         run: python -m sysconfig
       -
