@@ -16,7 +16,6 @@ jobs:
         architecture: [x64]
     name: root-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     env:
-      KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
     runs-on: ${{ matrix.os }}
     steps:
@@ -32,12 +31,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
       -
-        name: Restore wheelhouse from cache
+        name: Restore numpy+mkl from cache
         uses: actions/cache@v2
         with:
-          key: wheelhouse-${{ env.KEY_BASE }}-${{ github.sha }}
+          key: wheelhouse-numpy-${{ github.sha }}
           path: wheelhouse/*
-          restore-keys: wheelhouse-${{ env.KEY_BASE }}-
+          restore-keys: wheelhouse-numpy
       -
         run: python -m sysconfig
       -
@@ -80,7 +79,6 @@ jobs:
         architecture: [x64]
     name: venv-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     env:
-      KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
     runs-on: ${{ matrix.os }}
     steps:
@@ -96,12 +94,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
       -
-        name: Restore wheelhouse from cache
+        name: Restore numpy+mkl from cache
         uses: actions/cache@v2
         with:
-          key: wheelhouse-${{ env.KEY_BASE }}-${{ github.sha }}
+          key: wheelhouse-numpy-${{ github.sha }}
           path: wheelhouse/*
-          restore-keys: wheelhouse-${{ env.KEY_BASE }}-
+          restore-keys: wheelhouse-numpy
       -
         name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
         run: |
