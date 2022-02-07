@@ -19,8 +19,6 @@ jobs:
           - os: macos-latest
             architecture: x86
     name: Build [${{ matrix.os }} ${{ matrix.architecture }}][Python ${{ matrix.python-version }}]
-    env:
-      KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     steps:
       -
@@ -39,11 +37,6 @@ jobs:
           declare || true
           python -m sysconfig
         shell: bash
-      -
-        uses: actions/cache@v2
-        with:
-          key: wheelhouse-${{ env.KEY_BASE }}-${{ github.sha }}
-          path: wheelhouse/*
       -
         name: Install dependencies
         run: |

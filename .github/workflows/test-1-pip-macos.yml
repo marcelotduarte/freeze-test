@@ -47,8 +47,6 @@ jobs:
             sample: service
         branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
-    env:
-      KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     steps:
       -
@@ -63,13 +61,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
-      -
-        name: Restore wheelhouse from cache
-        uses: actions/cache@v2
-        with:
-          key: wheelhouse-${{ env.KEY_BASE }}-${{ github.sha }}
-          path: wheelhouse/*
-          restore-keys: wheelhouse-${{ env.KEY_BASE }}-
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
