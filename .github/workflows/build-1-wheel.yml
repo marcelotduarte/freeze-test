@@ -95,20 +95,17 @@ jobs:
           cp ../make_index.py .
           mkdir -p cx-freeze
           mv cx_Freeze-* cx-freeze/
+          VERSION=$(ls cx-freeze | (read name; echo $name) | sed 's/-/ /g' | awk '{print $2}')
           mkdir -p cx-logging
           mv cx_Logging-* cx-logging/
           python make_index.py cx-freeze --base cx_Freeze
           python make_index.py cx-logging --base cx_Logging
           rm make_index.py
           echo "theme: jekyll-theme-architect">_config.yml
-          echo "## Packages for cx_Freeze">index.md
-          echo "">>index.md
-          echo "Nightly packages for [cx_Freeze](cx-freeze/index.md).">>index.md
-          echo "">>index.md
-          echo "## Packages for cx_Logging 3.0 \[Windows\]\[Python 3.10\]">>index.md
-          echo "">>index.md
-          echo "Unofficial [cx_Logging](cx-logging/index.md) packages.">>index.md
-          echo "">>index.md
+          echo -e "## Packages for cx_Freeze $VERSION\n">index.md
+          echo -e "Nightly packages for [cx_Freeze](cx-freeze/index.md).\n">>index.md
+          echo -e "## Packages for cx_Logging 3.0 \[Windows\]\[Python 3.10\]\n">>index.md
+          echo -e "Unofficial [cx_Logging](cx-logging/index.md) packages.\n">>index.md
       -
         name: Publish cx_Freeze packages
         run: |
