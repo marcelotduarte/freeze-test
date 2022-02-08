@@ -97,8 +97,8 @@ jobs:
           mv cx_Freeze-* cx-freeze/
           mkdir -p cx-logging
           mv cx_Logging-* cx-logging/
-          python make_index.py cx-freeze
-          python make_index.py cx-logging
+          python make_index.py cx-freeze --base cx_Freeze
+          python make_index.py cx-logging --base cx_Logging
           rm make_index.py
           echo "theme: jekyll-theme-architect">_config.yml
           echo "## Packages for cx_Freeze">index.md
