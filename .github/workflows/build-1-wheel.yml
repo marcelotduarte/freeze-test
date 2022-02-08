@@ -93,21 +93,21 @@ jobs:
         working-directory: wheelhouse
         run: |
           cp ../make_index.py .
-          mkdir -p cx-Freeze
-          mv cx_Freeze-* cx-Freeze/
-          mkdir -p cx-Logging
-          mv cx_Logging-* cx-Logging/
-          python make_index.py cx-Freeze
-          python make_index.py cx-Logging
+          mkdir -p cx-freeze
+          mv cx_Freeze-* cx-freeze/
+          mkdir -p cx-logging
+          mv cx_Logging-* cx-logging/
+          python make_index.py cx-freeze
+          python make_index.py cx-logging
           rm make_index.py
           echo "theme: jekyll-theme-architect">_config.yml
           echo "## Packages for cx_Freeze">index.md
           echo "">>index.md
-          echo "Nightly packages for [cx_Freeze](cx-Freeze/index.md).">>index.md
+          echo "Nightly packages for [cx_Freeze](cx-freeze/index.md).">>index.md
           echo "">>index.md
           echo "## Packages for cx_Logging 3.0 \[Windows\]\[Python 3.10\]">>index.md
           echo "">>index.md
-          echo "Unofficial [cx_Logging](cx-Logging/index.md) packages.">>index.md
+          echo "Unofficial [cx_Logging](cx-logging/index.md) packages.">>index.md
           echo "">>index.md
       -
         name: Publish cx_Freeze packages
@@ -118,7 +118,7 @@ jobs:
           git push origin :gh-pages || true
           git checkout --orphan gh-pages
           cp -r wheelhouse/* .
-          git add cx-Freeze cx-Logging _config.yml index.md
+          git add cx-freeze cx-logging _config.yml index.md
           git commit -m "Publish cx_Freeze packages"
           git push --set-upstream origin gh-pages
         shell: bash
