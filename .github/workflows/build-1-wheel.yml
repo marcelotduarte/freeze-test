@@ -103,11 +103,11 @@ jobs:
           echo "theme: jekyll-theme-architect">_config.yml
           echo "## Packages for cx_Freeze">index.md
           echo "">>index.md
-          echo "Nightly packages for [cx_Freeze](cx_Freeze/index.md).">>index.md
+          echo "Nightly packages for [cx_Freeze](cx-Freeze/index.md).">>index.md
           echo "">>index.md
           echo "## Packages for cx_Logging 3.0 \[Windows\]\[Python 3.10\]">>index.md
           echo "">>index.md
-          echo "Unofficial [cx_Logging](cx_Logging/index.md) packages.">>index.md
+          echo "Unofficial [cx_Logging](cx-Logging/index.md) packages.">>index.md
           echo "">>index.md
       -
         name: Publish cx_Freeze packages
