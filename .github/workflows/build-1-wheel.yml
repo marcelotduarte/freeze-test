@@ -54,7 +54,9 @@ jobs:
         if: runner.os == 'Windows' && matrix.python-version == '3.10'
         run: |
           pip install --upgrade wheel
-          pip install -f https://marcelotduarte.github.io/packages/cx_Logging cx_Logging
+          git clone -b 3.0 https://github.com/anthony-tuininga/cx_Logging.git
+          python -m build -o wheelhouse -n ./cx_Logging
+          pip install -f wheelhouse cx_Logging
           python -m build -o wheelhouse -n .
         shell: bash
       -
@@ -85,22 +87,32 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: cx-freeze-wheelhouse
-          path: cx_Freeze
+          path: wheelhouse
       -
-        name: Create index.md
+        name: Create packages template
+        working-directory: wheelhouse
         run: |
-          python make_index.py cx_Freeze
-          mv cx_Freeze new_cx_Freeze
+          python ../make_index.py cx_Freeze
+          python ../make_index.py cx_Logging
+          echo "theme: jekyll-theme-architect">_config.yml
+          echo "## Packages for cx_Freeze">index.md
+          echo "">>index.md
+          echo "Nightly packages for [cx_Freeze](cx_Freeze/index.md).">>index.md
+          echo "">>index.md
+          echo "## Packages for cx_Logging 3.0 \[Windows\]\[Python 3.10\]">>index.md
+          echo "">>index.md
+          echo "Unofficial [cx_Logging](cx_Logging/index.md) packages.">>index.md
+          echo "">>index.md
       -
-        name: Update packages
+        name: Publish cx_Freeze packages
         run: |
           git config user.name "Marcelo Duarte"
           git config user.email marcelotduarte@users.noreply.github.com
-          git checkout gh-pages
-          mkdir -p cx_Freeze
-          cp new_cx_Freeze/* cx_Freeze/
-          git add cx_Freeze
-          git commit -m "Update cx_Freeze packages"
-          git push
-          rm -rf new_cx_Freeze
+          git branch -D gh-pages || true
+          git push origin :gh-pages || true
+          git checkout --orphan gh-pages
+          cp -r wheelhouse/* .
+          git add cx_Freeze cx_Logging _config.yml index.md
+          git commit -m "Publish cx_Freeze packages"
+          git push --set-upstream origin gh-pages
         shell: bash
