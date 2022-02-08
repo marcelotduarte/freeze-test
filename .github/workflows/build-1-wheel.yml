@@ -93,13 +93,13 @@ jobs:
         working-directory: wheelhouse
         run: |
           cp ../make_index.py .
-          ls -l
-          mkdir -p cx_Freeze
-          mv cx_Freeze-* cx_Freeze/
-          mkdir -p cx_Logging
-          mv cx_Logging-* cx_Logging/
-          python make_index.py cx_Freeze
-          python make_index.py cx_Logging
+          mkdir -p cx-Freeze
+          mv cx_Freeze-* cx-Freeze/
+          mkdir -p cx-Logging
+          mv cx_Logging-* cx-Logging/
+          python make_index.py cx-Freeze
+          python make_index.py cx-Logging
+          rm make_index.py
           echo "theme: jekyll-theme-architect">_config.yml
           echo "## Packages for cx_Freeze">index.md
           echo "">>index.md
