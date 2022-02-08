@@ -92,6 +92,10 @@ jobs:
         name: Create packages template
         working-directory: wheelhouse
         run: |
+          mkdir -p cx_Freeze
+          mv cx_Freeze-* cx_Freeze/
+          mkdir -p cx_Logging
+          mv cx_Logging-* cx_Logging/
           python ../make_index.py cx_Freeze
           python ../make_index.py cx_Logging
           echo "theme: jekyll-theme-architect">_config.yml
