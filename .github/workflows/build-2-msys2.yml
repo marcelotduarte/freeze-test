@@ -28,10 +28,9 @@ jobs:
             mingw-w64-${{ matrix.sys.env }}-toolchain
             mingw-w64-${{ matrix.sys.env }}-python-setuptools
             mingw-w64-${{ matrix.sys.env }}-python-cx-logging
+            mingw-w64-${{ matrix.sys.env }}-python-lief
           update: true
           #  mingw-w64-${{ matrix.sys.env }}-python-pip
-          #  mingw-w64-${{ matrix.sys.env }}-python-importlib-metadata
-          #  mingw-w64-${{ matrix.sys.env }}-python-lief
       -
         name: Variables
         run: |
