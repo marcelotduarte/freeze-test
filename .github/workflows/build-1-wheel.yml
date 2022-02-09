@@ -136,19 +136,28 @@ jobs:
         working-directory: wheelhouse
         run: |
           cp ../make_index.py .
+          # cx_Freeze wheels
           mkdir -p cx-freeze
           mv cx_Freeze-* cx-freeze/
-          VERSION=$(ls cx-freeze | (read name; echo $name) | sed 's/-/ /g' | awk '{print $2}')
+          python make_index.py cx-freeze --base cx_Freeze
+          # mingw packages
+          mkdir -p python-cx-freeze
+          mv mingw-*-python-cx-freeze-* python-cx-freeze/
+          python make_index.py python-cx-freeze
+          # cx_Logging
           mkdir -p cx-logging
           mv cx_Logging-* cx-logging/
-          python make_index.py cx-freeze --base cx_Freeze
           python make_index.py cx-logging --base cx_Logging
+          # cleanup
           rm make_index.py
-          echo "theme: jekyll-theme-architect">_config.yml
-          echo -e "## Packages for cx_Freeze $VERSION\n">index.md
-          echo -e "Nightly packages for [cx_Freeze](cx-freeze/index.md).\n">>index.md
+          # template
+          VERSION=$(ls cx-freeze | (read name; echo $name) | sed 's/-/ /g' | awk '{print $2}')
+          echo -e "## Development packages for cx_Freeze $VERSION\n">index.md
+          echo -e "Development wheels for [cx_Freeze](cx-freeze/index.md).\n">>index.md
+          echo -e "Development packages for MSYS2 [python-cx-freeze](python-cx-freeze/index.md).\n">>index.md
           echo -e "## Packages for cx_Logging 3.0 \[Windows\]\[Python 3.10\]\n">>index.md
-          echo -e "Unofficial [cx_Logging](cx-logging/index.md) packages.\n">>index.md
+          echo -e "Unofficial wheels for [cx_Logging](cx-logging/index.md).\n">>index.md
+          echo "theme: jekyll-theme-architect">_config.yml
       -
         name: Publish cx_Freeze packages
         run: |

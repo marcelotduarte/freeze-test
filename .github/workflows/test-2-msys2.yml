@@ -69,8 +69,9 @@ jobs:
       -
         name: Install from package
         run: |
-          version=$(grep "__version__ = " cx_Freeze/__init__.py | sed 's/-/./' | awk -F\" '{print $2}')
-          pacman --noconfirm --needed -U mingw-w64-${{ matrix.sys.env }}-python-cx-freeze-${version}-*
+          VERSION=$(grep "__version__ = " cx_Freeze/__init__.py | sed 's/-/./' | awk -F\" '{print $2}')
+          NAME=mingw-w64-${{ matrix.sys.env }}-python-cx-freeze-${VERSION}-1-any.pkg.tar.zst
+          pacman --noconfirm --needed -U ${NAME}
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
