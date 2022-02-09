@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: ['3.7', '3.8', '3.9', '3.10']
     runs-on: ubuntu-latest
     name: Cache numpy+mkl packages (${{ matrix.python-version }})
     env:
@@ -24,22 +24,22 @@ jobs:
         run: mkdir -p wheelhouse
       -
         name: Download the package
-        if: "${{ matrix.python-version }}" == "3.7"
+        if: ${{ matrix.python-version == '3.7' }}
         working-directory: wheelhouse
         run: curl ${{ env.LINK }}/numpy-1.21.5+mkl-cp37-cp37m-win_amd64.whl -O
       -
         name: Download the package
-        if: "${{ matrix.python-version }}" == "3.8"
+        if: ${{ matrix.python-version == '3.8' }}
         working-directory: wheelhouse
         run: curl ${{ env.LINK }}/numpy-1.22.2+mkl-cp38-cp38-win_amd64.whl -O
       -
         name: Download the package
-        if: "${{ matrix.python-version }}" == "3.9"
+        if: ${{ matrix.python-version == '3.9' }}
         working-directory: wheelhouse
         run: curl ${{ env.LINK }}/numpy-1.22.2+mkl-cp39-cp39-win_amd64.whl -O
       -
         name: Download the package
-        if: "${{ matrix.python-version }}" == "3.10"
+        if: ${{ matrix.python-version == '3.10' }}
         working-directory: wheelhouse
         run: curl ${{ env.LINK }}/numpy-1.22.2+mkl-cp310-cp310-win_amd64.whl -O
       -
