@@ -4,79 +4,44 @@ on:
   workflow_dispatch:
 
 jobs:
-  cp37:
-    runs-on: ubuntu-20.04
-    name: Cache numpy+mkl packages (cp37)
+  download:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+    runs-on: ubuntu-latest
+    name: Cache numpy+mkl packages (${{ matrix.python-version }})
+    env:
+      LINK: https://download.lfd.uci.edu/pythonlibs/x6hvwk7i
     steps:
       -
         uses: actions/cache@v2
         with:
-          key: wheelhouse-numpy-cp37-${{ github.sha }}
+          key: wheelhouse-numpy-${{ matrix.python-version }}-${{ github.sha }}
           path: wheelhouse
+      -
+        name: Make dir
+        run: mkdir -p wheelhouse
       -
         name: Download the package
-        run: |
-          curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/numpy-1.21.5+mkl-cp37-cp37m-win_amd64.whl -O
-      -
-        name: Upload the artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: wheelhouse-numpy
-          path: wheelhouse
-
-  cp38:
-    runs-on: ubuntu-20.04
-    name: Cache numpy+mkl packages (cp38)
-    steps:
-      -
-        uses: actions/cache@v2
-        with:
-          key: wheelhouse-numpy-cp38-${{ github.sha }}
-          path: wheelhouse
+        if: ${{ matrix.python-version }} == "3.7"
+        working-directory: wheelhouse
+        run: curl ${{ env.LINK }}/numpy-1.21.5+mkl-cp37-cp37m-win_amd64.whl -O
       -
         name: Download the package
-        run: |
-          curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/numpy-1.22.2+mkl-cp38-cp38-win_amd64.whl -O
-      -
-        name: Upload the artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: wheelhouse-numpy
-          path: wheelhouse
-
-  cp39:
-    runs-on: ubuntu-20.04
-    name: Cache numpy+mkl packages (cp39)
-    steps:
-      -
-        uses: actions/cache@v2
-        with:
-          key: wheelhouse-numpy-cp39-${{ github.sha }}
-          path: wheelhouse
+        if: ${{ matrix.python-version }} == "3.8"
+        working-directory: wheelhouse
+        run: curl ${{ env.LINK }}/numpy-1.22.2+mkl-cp38-cp38-win_amd64.whl -O
       -
         name: Download the package
-        run: |
-          curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/numpy-1.22.2+mkl-cp39-cp39-win_amd64.whl -O
-      -
-        name: Upload the artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: wheelhouse-numpy
-          path: wheelhouse
-
-  cp310:
-    runs-on: ubuntu-20.04
-    name: Cache numpy+mkl packages (cp310)
-    steps:
-      -
-        uses: actions/cache@v2
-        with:
-          key: wheelhouse-numpy-cp310-${{ github.sha }}
-          path: wheelhouse
+        if: ${{ matrix.python-version }} == "3.9"
+        working-directory: wheelhouse
+        run: curl ${{ env.LINK }}/numpy-1.22.2+mkl-cp39-cp39-win_amd64.whl -O
       -
         name: Download the package
-        run: |
-          curl https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/numpy-1.22.2+mkl-cp310-cp310-win_amd64.whl -O
+        if: ${{ matrix.python-version }} == "3.10"
+        working-directory: wheelhouse
+        run: curl ${{ env.LINK }}/numpy-1.22.2+mkl-cp310-cp310-win_amd64.whl -O
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2

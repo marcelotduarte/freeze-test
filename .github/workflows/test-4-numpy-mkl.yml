@@ -17,7 +17,6 @@ jobs:
     name: root-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     env:
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
-      NUMPY_LINKS: https://download.lfd.uci.edu/pythonlibs/x6hvwk7i
     runs-on: ${{ matrix.os }}
     steps:
       -
@@ -35,9 +34,9 @@ jobs:
         name: Restore numpy+mkl from cache
         uses: actions/cache@v2
         with:
-          key: wheelhouse-numpy-${{ github.sha }}
-          path: wheelhouse/*
-          restore-keys: wheelhouse-numpy-
+          key: wheelhouse-numpy-${{ matrix.python-version }}-${{ github.sha }}
+          path: wheelhouse
+          restore-keys: wheelhouse-numpy-${{ matrix.python-version }}-
       -
         run: python -m sysconfig
       -
@@ -45,8 +44,7 @@ jobs:
         id: freeze-and-run
         run: |
           echo "::group::Install dependencies"
-          #pip install -f wheelhouse numpy --no-index
-          pip install -f ${{ env.NUMPY_LINKS }} numpy --no-index
+          pip install -f wheelhouse numpy --no-index
           echo "::endgroup::"
           ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
         shell: bash
@@ -82,7 +80,6 @@ jobs:
     name: venv-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     env:
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
-      NUMPY_LINKS: https://download.lfd.uci.edu/pythonlibs/x6hvwk7i
     runs-on: ${{ matrix.os }}
     steps:
       -
@@ -100,17 +97,17 @@ jobs:
         name: Restore numpy+mkl from cache
         uses: actions/cache@v2
         with:
-          key: wheelhouse-numpy-${{ github.sha }}
-          path: wheelhouse/*
-          restore-keys: wheelhouse-numpy
+          key: wheelhouse-numpy-${{ matrix.python-version }}-${{ github.sha }}
+          path: wheelhouse
+          restore-keys: wheelhouse-numpy-${{ matrix.python-version }}-
+
       -
         name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
         run: |
           echo "::group::Create venv with dependencies"
           python -m venv venv
           source venv/scripts/activate
-          #pip install -f wheelhouse numpy --no-index
-          pip install -f ${{ env.NUMPY_LINKS }} numpy --no-index
+          pip install -f wheelhouse numpy --no-index
           echo "::endgroup::"
           ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
         shell: bash
