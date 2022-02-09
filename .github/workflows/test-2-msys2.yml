@@ -39,6 +39,8 @@ jobs:
         exclude:
           - sample: pythonnet-demo
     name: ${{ matrix.sample }}-${{ matrix.sys.msystem }}
+    env:
+      PACKAGES: https://marcelotduarte.github.io/packages
     runs-on: windows-latest
     defaults:
       run:
@@ -61,16 +63,11 @@ jobs:
             mingw-w64-${{ matrix.sys.env }}-python-lief
           update: true
       -
-        uses: actions/cache@v2
-        with:
-          key: wheelhouse-${{ matrix.sys.msystem }}-${{ github.sha }}
-          path: mingw-w64-*.pkg.*
-          restore-keys: wheelhouse-${{ matrix.sys.msystem }}-
-      -
         name: Install from package
         run: |
           VERSION=$(grep "__version__ = " cx_Freeze/__init__.py | sed 's/-/./' | awk -F\" '{print $2}')
           NAME=mingw-w64-${{ matrix.sys.env }}-python-cx-freeze-${VERSION}-1-any.pkg.tar.zst
+          curl ${{ env.PACKAGES }}/${NAME} -O
           pacman --noconfirm --needed -U ${NAME}
       -
         name: Freeze and run "${{ matrix.sample }}"
