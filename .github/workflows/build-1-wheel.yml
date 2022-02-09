@@ -110,7 +110,7 @@ jobs:
           path: mingw-w64-*.pkg.*
 
   packages:
-    needs: build_wheel, build_msys2
+    needs: [build_wheel, build_msys2]
     runs-on: ubuntu-20.04
     name: Update packages repository
     steps:
