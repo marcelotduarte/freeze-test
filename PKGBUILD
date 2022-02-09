@@ -29,7 +29,7 @@ prepare() {
 
 pkgver() {
   cd python-${_realname}-${MSYSTEM}
-  grep "__version__ = " cx_Freeze/__init__.py | sed 's/-//' | awk -F\" '{print $2}'
+  grep "__version__ = " cx_Freeze/__init__.py | sed 's/-/./' | awk -F\" '{print $2}'
 }
 
 build() {
