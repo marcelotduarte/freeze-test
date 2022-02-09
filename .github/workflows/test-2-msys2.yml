@@ -54,12 +54,12 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.sys.msystem }}
-          install: >-
-            mingw-w64-${{ matrix.sys.env }}-python-pip
-            mingw-w64-${{ matrix.sys.env }}-python-setuptools
-            mingw-w64-${{ matrix.sys.env }}-python-importlib-metadata
-            mingw-w64-${{ matrix.sys.env }}-python-cx-logging
-            mingw-w64-${{ matrix.sys.env }}-python-lief
+          #install: >-
+          #  mingw-w64-${{ matrix.sys.env }}-python-pip
+          #  mingw-w64-${{ matrix.sys.env }}-python-setuptools
+          #  mingw-w64-${{ matrix.sys.env }}-python-importlib-metadata
+          #  mingw-w64-${{ matrix.sys.env }}-python-cx-logging
+          #  mingw-w64-${{ matrix.sys.env }}-python-lief
           update: true
       -
         uses: actions/cache@v2
@@ -69,7 +69,6 @@ jobs:
           restore-keys: wheelhouse-${{ matrix.sys.msystem }}-
       -
         name: Install from package
-        # mingw-w64-i686-python-cx-freeze-6.10a1-1-any.pkg.tar.zst
         run: |
           version=$(grep "__version__ = " cx_Freeze/__init__.py | sed 's/-//' | awk -F\" '{print $2}')
           pacman --noconfirm --needed -U mingw-w64-${{ matrix.sys.env }}-python-cx-freeze-${version}-*
