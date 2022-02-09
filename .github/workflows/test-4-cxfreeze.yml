@@ -37,7 +37,7 @@ jobs:
       -
         name: Install dependencies
         run: |
-          pip install --extra-index-url ${{ LINK1 }} cx_Freeze --pre
+          pip install --extra-index-url ${{ env.LINK1 }} cx_Freeze --pre
       -
         run: python -m sysconfig
       -
