@@ -12,11 +12,12 @@ jobs:
       matrix:
         sample: [pandas]
         os: [windows-latest]
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
         architecture: [x64]
     name: root-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     env:
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
+      NUMPY_LINKS: https://download.lfd.uci.edu/pythonlibs/x6hvwk7i
     runs-on: ${{ matrix.os }}
     steps:
       -
@@ -44,7 +45,8 @@ jobs:
         id: freeze-and-run
         run: |
           echo "::group::Install dependencies"
-          pip install -f wheelhouse numpy --no-index
+          #pip install -f wheelhouse numpy --no-index
+          pip install -f ${{ env.NUMPY_LINKS }} numpy --no-index
           echo "::endgroup::"
           ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
         shell: bash
@@ -75,11 +77,12 @@ jobs:
       matrix:
         sample: [pandas]
         os: [windows-latest]
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
         architecture: [x64]
     name: venv-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     env:
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
+      NUMPY_LINKS: https://download.lfd.uci.edu/pythonlibs/x6hvwk7i
     runs-on: ${{ matrix.os }}
     steps:
       -
@@ -106,7 +109,8 @@ jobs:
           echo "::group::Create venv with dependencies"
           python -m venv venv
           source venv/scripts/activate
-          pip install -f wheelhouse numpy --no-index
+          #pip install -f wheelhouse numpy --no-index
+          pip install -f ${{ env.NUMPY_LINKS }} numpy --no-index
           echo "::endgroup::"
           ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
         shell: bash
