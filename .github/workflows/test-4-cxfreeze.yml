@@ -19,6 +19,8 @@ jobs:
           - os: macos-latest
             architecture: x86
     name: cxfreeze-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
+    env:
+      LINK1: https://marcelotduarte.github.io/packages
     runs-on: ${{ matrix.os }}
     steps:
       -
@@ -35,10 +37,7 @@ jobs:
       -
         name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -U setuptools
-          #pip install -r requirements.txt
-          pip install -f https://marcelotduarte.github.io/packages/cx_Freeze cx_Freeze --pre
+          pip install --extra-index-url ${{ LINK1 }} cx_Freeze --pre
       -
         run: python -m sysconfig
       -
