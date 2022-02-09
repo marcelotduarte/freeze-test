@@ -167,7 +167,7 @@ jobs:
           git push origin :gh-pages || true
           git checkout --orphan gh-pages
           cp -r wheelhouse/* .
-          git add cx-freeze cx-logging _config.yml index.md
+          git add cx-freeze python-cx-freeze cx-logging index.md _config.yml
           git commit -m "Publish cx_Freeze packages"
           git push --set-upstream origin gh-pages
         shell: bash
