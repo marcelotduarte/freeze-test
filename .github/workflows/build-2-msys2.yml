@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build_msys2:
     strategy:
       fail-fast: false
       matrix:
