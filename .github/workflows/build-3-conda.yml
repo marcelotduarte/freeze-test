@@ -44,18 +44,31 @@ jobs:
         run: conda install conda-build
       -
         name: Prepare recipe
+        if: runner.os != 'macOS'
         working-directory: recipe
         run: |
+           VERSION="6.11.dev"
+           sed -i "/set version/c\{% set version = \"$VERSION\" %}" meta.yaml
+           sed -i '/url:/c\  git_url: https://github.com/marcelotduarte/cx_Freeze.git' meta.yaml
+           sed -i '/sha256:/c\  git_rev: develop' meta.yaml
+           sed -i '/number:/c\  number: 0' meta.yaml
+           cat meta.yaml
+      -
+        name: Prepare recipe
+        if: runner.os == 'macOS'
+        working-directory: recipe
+        run: |
+          # sed on macOS differ from Linux
           VERSION="6.11.dev"
-          # sed -i differ between Linux and osx, so I do not use it.
-          sed "/.*set version.*/d" meta.yaml>meta.tmp
-          sed '/url:/c\  git_url: https://github.com/marcelotduarte/cx_Freeze.git' meta.tmp>meta.yaml
-          sed '/sha256:/c\  git_rev: develop' meta.yaml>meta.tmp
-          sed '/number:/c\  number: 0' meta.tmp>meta.yaml
+          sed -i '' "/.*set version.*/d" meta.yaml
           cp meta.yaml meta.tmp
           echo "{% set version = \"$VERSION\" %}">meta.yaml
           cat meta.tmp>>meta.yaml
           rm meta.tmp
+          sed -i '' '/url:/c  git_url: https://github.com/marcelotduarte/cx_Freeze.git' meta.yaml
+          sed -i '' '/sha256:/c  git_rev: develop' meta.yaml
+          sed -i '' '/number:/c  number: 0' meta.yaml
+          cat meta.yaml
       -
         name: Build the conda package
         run: conda build recipe --output-folder .
