@@ -45,11 +45,12 @@ jobs:
         name: Prepare recipe
         working-directory: recipe
         run: |
-          VERSION=6.11.dev
+          VERSION="6.11.dev"
           sed -i "/set version/c\{% set version = \"$VERSION\" %}" meta.yaml
-          sed -i "/url:/c\  git_url: https://github.com/marcelotduarte/cx_Freeze.git" meta.yaml
-          sed -i "/sha256:/c\  git_rev: develop" meta.yaml
-          sed -i "/number:/c\  number: 0" meta.yaml
+          sed -i '/url:/c\  git_url: https://github.com/marcelotduarte/cx_Freeze.git' meta.yaml
+          sed -i '/sha256:/c\  git_rev: develop' meta.yaml
+          sed -i '/number:/c\  number: 0' meta.yaml
+          cat meta.yaml
       -
         name: Build the conda package
         run: conda build recipe --output-folder .
