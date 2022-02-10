@@ -24,7 +24,6 @@ jobs:
       -
         uses: actions/checkout@v2
         with:
-          ref: develop
           repository: marcelotduarte/cx_freeze-feedstock
       -
         uses: conda-incubator/setup-miniconda@v2
@@ -32,25 +31,28 @@ jobs:
           activate-environment: freeze-${{ env.KEY_BASE }}
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
-          channels: conda-forge,defaults
+          channels: conda-forge
       -
         uses: actions/cache@v2
         with:
           key: conda-${{ env.KEY_BASE }}-${{ github.sha }}
           path: ./*/cx_freeze*.tar.bz2
       -
-        name: Install conda-build
+        run: conda info
+      -
+        run: conda install conda-build
+      -
+        name: Prepare recipe
+        working-directory: recipe
         run: |
-          echo "::group::conda info"
-          conda info
-          echo "::endgroup::"
-          echo "::group::Install conda-build"
-          conda install conda-build
-          echo "::endgroup::"
+          VERSION=6.XX
+          sed -i "/set version/c{% set version = \"$VERSION\" %}" meta.yaml
+          sed -i "/url:/c  git_url: https://github.com/marcelotduarte/cx_Freeze.git" meta.yaml
+          sed -i "/sha256:/c  git_rev: develop" meta.yaml
+          sed -i "/number:/c  number: 0" meta.yaml
       -
         name: Build the conda package
-        run: |
-          conda build recipe --output-folder .
+        run: conda build recipe --output-folder .
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
