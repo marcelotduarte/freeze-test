@@ -58,14 +58,15 @@ jobs:
           sed -i '/url:/c\  path: ../..' meta.yaml
           sed -i '/.*sha256.*/d' meta.yaml
           sed -i '/number:/c\  number: 0' meta.yaml
+          popd
           git diff
       -
         name: Prepare recipe
         if: runner.os == 'macOS'
-        working-directory: recipe
         run: |
           VERSION=$(grep "__version__ = " cx_Freeze/__init__.py | sed 's/-/./' | awk -F\" '{print $2}')
           # sed on macOS differ from Linux
+          pushd cx_freeze-feedstock/recipe
           sed -i '' "/.*set version.*/d" meta.yaml
           cp meta.yaml meta.tmp
           echo "{% set version = \"$VERSION\" %}">meta.yaml
@@ -74,9 +75,11 @@ jobs:
           sed -i '' '/url:/c\  path: ../..' meta.yaml
           sed -i '' '/.*sha256.*/d' meta.yaml
           sed -i '' '/number:/c\  number: 0' meta.yaml
+          popd
           git diff
       -
         name: Build the conda package
+        working-directory: cx_freeze-feedstock
         run: conda build -c conda-forge recipe --output-folder .
       -
         name: Upload the artifact
