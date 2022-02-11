@@ -36,13 +36,17 @@ jobs:
           popd
           git diff
       -
-        id: recipe
+        id: recipe1
         run: |
           import base64
           with open("recipe/meta.yaml", "rb") as fp:
               encoded = base64.b64encode(fp.read()).decode()
           print(f"::set-output name=encoded::{encoded}")
         shell: python
+      -
+        id: recipe
+        run: |
+          echo "::set-output name=encoded::$(base64 --wrap=0 recipe/meta.yaml)"
       -
         name: Upload recipe
         uses: actions/upload-artifact@v2
@@ -75,17 +79,9 @@ jobs:
           repository: marcelotduarte/cx_freeze-feedstock
       -
         name: Update recipe
-        uses: actions/download-artifact@v2
-        with:
-          name: recipe
-          path: .
-      -
-        run: echo ${{ needs.recipe.outputs.data }}
-      -
-        name: Up
         run: echo ${{ needs.recipe.outputs.data }} | base64 -d> meta.tmp
       -
-        run: ls -l
+        run: cat meta.tmp
       -
         name: Build the conda package
         run: echo ""
