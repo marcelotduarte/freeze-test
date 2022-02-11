@@ -24,7 +24,6 @@ jobs:
         uses: actions/setup-python@v2
       -
         name: Prepare recipe
-        id: recipe
         run: |
           pushd cx_Freeze/cx_Freeze
           VERSION=$(grep "__version__ = " __init__.py | sed 's/-/./' | awk -F\" '{print $2}')
@@ -34,9 +33,16 @@ jobs:
           sed -i '/url:/c\  git_url: https://github.com/marcelotduarte/cx_Freeze.git' meta.yaml
           sed -i '/sha256:/c\  git_rev: develop' meta.yaml
           sed -i '/number:/c\  number: 0' meta.yaml
-          echo "::set-output name=data::{\"meta\":\"$(cat meta.yaml)\"}"
           popd
           git diff
+      -
+        id: recipe
+        run: |
+          import base64
+          with open("recipe/meta.yaml", "rb") as fp:
+              encoded = base64.b64encode(fp.read())
+          print(f"::set-output name=encoded::{encoded}")
+        shell: python
       -
         name: Upload recipe
         uses: actions/upload-artifact@v2
@@ -44,7 +50,7 @@ jobs:
           name: recipe
           path: recipe/meta.yaml
     outputs:
-      data: ${{ steps.recipe.outputs.data }}
+      data: ${{ steps.recipe.outputs.encoded }}
 
   build_linux_64:
     needs: [recipe]
@@ -74,12 +80,10 @@ jobs:
           name: recipe
           path: .
       -
-        run: ls -l
-      -
         run: echo ${{ needs.recipe.outputs.data }}
       -
         name: Up
-        run: echo ${{ fromJSON(needs.recipe.outputs.data) }} > meta.tmp
+        run: echo ${{ needs.recipe.outputs.data }} | base64 -d> meta.tmp
       -
         run: ls -l
       -
