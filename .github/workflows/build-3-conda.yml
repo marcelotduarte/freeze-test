@@ -21,8 +21,6 @@ jobs:
           repository: marcelotduarte/cx_Freeze
           path: cx_Freeze
       -
-        uses: actions/setup-python@v2
-      -
         name: Prepare recipe
         run: |
           pushd cx_Freeze/cx_Freeze
@@ -36,23 +34,10 @@ jobs:
           popd
           git diff
       -
-        id: recipe1
-        run: |
-          import base64
-          with open("recipe/meta.yaml", "rb") as fp:
-              encoded = base64.b64encode(fp.read()).decode()
-          print(f"::set-output name=encoded::{encoded}")
-        shell: python
-      -
+        name: Send recipe
         id: recipe
         run: |
           echo "::set-output name=encoded::$(base64 --wrap=0 recipe/meta.yaml)"
-      -
-        name: Upload recipe
-        uses: actions/upload-artifact@v2
-        with:
-          name: recipe
-          path: recipe/meta.yaml
     outputs:
       data: ${{ steps.recipe.outputs.encoded }}
 
@@ -79,9 +64,9 @@ jobs:
           repository: marcelotduarte/cx_freeze-feedstock
       -
         name: Update recipe
-        run: echo ${{ needs.recipe.outputs.data }} | base64 -d> meta.tmp
+        run: echo ${{ needs.recipe.outputs.data }} | base64 -d>recipe/meta.yaml
       -
-        run: cat meta.tmp
+        run: cat recipe/meta.yaml
       -
         name: Build the conda package
         run: echo ""
@@ -114,11 +99,8 @@ jobs:
         with:
           repository: marcelotduarte/cx_freeze-feedstock
       -
-        name: Download recipe
-        uses: actions/download-artifact@v2
-        with:
-          name: recipe
-          path: recipe/meta.yaml
+        name: Update recipe
+        run: echo ${{ needs.recipe.outputs.data }} | base64 -d>recipe/meta.yaml
       -
         uses: conda-incubator/setup-miniconda@v2
         with:
