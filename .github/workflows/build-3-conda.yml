@@ -40,7 +40,7 @@ jobs:
         run: |
           import base64
           with open("recipe/meta.yaml", "rb") as fp:
-              encoded = base64.b64encode(fp.read())
+              encoded = base64.b64encode(fp.read()).decode()
           print(f"::set-output name=encoded::{encoded}")
         shell: python
       -
