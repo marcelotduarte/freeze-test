@@ -19,6 +19,7 @@ jobs:
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
+          path: cx_Freeze
       -
         uses: actions/setup-python@v2
       -
