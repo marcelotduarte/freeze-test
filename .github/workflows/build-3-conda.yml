@@ -22,6 +22,7 @@ jobs:
           path: cx_Freeze
       -
         name: Prepare recipe
+        id: recipe
         run: |
           pushd cx_Freeze/cx_Freeze
           VERSION=$(grep "__version__ = " __init__.py | sed 's/-/./' | awk -F\" '{print $2}')
@@ -31,37 +32,42 @@ jobs:
           sed -i '/url:/c\  git_url: https://github.com/marcelotduarte/cx_Freeze.git' meta.yaml
           sed -i '/sha256:/c\  git_rev: develop' meta.yaml
           sed -i '/number:/c\  number: 0' meta.yaml
+          echo "::set-output name=encoded::$(base64 --wrap=0 meta.yaml)"
           popd
           git diff
       -
-        name: Send recipe
-        id: recipe
+        name: List configurations
+        id: config
         run: |
-          echo "::set-output name=encoded::$(base64 --wrap=0 recipe/meta.yaml)"
+          LINUX_64=
+          pushd ci_support
+          for CONFIG in *.yaml; do
+            echo ${CONFIG::-5}
+            if [ "${CONFIG:0:8}" == "linux_64" ] ; then
+                LINUX_64="${LINUX_64},${CONFIG::-5}"
+            fi
+          done
+          popd
+          echo "::set-output name=linux_64::${LINUX_64:1:}"
     outputs:
       data: ${{ steps.recipe.outputs.encoded }}
+      linux_64: ${{ steps.config.outputs.linux_64 }}
 
   build_linux_64:
     needs: [recipe]
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        #python-version: ["3.7", "3.8", "3.9", "3.10"]
-        python-version: ["3.8"]
-        architecture: [x64]
-    name: Build ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
-    defaults:
-      run:
-        shell: bash -l {0}
-    env:
-      KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
-    runs-on: ${{ matrix.os }}
+        linux_64: ${{ needs.recipe.outputs.linux_64 }}
+    name: Build ${{ matrix.linux_64 }}
+    runs-on: ubuntu-latest
     steps:
       -
         uses: actions/checkout@v2
         with:
           repository: marcelotduarte/cx_freeze-feedstock
+      -
+        uses: actions/setup-python@v2
       -
         name: Update recipe
         run: echo ${{ needs.recipe.outputs.data }} | base64 -d>recipe/meta.yaml
@@ -69,7 +75,10 @@ jobs:
         run: cat recipe/meta.yaml
       -
         name: Build the conda package
-        run: echo ""
+        run: |
+          for CONFIG in [ ${{ needs.recipe.outputs.linux_64 }} ]; do
+            echo $CONFIG
+          done
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
