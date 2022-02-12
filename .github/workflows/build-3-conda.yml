@@ -48,6 +48,7 @@ jobs:
             fi
           done
           popd
+          echo ${LINUX_64:1:}
           echo "::set-output name=linux_64::${LINUX_64:1:}"
     outputs:
       data: ${{ steps.recipe.outputs.encoded }}
@@ -58,7 +59,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        linux_64: ${{ needs.recipe.outputs.linux_64 }}
+        linux_64: [ ${{ needs.recipe.outputs.linux_64 }} ]
     name: Build ${{ matrix.linux_64 }}
     runs-on: ubuntu-latest
     steps:
