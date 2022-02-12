@@ -126,7 +126,9 @@ jobs:
         run: cat recipe/meta.yaml
       -
         name: Build the conda package
-        run: python build-locally.py ${{ matrix.config }}
+        run: |
+          git config core.precomposeunicode false
+          python build-locally.py ${{ matrix.config }}
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
