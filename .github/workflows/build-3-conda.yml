@@ -36,28 +36,82 @@ jobs:
           popd
           git diff
       -
-        name: List configurations
-        id: config
+        name: List 'linux' configurations
+        id: linux
         run: |
-          LINUX_64=""
+          CONFIGS=""
           for CONFIG in .ci_support/linux_*.yaml; do
-            LINUX_64="${LINUX_64}\"${CONFIG:12:-5}\", "
+            CONFIGS="${CONFIGS}\"${CONFIG:12:-5}\", "
           done
-          echo ${LINUX_64::-2}
-          echo "[${LINUX_64::-2}]"
-          echo "::set-output name=linux_64::[${LINUX_64::-2}]"
+          echo ${CONFIGS::-2}
+          echo "[${CONFIGS::-2}]"
+          echo "::set-output name=config::[${CONFIGS::-2}]"
+      -
+        name: List 'osx' configurations
+        id: osx
+        run: |
+          CONFIGS=""
+          for CONFIG in .ci_support/osx_*.yaml; do
+            CONFIGS="${CONFIGS}\"${CONFIG:12:-5}\", "
+          done
+          echo ${CONFIGS::-2}
+          echo "[${CONFIGS::-2}]"
+          echo "::set-output name=config::[${CONFIGS::-2}]"
+      -
+        name: List 'win' configurations
+        id: win
+        run: |
+          CONFIGS=""
+          for CONFIG in .ci_support/win_*.yaml; do
+            CONFIGS="${CONFIGS}\"${CONFIG:12:-5}\", "
+          done
+          echo ${CONFIGS::-2}
+          echo "[${CONFIGS::-2}]"
+          echo "::set-output name=config::[${CONFIGS::-2}]"
     outputs:
       data: ${{ steps.recipe.outputs.encoded }}
-      linux_64: ${{ steps.config.outputs.linux_64 }}
+      linux: ${{ steps.linux.outputs.config }}
+      osx: ${{ steps.osx.outputs.config }}
+      win: ${{ steps.win.outputs.config }}
 
-  build_linux_64:
+  build_linux:
     needs: [recipe]
     strategy:
       fail-fast: false
       matrix:
-        config: ${{ fromJSON(needs.recipe.outputs.linux_64) }}
+        config: ${{ fromJSON(needs.recipe.outputs.linux) }}
     name: Build ${{ matrix.config }}
     runs-on: ubuntu-latest
+    steps:
+      -
+        uses: actions/checkout@v2
+        with:
+          repository: marcelotduarte/cx_freeze-feedstock
+      -
+        uses: actions/setup-python@v2
+      -
+        name: Update recipe
+        run: echo ${{ needs.recipe.outputs.data }} | base64 -d>recipe/meta.yaml
+      -
+        run: cat recipe/meta.yaml
+      -
+        name: Build the conda package
+        run: python build-locally.py ${{ matrix.config }}
+      -
+        name: Upload the artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: cx-freeze-conda
+          path: ./build_artifacts/*/cx_freeze*.tar.bz2
+
+  build_osx:
+    needs: [recipe]
+    strategy:
+      fail-fast: false
+      matrix:
+        config: ${{ fromJSON(needs.recipe.outputs.osx) }}
+    name: Build ${{ matrix.config }}
+    runs-on: macos-latest
     steps:
       -
         uses: actions/checkout@v2
@@ -85,7 +139,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, windows-latest]
+        #os: [macos-latest, windows-latest]
+        os: [windows-latest]
         python-version: ["3.7", "3.8", "3.9", "3.10"]
         architecture: [x64]
     name: Build ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
