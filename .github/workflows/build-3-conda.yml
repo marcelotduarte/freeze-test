@@ -40,7 +40,7 @@ jobs:
         id: config
         run: |
           LINUX_64=
-          pushd ci_support
+          pushd .ci_support
           for CONFIG in *.yaml; do
             echo ${CONFIG::-5}
             if [ "${CONFIG:0:8}" == "linux_64" ] ; then
