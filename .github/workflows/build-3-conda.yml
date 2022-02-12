@@ -40,13 +40,9 @@ jobs:
         id: config
         run: |
           LINUX_64=""
-          pushd .ci_support
-          for CONFIG in *.yaml; do
-            if [ "${CONFIG::8}" == "linux_64" ] ; then
-              LINUX_64="${LINUX_64}\"${CONFIG::-5}\", "
-            fi
+          for CONFIG in .ci_support/linux_*.yaml; do
+            LINUX_64="${LINUX_64}\"${CONFIG:12:-5}\", "
           done
-          popd
           echo ${LINUX_64::-2}
           echo "[${LINUX_64::-2}]"
           echo "::set-output name=linux_64::[${LINUX_64::-2}]"
@@ -82,7 +78,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: cx-freeze-conda
-          path: ./*/cx_freeze*.tar.bz2
+          path: ./build_artifacts/*/cx_freeze*.tar.bz2
 
   build_osx_64_and_win_64:
     needs: [recipe]
