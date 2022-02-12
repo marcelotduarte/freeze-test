@@ -39,18 +39,18 @@ jobs:
         name: List configurations
         id: config
         run: |
-          LINUX_64=
+          LINUX_64=""
           pushd .ci_support
           for CONFIG in *.yaml; do
             echo ${CONFIG::8} ${CONFIG::-5}
             if [ "${CONFIG::8}" == "linux_64" ] ; then
               echo ${CONFIG::-5}
-              LINUX_64="${LINUX_64},${CONFIG::-5}"
+              LINUX_64="${LINUX_64}${CONFIG::-5} "
             fi
           done
           popd
-          echo ${LINUX_64:1:}
-          echo "::set-output name=linux_64::[${LINUX_64:1:}]"
+          echo ${LINUX_64::-1}
+          echo "::set-output name=linux_64::[${LINUX_64::-1}]"
     outputs:
       data: ${{ steps.recipe.outputs.encoded }}
       linux_64: ${{ steps.config.outputs.linux_64 }}
