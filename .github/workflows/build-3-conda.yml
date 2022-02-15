@@ -19,15 +19,15 @@ jobs:
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
-          path: cx_Freeze
+          path: recipe/cx_Freeze
       -
         name: Prepare recipe
         id: recipe
+        working-directory: recipe
         run: |
           pushd cx_Freeze/cx_Freeze
           VERSION=$(grep "__version__ = " __init__.py | sed 's/-/./' | awk -F\" '{print $2}')
           popd
-          pushd recipe
           sed -i "/set version/c\{% set version = \"$VERSION\" %}" meta.yaml
           sed -i '/number:/c\  number: 0' meta.yaml
           cp meta.yaml meta1.yaml
@@ -35,10 +35,9 @@ jobs:
           sed -i '/sha256:/c\  git_rev: develop' meta1.yaml
           echo "::set-output name=encoded::$(base64 --wrap=0 meta1.yaml)"
           cp meta.yaml meta2.yaml
-          sed -i '/url:/c\  path: ../cx_Freeze' meta2.yaml
+          sed -i '/url:/c\  path: ./cx_Freeze' meta2.yaml
           sed -i '/sha256:/c\  #' meta2.yaml
           echo "::set-output name=encoded2::$(base64 --wrap=0 meta2.yaml)"
-          popd
           git diff
       -
         name: List 'linux' configurations
@@ -97,10 +96,17 @@ jobs:
         with:
           repository: marcelotduarte/cx_freeze-feedstock
       -
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+          path: recipe/cx_Freeze
+      -
         uses: actions/setup-python@v2
       -
         name: Update recipe
-        run: echo ${{ needs.recipe.outputs.data }} | base64 -d>recipe/meta.yaml
+        working-directory: recipe
+        run: echo ${{ needs.recipe.outputs.data2 }} | base64 -d>meta.yaml
       -
         run: cat recipe/meta.yaml
       -
@@ -131,7 +137,7 @@ jobs:
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
-          path: cx_Freeze
+          path: recipe/cx_Freeze
       -
         uses: actions/setup-python@v2
       -
@@ -180,7 +186,7 @@ jobs:
       -
         name: Update recipe
         working-directory: recipe
-        run: echo ${{ needs.recipe.outputs.data }} | base64 -d>meta.yaml
+        run: echo ${{ needs.recipe.outputs.data2 }} | base64 -d>meta.yaml
       -
         name: Build the conda package
         run: conda build -c conda-forge recipe --output-folder .
