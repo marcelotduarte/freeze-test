@@ -30,14 +30,13 @@ jobs:
           popd
           sed -i "/set version/c\{% set version = \"$VERSION\" %}" meta.yaml
           sed -i '/number:/c\  number: 0' meta.yaml
-          cp meta.yaml meta1.yaml
-          sed -i '/url:/c\  git_url: https://github.com/marcelotduarte/cx_Freeze.git' meta1.yaml
-          sed -i '/sha256:/c\  git_rev: develop' meta1.yaml
-          echo "::set-output name=encoded::$(base64 --wrap=0 meta1.yaml)"
-          cp meta.yaml meta2.yaml
-          sed -i '/url:/c\  path: ./cx_Freeze' meta2.yaml
-          sed -i '/sha256:/c\  #' meta2.yaml
-          echo "::set-output name=encoded2::$(base64 --wrap=0 meta2.yaml)"
+          sed -i '/url:/c\  git_url: https://github.com/marcelotduarte/cx_Freeze.git' meta.yaml
+          sed -i '/sha256:/c\  git_rev: develop' meta.yaml
+          echo "::set-output name=meta::$(base64 --wrap=0 meta.yaml)"
+          cp meta.yaml meta_path.yaml
+          sed -i '/git_url:/c\  path: ./cx_Freeze' meta_path.yaml
+          sed -i '/git_rev:/c\  #' meta_path.yaml
+          echo "::set-output name=meta_path::$(base64 --wrap=0 meta_path.yaml)"
           git diff
       -
         name: List 'unix' configurations
@@ -56,11 +55,9 @@ jobs:
             version="${python_and_version:6:-1}"
             CONFIGS="${CONFIGS}{\"name\":\"${name}\",\"version\":\"${version}\",\"os\":\"macos\"}, "
           done
-          echo ${CONFIGS::-2}
-          echo "[${CONFIGS::-2}]"
           echo "::set-output name=config::[${CONFIGS::-2}]"
       -
-        name: List 'win' configurations
+        name: List 'windows' configurations
         id: win
         run: |
           CONFIGS=""
@@ -70,12 +67,10 @@ jobs:
             version="${python_and_version:6:-1}"
             CONFIGS="${CONFIGS}{\"name\":\"${name}\",\"version\":\"${version}\",\"os\":\"windows\"}, "
           done
-          echo ${CONFIGS::-2}
-          echo "[${CONFIGS::-2}]"
           echo "::set-output name=config::[${CONFIGS::-2}]"
     outputs:
-      data: ${{ steps.recipe.outputs.encoded }}
-      data2: ${{ steps.recipe.outputs.encoded2 }}
+      data: ${{ steps.recipe.outputs.meta }}
+      data_path: ${{ steps.recipe.outputs.meta_path }}
       unix: ${{ steps.unix.outputs.config }}
       win: ${{ steps.win.outputs.config }}
 
@@ -103,7 +98,7 @@ jobs:
       -
         name: Update recipe
         working-directory: recipe
-        run: echo ${{ needs.conda_recipe.outputs.data2 }} | base64 -d>meta.yaml
+        run: echo ${{ needs.conda_recipe.outputs.data_path }} | base64 -d>meta.yaml
       -
         run: cat recipe/meta.yaml
       -
@@ -112,7 +107,9 @@ jobs:
       -
         name: Move to build_artifacts
         if: matrix.config.os == 'macos'
-        run: mkdir -p build_artifacts && mv miniforge3/conda-bld/* build_artifacts/
+        run: |
+          mkdir -p build_artifacts
+          mv miniforge3/conda-bld/* build_artifacts/
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
@@ -130,18 +127,12 @@ jobs:
     defaults:
       run:
         shell: bash -l {0}
-    runs-on: windows-latest
+    runs-on: ${{ matrix.config.os }}-latest
     steps:
       -
         uses: actions/checkout@v2
         with:
           repository: marcelotduarte/cx_freeze-feedstock
-      -
-        uses: actions/checkout@v2
-        with:
-          ref: develop
-          repository: marcelotduarte/cx_Freeze
-          path: recipe/cx_Freeze
       -
         uses: conda-incubator/setup-miniconda@v2
         with:
@@ -156,13 +147,15 @@ jobs:
       -
         name: Update recipe
         working-directory: recipe
-        run: echo ${{ needs.conda_recipe.outputs.data2 }} | base64 -d>meta.yaml
+        run: echo ${{ needs.conda_recipe.outputs.data }} | base64 -d>meta.yaml
       -
         name: Build the conda package
-        run: conda build -c conda-forge recipe --output-folder .
+        run: |
+          mkdir -p build_artifacts
+          conda build -c conda-forge recipe --output-folder build_artifacts
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
           name: cx-freeze-conda
-          path: ./*/cx_freeze*.tar.bz2
+          path: ./build_artifacts/*/cx_freeze*.tar.bz2
