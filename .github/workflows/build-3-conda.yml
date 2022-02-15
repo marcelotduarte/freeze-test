@@ -148,7 +148,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: cx-freeze-conda
-          path: ./**/cx_freeze*.tar.bz2
+          path: ./miniforge3/conda-bld/*/cx_freeze*.tar.bz2
 
   build_win:
     needs: [recipe]
