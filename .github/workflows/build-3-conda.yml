@@ -103,7 +103,7 @@ jobs:
       -
         name: Update recipe
         working-directory: recipe
-        run: echo ${{ needs.recipe.outputs.data2 }} | base64 -d>meta.yaml
+        run: echo ${{ needs.conda_recipe.outputs.data2 }} | base64 -d>meta.yaml
       -
         run: cat recipe/meta.yaml
       -
@@ -156,7 +156,7 @@ jobs:
       -
         name: Update recipe
         working-directory: recipe
-        run: echo ${{ needs.recipe.outputs.data2 }} | base64 -d>meta.yaml
+        run: echo ${{ needs.conda_recipe.outputs.data2 }} | base64 -d>meta.yaml
       -
         name: Build the conda package
         run: conda build -c conda-forge recipe --output-folder .
