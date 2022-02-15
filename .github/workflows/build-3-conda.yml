@@ -29,10 +29,15 @@ jobs:
           popd
           pushd recipe
           sed -i "/set version/c\{% set version = \"$VERSION\" %}" meta.yaml
-          sed -i '/url:/c\  git_url: https://github.com/marcelotduarte/cx_Freeze.git' meta.yaml
-          sed -i '/sha256:/c\  git_rev: develop' meta.yaml
           sed -i '/number:/c\  number: 0' meta.yaml
-          echo "::set-output name=encoded::$(base64 --wrap=0 meta.yaml)"
+          cp meta.yaml meta1.yaml
+          sed -i '/url:/c\  git_url: https://github.com/marcelotduarte/cx_Freeze.git' meta1.yaml
+          sed -i '/sha256:/c\  git_rev: develop' meta1.yaml
+          echo "::set-output name=encoded::$(base64 --wrap=0 meta1.yaml)"
+          cp meta.yaml meta2.yaml
+          sed -i '/url:/c\  path: ./cx_Freeze' meta2.yaml
+          sed -i '/sha256:/c\  #' meta2.yaml
+          echo "::set-output name=encoded2::$(base64 --wrap=0 meta2.yaml)"
           popd
           git diff
       -
@@ -63,13 +68,17 @@ jobs:
         run: |
           CONFIGS=""
           for CONFIG in .ci_support/win_*.yaml; do
-            CONFIGS="${CONFIGS}\"${CONFIG:12:-5}\", "
+            name=${CONFIG:12:-5}
+            python_and_version=$(echo $name|awk -F_ '{print $3}')
+            version="${python_and_version:6:-1}"
+            CONFIGS="${CONFIGS}{\"name\":\"${name}\",\"version\":${version}}, "
           done
           echo ${CONFIGS::-2}
           echo "[${CONFIGS::-2}]"
           echo "::set-output name=config::[${CONFIGS::-2}]"
     outputs:
       data: ${{ steps.recipe.outputs.encoded }}
+      data2: ${{ steps.recipe.outputs.encoded2 }}
       linux: ${{ steps.linux.outputs.config }}
       osx: ${{ steps.osx.outputs.config }}
       win: ${{ steps.win.outputs.config }}
@@ -118,17 +127,22 @@ jobs:
         with:
           repository: marcelotduarte/cx_freeze-feedstock
       -
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+          path: cx_Freeze
+      -
         uses: actions/setup-python@v2
       -
         name: Update recipe
-        run: echo ${{ needs.recipe.outputs.data }} | base64 -d>recipe/meta.yaml
+        working-directory: recipe
+        run: echo ${{ needs.recipe.outputs.data2 }} | base64 -d>meta.yaml
       -
         run: cat recipe/meta.yaml
       -
         name: Build the conda package
-        run: |
-          git config core.precomposeunicode false
-          python build-locally.py ${{ matrix.config }}
+        run: python build-locally.py ${{ matrix.config }}
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
@@ -136,7 +150,95 @@ jobs:
           name: cx-freeze-conda
           path: ./build_artifacts/*/cx_freeze*.tar.bz2
 
-  build_osx_64_and_win_64:
+  build_win:
+    needs: [recipe]
+    strategy:
+      fail-fast: false
+      matrix:
+        config: ${{ fromJSON(needs.recipe.outputs.win) }}
+    name: Build ${{ matrix.config.name }}
+    defaults:
+      run:
+        shell: bash -l {0}
+    runs-on: windows-latest
+    steps:
+      -
+        uses: actions/checkout@v2
+        with:
+          repository: marcelotduarte/cx_freeze-feedstock
+      -
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: freeze-${{ matrix.config.name }}
+          python-version: ${{ matrix.config.version }}
+          #architecture: ${{ matrix.architecture }}
+          channels: conda-forge
+      -
+        run: conda info
+      -
+        run: conda install -c conda-forge conda-build
+      -
+        name: Update recipe
+        working-directory: recipe
+        run: echo ${{ needs.recipe.outputs.data }} | base64 -d>meta.yaml
+      -
+        name: Build the conda package
+        run: conda build -c conda-forge recipe --output-folder .
+      -
+        name: Upload the artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: cx-freeze-conda
+          path: ./*/cx_freeze*.tar.bz2
+
+  build_osx_64:
+    needs: [recipe]
+    strategy:
+      fail-fast: false
+      matrix:
+        config: ${{ fromJSON(needs.recipe.outputs.osx) }}
+    name: Build ${{ matrix.config }}
+    defaults:
+      run:
+        shell: bash -l {0}
+    runs-on: macos-latest
+    steps:
+      -
+        uses: actions/checkout@v2
+        with:
+          repository: marcelotduarte/cx_freeze-feedstock
+      -
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+          path: cx_Freeze
+      -
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: freeze-${{ matrix.config }}
+          python-version: 3.9
+          architecture: x64
+          channels: conda-forge
+      -
+        run: conda info
+      -
+        name: Update recipe
+        working-directory: recipe
+        run: echo ${{ needs.recipe.outputs.data2 }} | base64 -d>meta.yaml
+      -
+        run: cat recipe/meta.yaml
+      -
+        name: Build the conda package
+        run: python build-locally.py ${{ matrix.config }}
+      -
+        name: Upload the artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: cx-freeze-conda
+          path: ./*/cx_freeze*.tar.bz2
+
+  build_win_64:
     needs: [recipe]
     strategy:
       fail-fast: false
