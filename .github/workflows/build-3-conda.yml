@@ -71,7 +71,7 @@ jobs:
             name=${CONFIG:12:-5}
             python_and_version=$(echo $name|awk -F_ '{print $3}')
             version="${python_and_version:6:-1}"
-            CONFIGS="${CONFIGS}{\"name\":\"${name}\",\"version\":${version}}, "
+            CONFIGS="${CONFIGS}{\"name\":\"${name}\",\"version\":\"${version}\"}, "
           done
           echo ${CONFIGS::-2}
           echo "[${CONFIGS::-2}]"
