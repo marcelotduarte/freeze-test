@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  recipe:
+  conda_recipe:
     name: Generate recipe
     runs-on: ubuntu-latest
     steps:
@@ -40,23 +40,21 @@ jobs:
           echo "::set-output name=encoded2::$(base64 --wrap=0 meta2.yaml)"
           git diff
       -
-        name: List 'linux' configurations
-        id: linux
+        name: List 'unix' configurations
+        id: unix
         run: |
           CONFIGS=""
           for CONFIG in .ci_support/linux_*.yaml; do
-            CONFIGS="${CONFIGS}\"${CONFIG:12:-5}\", "
+            name=${CONFIG:12:-5}
+            python_and_version=$(echo $name|awk -F_ '{print $3}')
+            version="${python_and_version:8:-1}"
+            CONFIGS="${CONFIGS}{\"name\":\"${name}\",\"version\":\"${version}\",\"os\":\"ubuntu\"}, "
           done
-          echo ${CONFIGS::-2}
-          echo "[${CONFIGS::-2}]"
-          echo "::set-output name=config::[${CONFIGS::-2}]"
-      -
-        name: List 'osx' configurations
-        id: osx
-        run: |
-          CONFIGS=""
           for CONFIG in .ci_support/osx_*.yaml; do
-            CONFIGS="${CONFIGS}\"${CONFIG:12:-5}\", "
+            name=${CONFIG:12:-5}
+            python_and_version=$(echo $name|awk -F_ '{print $3}')
+            version="${python_and_version:6:-1}"
+            CONFIGS="${CONFIGS}{\"name\":\"${name}\",\"version\":\"${version}\",\"os\":\"macos\"}, "
           done
           echo ${CONFIGS::-2}
           echo "[${CONFIGS::-2}]"
@@ -70,7 +68,7 @@ jobs:
             name=${CONFIG:12:-5}
             python_and_version=$(echo $name|awk -F_ '{print $3}')
             version="${python_and_version:6:-1}"
-            CONFIGS="${CONFIGS}{\"name\":\"${name}\",\"version\":\"${version}\"}, "
+            CONFIGS="${CONFIGS}{\"name\":\"${name}\",\"version\":\"${version}\",\"os\":\"windows\"}, "
           done
           echo ${CONFIGS::-2}
           echo "[${CONFIGS::-2}]"
@@ -78,19 +76,20 @@ jobs:
     outputs:
       data: ${{ steps.recipe.outputs.encoded }}
       data2: ${{ steps.recipe.outputs.encoded2 }}
-      linux: ${{ steps.linux.outputs.config }}
-      osx: ${{ steps.osx.outputs.config }}
+      unix: ${{ steps.unix.outputs.config }}
       win: ${{ steps.win.outputs.config }}
 
-  build_linux:
-    needs: [recipe]
+  build_conda_unix:
+    needs: [conda_recipe]
     strategy:
       fail-fast: false
       matrix:
-        config: ${{ fromJSON(needs.recipe.outputs.linux) }}
-    name: Build ${{ matrix.config }}
-    runs-on: ubuntu-latest
+        config: ${{ fromJSON(needs.conda_recipe.outputs.unix) }}
+    name: Build ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}-latest
     steps:
+      -
+        uses: actions/setup-python@v2
       -
         uses: actions/checkout@v2
         with:
@@ -102,8 +101,6 @@ jobs:
           repository: marcelotduarte/cx_Freeze
           path: recipe/cx_Freeze
       -
-        uses: actions/setup-python@v2
-      -
         name: Update recipe
         working-directory: recipe
         run: echo ${{ needs.recipe.outputs.data2 }} | base64 -d>meta.yaml
@@ -111,7 +108,11 @@ jobs:
         run: cat recipe/meta.yaml
       -
         name: Build the conda package
-        run: python build-locally.py ${{ matrix.config }}
+        run: python build-locally.py ${{ matrix.config.name }}
+      -
+        name: Move to build_artifacts
+        if: matrix.config.os == 'macos'
+        run: mkdir -p build_artifacts && mv miniforge3/conda-bld/* build_artifacts/
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
@@ -119,49 +120,12 @@ jobs:
           name: cx-freeze-conda
           path: ./build_artifacts/*/cx_freeze*.tar.bz2
 
-  build_osx:
-    needs: [recipe]
+  build_conda_windows:
+    needs: [conda_recipe]
     strategy:
       fail-fast: false
       matrix:
-        config: ${{ fromJSON(needs.recipe.outputs.osx) }}
-    name: Build ${{ matrix.config }}
-    runs-on: macos-latest
-    steps:
-      -
-        uses: actions/checkout@v2
-        with:
-          repository: marcelotduarte/cx_freeze-feedstock
-      -
-        uses: actions/checkout@v2
-        with:
-          ref: develop
-          repository: marcelotduarte/cx_Freeze
-          path: recipe/cx_Freeze
-      -
-        uses: actions/setup-python@v2
-      -
-        name: Update recipe
-        working-directory: recipe
-        run: echo ${{ needs.recipe.outputs.data2 }} | base64 -d>meta.yaml
-      -
-        run: cat recipe/meta.yaml
-      -
-        name: Build the conda package
-        run: python build-locally.py ${{ matrix.config }}
-      -
-        name: Upload the artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: cx-freeze-conda
-          path: ./miniforge3/conda-bld/*/cx_freeze*.tar.bz2
-
-  build_win:
-    needs: [recipe]
-    strategy:
-      fail-fast: false
-      matrix:
-        config: ${{ fromJSON(needs.recipe.outputs.win) }}
+        config: ${{ fromJSON(needs.conda_recipe.outputs.win) }}
     name: Build ${{ matrix.config.name }}
     defaults:
       run:
@@ -172,6 +136,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: marcelotduarte/cx_freeze-feedstock
+      -
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+          path: recipe/cx_Freeze
       -
         uses: conda-incubator/setup-miniconda@v2
         with:
