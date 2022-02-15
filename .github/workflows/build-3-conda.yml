@@ -35,7 +35,7 @@ jobs:
           sed -i '/sha256:/c\  git_rev: develop' meta1.yaml
           echo "::set-output name=encoded::$(base64 --wrap=0 meta1.yaml)"
           cp meta.yaml meta2.yaml
-          sed -i '/url:/c\  path: ./cx_Freeze' meta2.yaml
+          sed -i '/url:/c\  path: ../cx_Freeze' meta2.yaml
           sed -i '/sha256:/c\  #' meta2.yaml
           echo "::set-output name=encoded2::$(base64 --wrap=0 meta2.yaml)"
           popd
@@ -231,51 +231,6 @@ jobs:
       -
         name: Build the conda package
         run: python build-locally.py ${{ matrix.config }}
-      -
-        name: Upload the artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: cx-freeze-conda
-          path: ./*/cx_freeze*.tar.bz2
-
-  build_win_64:
-    needs: [recipe]
-    strategy:
-      fail-fast: false
-      matrix:
-        #os: [macos-latest, windows-latest]
-        os: [windows-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
-        architecture: [x64]
-    name: Build ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
-    defaults:
-      run:
-        shell: bash -l {0}
-    env:
-      KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
-    runs-on: ${{ matrix.os }}
-    steps:
-      -
-        uses: actions/checkout@v2
-        with:
-          repository: marcelotduarte/cx_freeze-feedstock
-      -
-        name: Update recipe
-        run: echo ${{ needs.recipe.outputs.data }} | base64 -d>recipe/meta.yaml
-      -
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          activate-environment: freeze-${{ env.KEY_BASE }}
-          python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.architecture }}
-          channels: conda-forge
-      -
-        run: conda info
-      -
-        run: conda install -c conda-forge conda-build
-      -
-        name: Build the conda package
-        run: conda build -c conda-forge recipe --output-folder .
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
