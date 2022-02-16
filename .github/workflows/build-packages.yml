@@ -302,7 +302,7 @@ jobs:
           mv mingw-*-python-cx-freeze-* python-cx-freeze/
           python make_index.py python-cx-freeze
           # conda packages
-          python make_index.py conda --base cx_freeze
+          python make_index.py conda
           # cx_Logging
           mkdir -p cx-logging
           mv cx_Logging-* cx-logging/
