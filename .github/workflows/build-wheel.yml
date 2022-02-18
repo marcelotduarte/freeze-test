@@ -9,7 +9,6 @@ jobs:
   macos:
     name: Build macOS wheels
     runs-on: macos-latest
-    continue-on-error: true
     steps:
       -
         uses: actions/checkout@v2
@@ -39,7 +38,6 @@ jobs:
   linux:
     name: Build manylinux wheels
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       -
         uses: actions/checkout@v2
