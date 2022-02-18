@@ -6,11 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  macos_cibuildwheel:
+  macos:
     name: Build wheel using cibuildwheel on macOS
-    strategy:
-      matrix:
-        platform: [x86_64]
     runs-on: macos-latest
     continue-on-error: true
     steps:
@@ -29,12 +26,10 @@ jobs:
       -
         name: Build the wheel
         env:
-          CIBW_BUILD: cp3*-m*_x86_64
-          #CIBW_SKIP: cp35*
+          CIBW_BUILD: cp3*-macosx_*
           CIBW_BUILD_VERBOSITY: 1
           #CIBW_BEFORE_BUILD: python -m pip install --upgrade pip && pip install -U importlib-metadata setuptools wheel && python -m sysconfig
-        run: |
-          python -m cibuildwheel --output-dir wheelhouse .
+        run: python -m cibuildwheel --output-dir wheelhouse .
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
@@ -83,7 +78,7 @@ jobs:
           name: cx-freeze-wheelhouse
           path: wheelhouse
   publish:
-    needs: [macos_cibuildwheel, linux]
+    needs: [macos, linux]
     runs-on: ubuntu-20.04
     name: "Publish"
     steps:
@@ -105,7 +100,7 @@ jobs:
           path: wheelhouse
       - name: Build the docs
         run: |
-          pip install .[doc]
+          pip install -e .[doc]
           make -C doc
       - name: Display structure of downloaded files
         run: ls -R
