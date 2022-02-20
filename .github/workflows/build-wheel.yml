@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-10.15, ubuntu-latest]
+        os: [macos-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       -
@@ -28,6 +28,8 @@ jobs:
           pip install cibuildwheel==2.3.1
       -
         name: Build the wheel
+        env:
+          LDFLAGS: -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib
         run: python -m cibuildwheel
       -
         name: Upload the artifact
