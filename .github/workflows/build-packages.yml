@@ -6,20 +6,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_wheel:
+  build_wheel_windows:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
         architecture: [x64, x86]
-        exclude:
-          - os: ubuntu-latest
-            architecture: x86
-          - os: macos-latest
-            architecture: x86
-    name: Build [${{ matrix.os }} ${{ matrix.architecture }}][Python ${{ matrix.python-version }}]
-    runs-on: ${{ matrix.os }}
+    name: Build [Windows ${{ matrix.architecture }}][Python ${{ matrix.python-version }}]
+    runs-on: windows-latest
     steps:
       -
         uses: actions/checkout@v2
@@ -44,14 +38,12 @@ jobs:
           pip install --upgrade build setuptools
         shell: bash
       -
-        name: Build the wheel
-        if: runner.os != 'Windows' || matrix.python-version != '3.10'
-        run: |
-          python -m build -o wheelhouse
-        shell: bash
+        name: Build the wheel [Python 3.6-3.9]
+        if: matrix.python-version != '3.10'
+        run: python -m build -o wheelhouse
       -
-        name: Build the wheel [Windows][Python 3.10]
-        if: runner.os == 'Windows' && matrix.python-version == '3.10'
+        name: Build the wheel [Python 3.10]
+        if: matrix.python-version == '3.10'
         run: |
           pip install --upgrade wheel
           git clone -b 3.0 https://github.com/anthony-tuininga/cx_Logging.git
@@ -64,7 +56,42 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: cx-freeze-wheelhouse
-          path: wheelhouse/cx_*
+          path: wheelhouse
+
+  build_wheel_unix:
+    name: Build [{{ matrix.os }}]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macOS, Ubuntu]
+    runs-on: ${{ matrix.os }}-latest
+    steps:
+      -
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+      -
+        uses: actions/setup-python@v2
+      -
+        name: Variables
+        run: |
+          declare || true
+          python -m sysconfig
+      -
+        name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install cibuildwheel==2.3.1
+      -
+        name: Build the wheel
+        run: python -m cibuildwheel
+      -
+        name: Upload the artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: cx-freeze-wheelhouse
+          path: wheelhouse
 
   build_msys2:
     strategy:
@@ -264,7 +291,7 @@ jobs:
           path: ./build_artifacts/*/cx_freeze*.tar.bz2
 
   packages:
-    needs: [build_wheel, build_msys2, build_conda_unix, build_conda_windows]
+    needs: [build_wheel_windows, build_wheel_unix, build_msys2, build_conda_unix, build_conda_windows]
     runs-on: ubuntu-latest
     name: Update packages repository
     steps:
@@ -314,6 +341,7 @@ jobs:
           echo -e "## Development packages for cx_Freeze $VERSION\n">index.md
           echo -e "Development wheels for [cx_Freeze](cx-freeze/index.md).\n">>index.md
           echo -e "Development packages for MSYS2 [python-cx-freeze](python-cx-freeze/index.md).\n">>index.md
+          echo -e "{% include \"python-cx-freeze/index.md\" %}\n"
           echo -e "Development packages for conda-forge [cx_freeze](conda/index.md).\n">>index.md
           echo -e "## Packages for cx_Logging 3.0 \[Windows\]\[Python 3.10\]\n">>index.md
           echo -e "Unofficial wheels for [cx_Logging](cx-logging/index.md).\n">>index.md
