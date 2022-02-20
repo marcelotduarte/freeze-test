@@ -59,11 +59,11 @@ jobs:
           path: wheelhouse
 
   build_wheel_unix:
-    name: Build [{{ matrix.os }}]
     strategy:
       fail-fast: false
       matrix:
         os: [macOS, Ubuntu]
+    name: Build [{{ matrix.os }}]
     runs-on: ${{ matrix.os }}-latest
     steps:
       -
