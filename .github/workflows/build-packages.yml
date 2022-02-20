@@ -62,9 +62,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macOS, Ubuntu]
+        os: [macos-latest, ubuntu-latest]
     name: Build [{{ matrix.os }}]
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os }}
     steps:
       -
         uses: actions/checkout@v2
