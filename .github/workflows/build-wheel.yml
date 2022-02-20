@@ -29,7 +29,7 @@ jobs:
       -
         name: Build the wheel
         env:
-          LDFLAGS: -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib
+          CIBW_ENVIRONMENT: LDFLAGS=-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib
         run: python -m cibuildwheel
       -
         name: Upload the artifact
