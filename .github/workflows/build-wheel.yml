@@ -35,8 +35,8 @@ jobs:
       -
         name: Build the wheel
         env:
-          CIBW_ENVIRONMENT: "LDFLAGS=-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib"
-          SDKROOT: "/Library/Developer/CommandLineTools/SDKs/MacOSX11.sdk"
+          #CIBW_ENVIRONMENT: "LDFLAGS=-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib"
+          CIBW_ENVIRONMENT: SDKROOT="/Library/Developer/CommandLineTools/SDKs/MacOSX11.sdk"
         run: python -m cibuildwheel
       -
         name: Upload the artifact
