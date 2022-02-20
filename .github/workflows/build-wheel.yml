@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  macos:
-    name: Build macOS wheels
-    runs-on: macos-latest
+  build:
+    name: Build wheels
+    runs-on: [macos-latest, ubuntu-latest]
     steps:
       -
         uses: actions/checkout@v2
@@ -24,31 +24,7 @@ jobs:
           pip install cibuildwheel==2.3.1
       -
         name: Build the wheel
-        env:
-          CIBW_BUILD: cp3*-macosx_*
-          CIBW_BUILD_VERBOSITY: 1
-          #CIBW_BEFORE_BUILD: python -m sysconfig
         run: python -m cibuildwheel
-      -
-        name: Upload the artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: cx-freeze-wheelhouse
-          path: wheelhouse
-  linux:
-    name: Build manylinux wheels
-    runs-on: ubuntu-latest
-    steps:
-      -
-        uses: actions/checkout@v2
-        with:
-          ref: develop
-          repository: marcelotduarte/cx_Freeze
-      - 
-        uses: actions/setup-python@v2
-      -
-        name: Build the wheel
-        run: ./ci/build-manylinux-cibuildwheel.sh
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
