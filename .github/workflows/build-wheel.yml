@@ -42,9 +42,10 @@ jobs:
             find /Library/Frameworks/Python.framework -name 'libpython*.a' -print &&
             find /Library/Frameworks/Python.framework -name 'libpython*.dylib' -print
           CIBW_BUILD: "cp38*-macosx_*"
+          CIBW_ARCHS_MACOS: universal2
         #  #CIBW_ENVIRONMENT: "LDFLAGS=-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib"
         #  #CIBW_ENVIRONMENT: SDKROOT="/Library/Developer/CommandLineTools/SDKs/MacOSX11.sdk"
-        run: python -m cibuildwheel --archs x86_64,universal2,arm64
+        run: python -m cibuildwheel
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
