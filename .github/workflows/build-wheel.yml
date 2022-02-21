@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-M1]
+        os: [macos-11.0]
     runs-on: ${{ matrix.os }}
     steps:
       -
@@ -37,7 +37,7 @@ jobs:
         #env:
         #  #CIBW_ENVIRONMENT: "LDFLAGS=-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib"
         #  #CIBW_ENVIRONMENT: SDKROOT="/Library/Developer/CommandLineTools/SDKs/MacOSX11.sdk"
-        run: python -m cibuildwheel
+        run: python -m cibuildwheel --archs x86_64,universal2,arm64
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
