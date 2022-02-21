@@ -40,7 +40,7 @@ jobs:
           CIBW_BEFORE_BUILD_MACOS:>
             find /Library/Frameworks/Python.framework/Versions/3.8 -name '*.a' - print &&
             find /Library/Frameworks/Python.framework/Versions/3.8 -name '*.dylib' - print
-          CIBW_BUILD = "cp38*-macosx_*"
+          CIBW_BUILD: "cp38*-macosx_*"
         #  #CIBW_ENVIRONMENT: "LDFLAGS=-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib"
         #  #CIBW_ENVIRONMENT: SDKROOT="/Library/Developer/CommandLineTools/SDKs/MacOSX11.sdk"
         run: python -m cibuildwheel --archs x86_64,universal2,arm64
