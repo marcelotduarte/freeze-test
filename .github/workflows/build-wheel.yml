@@ -36,6 +36,7 @@ jobs:
         name: Build the wheel
         env:
           CIBW_DEPENDENCY_VERSIONS: latest
+          CIBW_ENVIRONMENT: MACOSX_DEPLOYMENT_TARGET=11.1
         #  #CIBW_ENVIRONMENT: "LDFLAGS=-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib"
         #  #CIBW_ENVIRONMENT: SDKROOT="/Library/Developer/CommandLineTools/SDKs/MacOSX11.sdk"
         run: python -m cibuildwheel --archs x86_64,universal2,arm64
