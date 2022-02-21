@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest]
+        os: [macos-M1]
     runs-on: ${{ matrix.os }}
     steps:
       -
@@ -34,9 +34,9 @@ jobs:
           pip install cibuildwheel==2.3.1
       -
         name: Build the wheel
-        env:
-          #CIBW_ENVIRONMENT: "LDFLAGS=-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib"
-          CIBW_ENVIRONMENT: SDKROOT="/Library/Developer/CommandLineTools/SDKs/MacOSX11.sdk"
+        #env:
+        #  #CIBW_ENVIRONMENT: "LDFLAGS=-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib"
+        #  #CIBW_ENVIRONMENT: SDKROOT="/Library/Developer/CommandLineTools/SDKs/MacOSX11.sdk"
         run: python -m cibuildwheel
       -
         name: Upload the artifact
