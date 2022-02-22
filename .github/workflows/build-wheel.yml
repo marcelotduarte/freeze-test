@@ -36,11 +36,14 @@ jobs:
         name: Build the wheel
         env:
           CIBW_DEPENDENCY_VERSIONS: latest
-          CIBW_ENVIRONMENT: MACOSX_DEPLOYMENT_TARGET=11.0 MACOSX_SDK_VERSION=12.2
-          #  SDKROOT=$XCODE_12_DEVELOPER_DIR
+          CIBW_ENVIRONMENT: >-
+            MACOSX_DEPLOYMENT_TARGET=11.0
+            MACOSX_SDK_VERSION=12.2
+            SDKROOT=$XCODE_12_DEVELOPER_DIR
           CIBW_BEFORE_BUILD_MACOS: >-
             declare && python -VV && python -m sysconfig &&
             ls -l -h $(find /Library/Frameworks/Python.framework/Versions -name 'libpython3.*.*' -print)
+            && ls -l $(find /Library/Frameworks/Python.framework/Versions -name 'Python' -print)
           CIBW_BUILD: "cp38*-macosx_*"
           CIBW_ARCHS_MACOS: universal2
         #  #CIBW_ENVIRONMENT: "LDFLAGS=-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib"
