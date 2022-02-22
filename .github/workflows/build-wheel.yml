@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-11.0]
+        os: [macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       -
@@ -36,15 +36,8 @@ jobs:
         name: Build the wheel
         env:
           CIBW_DEPENDENCY_VERSIONS: latest
-          CIBW_BEFORE_BUILD_MACOS: >-
-            declare && python -VV && python -m sysconfig &&
-            ls -l -h $(find /Library/Frameworks/Python.framework/Versions -name 'libpython3.*.*' -print)
-            && ls -l $(find /Library/Frameworks/Python.framework/Versions -name 'Python' -print) &&
-            echo "!"
-          CIBW_BUILD: "cp3{9,10}*-macosx_*"
+          CIBW_BUILD: "cp39*-macosx_*"
           CIBW_ARCHS_MACOS: universal2 arm64
-        #  #CIBW_ENVIRONMENT: "LDFLAGS=-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib"
-        #  #CIBW_ENVIRONMENT: SDKROOT="/Library/Developer/CommandLineTools/SDKs/MacOSX11.sdk"
         run: python -m cibuildwheel
       -
         name: Upload the artifact

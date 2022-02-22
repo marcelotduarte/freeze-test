@@ -338,12 +338,12 @@ jobs:
           rm make_index.py
           # template
           VERSION=$(ls cx-freeze | (read name; echo $name) | sed 's/-/ /g' | awk '{print $2}')
-          echo -e "## Development packages for cx_Freeze $VERSION\n">index.md
+          echo -e "# Development packages for cx_Freeze $VERSION\n">index.md
           echo -e "Development wheels for [cx_Freeze](cx-freeze/index.md).\n">>index.md
           echo -e "Development packages for MSYS2 [python-cx-freeze](python-cx-freeze/index.md).\n">>index.md
-          echo -e "{% include_relative python-cx-freeze/index.md %}\n">>index.md
+          #echo -e "{% include_relative python-cx-freeze/index.md %}\n">>index.md
           echo -e "Development packages for conda-forge [cx_freeze](conda/index.md).\n">>index.md
-          echo -e "## Packages for cx_Logging 3.0 \[Windows\]\[Python 3.10\]\n">>index.md
+          echo -e "# Packages for cx_Logging 3.0 \[Windows\]\[Python 3.10\]\n">>index.md
           echo -e "Unofficial wheels for [cx_Logging](cx-logging/index.md).\n">>index.md
           echo "theme: jekyll-theme-architect">_config.yml
       -
