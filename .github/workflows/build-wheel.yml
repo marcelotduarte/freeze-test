@@ -41,7 +41,7 @@ jobs:
             ls -l -h $(find /Library/Frameworks/Python.framework/Versions -name 'libpython3.*.*' -print)
             && ls -l $(find /Library/Frameworks/Python.framework/Versions -name 'Python' -print) &&
             echo "!"
-          CIBW_BUILD: "cp3{9.10}*-macosx_*"
+          CIBW_BUILD: "cp3{9,10}*-macosx_*"
           CIBW_ARCHS_MACOS: universal2 arm64
         #  #CIBW_ENVIRONMENT: "LDFLAGS=-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib"
         #  #CIBW_ENVIRONMENT: SDKROOT="/Library/Developer/CommandLineTools/SDKs/MacOSX11.sdk"
