@@ -10,10 +10,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        os: [macos-latest, windows-latest]
         python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
         architecture: [x64, x86]
-    name: Build [Windows ${{ matrix.architecture }}][Python ${{ matrix.python-version }}]
-    runs-on: windows-latest
+        exclude:
+          - os: macos-latest
+            architecture: x86
+          - os: macos-latest
+            python-version: "3.9"
+          - os: macos-latest
+            python-version: "3.10"
+    name: Build [${{ matrix.os }} ${{ matrix.architecture }}][Python ${{ matrix.python-version }}]
+    runs-on: ${{ matrix.os }}
     steps:
       -
         uses: actions/checkout@v2
@@ -39,11 +47,11 @@ jobs:
         shell: bash
       -
         name: Build the wheel [Python 3.6-3.9]
-        if: matrix.python-version != '3.10'
+        if: runner.os != 'Windows' || matrix.python-version != '3.10'
         run: python -m build -o wheelhouse
       -
-        name: Build the wheel [Python 3.10]
-        if: matrix.python-version == '3.10'
+        name: Build the wheel [Windows][Python 3.10]
+        if: runner.os == 'Windows' && matrix.python-version == '3.10'
         run: |
           pip install --upgrade wheel
           git clone -b 3.0 https://github.com/anthony-tuininga/cx_Logging.git
