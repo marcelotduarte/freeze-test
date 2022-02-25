@@ -42,7 +42,7 @@ jobs:
         run: |
           sudo port install py${{ matrix.python-version }}-pip +universal
           sudo port select --set pip pip${{ matrix.python-version }}
-          sudo port install py39-build +universal
+          sudo port install py${{ matrix.python-version }}-build +universal
       -
         name: Build the wheel
         run: python -m build -o wheelhouse
