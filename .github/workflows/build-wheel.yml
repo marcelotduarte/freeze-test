@@ -24,7 +24,7 @@ jobs:
       -
         name: Install MacPorts
         run: |
-          curl _L https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-10.15-Catalina.pkg -O
+          curl -L https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-10.15-Catalina.pkg -O
           #chmod +x MacPorts-2.7.1-10.15-Catalina.pkg
           ls -l
           sudo installer -pkg $(pwd)/MacPorts-2.7.1-10.15-Catalina.pkg -target /
