@@ -30,7 +30,7 @@ jobs:
       -
         name: Install python
         run: |
-          sudo port install python${{ matrix.python-version }}+universal
+          sudo port install python${{ matrix.python-version }} +universal
           sudo port select --set python python${{ matrix.python-version }}
       -
         name: Variables
