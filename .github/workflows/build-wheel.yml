@@ -40,9 +40,9 @@ jobs:
       -
         name: Install dependencies
         run: |
-          sudo port install py${{ matrix.python-version }}-pip
+          sudo port install py${{ matrix.python-version }}-pip +universal
           sudo port select --set pip pip${{ matrix.python-version }}
-          pip install --upgrade build
+          sudo port install py39-build +universal
       -
         name: Build the wheel
         run: python -m build -o wheelhouse
