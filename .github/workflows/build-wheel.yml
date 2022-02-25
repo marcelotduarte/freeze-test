@@ -10,9 +10,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest]
+        os: [macos-10.15]
         architecture: [universal2]
-        python-version: ["3.9", "3.10"]
+        python-version: ["39", "310"]
     name: Build [${{ matrix.os }} ${{ matrix.architecture }}][Python ${{ matrix.python-version }}]
     runs-on: ${{ matrix.os }}
     steps:
@@ -22,24 +22,27 @@ jobs:
           ref: develop
           repository: marcelotduarte/cx_Freeze
       -
+        name: Install MacPorts
+        run: |
+          curl https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-10.15-Catalina.pkg -O
+          sudo installer -pkg MacPorts-2.7.1-10.15-Catalina.pkg -target /
+      -
         name: Install python
         run: |
-          brew install python@${{ matrix.python-version }}
-          brew info python@${{ matrix.python-version }}
+          sudo port install python${{ matrix.python-version }}
       -
         name: Variables
         run: |
           declare || true
-          python3 -m sysconfig
-        shell: bash
+          python -m sysconfig
       -
         name: Install dependencies
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install --upgrade build setuptools
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade build setuptools
       -
         name: Build the wheel
-        run: python3 -m build -o wheelhouse
+        run: python -m build -o wheelhouse
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
