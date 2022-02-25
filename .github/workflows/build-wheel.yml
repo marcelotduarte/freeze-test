@@ -30,7 +30,7 @@ jobs:
       -
         name: Install python
         run: |
-          sudo port install python${{ matrix.python-version }}
+          sudo port install python${{ matrix.python-version }}+universal
           sudo port select --set python python${{ matrix.python-version }}
       -
         name: Variables
@@ -41,10 +41,8 @@ jobs:
         name: Install dependencies
         run: |
           sudo port install py${{ matrix.python-version }}-pip
-          port select --set pip py${{ matrix.python-version }}-pip
-          #python -m ensurepip
-          #python -m pip install --upgrade pip
-          pip install --upgrade build setuptools
+          sudo port select --set pip pip${{ matrix.python-version }}
+          pip install --upgrade build
       -
         name: Build the wheel
         run: python -m build -o wheelhouse
