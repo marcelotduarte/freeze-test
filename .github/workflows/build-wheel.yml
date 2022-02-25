@@ -40,9 +40,11 @@ jobs:
       -
         name: Install dependencies
         run: |
-          python -m ensurepip
-          python -m pip install --upgrade pip
-          python -m pip install --upgrade build setuptools
+          sudo port install py${{ matrix.python-version }}-pip
+          port select --set pip py${{ matrix.python-version }}-pip
+          #python -m ensurepip
+          #python -m pip install --upgrade pip
+          pip install --upgrade build setuptools
       -
         name: Build the wheel
         run: python -m build -o wheelhouse
