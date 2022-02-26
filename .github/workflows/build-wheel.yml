@@ -45,7 +45,13 @@ jobs:
           sudo port install py${{ matrix.python-version }}-build +universal
       -
         name: Build the wheel
-        run: python -m build -o wheelhouse
+        env:
+          CIBW_BUILD: cp${{ matrix.python-version }}-macosx_universal2
+          CIBW_ARCHS: universal2
+        run: |
+          #python -m build -o wheelhouse
+          pip install cibuildwheel==2.3.1
+          python -m cibuildwheel
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
