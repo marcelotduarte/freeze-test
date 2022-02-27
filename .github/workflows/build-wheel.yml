@@ -134,7 +134,7 @@ jobs:
           pip install cibuildwheel==2.3.1
           export -n CI
           export -n GITHUB_ACTIONS
-          python -m cibuildwheel --platform macos
+          bash -c "python -m cibuildwheel --platform macos"
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
