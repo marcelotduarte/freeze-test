@@ -40,7 +40,24 @@ jobs:
         shell: bash
       -
         name: Build the wheel
-        run: python -m build -o wheelhouse
+        env:
+          PIP_DISABLE_PIP_VERSION_CHECK: "1"
+          MACOSX_DEPLOYMENT_TARGET: "10.9"
+        run: |
+          if [ ${{ matrix.python-version }} != "36" ] &&
+             [ ${{ matrix.python-version }} != "37" ] ; then
+            if [ ${{ matrix.architecture }} == "arm64" ] ; then
+              export _PYTHON_HOST_PLATFORM="macosx-11.0-arm64"
+              export ARCHFLAGS="-arch arm64"
+            elif [ ${{ matrix.architecture }} == "universal2" ] ; then
+              export _PYTHON_HOST_PLATFORM="macosx-10.9-universal2"
+              export ARCHFLAGS="-arch arm64 -arch x86_64"
+            else
+              export _PYTHON_HOST_PLATFORM="macosx-10.9-x86_64"
+              export ARCHFLAGS="-arch x86_64"
+            fi
+          fi
+          python -m build -o wheelhouse
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
