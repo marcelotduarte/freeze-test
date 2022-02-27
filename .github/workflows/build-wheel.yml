@@ -127,15 +127,23 @@ jobs:
       -
         name: Build the wheel
         env:
-          CIBW_BUILD: cp${{ matrix.python-version }}-macosx_universal2
-          CIBW_ARCHS: universal2
-          CIBW_BEFORE_BUILD: sudo port select --set python python${{ matrix.python-version }}
+          PIP_DISABLE_PIP_VERSION_CHECK: "1"
+          MACOSX_DEPLOYMENT_TARGET: "10.9"
         run: |
-          #python -m build -o wheelhouse
-          pip install cibuildwheel==2.3.1
-          #export -n CI
-          #export -n GITHUB_ACTIONS
-          python -m cibuildwheel --platform macos
+          if [ ${{ matrix.python-version }} != "36" ] &&
+             [ ${{ matrix.python-version }} != "37" ] ; then
+            if [ ${{ matrix.architecture }} == "arm64" ] ; then
+              export _PYTHON_HOST_PLATFORM="macosx-11.0-arm64"
+              export ARCHFLAGS="-arch arm64"
+            elif [ ${{ matrix.architecture }} == "universal2" ] ; then
+              export _PYTHON_HOST_PLATFORM="macosx-10.9-universal2"
+              export ARCHFLAGS="-arch arm64 -arch x86_64"
+            else
+              export _PYTHON_HOST_PLATFORM="macosx-10.9-x86_64"
+              export ARCHFLAGS="-arch x86_64"
+            fi
+          fi
+          python -m build -o wheelhouse
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
