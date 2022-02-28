@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_wheel_windows:
+  build_wheel_macosx:
     strategy:
       fail-fast: false
       matrix:
@@ -155,9 +155,9 @@ jobs:
             elif [ ${{ matrix.architecture }} == "universal2" ] ; then
               export _PYTHON_HOST_PLATFORM="macosx-10.9-universal2"
               export ARCHFLAGS="-arch arm64 -arch x86_64"
-            else
-              export _PYTHON_HOST_PLATFORM="macosx-10.9-x86_64"
-              export ARCHFLAGS="-arch x86_64"
+            #else
+            #  export _PYTHON_HOST_PLATFORM="macosx-10.9-x86_64"
+            #  export ARCHFLAGS="-arch x86_64"
             fi
           fi
           python -m build -o wheelhouse
