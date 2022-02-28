@@ -41,20 +41,19 @@ jobs:
       -
         name: Build the wheel
         env:
-          PIP_DISABLE_PIP_VERSION_CHECK: "1"
           MACOSX_DEPLOYMENT_TARGET: "10.9"
         run: |
-          if [ ${{ matrix.python-version }} != "36" ] &&
-             [ ${{ matrix.python-version }} != "37" ] ; then
-            if [ ${{ matrix.architecture }} == "arm64" ] ; then
+          if [ "${{ matrix.python-version }}" != "3.6" ] &&
+             [ "${{ matrix.python-version }}" != "3.7" ] ; then
+            if [ "${{ matrix.architecture }}" == "arm64" ] ; then
               export _PYTHON_HOST_PLATFORM="macosx-11.0-arm64"
               export ARCHFLAGS="-arch arm64"
-            elif [ ${{ matrix.architecture }} == "universal2" ] ; then
+            elif [ "${{ matrix.architecture }}" == "universal2" ] ; then
               export _PYTHON_HOST_PLATFORM="macosx-10.9-universal2"
               export ARCHFLAGS="-arch arm64 -arch x86_64"
-            else
-              export _PYTHON_HOST_PLATFORM="macosx-10.9-x86_64"
-              export ARCHFLAGS="-arch x86_64"
+            #else
+            #  export _PYTHON_HOST_PLATFORM="macosx-10.9-x86_64"
+            #  export ARCHFLAGS="-arch x86_64"
             fi
           fi
           python -m build -o wheelhouse
@@ -93,8 +92,8 @@ jobs:
       -
         name: Build the wheel
         env:
-          CIBW_BUILD: "cp3*-macosx_*"
-          CIBW_ARCHS: "auto universal2 arm64"
+          CIBW_BUILD: "cp39*-macosx_*"
+          CIBW_ARCHS: "universal2"
 
         run: python -m cibuildwheel
       -
