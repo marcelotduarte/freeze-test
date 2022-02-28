@@ -81,6 +81,7 @@ jobs:
         run: |
           declare || true
           python -m sysconfig
+          xcodebuild -showsdks
         shell: bash
       -
         name: Install dependencies
