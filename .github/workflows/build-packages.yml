@@ -92,7 +92,7 @@ jobs:
         name: Build the wheel
         env:
           MACOSX_DEPLOYMENT_TARGET: "10.9"
-          #_PYTHON_HOST_PLATFORM: "macosx-10.9-x86_64"
+          _PYTHON_HOST_PLATFORM: "macosx-10.9-x86_64"
         run: |
           python -m build -o wheelhouse
       -
