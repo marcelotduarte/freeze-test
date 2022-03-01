@@ -91,11 +91,12 @@ jobs:
       -
         name: Build the wheel
         run: |
+          python -m build -o wheelhouse
           if [ "${{ matrix.python-version }}" != "3.6" ] ; then
             export MACOSX_DEPLOYMENT_TARGET="10.9"
-            #export _PYTHON_HOST_PLATFORM="macosx-10.9-x86_64"
+            export _PYTHON_HOST_PLATFORM="macosx-10.9-x86_64"
+            python -m build -o wheelhouse
           fi
-          python -m build -o wheelhouse
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
