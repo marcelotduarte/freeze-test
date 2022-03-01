@@ -90,10 +90,11 @@ jobs:
           pip install --upgrade build setuptools
       -
         name: Build the wheel
-        env:
-          MACOSX_DEPLOYMENT_TARGET: "10.9"
-          _PYTHON_HOST_PLATFORM: "macosx-10.9-x86_64"
         run: |
+          if [ "${{ matrix.python-version }}" != "3.6" ] ; then
+            export MACOSX_DEPLOYMENT_TARGET="10.9"
+            #export _PYTHON_HOST_PLATFORM="macosx-10.9-x86_64"
+          fi
           python -m build -o wheelhouse
       -
         name: Upload the artifact

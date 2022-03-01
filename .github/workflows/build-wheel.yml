@@ -40,11 +40,10 @@ jobs:
         shell: bash
       -
         name: Build the wheel
-        env:
-          MACOSX_DEPLOYMENT_TARGET: "10.9"
         run: |
           if [ "${{ matrix.python-version }}" != "3.6" ] &&
              [ "${{ matrix.python-version }}" != "3.7" ] ; then
+            export MACOSX_DEPLOYMENT_TARGET="10.9"
             if [ "${{ matrix.architecture }}" == "arm64" ] ; then
               export _PYTHON_HOST_PLATFORM="macosx-11.0-arm64"
               export ARCHFLAGS="-arch arm64"
