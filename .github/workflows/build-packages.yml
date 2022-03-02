@@ -337,14 +337,44 @@ jobs:
           name: cx-freeze-conda
           path: ./build_artifacts/*/cx_freeze*.tar.bz2
 
+  build_conda_index:
+    needs: [build_conda_unix, build_conda_windows]
+    strategy:
+      fail-fast: false
+    name: Conda index
+    defaults:
+      run:
+        shell: bash -l {0}
+    runs-on: ubuntu-latest
+    steps:
+      -
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: freeze-index
+          python-version: 3.9
+          channels: conda-forge
+      -
+        name: Download the conda artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: cx-freeze-conda
+          path: build_artifacts
+      -
+        run: conda index build_artifacts
+      -
+        name: Upload the artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: cx-freeze-conda
+          path: ./build_artifacts/*/*
+
   packages:
     needs:
       - build_wheel_windows
       - build_wheel_macosx
       - build_wheel_unix
       - build_msys2
-      - build_conda_unix
-      - build_conda_windows
+      - build_conda_index
     runs-on: ubuntu-latest
     name: Update packages repository
     steps:
