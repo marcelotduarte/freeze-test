@@ -42,12 +42,8 @@ jobs:
         exclude:
           - os: ubuntu-latest
             sample: pythonnet-demo
-          #- os: macos-latest
-          #  sample: pythonnet-demo
           - os: ubuntu-latest
             sample: service
-          #- os: macos-latest
-          #  sample: service
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
@@ -71,22 +67,12 @@ jobs:
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
       -
-        uses: actions/cache@v2
-        with:
-          key: conda-${{ env.KEY_BASE }}-${{ github.sha }}
-          path: ./*/cx_freeze*.tar.bz2
-          restore-keys: conda-${{ env.KEY_BASE }}-
-      -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
           DISPLAY: ':99.0'
-        run: |
-          echo "::group::conda info"
-          conda info
-          echo "::endgroup::"
-          ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
       -
         name: Collect images and logs
         run: |
