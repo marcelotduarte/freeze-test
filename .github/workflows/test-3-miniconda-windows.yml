@@ -63,7 +63,7 @@ jobs:
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} || true
       -
         name: Collect images and logs
         run: |
