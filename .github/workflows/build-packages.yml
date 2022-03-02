@@ -288,6 +288,8 @@ jobs:
           mkdir -p build_artifacts
           mv miniforge3/conda-bld/* build_artifacts/
       -
+        run: ls -l build_artifacts
+      -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
@@ -331,6 +333,8 @@ jobs:
           mkdir -p build_artifacts
           conda build -c conda-forge recipe --output-folder build_artifacts
       -
+        run: ls -l build_artifacts
+      -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
@@ -360,7 +364,13 @@ jobs:
           name: cx-freeze-conda
           path: build_artifacts
       -
+        run: ls -l build_artifacts
+      -
+        run: conda install -c conda-forge conda-build
+      -
         run: conda index build_artifacts
+      -
+        run: ls -l build_artifacts
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
