@@ -290,7 +290,7 @@ jobs:
       -
         run: ls -l build_artifacts
       -
-        name: Upload the artifact
+        name: Upload the conda artifact
         uses: actions/upload-artifact@v2
         with:
           name: cx-freeze-conda
@@ -335,7 +335,7 @@ jobs:
       -
         run: ls -l build_artifacts
       -
-        name: Upload the artifact
+        name: Upload the conda artifact
         uses: actions/upload-artifact@v2
         with:
           name: cx-freeze-conda
@@ -372,11 +372,15 @@ jobs:
       -
         run: ls -l build_artifacts
       -
-        name: Upload the artifact
+        name: Upload repository data to the conda artifact
         uses: actions/upload-artifact@v2
         with:
           name: cx-freeze-conda
-          path: ./build_artifacts/*/*
+          path: |
+            ./build_artifacts/*/current_repodata.*
+            ./build_artifacts/*/repodata*
+            ./build_artifacts/*/index.html
+            !./build_artifacts/noarch
 
   packages:
     needs:
