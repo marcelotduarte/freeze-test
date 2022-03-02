@@ -362,25 +362,22 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: cx-freeze-conda
-          path: build_artifacts
+          path: artifacts
       -
-        run: ls -l build_artifacts
+        run: ls -l artifacts
       -
         run: conda install -c conda-forge conda-build
       -
-        run: conda index build_artifacts
+        run: |
+          conda index -s linux-64 -s osx-64 -s osx-arm64 -s win-64 artifacts
       -
-        run: ls -l build_artifacts
+        run: ls -l artifacts
       -
         name: Upload repository data to the conda artifact
         uses: actions/upload-artifact@v2
         with:
           name: cx-freeze-conda
-          path: |
-            ./build_artifacts/*/current_repodata.*
-            ./build_artifacts/*/repodata*
-            ./build_artifacts/*/index.html
-            !./build_artifacts/noarch
+          path: ./artifacts/*/*
 
   packages:
     needs:
@@ -426,7 +423,7 @@ jobs:
           mv mingw-*-python-cx-freeze-* python-cx-freeze/
           python make_index.py python-cx-freeze
           # conda packages
-          python make_index.py conda
+          python make_index.py conda --mask "cx_freeze-*.tar.bz2"
           # cx_Logging
           mkdir -p cx-logging
           mv cx_Logging-* cx-logging/
