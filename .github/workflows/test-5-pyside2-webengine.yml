@@ -70,8 +70,7 @@ jobs:
       -
         name: Generate setup.py
         run: |
-          cp ../pyside2/setup.py setup.py
-          sed -i "/Executable(/c\Executable('simplebrowser.py', target_name='test_simplebrowser')" setup.py
+          sed "/Executable(/c\Executable('simplebrowser.py', target_name='test_simplebrowser')" ../pyside2/setup.py >setup.py
         working-directory: cx_Freeze/samples/${{ matrix.sample }}
         shell: bash
       -
