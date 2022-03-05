@@ -62,7 +62,7 @@ jobs:
       -
         name: Copy sample
         if: runner.os == 'Windows'
-        run: copy ${{ env.EXAMPLE }}\webenginewidgets\simplebrowser.py .
+        run: copy ${{ env.EXAMPLE }}\simplebrowser.py .
         working-directory: cx_Freeze\samples\${{ matrix.sample }}
         env:
           EXAMPLE: ${{ env.pythonLocation }}\lib\python${{ matrix.python-version }}\site-packages\PySide2\examples\webenginewidgets
