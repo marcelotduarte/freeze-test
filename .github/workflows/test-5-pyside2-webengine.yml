@@ -40,38 +40,9 @@ jobs:
           libsdl2-2.0-0
           imagemagick-6.q16
       -
-        name: Install dependencies
-        run: pip install PySide2
-      -
-        run: python -m sysconfig
-      -
-        uses: actions/upload-artifact@v2
-        with:
-          name: site-packages-PySide2-${{ matrix.python-version }}-${{ matrix.os }}
-          path: ${{ env.pythonLocation }}/lib/python${{ matrix.python-version }}/site-packages/PySide2/**
-      -
-        run: mkdir -p cx_Freeze/samples/${{ matrix.sample }}
-        shell: bash
-      -
-        name: Copy sample
-        if: runner.os != 'Windows'
-        run: cp ${{ env.EXAMPLE }}/simplebrowser.py .
-        working-directory: cx_Freeze/samples/${{ matrix.sample }}
-        env:
-          EXAMPLE: ${{ env.pythonLocation }}/lib/python${{ matrix.python-version }}/site-packages/PySide2/examples/webenginewidgets
-      -
-        name: Copy sample
-        if: runner.os == 'Windows'
-        run: copy ${{ env.EXAMPLE }}\simplebrowser.py .
-        working-directory: cx_Freeze\samples\${{ matrix.sample }}
-        env:
-          EXAMPLE: ${{ env.pythonLocation }}\lib\python${{ matrix.python-version }}\site-packages\PySide2\examples\webenginewidgets
-        shell: cmd
-      -
-        name: Generate setup.py
+        name: Prepare to build
         run: |
-          sed "/Executable(/c\Executable('simplebrowser.py', target_name='test_simplebrowser')" ../pyside2/setup.py >setup.py
-        working-directory: cx_Freeze/samples/${{ matrix.sample }}
+          cp cx_Freeze/samples/${{ matrix.sample }}/build-test-simplebrowser.json ci/build-test.json
         shell: bash
       -
         name: Freeze and run "${{ matrix.sample }}"
@@ -96,6 +67,11 @@ jobs:
             ./cx_Freeze/samples/${{ matrix.sample }}/*.png
             ./cx_Freeze/samples/${{ matrix.sample }}/*.log
           if-no-files-found: ignore
+      -
+        uses: actions/upload-artifact@v2
+        with:
+          name: site-packages-PySide2-${{ matrix.python-version }}-${{ matrix.os }}
+          path: ${{ env.pythonLocation }}/lib/python${{ matrix.python-version }}/site-packages/PySide2/**
       -
         name: Status
         run: exit ${{ steps.freeze-and-run.outputs.status }}
