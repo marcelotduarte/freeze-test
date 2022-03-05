@@ -47,7 +47,7 @@ jobs:
       -
         uses: actions/upload-artifact@v2
         with:
-          name: site-packages-PySide2-${{ matrix.python-version }}
+          name: site-packages-PySide2-${{ matrix.python-version }}-${{ matrix.os }}
           path: ${{ env.pythonLocation }}/lib/python${{ matrix.python-version }}/site-packages/PySide2/**
       -
         run: mkdir -p cx_Freeze/samples/${{ matrix.sample }}
@@ -55,7 +55,8 @@ jobs:
       -
         run: >-
           cp ${{ env.SITEPACKAGES }}/PySide2/examples/webenginewidgets/simplebrowser.py
-          test_simplebrowser.py
+          PySide2app.py &&
+          cp ../pyside2/setup.py setup.py
         working-directory: cx_Freeze/samples/${{ matrix.sample }}
         env:
           SITEPACKAGES: ${{ env.pythonLocation }}/lib/python${{ matrix.python-version }}/site-packages
