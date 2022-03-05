@@ -46,7 +46,7 @@ jobs:
           echo "::group::Install dependencies"
           pip install -f wheelhouse numpy --no-index
           echo "::endgroup::"
-          ./ci/build-test-one.sh ${{ matrix.sample }} || echo "::set-output name=status::$?"
+          ./ci/build-test-one.sh ${{ matrix.sample }} || true
         shell: bash
       -
         name: Collect images and logs
