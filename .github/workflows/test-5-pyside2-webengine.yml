@@ -53,6 +53,8 @@ jobs:
         run: mkdir -p cx_Freeze/samples/${{ matrix.sample }}
         shell: bash
       -
+        name: Copy sample
+        if: runner.os != 'Windows'
         run: >-
           cp ${{ env.SITEPACKAGES }}/PySide2/examples/webenginewidgets/simplebrowser.py
           PySide2app.py &&
@@ -60,7 +62,16 @@ jobs:
         working-directory: cx_Freeze/samples/${{ matrix.sample }}
         env:
           SITEPACKAGES: ${{ env.pythonLocation }}/lib/python${{ matrix.python-version }}/site-packages
-        shell: bash
+      -
+        name: Copy sample
+        if: runner.os == 'Windows'
+        run: >-
+          copy ${{ env.SITEPACKAGES }}\PySide2\examples\webenginewidgets\simplebrowser.py
+          PySide2app.py &&
+          copy ..\pyside2\setup.py setup.py
+        working-directory: cx_Freeze\samples\${{ matrix.sample }}
+        env:
+          SITEPACKAGES: ${{ env.pythonLocation }}/lib/python${{ matrix.python-version }}/site-packages
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
