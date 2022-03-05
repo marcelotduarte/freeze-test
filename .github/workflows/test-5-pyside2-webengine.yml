@@ -55,23 +55,24 @@ jobs:
       -
         name: Copy sample
         if: runner.os != 'Windows'
-        run: >-
-          cp ${{ env.SITEPACKAGES }}/PySide2/examples/webenginewidgets/simplebrowser.py
-          PySide2app.py &&
-          cp ../pyside2/setup.py setup.py
+        run: cp ${{ env.EXAMPLE }}/simplebrowser.py .
         working-directory: cx_Freeze/samples/${{ matrix.sample }}
         env:
-          SITEPACKAGES: ${{ env.pythonLocation }}/lib/python${{ matrix.python-version }}/site-packages
+          EXAMPLE: ${{ env.pythonLocation }}/lib/python${{ matrix.python-version }}/site-packages/PySide2/examples/webenginewidgets
       -
         name: Copy sample
         if: runner.os == 'Windows'
-        run: >-
-          copy ${{ env.SITEPACKAGES }}\PySide2\examples\webenginewidgets\simplebrowser.py
-          PySide2app.py &&
-          copy ..\pyside2\setup.py setup.py
+        run: copy ${{ env.EXAMPLE }}\webenginewidgets\simplebrowser.py .
         working-directory: cx_Freeze\samples\${{ matrix.sample }}
         env:
-          SITEPACKAGES: ${{ env.pythonLocation }}/lib/python${{ matrix.python-version }}/site-packages
+          EXAMPLE: ${{ env.pythonLocation }}\lib\python${{ matrix.python-version }}\site-packages\PySide2\examples\webenginewidgets
+      -
+        name: Generate setup.py
+        run: |
+          cp ../pyside2/setup.py setup.py
+          sed -i "/Executable/c\Executable('simplebrowser.py', target_name='test_simplebrowser')" setup.py
+        working-directory: cx_Freeze/samples/${{ matrix.sample }}
+        shell: bash
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
