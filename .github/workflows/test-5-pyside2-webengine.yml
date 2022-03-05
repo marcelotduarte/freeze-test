@@ -66,6 +66,7 @@ jobs:
         working-directory: cx_Freeze\samples\${{ matrix.sample }}
         env:
           EXAMPLE: ${{ env.pythonLocation }}\lib\python${{ matrix.python-version }}\site-packages\PySide2\examples\webenginewidgets
+        shell: cmd
       -
         name: Generate setup.py
         run: |
