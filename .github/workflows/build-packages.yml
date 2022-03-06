@@ -109,7 +109,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest]
-    name: Build [${{ matrix.os }}]
+    name: Build [${{ matrix.os }}] using cibuildwheel
     runs-on: ${{ matrix.os }}
     steps:
       -
@@ -132,10 +132,10 @@ jobs:
       -
         name: Build the wheel
         run: |
-          if [ "${{ matrix.os }}" != "macos-latest" ] ; then
+          if [ "${{ matrix.os }}" == "macos-latest" ] ; then
             export CIBW_BUILD="cp3*-macosx_*"
             export CIBW_ARCHS="universal2 arm64"
-            export CIBW_SKIP=cp38-macosx_universal2 cp38-macosx_arm64"
+            export CIBW_SKIP="cp38-macosx_universal2 cp38-macosx_arm64"
           fi
           python -m cibuildwheel
       -
