@@ -69,7 +69,8 @@ jobs:
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} || true
+        run: ./ci/build-test-one.sh ${{ matrix.sample }}
+        continue-on-error: true
         shell: bash
       -
         name: Collect images and logs
@@ -88,6 +89,11 @@ jobs:
             ./cx_Freeze/samples/${{ matrix.sample }}/*.log
           if-no-files-found: ignore
       -
-        name: Status
-        run: exit ${{ steps.freeze-and-run.outputs.status }}
+        name: Return sucess or error code
+        run: |
+          if [ "${{ steps.freeze-and-run.outputs.status }}" == "" ] ; then
+            exit -1
+          else
+            exit ${{ steps.freeze-and-run.outputs.status }}
+          fi
         shell: bash
