@@ -30,7 +30,7 @@ jobs:
           ref: develop
           repository: marcelotduarte/cx_Freeze
       -
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}

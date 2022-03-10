@@ -18,7 +18,7 @@ jobs:
           ref: develop
           repository: marcelotduarte/cx_Freeze
       -
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
       -
         id: set-matrix
         run: |
@@ -70,13 +70,14 @@ jobs:
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} || true
+        run: ./ci/build-test-one.sh ${{ matrix.sample }}
+        continue-on-error: true
       -
         name: Collect images and logs
-        run: |
-          cd cx_Freeze/samples/${{ matrix.sample }}
-          mv build/*/*.png . || true
-          mv build/*/*.log . || true
+        working-directory: cx_Freeze/samples/${{ matrix.sample }}
+        run: mv build/*/*.{png,log} .
+        continue-on-error: true
+        shell: bash
       -
         name: Upload the snapshots and logs
         uses: actions/upload-artifact@v2
@@ -87,6 +88,11 @@ jobs:
             ./cx_Freeze/samples/${{ matrix.sample }}/*.log
           if-no-files-found: ignore
       -
-        name: Status
-        run: exit ${{ steps.freeze-and-run.outputs.status }}
+        name: Return sucess or error code
+        run: |
+          if [ "${{ steps.freeze-and-run.outputs.status }}" == "" ] ; then
+            exit -1
+          else
+            exit ${{ steps.freeze-and-run.outputs.status }}
+          fi
         shell: bash

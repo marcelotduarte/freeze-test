@@ -25,7 +25,7 @@ jobs:
           repository: marcelotduarte/cx_Freeze
       -
         name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
@@ -49,14 +49,14 @@ jobs:
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} || true
+        run: ./ci/build-test-one.sh ${{ matrix.sample }}
+        continue-on-error: true
         shell: bash
       -
         name: Collect images and logs
-        run: |
-          cd cx_Freeze/samples/${{ matrix.sample }}
-          mv build/*/*.png . || true
-          mv build/*/*.log . || true
+        working-directory: cx_Freeze/samples/${{ matrix.sample }}
+        run: mv build/*/*.{png,log} .
+        continue-on-error: true
         shell: bash
       -
         name: Upload the snapshots and logs
@@ -73,6 +73,11 @@ jobs:
           name: site-packages-PySide2-${{ matrix.python-version }}-${{ matrix.os }}
           path: ${{ env.pythonLocation }}/lib/python${{ matrix.python-version }}/site-packages/PySide2/**
       -
-        name: Status
-        run: exit ${{ steps.freeze-and-run.outputs.status }}
+        name: Return sucess or error code
+        run: |
+          if [ "${{ steps.freeze-and-run.outputs.status }}" == "" ] ; then
+            exit -1
+          else
+            exit ${{ steps.freeze-and-run.outputs.status }}
+          fi
         shell: bash
