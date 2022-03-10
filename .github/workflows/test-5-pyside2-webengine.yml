@@ -55,8 +55,7 @@ jobs:
       -
         name: Collect images and logs
         working-directory: cx_Freeze/samples/${{ matrix.sample }}
-        run: mv build/*/*.{png,log} .
-        continue-on-error: true
+        run: mv build/*/*.{png,log} . || true
         shell: bash
       -
         name: Upload the snapshots and logs
