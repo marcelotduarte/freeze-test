@@ -81,14 +81,14 @@ jobs:
           ref: develop
           repository: marcelotduarte/cx_Freeze
       -
-        name: Install pipenv
-        run: pipx install pipenv
-      -
         name: Setup Python
         uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
+      -
+        name: Install pipenv
+        run: pipx install pipenv
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
