@@ -64,7 +64,6 @@ jobs:
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         run: ./ci/build-test-one.sh ${{ matrix.sample }}
-        continue-on-error: true
       -
         name: Collect images and logs
         working-directory: cx_Freeze/samples/${{ matrix.sample }}

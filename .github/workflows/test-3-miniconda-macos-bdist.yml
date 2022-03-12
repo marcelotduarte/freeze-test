@@ -72,12 +72,10 @@ jobs:
           QT_DEBUG_PLUGINS: 1
           TEST_BDIST_MAC: 1
         run: ./ci/build-test-one.sh ${{ matrix.sample }}
-        continue-on-error: true
       -
         name: Collect images and logs
         working-directory: cx_Freeze/samples/${{ matrix.sample }}
         run: mv build/*/*.{png,log} . || true
-        shell: bash
       -
         name: Upload the snapshots and logs
         uses: actions/upload-artifact@v2

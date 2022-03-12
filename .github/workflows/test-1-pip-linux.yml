@@ -78,12 +78,10 @@ jobs:
         env:
           QT_DEBUG_PLUGINS: 1
         run: ./ci/build-test-one.sh ${{ matrix.sample }}
-        shell: bash
       -
         name: Collect images and logs
         working-directory: cx_Freeze/samples/${{ matrix.sample }}
         run: mv build/*/*.{png,log} . || true
-        shell: bash
       -
         name: Upload the snapshots and logs
         uses: actions/upload-artifact@v2
