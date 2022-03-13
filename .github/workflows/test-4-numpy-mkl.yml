@@ -131,13 +131,7 @@ jobs:
           restore-keys: wheelhouse-numpy-${{ matrix.python-version }}-
       -
         name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
-        run: |
-          echo "::group::Create venv with dependencies"
-          python -m venv venv
-          source venv/scripts/activate
-          pip install -f wheelhouse numpy --no-index
-          echo "::endgroup::"
-          ./ci/build-test-one.sh ${{ matrix.sample }}
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --venv
         shell: bash
       -
         name: Collect images and logs
