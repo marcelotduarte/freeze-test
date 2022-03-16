@@ -134,7 +134,7 @@ jobs:
         env:
           CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
             delocate-listdeps {wheel} &&
-            delocate-wheel --require-archs {delocate_archs} -L /bases/lib -w {dest_dir} {wheel}
+            delocate-wheel --require-archs {delocate_archs} -L {project}/bases/lib -w {dest_dir} {wheel}
         run: |
           if [ "${{ matrix.os }}" == "macos-latest" ] ; then
             export CIBW_BUILD="cp3*-macosx_*"
