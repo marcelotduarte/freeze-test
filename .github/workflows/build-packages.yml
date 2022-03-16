@@ -56,54 +56,6 @@ jobs:
           name: cx-freeze-wheelhouse
           path: wheelhouse
 
-  build_wheel_macosx:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-latest]
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
-        architecture: [x64]
-    name: Build [${{ matrix.os }} ${{ matrix.architecture }}][Python ${{ matrix.python-version }}]
-    runs-on: ${{ matrix.os }}
-    steps:
-      -
-        uses: actions/checkout@v2
-        with:
-          ref: develop
-          repository: marcelotduarte/cx_Freeze
-      -
-        uses: actions/setup-python@v3
-        with:
-          python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.architecture }}
-      -
-        name: Variables
-        run: |
-          declare || true
-          python -m sysconfig
-          xcodebuild -showsdks
-        shell: bash
-      -
-        name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install --upgrade build setuptools
-      -
-        name: Build the wheel
-        run: |
-          python -m build -o wheelhouse
-          if [ "${{ matrix.python-version }}" != "3.6" ] ; then
-            export MACOSX_DEPLOYMENT_TARGET="10.9"
-            export _PYTHON_HOST_PLATFORM="macosx-10.9-x86_64"
-            python -m build -o wheelhouse
-          fi
-      -
-        name: Upload the artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: cx-freeze-wheelhouse-macosx-gha
-          path: wheelhouse
-
   build_wheel_unix:
     strategy:
       fail-fast: false
@@ -189,7 +141,7 @@ jobs:
         name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
-          name: cx-freeze-wheelhouse
+          name: cx-freeze-mingw
           path: mingw-w64-*.pkg.*
 
   conda_recipe:
@@ -392,7 +344,6 @@ jobs:
   packages:
     needs:
       - build_wheel_windows
-      - build_wheel_macosx
       - build_wheel_unix
       - build_msys2
       - build_conda_index
@@ -408,43 +359,49 @@ jobs:
       -
         uses: actions/setup-python@v3
       -
-        name: Download the artifact
+        name: Recreate branch gh-pages
+        run: |
+          git config user.name "Marcelo Duarte"
+          git config user.email marcelotduarte@users.noreply.github.com
+          git branch -D gh-pages || true
+          git push origin :gh-pages || true
+          git checkout --orphan gh-pages
+      -
+        name: Download the wheelhouse artifact
         uses: actions/download-artifact@v2
         with:
           name: cx-freeze-wheelhouse
-          path: wheelhouse
+          path: cx-freeze
+      -
+        name: Download the mingw artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: cx-freeze-mingw
+          path: mingw
       -
         name: Download the conda artifacts
         uses: actions/download-artifact@v2
         with:
           name: cx-freeze-conda
-          path: wheelhouse/conda
+          path: conda
       -
         name: Create packages template
-        working-directory: wheelhouse
         run: |
-          cp ../make_index.py .
-          # cx_Freeze wheels
-          mkdir -p cx-freeze
-          mv cx_Freeze-* cx-freeze/
+          # cx_Freeze wheels (and cx_logging)
+          mkdir cx-logging && mv cx-freeze/cx_Logging-* cx-logging/
+          python make_index.py cx-logging --base cx_Logging
           python make_index.py cx-freeze --base cx_Freeze
           # mingw packages
-          mkdir -p python-cx-freeze
-          mv mingw-*-python-cx-freeze-* python-cx-freeze/
-          python make_index.py python-cx-freeze
+          python make_index.py mingw --base python-cx-freeze
           # conda packages
           python make_index.py conda --mask "cx_freeze-*.tar.bz2"
-          # cx_Logging
-          mkdir -p cx-logging
-          mv cx_Logging-* cx-logging/
-          python make_index.py cx-logging --base cx_Logging
           # cleanup
           rm make_index.py
           # template
           VERSION=$(ls cx-freeze | (read name; echo $name) | sed 's/-/ /g' | awk '{print $2}')
           echo -e "# Development packages for cx_Freeze $VERSION\n">index.md
           echo -e "Development wheels for [cx_Freeze](cx-freeze/index.md).\n">>index.md
-          echo -e "Development packages for MSYS2 [python-cx-freeze](python-cx-freeze/index.md).\n">>index.md
+          echo -e "Development packages for MSYS2 [python-cx-freeze](mingw/index.md).\n">>index.md
           #echo -e "{% include_relative python-cx-freeze/index.md %}\n">>index.md
           echo -e "Development packages for conda-forge [cx_freeze](conda/index.md).\n">>index.md
           echo -e "# Packages for cx_Logging 3.0 \[Windows\]\[Python 3.10\]\n">>index.md
@@ -453,13 +410,6 @@ jobs:
       -
         name: Publish cx_Freeze packages
         run: |
-          git config user.name "Marcelo Duarte"
-          git config user.email marcelotduarte@users.noreply.github.com
-          git branch -D gh-pages || true
-          git push origin :gh-pages || true
-          git checkout --orphan gh-pages
-          cp -r wheelhouse/* .
-          git add cx-freeze python-cx-freeze conda cx-logging index.md _config.yml
+          git add .
           git commit -m "Publish cx_Freeze packages"
           git push --set-upstream origin gh-pages
-        shell: bash
