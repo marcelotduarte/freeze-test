@@ -101,7 +101,7 @@ jobs:
         name: Upload the artifact
         uses: actions/upload-artifact@v2
         with:
-          name: cx-freeze-wheelhouse
+          name: cx-freeze-wheelhouse-macosx-gha
           path: wheelhouse
 
   build_wheel_unix:
@@ -131,10 +131,14 @@ jobs:
           pip install cibuildwheel==2.3.1
       -
         name: Build the wheel
+        env:
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
+            delocate-listdeps {wheel} &&
+            delocate-wheel --require-archs {delocate_archs} -L /bases/lib -w {dest_dir} {wheel}
         run: |
           if [ "${{ matrix.os }}" == "macos-latest" ] ; then
             export CIBW_BUILD="cp3*-macosx_*"
-            export CIBW_ARCHS="universal2 arm64"
+            export CIBW_ARCHS="x86_64 universal2 arm64"
             export CIBW_SKIP="cp38-macosx_universal2 cp38-macosx_arm64"
           fi
           python -m cibuildwheel
