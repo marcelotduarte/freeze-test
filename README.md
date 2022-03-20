@@ -30,7 +30,7 @@ Please check the [installation](https://cx-freeze.readthedocs.io/en/latest/insta
 for more information and how to install in others environment such as pipenv,
 conda-forge, etc.
 
-# Documentation
+# Documentation [![Documentation Status](https://readthedocs.org/projects/cx-freeze/badge/?version=latest)](https://cx-freeze.readthedocs.io/en/latest/?badge=latest)
 
 The official documentation is available
 [here](https://cx-freeze.readthedocs.io).
