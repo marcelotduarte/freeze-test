@@ -1,5 +1,5 @@
 | Version | Downloads | Python |
-| --- | --- | --- | --- |
+| --- | --- | --- |
 | [![PyPI version](https://img.shields.io/pypi/v/cx_Freeze)](https://pypi.org/project/cx-freeze/) | 
 [![PyPi Downloads](https://img.shields.io/pypi/dm/cx_Freeze)](https://pypistats.org/packages/cx-freeze) |
 [![Python](https://img.shields.io/pypi/pyversions/cx-freeze)](https://www.python.org/) |
