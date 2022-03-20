@@ -54,7 +54,7 @@ If you need help you can also ask on the [discussion](https://github.com/marcelo
 
 # License
 
-[![License](https://img.shields.io/pypi/l/cx_Freeze.svg)](https://pypi.org/project/cx-Freeze/)
+[![License](https://img.shields.io/pypi/l/cx_Freeze.svg)](https://cx-freeze.readthedocs.io/en/latest/license.html)
 
 cx\_Freeze uses a license derived from the
 [Python Software Foundation License](https://www.python.org/psf/license).
