@@ -1,18 +1,44 @@
-[![PyPI version](https://img.shields.io/pypi/v/cx_Freeze)](https://pypi.org/project/cx-freeze/)
-[![PyPi Downloads](https://img.shields.io/pypi/dm/cx_Freeze)](https://pypistats.org/packages/cx-freeze)
-[![Anaconda-Server Badge](https://anaconda.org/conda-forge/cx_freeze/badges/version.svg)](https://anaconda.org/conda-forge/cx_freeze)
-[![Anaconda-Server Badge](https://anaconda.org/conda-forge/cx_freeze/badges/downloads.svg)](https://anaconda.org/conda-forge/cx_freeze)
-[![Python](https://img.shields.io/pypi/pyversions/cx-freeze)](https://www.python.org/)
+| Version | Downloads | Python |
+| --- | --- | --- | --- |
+| [![PyPI version](https://img.shields.io/pypi/v/cx_Freeze)](https://pypi.org/project/cx-freeze/) | 
+[![PyPi Downloads](https://img.shields.io/pypi/dm/cx_Freeze)](https://pypistats.org/packages/cx-freeze) |
+[![Python](https://img.shields.io/pypi/pyversions/cx-freeze)](https://www.python.org/) |
+| [![Conda Version](https://img.shields.io/conda/vn/conda-forge/cx_freeze.svg)](https://anaconda.org/conda-forge/cx_freeze) | 
+[![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/cx_freeze.svg)](https://anaconda.org/conda-forge/cx_freeze) | |
 [![Documentation Status](https://readthedocs.org/projects/cx-freeze/badge/?version=latest)](https://cx-freeze.readthedocs.io/en/latest/?badge=latest)
 [![License](https://img.shields.io/pypi/l/cx_Freeze.svg)](https://pypi.org/project/cx-Freeze/)
 [![LGTM](https://img.shields.io/lgtm/grade/python/g/marcelotduarte/cx_Freeze.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/marcelotduarte/cx_Freeze)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![CI](https://github.com/marcelotduarte/cx_Freeze/workflows/Build%20wheel/badge.svg)](https://github.com/marcelotduarte/cx_Freeze/actions)
 
 
 **cx\_Freeze** creates standalone executables from Python scripts, with the same
 performance, is cross-platform and should work on any platform that Python
 itself works on.
+
+# Installation
+
+In a virtual environment, install by issuing the command:
+
+```
+pip install --upgrade cx_Freeze
+```
+
+To install the latest development build:
+```
+pip install --pre --extra-index-url https://marcelotduarte.github.io/packages/ cx_Freeze
+```
+
+Please check the [installation](https://cx-freeze.readthedocs.io/en/latest/installation.html)
+for more information and how to install in others environment such as pipenv,
+conda-forge, etc.
+
+# Documentation
+
+The official documentation is available
+[here](https://cx-freeze.readthedocs.io).
+
+If you need help you can also ask on the discussion channel:
+https://github.com/marcelotduarte/cx_Freeze/discussions
 
 # Highlights of Version 6.10:
 - Support Application Manifests in Windows: manifest and uac-admin
@@ -33,29 +59,6 @@ itself works on.
 - Code modernization
 - Various bug fixes.
 
-# Installation
-
-In a virtual environment, install by issuing the command:
-
-```
-pip install --upgrade cx_Freeze
-```
-
-To install beta versions:
-```
-pip install --upgrade cx_Freeze --pre
-```
-
-Please check the installation in documentation for requirements.
-
-# Documentation
-
-The official documentation is available
-[here](https://cx-freeze.readthedocs.io).
-
-If you need help you can also ask on the discussion channel:
-https://github.com/marcelotduarte/cx_Freeze/discussions
-
 # License
 
 cx\_Freeze uses a license derived from the
@@ -63,7 +66,3 @@ cx\_Freeze uses a license derived from the
 You can read the cx\_Freeze license in the
 [documentation](https://cx-freeze.readthedocs.io/en/latest/license.html)
 or in the [source repository](doc/src/license.rst).
-
-# Donate
-
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate?business=8QXQTXWHPXZZE&item_name=cx-freeze+developer&currency_code=BRL)
