@@ -1,8 +1,7 @@
-| Version | Downloads | Python | Documentation | License |
-| --- | --- | --- | --- | --- |
-| [![PyPI version](https://img.shields.io/pypi/v/cx_Freeze)](https://pypi.org/project/cx-freeze/) | [![PyPi Downloads](https://img.shields.io/pypi/dm/cx_Freeze)](https://pypistats.org/packages/cx-freeze) | [![Python](https://img.shields.io/pypi/pyversions/cx-freeze)](https://www.python.org/) | [![Documentation Status](https://readthedocs.org/projects/cx-freeze/badge/?version=latest)](https://cx-freeze.readthedocs.io/en/latest/?badge=latest) | [![License](https://img.shields.io/pypi/l/cx_Freeze.svg)](https://pypi.org/project/cx-Freeze/) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![LGTM](https://img.shields.io/lgtm/grade/python/g/marcelotduarte/cx_Freeze.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/marcelotduarte/cx_Freeze) |
-| [![Conda Version](https://img.shields.io/conda/vn/conda-forge/cx_freeze.svg)](https://anaconda.org/conda-forge/cx_freeze) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/cx_freeze.svg)](https://anaconda.org/conda-forge/cx_freeze) | | | |
-
+| Version | Downloads | Python | Style |
+| --- | --- | --- | --- |
+| [![PyPI version](https://img.shields.io/pypi/v/cx_Freeze)](https://pypi.org/project/cx-freeze/) | [![PyPi Downloads](https://img.shields.io/pypi/dm/cx_Freeze)](https://pypistats.org/packages/cx-freeze) | [![Python](https://img.shields.io/pypi/pyversions/cx-freeze)](https://www.python.org/) | [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![LGTM](https://img.shields.io/lgtm/grade/python/g/marcelotduarte/cx_Freeze.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/marcelotduarte/cx_Freeze) |
+| [![Conda Version](https://img.shields.io/conda/vn/conda-forge/cx_freeze.svg)](https://anaconda.org/conda-forge/cx_freeze) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/cx_freeze.svg)](https://anaconda.org/conda-forge/cx_freeze) | | |
 
 **cx\_Freeze** creates standalone executables from Python scripts, with the same
 performance, is cross-platform and should work on any platform that Python
@@ -25,13 +24,14 @@ Please check the [installation](https://cx-freeze.readthedocs.io/en/latest/insta
 for more information and how to install in others environment such as pipenv,
 conda-forge, etc.
 
-# Documentation [![Documentation Status](https://readthedocs.org/projects/cx-freeze/badge/?version=latest)](https://cx-freeze.readthedocs.io/en/latest/?badge=latest)
+# Documentation
+
+[![Documentation Status](https://readthedocs.org/projects/cx-freeze/badge/?version=latest)](https://cx-freeze.readthedocs.io/en/latest/?badge=latest)
 
 The official documentation is available
 [here](https://cx-freeze.readthedocs.io).
 
-If you need help you can also ask on the discussion channel:
-https://github.com/marcelotduarte/cx_Freeze/discussions
+If you need help you can also ask on the [discussion](https://github.com/marcelotduarte/cx_Freeze/discussions) channel.
 
 # Highlights of Version 6.10:
 - Support Application Manifests in Windows: manifest and uac-admin
@@ -53,6 +53,8 @@ https://github.com/marcelotduarte/cx_Freeze/discussions
 - Various bug fixes.
 
 # License
+
+[![License](https://img.shields.io/pypi/l/cx_Freeze.svg)](https://pypi.org/project/cx-Freeze/)
 
 cx\_Freeze uses a license derived from the
 [Python Software Foundation License](https://www.python.org/psf/license).
