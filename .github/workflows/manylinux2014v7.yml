@@ -4,9 +4,9 @@ on:
   release:
     types: [created]
   schedule:
-    # run every day at 7:30AM UTC to refresh the cache
+    # run every day at 8:30AM UTC to refresh the cache
     # the cache results in time reduction from 1h20m19s to 1m34s
-    - cron:  '30 7 * * *'
+    - cron:  '30 8 * * *'
   workflow_dispatch:
 
 jobs:
