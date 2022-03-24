@@ -73,6 +73,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
       -
+        run: pip install -e . -v
+      -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         env:
