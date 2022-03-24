@@ -1,4 +1,4 @@
-name: Create manylinux2010 v6
+name: Create manylinux2010 v7
 
 on:
   release:
