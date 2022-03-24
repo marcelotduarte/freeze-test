@@ -1,0 +1,167 @@
+name: Create manylinux2014 v7
+
+on:
+  release:
+    types: [created]
+  schedule:
+    # run every day at 7:30AM UTC to refresh the cache
+    # the cache results in time reduction from 1h20m19s to 1m34s
+    - cron:  '30 7 * * *'
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        platform: [x86_64]
+        policy: [manylinux2014]
+        ref: [main]
+    name: Build wheel using ${{ matrix.policy }}_${{ matrix.platform }}
+    runs-on: ubuntu-latest
+    env:
+      POLICY: ${{ matrix.policy }}
+      PLATFORM: ${{ matrix.platform }}
+      COMMIT_SHA: ${{ github.sha }}
+    steps:
+      -
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+      -
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ matrix.ref }}
+          repository: pypa/manylinux
+          path: manylinux
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Setup cache
+        uses: actions/cache@v2
+        with:
+          path: manylinux/.buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
+          key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-${{ hashFiles('manylinux/docker/**') }}
+          restore-keys: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-
+      -
+        name: Build docker image
+        run: ./ci/build-manylinux-create.sh
+      -
+        name: Save the image to upload
+        continue-on-error: true
+        env:
+          IMAGENAME: ${{ matrix.policy }}_${{ matrix.platform }}
+          FILENAME: /tmp/docker/${{ matrix.policy }}_${{ matrix.platform }}.tar
+        run: |
+          mkdir -p /tmp/docker
+          docker images
+          docker tag $IMAGENAME:$COMMIT_SHA $IMAGENAME:latest
+          docker images
+          docker save -o $FILENAME $IMAGENAME:latest
+          docker images
+      -
+        name: Display structure of docker files
+        continue-on-error: true
+        run: |
+          ls -l -h /tmp/docker
+          docker images
+      -
+        name: Upload the artifact (docker image)
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.policy }}_${{ matrix.platform }}
+          path: /tmp/docker/${{ matrix.policy }}_${{ matrix.platform }}.tar
+      -
+        name: Build the wheels
+        run: ./ci/build-manylinux-run.sh
+      -
+        name: Upload the artifact (wheelhouse)
+        uses: actions/upload-artifact@v2
+        with:
+          name: cx-freeze-wheelhouse
+          path: wheelhouse
+
+  test:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [x86_64]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        architecture: [x64]
+    name: Test the wheel
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout cx_Freeze
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+      -
+        name: Set up Python ${{ matrix.python-version }} ${{ matrix.architecture }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.architecture }}
+      -
+        name: Download the wheelhouse
+        uses: actions/download-artifact@v2
+        with:
+          name: cx-freeze-wheelhouse
+          path: wheelhouse
+      -
+        name: Install cx-freeze from wheelhouse
+        run: |
+          python -m pip install --upgrade pip
+          pip install --upgrade -r requirements.txt
+          pip install -f wheelhouse cx_Freeze --pre
+          python -m sysconfig
+
+      # samples
+      -
+        name: Freeze cryptography sample
+        working-directory: cx_Freeze/samples/cryptography
+        run: |
+          pip install cryptography
+          python setup.py build_exe --excludes=tkinter
+      -
+        name: Run cryptography sample
+        working-directory: cx_Freeze/samples/cryptography
+        run: |
+          ./build/exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}/test_crypt
+      -
+        name: Upload the frozen app
+        uses: actions/upload-artifact@v2
+        with:
+          name: frozen-exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}
+          path: ./cx_Freeze/samples/cryptography/build/exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}/**
+
+  test2:
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        platform: [x86_64]
+    name: Test the wheel part 2
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Download the frozen app
+        uses: actions/download-artifact@v2
+        with:
+          name: frozen-exe.linux-${{ matrix.platform }}-${{ matrix.python-version }}
+          path: .
+      -
+        name: Run frozen app
+        continue-on-error: true
+        run: |
+          ls -l */
+          chmod +x ./test_crypt
+          ./test_crypt
+      -
+        name: Run cryptography sample in docker
+        run: |
+          docker run --rm -t -v `pwd`:/frozen ubuntu:16.04 /frozen/test_crypt
