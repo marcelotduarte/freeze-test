@@ -35,8 +35,8 @@ If you need help you can also ask on the [discussion](https://github.com/marcelo
 
 # Highlights of Version 6.10:
 - Support Application Manifests in Windows: manifest and uac-admin
-- EXPERIMENTAL New dependency resolver on Windows
-- EXPERIMENTAL Support for Apple Silicon using miniforge (conda-forge)
+- *EXPERIMENTAL* New dependency resolver on Windows
+- **EXPERIMENTAL** Support for Apple Silicon using miniforge (conda-forge)
 - Bug fixes and improvements
 
 # Highlights of Version 6.2 up to 6.9:
