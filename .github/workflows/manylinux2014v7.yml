@@ -3,10 +3,10 @@ name: Create manylinux2014 v7
 on:
   release:
     types: [created]
-  schedule:
+  #schedule:
     # run every day at 8:30AM UTC to refresh the cache
     # the cache results in time reduction from 1h20m19s to 1m34s
-    - cron:  '30 8 * * *'
+  #  - cron:  '30 8 * * *'
   workflow_dispatch:
 
 jobs:
