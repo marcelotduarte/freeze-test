@@ -43,6 +43,8 @@ jobs:
             sample: pythonnet-demo
           - os: macos-latest
             sample: service
+          - os: macos-latest
+            sample: pyside6
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
