@@ -292,6 +292,8 @@ jobs:
         working-directory: recipe
         run: echo ${{ needs.conda_recipe.outputs.data }} | base64 -d>meta.yaml
       -
+        run: cat recipe/meta.yaml
+      -
         name: Build the conda package
         run: |
           mkdir -p build_artifacts
