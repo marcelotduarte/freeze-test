@@ -80,8 +80,8 @@ jobs:
         run: |
           mv build/*/*.{png,log} . || true
           if [ "${{ steps.freeze-and-run.outputs.status }}" != "0" ] ; then
-            (python -m sysconfig >sysconfig.log) || true
-            (tar cvf build.tar build/) || true
+            (python -m sysconfig >${{ matrix.sample }}-sysconfig.log) || true
+            (tar cvf ${{ matrix.sample }}-build.tar build/) || true
           fi
       -
         name: Upload the snapshots and logs
