@@ -77,7 +77,12 @@ jobs:
       -
         name: Collect images and logs
         working-directory: cx_Freeze/samples/${{ matrix.sample }}
-        run: mv build/*/*.{png,log} . || true
+        run: |
+          mv build/*/*.{png,log} . || true
+          if [ "${{ steps.freeze-and-run.outputs.status }}" != "0" ] ; then
+            (python -m sysconfig >sysconfig.log) || true
+            (tar cvf build.tar build/) || true
+          fi
       -
         name: Upload the snapshots and logs
         uses: actions/upload-artifact@v2
@@ -86,6 +91,7 @@ jobs:
           path: |
             ./cx_Freeze/samples/${{ matrix.sample }}/*.png
             ./cx_Freeze/samples/${{ matrix.sample }}/*.log
+            ./cx_Freeze/samples/${{ matrix.sample }}/*.tar
           if-no-files-found: ignore
       -
         name: Return sucess or error code
