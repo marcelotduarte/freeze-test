@@ -5,44 +5,14 @@ on:
   #  branches: [ main ]
   workflow_dispatch:
 
-jobs:
-  matrix:
-    name: Generate matrix of samples
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      -
-        uses: actions/checkout@v2
-        with:
-          ref: develop
-          repository: marcelotduarte/cx_Freeze
-      -
-        uses: actions/setup-python@v3
-      -
-        id: set-matrix
-        run: |
-          import json
-          with open("ci/build-test.json") as fp:
-              data = json.load(fp)
-          samples = json.dumps(list(data.keys()))
-          print(f"::set-output name=matrix::{samples}")
-        shell: python
-
   tests:
-    needs: [matrix]
     strategy:
       fail-fast: false
       matrix:
-        sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
+        sample: ["pillow"]
         os: [macos-latest]
         python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
         architecture: [x64]
-        exclude:
-          - os: macos-latest
-            sample: pythonnet-demo
-          - os: macos-latest
-            sample: service
         branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
