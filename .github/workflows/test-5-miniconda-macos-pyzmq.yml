@@ -76,8 +76,8 @@ jobs:
         working-directory: cx_Freeze/samples/${{ matrix.sample }}
         run: |
           mv build/*/*.{png,log} . || true
-          (python -m sysconfig >$KEY_BASE-sysconfig.log) || true
-          (tar cvf $KEY_BASE-build.tar build/) || true
+          (python -m sysconfig >${{ matrix.sample }}-$KEY_BASE-sysconfig.log) || true
+          (tar cvf ${{ matrix.sample }}-$KEY_BASE-build.tar build/) || true
       -
         name: Upload the snapshots and logs
         uses: actions/upload-artifact@v2
