@@ -1,4 +1,4 @@
-name: Build-3-conda-cx_logging
+name: Build-conda-cx_logging
 
 on:
   #push:
