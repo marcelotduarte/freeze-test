@@ -1,4 +1,4 @@
-name: Test-1-wheels (macOS)
+name: Test-5-pip-macos-pillow
 
 on:
   #push:
