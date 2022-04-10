@@ -59,11 +59,17 @@ jobs:
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
       -
-        name: Freeze and run "${{ matrix.sample }}"
+        name: Freeze and run "${{ matrix.sample }}" (build_exe)
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
-          TEST_BDIST_MAC: 1
+        run: ./ci/build-test-one.sh ${{ matrix.sample }}
+      -
+        name: Freeze and run "${{ matrix.sample }}" (bdist_mac)
+        id: freeze-and-run-bdist-mac
+        env:
+          QT_DEBUG_PLUGINS: 1
+          TEST_BDIST_MAC: 2
         run: ./ci/build-test-one.sh ${{ matrix.sample }}
       -
         name: Collect images and logs
