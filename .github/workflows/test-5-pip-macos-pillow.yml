@@ -1,0 +1,93 @@
+name: Test-1-wheels (macOS)
+
+on:
+  #push:
+  #  branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  matrix:
+    name: Generate matrix of samples
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      -
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+      -
+        uses: actions/setup-python@v3
+      -
+        id: set-matrix
+        run: |
+          import json
+          with open("ci/build-test.json") as fp:
+              data = json.load(fp)
+          samples = json.dumps(list(data.keys()))
+          print(f"::set-output name=matrix::{samples}")
+        shell: python
+
+  tests:
+    needs: [matrix]
+    strategy:
+      fail-fast: false
+      matrix:
+        sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
+        os: [macos-latest]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        architecture: [x64]
+        exclude:
+          - os: macos-latest
+            sample: pythonnet-demo
+          - os: macos-latest
+            sample: service
+        branch: [develop]
+    name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      -
+        name: Checkout cx_Freeze
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+      -
+        name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.architecture }}
+      -
+        name: Freeze and run "${{ matrix.sample }}"
+        id: freeze-and-run
+        env:
+          QT_DEBUG_PLUGINS: 1
+        run: ./ci/build-test-one.sh ${{ matrix.sample }}
+      -
+        name: Collect images and logs
+        working-directory: cx_Freeze/samples/${{ matrix.sample }}
+        run: |
+          mv build/*/*.{png,log} . || true
+          (python -m sysconfig >${{ matrix.sample }}-$KEY_BASE-sysconfig.log) || true
+          (tar cvf ${{ matrix.sample }}-$KEY_BASE-build.tar build/) || true
+      -
+        name: Upload the snapshots and logs
+        uses: actions/upload-artifact@v2
+        with:
+          name: screensnapshots
+          path: |
+            ./cx_Freeze/samples/${{ matrix.sample }}/*.png
+            ./cx_Freeze/samples/${{ matrix.sample }}/*.log
+            ./cx_Freeze/samples/${{ matrix.sample }}/*.tar
+          if-no-files-found: ignore
+      -
+        name: Return sucess or error code
+        run: |
+          if [ "${{ steps.freeze-and-run.outputs.status }}" == "" ] ; then
+            exit -1
+          else
+            exit ${{ steps.freeze-and-run.outputs.status }}
+          fi
+        shell: bash
