@@ -95,6 +95,7 @@ jobs:
             export CIBW_BUILD="cp3*-macosx_*"
             export CIBW_ARCHS="x86_64 universal2 arm64"
             export CIBW_SKIP="cp38-macosx_universal2 cp38-macosx_arm64"
+            export CIBW_DEPENDENCY_VERSIONS="latest"
           fi
           python -m cibuildwheel
       -
