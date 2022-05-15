@@ -38,6 +38,7 @@ jobs:
         sys: [ { msystem: MINGW32, env: i686 }, { msystem: MINGW64, env: x86_64 }, { msystem: UCRT64, env: ucrt-x86_64 } ]
         exclude:
           - sample: pythonnet-demo
+          - sample: pyside2-simplebrowser
     name: ${{ matrix.sample }}-${{ matrix.sys.msystem }}
     env:
       PACKAGES: https://marcelotduarte.github.io/packages
