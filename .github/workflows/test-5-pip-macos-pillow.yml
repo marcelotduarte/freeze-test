@@ -10,9 +10,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sample: ["pillow"]
+        sample: ["pillow", "pyside6"]
         os: [macos-latest]
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.10"]
         architecture: [x64]
         branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
@@ -35,7 +35,9 @@ jobs:
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
-        run: ./ci/build-test-one.sh ${{ matrix.sample }}
+        run: |
+          pip install -e .
+          ./ci/build-test-one.sh ${{ matrix.sample }}
       -
         name: Collect images and logs
         working-directory: cx_Freeze/samples/${{ matrix.sample }}
