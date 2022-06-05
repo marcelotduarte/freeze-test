@@ -13,7 +13,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       -
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
@@ -63,7 +63,7 @@ jobs:
           imagemagick-6.q16
       -
         name: Checkout cx_Freeze
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
