@@ -37,7 +37,7 @@ jobs:
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         os: [windows-latest]
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11.0-beta.3"]
         architecture: [x64, x86]
         branch: [develop]
         exclude:
@@ -49,8 +49,16 @@ jobs:
             architecture: x86
           - sample: pythonnet-demo
             python-version: "3.10"
-          - sample: pyside6
+          - sample: matplotlib
+            python-version: "3.11.0-beta.3"
             architecture: x86
+          - sample: pandas
+            python-version: "3.11.0-beta.3"
+            architecture: x86
+          - sample: pythonnet-demo
+            python-version: "3.11.0-beta.3"
+          #- sample: pyside6
+          #  architecture: x86
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     steps:
