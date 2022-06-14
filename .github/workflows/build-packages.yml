@@ -12,8 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
-        #, "3.11.0-beta.1"]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11.0-beta.3"]
         architecture: [x64, x86]
     name: Build [${{ matrix.os }} ${{ matrix.architecture }}][Python ${{ matrix.python-version }}]
     runs-on: ${{ matrix.os }}
@@ -45,7 +44,7 @@ jobs:
         run: python -m build -o wheelhouse
       -
         name: Build the wheel [Windows][Python 3.10]
-        if: runner.os == 'Windows' && startsWith(matrix.python-version, '3.1')
+        if: runner.os == 'Windows' && startsWith(matrix.python-version, '3.10')
         run: |
           pip install --upgrade wheel
           git clone -b 3.0 https://github.com/anthony-tuininga/cx_Logging.git
@@ -84,10 +83,10 @@ jobs:
         name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install cibuildwheel==2.6.0
+          pip install cibuildwheel==2.6.1
       -
         name: Build the wheel
-        run: python -m cibuildwheel
+        run: python -m cibuildwheel --prerelease-pythons
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
