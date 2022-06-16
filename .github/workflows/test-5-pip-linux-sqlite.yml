@@ -36,6 +36,7 @@ jobs:
         env:
           QT_DEBUG_PLUGINS: 1
         run: |
+          pip install -r requirements.txt
           pip install -e .
           ./ci/build-test-one.sh ${{ matrix.sample }}
       -
