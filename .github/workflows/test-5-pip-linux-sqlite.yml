@@ -40,6 +40,7 @@ jobs:
           pip install -r requirements.txt
           pip install -e . --no-build-isolation
           ./ci/build-test-one.sh ${{ matrix.sample }}
+        shell: bash
       -
         name: Collect images and logs
         working-directory: cx_Freeze/samples/${{ matrix.sample }}
@@ -47,6 +48,7 @@ jobs:
           mv build/*/*.{png,log} . || true
           (python -m sysconfig >${{ matrix.sample }}-$KEY_BASE-sysconfig.log) || true
           (tar cvf ${{ matrix.sample }}-$KEY_BASE-build.tar build/) || true
+        shell: bash
       -
         name: Upload the snapshots and logs
         uses: actions/upload-artifact@v2
