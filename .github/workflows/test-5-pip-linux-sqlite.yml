@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         sample: ["simple", "sqlite"]
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
         python-version: ["3.11.0-beta.3"]
         architecture: [x64]
         branch: [develop]
