@@ -37,7 +37,7 @@ jobs:
           QT_DEBUG_PLUGINS: 1
         run: |
           pip install -r requirements.txt
-          pip install -e .
+          pip install -e . --no-build-isolation
           ./ci/build-test-one.sh ${{ matrix.sample }}
       -
         name: Collect images and logs
