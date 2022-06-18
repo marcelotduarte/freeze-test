@@ -85,12 +85,15 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
       -
+        name: Change requirements
+        if: runner.os == 'Windows'
+        run: sed -i "s/ and python_version <= '3.10/'/g" requirements.txt
+      -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
         run: |
-          sed -i "s/ and python_version <= '3.10'/#/g" requirements.txt
           echo "--extra-index-url https://riverbankcomputing.com/pypi/simple/" >> requirements.txt
           echo "--extra-index-url https://lief.s3-website.fr-par.scw.cloud/latest/" >> requirements.txt
           cat requirements.txt
