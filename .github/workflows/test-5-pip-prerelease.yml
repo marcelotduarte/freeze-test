@@ -96,7 +96,7 @@ jobs:
         run: |
           cp requirements.txt requirements.bak
           echo "--extra-index-url https://riverbankcomputing.com/pypi/simple/" > requirements.txt
-          echo "--extra-index-url https://lief.s3-website.fr-par.scw.cloud/latest/" >> requirements.txt
+          echo "-f https://lief.s3-website.fr-par.scw.cloud/latest/lief" >> requirements.txt
           cat requirements.bak >> requirements.txt
           cat requirements.txt
           ./ci/build-test-one.sh ${{ matrix.sample }}
