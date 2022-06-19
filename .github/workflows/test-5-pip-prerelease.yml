@@ -87,7 +87,9 @@ jobs:
       -
         name: Change requirements
         if: runner.os == 'Windows'
-        run: sed -i "s/ and python_version <= '3.10'/ /g" requirements.txt
+        run: |
+          sed -i "s/ and python_version <= '3.10'/ /g" requirements.txt
+          pip install --pre -f https://lief.s3-website.fr-par.scw.cloud/latest/lief lief
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
