@@ -94,8 +94,10 @@ jobs:
         env:
           QT_DEBUG_PLUGINS: 1
         run: |
-          echo "--extra-index-url https://riverbankcomputing.com/pypi/simple/" >> requirements.txt
+          cp requirements.txt requirements.bak
+          echo "--extra-index-url https://riverbankcomputing.com/pypi/simple/" > requirements.txt
           echo "--extra-index-url https://lief.s3-website.fr-par.scw.cloud/latest/" >> requirements.txt
+          cat requirements.bak >> requirements.txt
           cat requirements.txt
           ./ci/build-test-one.sh ${{ matrix.sample }}
         shell: bash
