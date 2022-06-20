@@ -54,7 +54,6 @@ jobs:
             sample: service
           - os: ubuntu-latest
             sample: matplotlib
-            python-version: "3.11.0-beta.3"
         branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
@@ -70,7 +69,7 @@ jobs:
           libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0
           libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
           libsdl2-2.0-0
-          libegl1
+          libegl1 libgconf-2-4
           imagemagick-6.q16
       -
         name: Checkout cx_Freeze

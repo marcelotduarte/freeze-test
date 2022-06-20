@@ -38,7 +38,7 @@ jobs:
           libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0
           libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
           libsdl2-2.0-0
-          libegl1
+          libegl1 libgconf-2-4
           imagemagick-6.q16
       -
         name: Prepare to build
