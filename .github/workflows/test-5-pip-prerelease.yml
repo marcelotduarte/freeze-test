@@ -88,19 +88,17 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           sed -i "s/ and python_version <= '3.10'/ /g" requirements.txt
-          pip install --pre -f https://lief.s3-website.fr-par.scw.cloud/latest/lief lief
+          #pip install --pre -f https://lief.s3-website.fr-par.scw.cloud/latest/lief lief
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
-        run: |
-          cp requirements.txt requirements.bak
-          echo "--extra-index-url https://riverbankcomputing.com/pypi/simple/" > requirements.txt
-          echo "-f https://lief.s3-website.fr-par.scw.cloud/latest/lief" >> requirements.txt
-          cat requirements.bak >> requirements.txt
-          cat requirements.txt
-          ./ci/build-test-one.sh ${{ matrix.sample }}
+          PIP_PRE: ${{startsWith(matrix.python-version, '3.11') }}
+          PIP_ONLY_BINARY: lief,numpy,pandas,PySide2,PySide6,PyQt5
+          PIP_EXTRA_INDEX_URL: https://riverbankcomputing.com/pypi/simple/
+          PIP_FIND_LINKS: https://lief.s3-website.fr-par.scw.cloud/latest/lief
+        run: ./ci/build-test-one.sh ${{ matrix.sample }}
         shell: bash
       -
         name: Collect images and logs
