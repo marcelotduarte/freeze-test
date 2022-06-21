@@ -29,13 +29,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
       -
-        name: Restore wheelhouse from cache
-        uses: actions/cache@v2
-        with:
-          path: wheelhouse/*
-          key: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('**/*.py', '**/*.c', '**/*.rst', '**/*.sh') }}
-          restore-keys: wheelhouse-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}-
-      -
         name: Install dependencies
         run: |
           python -m pip install --upgrade pip

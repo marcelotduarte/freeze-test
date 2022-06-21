@@ -12,12 +12,12 @@ jobs:
       matrix:
         sample: [pandas]
         os: [windows-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11.0-beta.3"]
         architecture: [x64]
     name: root-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     env:
-      LINK: https://download.lfd.uci.edu/pythonlibs/x6hvwk7i
-      NUMPY_VER: 1.22.3
+      LINK: https://download.lfd.uci.edu/pythonlibs/a4hvik9m
+      NUMPY_VER: 1.22.4
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
     runs-on: ${{ matrix.os }}
     steps:
@@ -49,7 +49,7 @@ jobs:
         name: Download the package
         if: matrix.python-version == '3.7' && steps.cache.outputs.cache-hit != 'true'
         working-directory: wheelhouse
-        run: curl ${{ env.LINK }}/numpy-1.21.5+mkl-cp37-cp37m-win_amd64.whl -O
+        run: curl ${{ env.LINK }}/numpy-1.21.6+mkl-cp37-cp37m-win_amd64.whl -O
       -
         name: Download the package
         if: matrix.python-version == '3.8' && steps.cache.outputs.cache-hit != 'true'
@@ -65,6 +65,11 @@ jobs:
         if: matrix.python-version == '3.10' && steps.cache.outputs.cache-hit != 'true'
         working-directory: wheelhouse
         run: curl ${{ env.LINK }}/numpy-${{ env.NUMPY_VER }}+mkl-cp310-cp310-win_amd64.whl -O
+      -
+        name: Download the package
+        if: startsWith(matrix.python-version, '3.11') && steps.cache.outputs.cache-hit != 'true'
+        working-directory: wheelhouse
+        run: curl ${{ env.LINK }}/numpy-${{ env.NUMPY_VER }}+mkl-cp311-cp311-win_amd64.whl -O
       -
         name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
         id: freeze-and-run
@@ -105,7 +110,7 @@ jobs:
       matrix:
         sample: [pandas]
         os: [windows-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11.0-beta.3"]
         architecture: [x64]
     name: venv-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     env:
