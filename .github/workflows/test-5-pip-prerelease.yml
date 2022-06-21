@@ -94,11 +94,11 @@ jobs:
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
+          PIP_EXTRA_INDEX_URL: https://riverbankcomputing.com/pypi/simple/
         run: |
           if [ ${{ runner.os == 'Windows' }} ] ; then
             export PIP_PRE=${{startsWith(matrix.python-version, '3.11') }}
             export PIP_ONLY_BINARY=lief,numpy,pandas,PySide2,PySide6,PyQt5
-            export PIP_EXTRA_INDEX_URL=https://riverbankcomputing.com/pypi/simple/
             export PIP_FIND_LINKS=https://lief.s3-website.fr-par.scw.cloud/latest/lief
           fi
           ./ci/build-test-one.sh ${{ matrix.sample }}
