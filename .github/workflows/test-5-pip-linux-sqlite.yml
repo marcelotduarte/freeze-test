@@ -1,4 +1,4 @@
-name: Test-5-pip-py311
+name: Test-5-pip-simple
 
 on:
   #push:
@@ -10,9 +10,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sample: ["simple", "sqlite"]
-        os: [ubuntu-latest, windows-latest]
-        python-version: ["3.11.0-beta.3"]
+        sample: ["opencv", "simple", "sqlite"]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.10"]
         architecture: [x64]
         branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
