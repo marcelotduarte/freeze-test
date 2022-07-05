@@ -39,6 +39,7 @@ jobs:
         exclude:
           - sample: pythonnet-demo
           - sample: pyside2-simplebrowser
+          - sample: pyside6-simplebrowser
     name: ${{ matrix.sample }}-${{ matrix.sys.msystem }}
     env:
       PACKAGES: https://marcelotduarte.github.io/packages
