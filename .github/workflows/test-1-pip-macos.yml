@@ -64,6 +64,7 @@ jobs:
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
+          QT_MAC_WANTS_LAYER: 1
         run: ./ci/build-test-one.sh ${{ matrix.sample }}
       -
         name: Collect images and logs
