@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sample: ["opencv", "simple", "sqlite"]
+        sample: ["pyside6-simplebrowser"]
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.10"]
         architecture: [x64]
