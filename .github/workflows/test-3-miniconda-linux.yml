@@ -45,6 +45,8 @@ jobs:
             sample: service
           - os: ubuntu-latest
             sample: pyside6
+          - os: ubuntu-latest
+            sample: pyside6-simplebrowser
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
