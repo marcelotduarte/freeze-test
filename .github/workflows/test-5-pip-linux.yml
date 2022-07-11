@@ -16,7 +16,7 @@ jobs:
           - "pyside2-simplebrowser"
           - "pyside6"
           - "pyside6-simplebrowser"
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
         python-version: ["3.10"]
         architecture: [x64]
         branch: [develop]
@@ -48,6 +48,8 @@ jobs:
         shell: bash
       -
         name: Collect images and logs
+        env:
+          KEY_BASE=${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
         working-directory: cx_Freeze/samples/${{ matrix.sample }}
         run: |
           mv build/*/*.{png,log} . || true
