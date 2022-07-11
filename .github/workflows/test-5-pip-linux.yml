@@ -49,7 +49,7 @@ jobs:
       -
         name: Collect images and logs
         env:
-          KEY_BASE=${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
+          KEY_BASE: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
         working-directory: cx_Freeze/samples/${{ matrix.sample }}
         run: |
           mv build/*/*.{png,log} . || true
