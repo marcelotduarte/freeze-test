@@ -54,7 +54,6 @@ jobs:
         shell: bash -l {0}
     env:
       KEY_BASE: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
-      PIP_DISABLE_PIP_VERSION_CHECK: '1'
     steps:
       -
         name: Checkout cx_Freeze
@@ -65,18 +64,24 @@ jobs:
       -
         uses: conda-incubator/setup-miniconda@v2
         with:
-          auto-update-conda: true
-          miniconda-version: latest
-          activate-environment: ${{ env.KEY_BASE }}
-          python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.architecture }}
-          channels: conda-forge
+          auto-activate-base: true
+          activate-environment: ""
+      -
+        name: Update conda
+        run: conda update --all
+      -
+        name: Create environment
+        run: >-
+          conda create -n ${{ env.KEY_BASE }} -c conda-forge
+          python=${{ matrix.python-version }}
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
-        run: ./ci/build-test-one.sh ${{ matrix.sample }}
+        run: |
+          conda activate -n ${{ env.KEY_BASE }}
+          ./ci/build-test-one.sh ${{ matrix.sample }}
       -
         name: Collect images and logs
         working-directory: cx_Freeze/samples/${{ matrix.sample }}
