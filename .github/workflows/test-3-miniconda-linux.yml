@@ -53,7 +53,7 @@ jobs:
       run:
         shell: bash -l {0}
     env:
-      KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
+      KEY_BASE: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
     steps:
       -
@@ -65,7 +65,8 @@ jobs:
       -
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: freeze-${{ env.KEY_BASE }}
+          miniconda-version: "latest"
+          activate-environment: ${{ env.KEY_BASE }}
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
