@@ -80,7 +80,7 @@ jobs:
         env:
           QT_DEBUG_PLUGINS: 1
         run: |
-          conda activate -n ${{ env.KEY_BASE }}
+          conda activate ${{ env.KEY_BASE }}
           ./ci/build-test-one.sh ${{ matrix.sample }}
       -
         name: Collect images and logs
