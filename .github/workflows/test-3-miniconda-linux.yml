@@ -73,7 +73,7 @@ jobs:
         name: Create environment
         run: >-
           conda create -n ${{ env.KEY_BASE }} -c conda-forge
-          python=${{ matrix.python-version }}
+          python="${{ matrix.python-version }}"
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
