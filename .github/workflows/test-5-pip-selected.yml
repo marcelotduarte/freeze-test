@@ -41,9 +41,11 @@ jobs:
         env:
           QT_DEBUG_PLUGINS: 1
         run: |
+          echo "::group::Install cx_Freeze development mode"
           python -m pip install -U pip wheel
           pip install -r requirements.txt
           pip install -e . --no-build-isolation
+          echo "::endgroup::"
           ./ci/build-test-one.sh ${{ matrix.sample }}
         shell: bash
       -
