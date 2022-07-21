@@ -39,6 +39,7 @@ jobs:
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         env:
+          QT_DEBUG: 1
           QT_DEBUG_PLUGINS: 1
         run: |
           echo "::group::Install cx_Freeze development mode"
