@@ -45,7 +45,7 @@ jobs:
           echo "::group::Install cx_Freeze development mode"
           python -m pip install -U pip wheel
           pip install -r requirements.txt
-          pip install -e . --no-build-isolation
+          pip install . --no-build-isolation --no-deps
           echo "::endgroup::"
           ./ci/build-test-one.sh ${{ matrix.sample }}
         shell: bash
