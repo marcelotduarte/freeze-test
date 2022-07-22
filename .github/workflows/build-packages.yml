@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11.0-beta.3"]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11-dev"]
         architecture: [x64, x86]
     name: Build [${{ matrix.os }} ${{ matrix.architecture }}][Python ${{ matrix.python-version }}]
     runs-on: ${{ matrix.os }}
@@ -99,7 +99,7 @@ jobs:
           platforms: arm64
       -
         name: Build wheels
-        uses: pypa/cibuildwheel@v2.7.0
+        uses: pypa/cibuildwheel@v2.8.1
         env:
           CIBW_PRERELEASE_PYTHONS: true
       -
