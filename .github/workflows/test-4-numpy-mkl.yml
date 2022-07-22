@@ -12,7 +12,7 @@ jobs:
       matrix:
         sample: [pandas]
         os: [windows-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11.0-beta.3"]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11-dev"]
         architecture: [x64]
     name: root-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     env:
@@ -30,7 +30,7 @@ jobs:
           ref: develop
           repository: marcelotduarte/cx_Freeze
       -
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
@@ -112,7 +112,7 @@ jobs:
       matrix:
         sample: [pandas]
         os: [windows-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11.0-beta.3"]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11-dev"]
         architecture: [x64]
     name: venv-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     env:
@@ -128,7 +128,7 @@ jobs:
           ref: develop
           repository: marcelotduarte/cx_Freeze
       -
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}

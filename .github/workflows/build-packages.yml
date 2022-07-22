@@ -23,7 +23,7 @@ jobs:
           ref: develop
           repository: marcelotduarte/cx_Freeze
       -
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
@@ -37,7 +37,7 @@ jobs:
         name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install --upgrade build "setuptools>=51.0.0,<=60.10.0"
+          pip install --upgrade build "setuptools>=59.0.1"
       -
         name: Build the wheel [Python 3.6-3.9]
         if: runner.os != 'Windows' || !startsWith(matrix.python-version, '3.1')
@@ -90,7 +90,7 @@ jobs:
           ref: develop
           repository: marcelotduarte/cx_Freeze
       -
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
       -
         name: Set up QEMU
         if: runner.os == 'Linux'
@@ -231,7 +231,7 @@ jobs:
     runs-on: ${{ matrix.config.os }}-latest
     steps:
       -
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
       -
         uses: actions/checkout@v3
         with:
@@ -367,7 +367,7 @@ jobs:
           repository: marcelotduarte/packages
           token: ${{ secrets.PUSH }}
       -
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
       -
         name: Recreate branch gh-pages
         run: |
