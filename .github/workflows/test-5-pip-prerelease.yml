@@ -17,6 +17,8 @@ jobs:
           repository: marcelotduarte/cx_Freeze
       -
         uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
       -
         id: set-matrix
         run: |
