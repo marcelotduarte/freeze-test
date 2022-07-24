@@ -47,7 +47,7 @@ jobs:
       -
         name: Install cx_Freeze development mode
         run: |
-          python ci/build_test.py samples/${{ matrix.sample }} --install-requires
+          python ci/build_test.py ${{ matrix.sample }} --basic-requirements
           conda uninstall -y cx_freeze --force
           python setup.py develop --no-deps
       -
