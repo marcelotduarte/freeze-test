@@ -15,8 +15,6 @@ jobs:
           - "pyqt5-simplebrowser"
           - "pyside2"
           - "pyside2-simplebrowser"
-          - "pyside6"
-          - "pyside6-simplebrowser"
         os: [windows-latest]
         python-version: ["3.10"]
         architecture: [x64]
