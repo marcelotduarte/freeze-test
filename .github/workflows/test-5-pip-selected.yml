@@ -44,7 +44,6 @@ jobs:
         name: Install cx_Freeze development mode
         run: |
           python ci/build_test.py ${{ matrix.sample }} --basic-requirements
-          pip uninstall -y cx_Freeze || true
           python setup.py develop --no-deps
       -
         name: Freeze and run "${{ matrix.sample }}" (build_exe)
