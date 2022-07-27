@@ -12,13 +12,12 @@ jobs:
       matrix:
         sample: [pandas]
         os: [windows-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11-dev"]
+        python-version: ["3.8", "3.9", "3.10", "3.11-dev"]
         architecture: [x64]
     name: root-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     env:
       LINK: https://download.lfd.uci.edu/pythonlibs/archived
       NUMPY_VER: 1.22.4
-      PIP_DISABLE_PIP_VERSION_CHECK: '1'
       PIP_PRE: ${{startsWith(matrix.python-version, '3.11') }}
       PIP_ONLY_BINARY: numpy,pandas
     runs-on: ${{ matrix.os }}
@@ -49,11 +48,6 @@ jobs:
           restore-keys: wheelhouse-numpy-${{ matrix.python-version }}-
       -
         name: Download the package
-        if: matrix.python-version == '3.7' && steps.cache.outputs.cache-hit != 'true'
-        working-directory: wheelhouse
-        run: curl ${{ env.LINK }}/cp37/numpy-1.21.6+mkl-cp37-cp37m-win_amd64.whl -O
-      -
-        name: Download the package
         if: matrix.python-version == '3.8' && steps.cache.outputs.cache-hit != 'true'
         working-directory: wheelhouse
         run: curl ${{ env.LINK }}/numpy-${{ env.NUMPY_VER }}+mkl-cp38-cp38-win_amd64.whl -O
@@ -73,7 +67,7 @@ jobs:
         working-directory: wheelhouse
         run: |
           curl ${{ env.LINK }}/numpy-${{ env.NUMPY_VER }}+mkl-cp311-cp311-win_amd64.whl -O
-          curl ${{ env.LINK }}/pandas-1.4.2-cp311-cp311-win_amd64.whl -O
+          curl ${{ env.LINK }}/pandas-1.4.3-cp311-cp311-win_amd64.whl -O
           curl https://lief.s3-website.fr-par.scw.cloud/latest/lief/lief-0.13.0.dev0-cp311-cp311-win_amd64.whl -O
         shell: bash
       -
@@ -112,11 +106,10 @@ jobs:
       matrix:
         sample: [pandas]
         os: [windows-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11-dev"]
+        python-version: ["3.8", "3.9", "3.10", "3.11-dev"]
         architecture: [x64]
     name: venv-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     env:
-      PIP_DISABLE_PIP_VERSION_CHECK: '1'
       PIP_PRE: ${{startsWith(matrix.python-version, '3.11') }}
       PIP_ONLY_BINARY: numpy,pandas
     runs-on: ${{ matrix.os }}
