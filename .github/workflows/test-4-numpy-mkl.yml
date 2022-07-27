@@ -17,7 +17,7 @@ jobs:
     name: root-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     env:
       LINK: https://download.lfd.uci.edu/pythonlibs/archived
-      NUMPY_VER: 1.22.4
+      NUMPY_VER: 1.22.4+mkl
       PIP_PRE: ${{startsWith(matrix.python-version, '3.11') }}
       PIP_ONLY_BINARY: numpy,pandas
     runs-on: ${{ matrix.os }}
@@ -43,30 +43,29 @@ jobs:
         id: cache
         uses: actions/cache@v2
         with:
-          key: wheelhouse-numpy-${{ matrix.python-version }}-${{ github.sha }}
+          key: ${{ env.LINK }}/numpy-${{ env.NUMPY_VER }}-${{ matrix.python-version }}
           path: wheelhouse
-          restore-keys: wheelhouse-numpy-${{ matrix.python-version }}-
       -
         name: Download the package
         if: matrix.python-version == '3.8' && steps.cache.outputs.cache-hit != 'true'
         working-directory: wheelhouse
-        run: curl ${{ env.LINK }}/numpy-${{ env.NUMPY_VER }}+mkl-cp38-cp38-win_amd64.whl -O
+        run: curl ${{ env.LINK }}/numpy-${{ env.NUMPY_VER }}-cp38-cp38-win_amd64.whl -O
       -
         name: Download the package
         if: matrix.python-version == '3.9' && steps.cache.outputs.cache-hit != 'true'
         working-directory: wheelhouse
-        run: curl ${{ env.LINK }}/numpy-${{ env.NUMPY_VER }}+mkl-cp39-cp39-win_amd64.whl -O
+        run: curl ${{ env.LINK }}/numpy-${{ env.NUMPY_VER }}-cp39-cp39-win_amd64.whl -O
       -
         name: Download the package
         if: matrix.python-version == '3.10' && steps.cache.outputs.cache-hit != 'true'
         working-directory: wheelhouse
-        run: curl ${{ env.LINK }}/numpy-${{ env.NUMPY_VER }}+mkl-cp310-cp310-win_amd64.whl -O
+        run: curl ${{ env.LINK }}/numpy-${{ env.NUMPY_VER }}-cp310-cp310-win_amd64.whl -O
       -
         name: Download the package
         if: startsWith(matrix.python-version, '3.11') && steps.cache.outputs.cache-hit != 'true'
         working-directory: wheelhouse
         run: |
-          curl ${{ env.LINK }}/numpy-${{ env.NUMPY_VER }}+mkl-cp311-cp311-win_amd64.whl -O
+          curl ${{ env.LINK }}/numpy-${{ env.NUMPY_VER }}-cp311-cp311-win_amd64.whl -O
           curl ${{ env.LINK }}/pandas-1.4.3-cp311-cp311-win_amd64.whl -O
           curl https://lief.s3-website.fr-par.scw.cloud/latest/lief/lief-0.13.0.dev0-cp311-cp311-win_amd64.whl -O
         shell: bash
