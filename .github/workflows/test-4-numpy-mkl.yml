@@ -110,6 +110,8 @@ jobs:
         architecture: [x64]
     name: venv-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     env:
+      LINK: https://download.lfd.uci.edu/pythonlibs/archived
+      NUMPY_VER: 1.22.4+mkl
       PIP_PRE: ${{startsWith(matrix.python-version, '3.11') }}
       PIP_ONLY_BINARY: numpy,pandas
     runs-on: ${{ matrix.os }}
@@ -129,9 +131,8 @@ jobs:
         name: Restore numpy+mkl from cache
         uses: actions/cache@v2
         with:
-          key: wheelhouse-numpy-${{ matrix.python-version }}-${{ github.sha }}
+          key: ${{ env.LINK }}/numpy-${{ env.NUMPY_VER }}-${{ matrix.python-version }}
           path: wheelhouse
-          restore-keys: wheelhouse-numpy-${{ matrix.python-version }}-
       -
         name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
         id: freeze-and-run
