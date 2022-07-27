@@ -17,6 +17,7 @@ jobs:
     name: root-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     env:
       LINK: https://download.lfd.uci.edu/pythonlibs/archived
+      LINK_LIEF: https://lief.s3-website.fr-par.scw.cloud/latest/lief
       NUMPY_VER: 1.22.4+mkl
       PIP_PRE: ${{startsWith(matrix.python-version, '3.11') }}
       PIP_ONLY_BINARY: numpy,pandas
@@ -65,9 +66,9 @@ jobs:
         if: startsWith(matrix.python-version, '3.11') && steps.cache.outputs.cache-hit != 'true'
         working-directory: wheelhouse
         run: |
-          curl ${{ env.LINK }}/numpy-${{ env.NUMPY_VER }}-cp311-cp311-win_amd64.whl -O
-          curl ${{ env.LINK }}/pandas-1.4.3-cp311-cp311-win_amd64.whl -O
-          curl https://lief.s3-website.fr-par.scw.cloud/latest/lief/lief-0.13.0.dev0-cp311-cp311-win_amd64.whl -O
+          pip download ${{ env.LINK }}/numpy-${{ env.NUMPY_VER }}-cp311-cp311-win_amd64.whl --no-deps -d .
+          pip download ${{ env.LINK }}/pandas-1.4.3-cp311-cp311-win_amd64.whl --no-deps -d .
+          pip download ${{ env.LINK_LIEF }}/lief-0.13.0.dev0-cp311-cp311-win_amd64.whl --no-deps -d .
         shell: bash
       -
         name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
