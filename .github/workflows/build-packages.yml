@@ -59,11 +59,8 @@ jobs:
           pip install --upgrade wheel
           git clone https://github.com/anthony-tuininga/cx_Logging.git
           pushd cx_Logging
-          git checkout -b pr7 main
-          git pull https://github.com/marmig0404/cx_Logging main
-          git diff main >pr7.diff
           git checkout 3.0
-          patch -p1 <pr7.diff
+          git cherry-pick 3512a9f7b7f66b1d8c0c94dc1f7aab99a8eb5e9c
           popd
           python -m build -o wheelhouse -n ./cx_Logging
           pip install -f wheelhouse cx_Logging
