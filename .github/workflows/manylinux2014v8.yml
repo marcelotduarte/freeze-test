@@ -1,4 +1,4 @@
-name: Create manylinux2014 v7
+name: Create manylinux2014 v8
 
 on:
   release:
@@ -16,7 +16,6 @@ jobs:
       matrix:
         platform: [x86_64]
         policy: [manylinux2014]
-        ref: [main]
     name: Build wheel using ${{ matrix.policy }}_${{ matrix.platform }}
     runs-on: ubuntu-latest
     env:
@@ -32,12 +31,12 @@ jobs:
       -
         uses: actions/checkout@v3
         with:
-          ref: ${{ matrix.ref }}
+          ref: tcltk86
           repository: pypa/manylinux
           path: manylinux
       -
         name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1.6.0
+        uses: docker/setup-buildx-action@v2
       -
         name: Setup cache
         uses: actions/cache@v2
@@ -47,7 +46,7 @@ jobs:
           restore-keys: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-
       -
         name: Build docker image
-        run: ./ci/build-manylinux-create.sh
+        run: ./ci/build-manylinux2014.sh
       -
         name: Save the image to upload
         continue-on-error: true
