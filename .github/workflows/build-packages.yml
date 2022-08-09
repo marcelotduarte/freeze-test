@@ -60,6 +60,8 @@ jobs:
           git clone https://github.com/anthony-tuininga/cx_Logging.git
           pushd cx_Logging
           git checkout 3.0
+          git config user.name "Marcelo Duarte"
+          git config user.email marcelotduarte@users.noreply.github.com
           git cherry-pick 3512a9f7b7f66b1d8c0c94dc1f7aab99a8eb5e9c
           popd
           python -m build -o wheelhouse -n ./cx_Logging
