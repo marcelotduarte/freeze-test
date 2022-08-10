@@ -162,8 +162,7 @@ jobs:
         if: runner.os == 'Linux'
         working-directory: docker_image
         run: |
-          tar xvf manylinux2014_x86_64.tar
-          docker load -i manylinux2014_x86_64
+          docker load -i manylinux2014_x86_64.tar
           rm manylinux2014_x86_64.tar
       -
         name: Set up QEMU
