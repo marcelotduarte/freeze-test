@@ -139,7 +139,6 @@ jobs:
     name: Build [${{ matrix.os }}] using cibuildwheel
     env:
       COMMIT_SHA: ${{ github.sha }}
-      CIBW_MANYLINUX_X86_64_IMAGE: "quay.io/pypa/manylinux2014_x86_64:latest"
     runs-on: ${{ matrix.os }}
     steps:
       -
@@ -156,7 +155,7 @@ jobs:
         if: runner.os == 'Linux'
         uses: actions/download-artifact@v2
         with:
-          name: manylinux2014_x86_64.tar
+          name: manylinux2014_x86_64
           path: docker_image
       -
         name: Restore the docker image
@@ -164,7 +163,7 @@ jobs:
         working-directory: docker_image
         run: |
           tar xvf manylinux2014_x86_64.tar
-          docker load -o manylinux2014_x86_64 $CIBW_MANYLINUX_X86_64_IMAGE
+          docker load -i manylinux2014_x86_64
           rm manylinux2014_x86_64.tar
       -
         name: Set up QEMU
@@ -177,6 +176,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.8.1
         env:
           CIBW_PRERELEASE_PYTHONS: true
+          CIBW_MANYLINUX_X86_64_IMAGE: "quay.io/pypa/manylinux2014_x86_64:latest"
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
