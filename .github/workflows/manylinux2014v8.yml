@@ -51,7 +51,7 @@ jobs:
         name: Save the image to upload
         continue-on-error: true
         env:
-          IMAGENAME: ${{ matrix.policy }}_${{ matrix.platform }}
+          IMAGENAME: quay.io/pypa/${{ matrix.policy }}_${{ matrix.platform }}
           FILENAME: /tmp/docker/${{ matrix.policy }}_${{ matrix.platform }}.tar
         run: |
           mkdir -p /tmp/docker
@@ -73,8 +73,14 @@ jobs:
           name: ${{ matrix.policy }}_${{ matrix.platform }}
           path: /tmp/docker/${{ matrix.policy }}_${{ matrix.platform }}.tar
       -
-        name: Build the wheels
-        run: ./ci/build-manylinux-run.sh
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      -
+        name: Build wheels
+        uses: pypa/cibuildwheel@v2.8.1
+        env:
+          CIBW_PRERELEASE_PYTHONS: true
       -
         name: Upload the artifact (wheelhouse)
         uses: actions/upload-artifact@v2
@@ -100,7 +106,7 @@ jobs:
           repository: marcelotduarte/cx_Freeze
       -
         name: Set up Python ${{ matrix.python-version }} ${{ matrix.architecture }}
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
