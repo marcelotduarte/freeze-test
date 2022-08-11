@@ -110,7 +110,7 @@ jobs:
           restore-keys: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-
       -
         name: Build docker image
-        run: ./ci/build-manylinux2014.sh
+        run: ./ci/manylinux-create.sh
       -
         name: Save the docker image to upload
         env:
