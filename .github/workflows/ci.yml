@@ -49,6 +49,7 @@ jobs:
       run: |
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
+          pip install --upgrade "setuptools>=59.0.1,<64" "wheel>=0.36.2"
           pip install -v -e .
     - name: Run tests with Pytest
       if: matrix.python-version != '3.10'
