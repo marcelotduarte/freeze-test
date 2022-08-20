@@ -56,7 +56,7 @@ jobs:
           fi
           export PIP_PRE=1
         fi
-        pip install -r requirements-dev.txt
+        pip install -r requirements-dev.txt --upgrade-strategy eager
         pip install -v -e . --no-deps --no-build-isolation
       shell: bash
     - name: Run tests with Pytest
