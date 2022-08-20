@@ -49,12 +49,12 @@ jobs:
         python -m pip install --upgrade pip
         if [[ ${{ matrix.python-version }} == *-dev ]] ; then
           pip install --upgrade setuptools wheel
-          if [ ${{ runner.os == 'Windows' }} ] ; then
+          if [ ${{ runner.os }} == 'Windows' ] ; then
             export PIP_EXTRA_INDEX_URL="https://marcelotduarte.github.io/packages/"
             export PIP_FIND_LINKS="https://lief.s3-website.fr-par.scw.cloud/latest/lief/"
             export PIP_ONLY_BINARY=lief
-            export PIP_PRE=1
           fi
+          export PIP_PRE=1
         fi
         pip install -r requirements-dev.txt
         pip install -v -e . --no-deps --no-build-isolation
