@@ -54,6 +54,10 @@ jobs:
             export PIP_FIND_LINKS="https://lief.s3-website.fr-par.scw.cloud/latest/lief/"
             export PIP_ONLY_BINARY=lief
           fi
+          if [ ${{ runner.os }} == 'Linux' ] ; then
+            # force pure python build
+            pip install pyyaml -v --no-build-isolation
+          fi
           export PIP_PRE=1
         fi
         pip install -r requirements-dev.txt --upgrade-strategy eager
