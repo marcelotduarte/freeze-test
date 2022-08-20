@@ -45,6 +45,8 @@ jobs:
             sample: pythonnet-demo
           - os: ubuntu-latest
             sample: service
+          - os: ubuntu-latest
+            sample: service-asyncio
         branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}

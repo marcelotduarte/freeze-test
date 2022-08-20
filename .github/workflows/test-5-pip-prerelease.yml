@@ -55,6 +55,10 @@ jobs:
           - os: macos-latest
             sample: service
           - os: ubuntu-latest
+            sample: service-asyncio
+          - os: macos-latest
+            sample: service-asyncio
+          - os: ubuntu-latest
             sample: matplotlib
         branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}

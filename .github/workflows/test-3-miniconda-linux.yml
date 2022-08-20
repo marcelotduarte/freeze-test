@@ -46,6 +46,8 @@ jobs:
           - os: ubuntu-latest
             sample: service
           - os: ubuntu-latest
+            sample: service-asyncio
+          - os: ubuntu-latest
             sample: pyside6
           - os: ubuntu-latest
             sample: pyside6-simplebrowser
