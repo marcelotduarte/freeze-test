@@ -62,57 +62,7 @@ jobs:
           name: cx-freeze-wheelhouse
           path: wheelhouse
 
-  build_manylinux2014_image:
-    strategy:
-      matrix:
-        platform: [x86_64]
-        policy: [manylinux2014]
-    name: Create ${{ matrix.policy }}_${{ matrix.platform }}
-    runs-on: ubuntu-latest
-    env:
-      POLICY: ${{ matrix.policy }}
-      PLATFORM: ${{ matrix.platform }}
-      COMMIT_SHA: ${{ github.sha }}
-    steps:
-      -
-        uses: actions/checkout@v3
-        with:
-          ref: develop
-          repository: marcelotduarte/cx_Freeze
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      -
-        name: Setup cache
-        uses: actions/cache@v2
-        with:
-          path: manylinux/.buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
-          key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-${{ hashFiles('manylinux/docker/**') }}
-          restore-keys: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-
-      -
-        name: Build docker image
-        run: ./ci/manylinux-create.sh
-      -
-        name: Save the docker image to upload
-        env:
-          IMAGENAME: quay.io/pypa/${{ matrix.policy }}_${{ matrix.platform }}
-          FILENAME: /tmp/docker/${{ matrix.policy }}_${{ matrix.platform }}.tar
-        run: |
-          mkdir -p /tmp/docker
-          docker tag $IMAGENAME:$COMMIT_SHA $IMAGENAME:latest
-          docker save -o $FILENAME $IMAGENAME:latest
-      -
-        name: Display structure of docker files
-        run: ls -l -h /tmp/docker && docker images
-      -
-        name: Upload the docker image
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ matrix.policy }}_${{ matrix.platform }}
-          path: /tmp/docker/${{ matrix.policy }}_${{ matrix.platform }}.tar
-
   build_wheel_unix:
-    needs: [build_manylinux2014_image]
     strategy:
       fail-fast: false
       matrix:
@@ -131,20 +81,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-      -
-        name: Download the docker image
-        if: runner.os == 'Linux'
-        uses: actions/download-artifact@v2
-        with:
-          name: manylinux2014_x86_64
-          path: docker_image
-      -
-        name: Restore the docker image
-        if: runner.os == 'Linux'
-        working-directory: docker_image
-        run: |
-          docker load -i manylinux2014_x86_64.tar
-          rm manylinux2014_x86_64.tar
       -
         name: Set up QEMU
         if: runner.os == 'Linux'
