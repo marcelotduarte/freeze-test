@@ -52,7 +52,7 @@ jobs:
         shell: bash
       -
         name: Collect images and logs
-        working-directory: cx_Freeze/samples/${{ matrix.sample }}
+        working-directory: samples/${{ matrix.sample }}
         run: |
           mv build/*/*.{png,log} . || true
           (python -m sysconfig > $KEY_BASE-sysconfig.log) || true
@@ -64,9 +64,9 @@ jobs:
         with:
           name: screensnapshots
           path: |
-            ./cx_Freeze/samples/${{ matrix.sample }}/*.png
-            ./cx_Freeze/samples/${{ matrix.sample }}/*.log
-            ./cx_Freeze/samples/${{ matrix.sample }}/*.tar
+            ./samples/${{ matrix.sample }}/*.png
+            ./samples/${{ matrix.sample }}/*.log
+            ./samples/${{ matrix.sample }}/*.tar
           if-no-files-found: ignore
       -
         name: Return sucess or error code

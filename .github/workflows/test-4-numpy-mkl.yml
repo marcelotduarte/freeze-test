@@ -77,7 +77,7 @@ jobs:
         shell: bash
       -
         name: Collect images and logs
-        working-directory: cx_Freeze/samples/${{ matrix.sample }}
+        working-directory: samples/${{ matrix.sample }}
         run: mv build/*/*.{png,log} . || true
         shell: bash
       -
@@ -86,8 +86,8 @@ jobs:
         with:
           name: screensnapshots
           path: |
-            ./cx_Freeze/samples/${{ matrix.sample }}/*.png
-            ./cx_Freeze/samples/${{ matrix.sample }}/*.log
+            ./samples/${{ matrix.sample }}/*.png
+            ./samples/${{ matrix.sample }}/*.log
           if-no-files-found: ignore
       -
         name: Return sucess or error code
@@ -140,7 +140,7 @@ jobs:
         shell: bash
       -
         name: Collect images and logs
-        working-directory: cx_Freeze/samples/${{ matrix.sample }}
+        working-directory: samples/${{ matrix.sample }}
         run: mv build/*/*.{png,log} . || true
         shell: bash
       -
@@ -149,8 +149,8 @@ jobs:
         with:
           name: screensnapshots
           path: |
-            ./cx_Freeze/samples/${{ matrix.sample }}/*.png
-            ./cx_Freeze/samples/${{ matrix.sample }}/*.log
+            ./samples/${{ matrix.sample }}/*.png
+            ./samples/${{ matrix.sample }}/*.log
           if-no-files-found: ignore
       -
         name: Return sucess or error code

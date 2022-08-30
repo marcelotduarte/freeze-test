@@ -44,7 +44,7 @@ jobs:
         run: cxfreeze --version
       -
         name: Freeze simple sample (2-different target-name)
-        working-directory: cx_Freeze/samples/simple
+        working-directory: samples/simple
         run: |
           cxfreeze hello.py --silent --target-name Hello-0.1 --target-dir build --excludes tkinter
           ls -l
@@ -52,5 +52,5 @@ jobs:
         shell: bash
       -
         name: Run simple sample (2-different target-name)
-        working-directory: cx_Freeze/samples/simple/build
+        working-directory: samples/simple/build
         run: ./Hello-0.1
