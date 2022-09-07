@@ -46,6 +46,8 @@ jobs:
           - sample: matplotlib
             python-version: "3.10"
             architecture: x86
+          - sample: orjson
+            architecture: x86
           - sample: pandas
             python-version: "3.10"
             architecture: x86
