@@ -39,6 +39,7 @@ jobs:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         sys: [ { msystem: MINGW32, env: i686 }, { msystem: MINGW64, env: x86_64 }, { msystem: UCRT64, env: ucrt-x86_64 } ]
         exclude:
+          - sample: orjson
           - sample: pythonnet-demo
           - sample: pyside2-simplebrowser
           - sample: pyside6-simplebrowser
