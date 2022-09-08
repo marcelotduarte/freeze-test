@@ -11,8 +11,8 @@ jobs:
       fail-fast: false
       matrix:
         sample:
-          - "cryptography"
-        os: [windows-latest, ubuntu-latest, macos-latest]
+          - "pyside2"
+        os: [windows-latest]
         python-version: ["3.10"]
         architecture: [x64]
         branch: [develop]
