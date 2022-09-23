@@ -72,15 +72,16 @@ jobs:
       -
         name: Collect images and logs
         working-directory: samples/${{ matrix.sample }}
-        run: mv build/*/*.{png,log} . || true
+        run: mv build/*/*.{err,log,png} . || true
       -
         name: Upload the snapshots and logs
         uses: actions/upload-artifact@v2
         with:
           name: screensnapshots
           path: |
-            ./samples/${{ matrix.sample }}/*.png
+            ./samples/${{ matrix.sample }}/*.err
             ./samples/${{ matrix.sample }}/*.log
+            ./samples/${{ matrix.sample }}/*.png
           if-no-files-found: ignore
       -
         name: Return sucess or error code

@@ -62,7 +62,7 @@ jobs:
         name: Collect images and logs
         working-directory: samples/${{ matrix.sample }}
         run: |
-          mv build/*/*.{png,log} . || true
+          mv build/*/*.{err,log,png} . || true
           (python -m sysconfig > $KEY_BASE-sysconfig.log) || true
           (tar cvf $KEY_BASE-build.tar build/exe.*/) || true
       -
@@ -71,8 +71,9 @@ jobs:
         with:
           name: screensnapshots
           path: |
-            ./samples/${{ matrix.sample }}/*.png
+            ./samples/${{ matrix.sample }}/*.err
             ./samples/${{ matrix.sample }}/*.log
+            ./samples/${{ matrix.sample }}/*.png
             ./samples/${{ matrix.sample }}/*.tar
           if-no-files-found: ignore
       -
