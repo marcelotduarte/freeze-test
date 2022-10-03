@@ -89,9 +89,9 @@ jobs:
           platforms: arm64
       -
         name: Build wheels
-        uses: pypa/cibuildwheel@v2.9.0
-        env:
-          CIBW_MANYLINUX_X86_64_IMAGE: "quay.io/pypa/manylinux2014_x86_64:latest"
+        uses: pypa/cibuildwheel@v2.10.2
+        #env:
+        #  CIBW_MANYLINUX_X86_64_IMAGE: "quay.io/pypa/manylinux2014_x86_64:latest"
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v2
@@ -169,6 +169,8 @@ jobs:
           sed -i '/url:/c\  git_url: https://github.com/marcelotduarte/cx_Freeze.git' meta.yaml
           sed -i '/sha256:/c\  git_rev: develop' meta.yaml
           sed -i '/- setuptools/c\    - setuptools >=59.0.1' meta.yaml
+          sed -i '/patches/c\  #' meta.yaml
+          sed -i '/- PR1526/c\    #' meta.yaml
           echo "::set-output name=meta::$(base64 --wrap=0 meta.yaml)"
           cp meta.yaml meta_path.yaml
           sed -i '/git_url:/c\  path: ./cx_Freeze' meta_path.yaml
