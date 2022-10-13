@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11-dev"]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11-dev"]
         architecture: [x64, x86]
     name: Build [${{ matrix.os }} ${{ matrix.architecture }}][Python ${{ matrix.python-version }}]
     runs-on: ${{ matrix.os }}
@@ -90,8 +90,6 @@ jobs:
       -
         name: Build wheels
         uses: pypa/cibuildwheel@v2.10.2
-        #env:
-        #  CIBW_MANYLINUX_X86_64_IMAGE: "quay.io/pypa/manylinux2014_x86_64:latest"
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v3
@@ -169,8 +167,6 @@ jobs:
           sed -i '/url:/c\  git_url: https://github.com/marcelotduarte/cx_Freeze.git' meta.yaml
           sed -i '/sha256:/c\  git_rev: develop' meta.yaml
           sed -i '/- setuptools/c\    - setuptools >=59.0.1' meta.yaml
-          sed -i '/patches/c\  #' meta.yaml
-          sed -i '/- PR1526/c\    #' meta.yaml
           echo "::set-output name=meta::$(base64 --wrap=0 meta.yaml)"
           cp meta.yaml meta_path.yaml
           sed -i '/git_url:/c\  path: ./cx_Freeze' meta_path.yaml
@@ -410,7 +406,7 @@ jobs:
           echo -e "Development packages for MSYS2 [python-cx-freeze](mingw/index.md).\n">>index.md
           #echo -e "{% include_relative python-cx-freeze/index.md %}\n">>index.md
           echo -e "Development packages for conda-forge [cx_freeze](conda/index.md).\n">>index.md
-          echo -e "# Packages for cx_Logging 3.0 \[Windows\]\[Python 3.6-3.11\]\n">>index.md
+          echo -e "# Packages for cx_Logging 3.0 \[Windows\]\[Python 3.7-3.11\]\n">>index.md
           echo -e "Unofficial wheels for [cx_Logging](cx-logging/index.md).\n">>index.md
           echo "theme: jekyll-theme-architect">_config.yml
       -
