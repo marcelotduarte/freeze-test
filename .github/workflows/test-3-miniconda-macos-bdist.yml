@@ -87,7 +87,7 @@ jobs:
         run: mv build/*/*.{err,log,png} . || true
       -
         name: Upload the snapshots and logs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: screensnapshots
           path: |

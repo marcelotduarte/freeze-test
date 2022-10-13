@@ -62,7 +62,7 @@ jobs:
           conda build recipe
       -
         name: Upload the artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: cx_logging-conda
           path: ${{ steps.conda.outputs.CONDA_BLD }}/*/*.tar.bz2

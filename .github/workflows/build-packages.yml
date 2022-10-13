@@ -57,7 +57,7 @@ jobs:
         shell: bash
       -
         name: Upload the artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: cx-freeze-wheelhouse
           path: wheelhouse
@@ -94,7 +94,7 @@ jobs:
         #  CIBW_MANYLINUX_X86_64_IMAGE: "quay.io/pypa/manylinux2014_x86_64:latest"
       -
         name: Upload the artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: cx-freeze-wheelhouse
           path: wheelhouse
@@ -137,7 +137,7 @@ jobs:
           MINGW_ARCH=${{ matrix.sys.msystem }} makepkg-mingw -sCLf
       -
         name: Upload the artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: cx-freeze-mingw
           path: mingw-w64-*.pkg.*
@@ -255,7 +255,7 @@ jobs:
         run: ls -l build_artifacts
       -
         name: Upload the conda artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: cx-freeze-conda
           path: ./build_artifacts/*/cx_freeze*.tar.bz2
@@ -302,7 +302,7 @@ jobs:
         run: ls -l build_artifacts
       -
         name: Upload the conda artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: cx-freeze-conda
           path: ./build_artifacts/*/cx_freeze*.tar.bz2
@@ -340,7 +340,7 @@ jobs:
         run: ls -l artifacts
       -
         name: Upload repository data to the conda artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: cx-freeze-conda
           path: ./artifacts/*/*
