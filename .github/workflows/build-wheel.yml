@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest]
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
         architecture: [x64]
     name: Build [${{ matrix.os }} ${{ matrix.architecture }}][Python ${{ matrix.python-version }}]
     runs-on: ${{ matrix.os }}
@@ -42,8 +42,7 @@ jobs:
         name: Build the wheel
         run: |
           # build-packages.yml has a limeted comparison
-          if [ "${{ matrix.python-version }}" != "3.6" ] &&
-             [ "${{ matrix.python-version }}" != "3.7" ] ; then
+          if [ "${{ matrix.python-version }}" != "3.7" ] ; then
             export MACOSX_DEPLOYMENT_TARGET="10.9"
             if [ "${{ matrix.architecture }}" == "arm64" ] ; then
               export _PYTHON_HOST_PLATFORM="macosx-11.0-arm64"
@@ -107,8 +106,7 @@ jobs:
           PIP_DISABLE_PIP_VERSION_CHECK: "1"
           MACOSX_DEPLOYMENT_TARGET: "10.9"
         run: |
-          if [ ${{ matrix.python-version }} != "36" ] &&
-             [ ${{ matrix.python-version }} != "37" ] ; then
+          if [ ${{ matrix.python-version }} != "37" ] ; then
             if [ ${{ matrix.architecture }} == "arm64" ] ; then
               export _PYTHON_HOST_PLATFORM="macosx-11.0-arm64"
               export ARCHFLAGS="-arch arm64"

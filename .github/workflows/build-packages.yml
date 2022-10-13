@@ -40,7 +40,7 @@ jobs:
       -
         name: Build the wheel
         run: |
-          pip install --upgrade "setuptools>=59.0.1" "wheel>=0.36.2"
+          pip install --upgrade "setuptools>=59.0.1" "wheel>=0.37.1"
           git clone https://github.com/anthony-tuininga/cx_Logging.git
           pushd cx_Logging
           git checkout 3.0
