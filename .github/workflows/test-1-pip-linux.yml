@@ -70,7 +70,7 @@ jobs:
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} >> $GITHUB_OUTPUT
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} || echo "status=$?" >> $GITHUB_OUTPUT
       -
         name: Collect images and logs
         working-directory: samples/${{ matrix.sample }}

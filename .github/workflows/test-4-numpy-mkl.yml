@@ -73,7 +73,7 @@ jobs:
       -
         name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} >> $GITHUB_OUTPUT
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} || echo "status=$?" >> $GITHUB_OUTPUT
         shell: bash
       -
         name: Collect images and logs
@@ -136,7 +136,7 @@ jobs:
       -
         name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --venv >> $GITHUB_OUTPUT
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --venv || echo "status=$?" >> $GITHUB_OUTPUT
         shell: bash
       -
         name: Collect images and logs
