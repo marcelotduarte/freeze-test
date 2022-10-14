@@ -78,7 +78,7 @@ jobs:
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --pipenv
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --pipenv >> $GITHUB_OUTPUT
         shell: bash
       -
         name: Collect images and logs

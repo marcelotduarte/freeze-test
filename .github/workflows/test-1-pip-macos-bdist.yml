@@ -72,7 +72,7 @@ jobs:
           QT_DEBUG_PLUGINS: 1
           QT_MAC_WANTS_LAYER: 1
           TEST_BDIST_MAC: 1
-        run: ./ci/build-test-one.sh ${{ matrix.sample }}
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} >> $GITHUB_OUTPUT
       -
         name: Collect images and logs
         working-directory: samples/${{ matrix.sample }}

@@ -94,7 +94,7 @@ jobs:
             export PIP_PRE=${{ startsWith(matrix.python-version, '3.11') }}
             export PIP_ONLY_BINARY=lief,numpy,pandas,PySide2,PySide6,PyQt5
           fi
-          ./ci/build-test-one.sh ${{ matrix.sample }}
+          ./ci/build-test-one.sh ${{ matrix.sample }} >> $GITHUB_OUTPUT
         shell: bash
       -
         name: Collect images and logs

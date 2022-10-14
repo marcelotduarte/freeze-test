@@ -80,7 +80,7 @@ jobs:
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }}
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} >> $GITHUB_OUTPUT
       -
         name: Collect images and logs
         working-directory: samples/${{ matrix.sample }}
