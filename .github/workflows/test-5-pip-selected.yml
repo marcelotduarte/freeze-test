@@ -50,7 +50,7 @@ jobs:
           QT_DEBUG: 1
           QT_DEBUG_PLUGINS: 1
           TEST_BDIST_MAC: 1
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} || (echo "status=$?" >> $GITHUB_OUTPUT)
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} ; (echo "status=$?" >> $GITHUB_OUTPUT)
         shell: bash
       -
         name: Collect images and logs
