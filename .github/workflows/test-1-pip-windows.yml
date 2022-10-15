@@ -56,8 +56,6 @@ jobs:
             architecture: x86
           - sample: pyside6-simplebrowser
             architecture: x86
-          - sample: pythonnet-demo
-            python-version: "3.10"
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     steps:
