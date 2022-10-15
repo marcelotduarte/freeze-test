@@ -81,7 +81,10 @@ jobs:
         env:
           QT_DEBUG_PLUGINS: 1
           QT_MAC_WANTS_LAYER: 1
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} ; (echo "status=$?" >> $GITHUB_OUTPUT)
+        run: |
+          ./ci/build-test-one.sh ${{ matrix.sample }}
+          echo "status=$?" >> $GITHUB_OUTPUT
+        continue-on-error: true
       -
         name: Collect images and logs
         working-directory: samples/${{ matrix.sample }}

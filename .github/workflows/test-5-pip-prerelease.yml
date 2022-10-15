@@ -94,7 +94,9 @@ jobs:
             export PIP_PRE=${{ startsWith(matrix.python-version, '3.11') }}
             export PIP_ONLY_BINARY=lief,numpy,pandas,PySide2,PySide6,PyQt5
           fi
-          ./ci/build-test-one.sh ${{ matrix.sample }} ; (echo "status=$?" >> $GITHUB_OUTPUT)
+          ./ci/build-test-one.sh ${{ matrix.sample }}
+          echo "status=$?" >> $GITHUB_OUTPUT
+        continue-on-error: true
         shell: bash
       -
         name: Collect images and logs

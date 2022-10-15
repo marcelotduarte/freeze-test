@@ -67,13 +67,13 @@ jobs:
           architecture: ${{ matrix.architecture }}
       -
         name: Freeze and run "${{ matrix.sample }}"
-        continue-on-error: true
         id: freeze-and-run
         env:
           QT_DEBUG_PLUGINS: 1
         run: |
           ./ci/build-test-one.sh ${{ matrix.sample }}
           echo "status=$?" >> $GITHUB_OUTPUT
+        continue-on-error: true
       -
         name: Collect images and logs
         working-directory: samples/${{ matrix.sample }}
