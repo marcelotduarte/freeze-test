@@ -20,8 +20,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       KEY_BASE: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
-      QT_DEBUG: 1
-      QT_DEBUG_PLUGINS: 1
     steps:
       -
         name: Checkout cx_Freeze
@@ -47,11 +45,9 @@ jobs:
         name: Freeze and run "${{ matrix.sample }}" (build_exe)
         id: freeze-and-run
         env:
-          QT_DEBUG: 1
-          QT_DEBUG_PLUGINS: 1
           TEST_BDIST_MAC: 1
         run: |
-          ./ci/build-test-one.sh ${{ matrix.sample }}
+          ./ci/build-test-one.sh ${{ matrix.sample }} --debug
           echo "status=$?" >> $GITHUB_OUTPUT
         continue-on-error: true
         shell: bash

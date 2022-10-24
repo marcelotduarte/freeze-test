@@ -87,14 +87,12 @@ jobs:
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
-        env:
-          QT_DEBUG_PLUGINS: 1
         run: |
           if [ ${{ runner.os == 'Windows' }} ] ; then
             export PIP_PRE=${{ startsWith(matrix.python-version, '3.11') }}
             export PIP_ONLY_BINARY=lief,numpy,pandas,PySide2,PySide6,PyQt5
           fi
-          ./ci/build-test-one.sh ${{ matrix.sample }}
+          ./ci/build-test-one.sh ${{ matrix.sample }} --debug
           echo "status=$?" >> $GITHUB_OUTPUT
         continue-on-error: true
         shell: bash

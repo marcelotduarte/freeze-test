@@ -73,10 +73,8 @@ jobs:
       -
         name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
         id: freeze-and-run
-        env:
-          QT_DEBUG_PLUGINS: 1
         run: |
-          ./ci/build-test-one.sh ${{ matrix.sample }}
+          ./ci/build-test-one.sh ${{ matrix.sample }} --debug
           echo "status=$?" >> $GITHUB_OUTPUT
         continue-on-error: true
         shell: bash
@@ -141,10 +139,8 @@ jobs:
       -
         name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
         id: freeze-and-run
-        env:
-          QT_DEBUG_PLUGINS: 1
         run: |
-          ./ci/build-test-one.sh ${{ matrix.sample }} --venv
+          ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv
           echo "status=$?" >> $GITHUB_OUTPUT
         continue-on-error: true
         shell: bash

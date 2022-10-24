@@ -76,10 +76,8 @@ jobs:
       -
         name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
-        env:
-          QT_DEBUG_PLUGINS: 1
         run: |
-          ./ci/build-test-one.sh ${{ matrix.sample }} --pipenv
+          ./ci/build-test-one.sh ${{ matrix.sample }} --debug --pipenv
           echo "status=$?" >> $GITHUB_OUTPUT
         continue-on-error: true
         shell: bash
