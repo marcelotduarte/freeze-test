@@ -43,6 +43,8 @@ jobs:
         exclude:
           - sample: orjson
           - sample: pythonnet-demo
+          - sample: pyqt5-simplebrowser
+          - sample: pyqt6-simplebrowser
           - sample: pyside2-simplebrowser
           - sample: pyside6-simplebrowser
     name: ${{ matrix.sample }}-${{ matrix.sys.msystem }}

@@ -43,10 +43,10 @@ jobs:
         python-version: ["3.7", "3.8", "3.9", "3.10"]
         architecture: [x64]
         exclude:
-          - os: windows-latest
-            sample: pyside6
-          - os: windows-latest
-            sample: pyside6-simplebrowser
+          - sample: pyqt6
+          - sample: pyqt6-simplebrowser
+          - sample: pyside6
+          - sample: pyside6-simplebrowser
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:

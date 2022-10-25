@@ -43,16 +43,13 @@ jobs:
         python-version: ["3.7", "3.8", "3.9", "3.10"]
         architecture: [x64]
         exclude:
-          - os: ubuntu-latest
-            sample: pythonnet-demo
-          - os: ubuntu-latest
-            sample: service
-          - os: ubuntu-latest
-            sample: service-asyncio
-          - os: ubuntu-latest
-            sample: pyside6
-          - os: ubuntu-latest
-            sample: pyside6-simplebrowser
+          - sample: pythonnet-demo
+          - sample: service
+          - sample: service-asyncio
+          - sample: pyqt6
+          - sample: pyqt6-simplebrowser
+          - sample: pyside6
+          - sample: pyside6-simplebrowser
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
