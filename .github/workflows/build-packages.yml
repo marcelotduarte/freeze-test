@@ -121,6 +121,7 @@ jobs:
             mingw-w64-${{ matrix.sys.env }}-python-setuptools
             mingw-w64-${{ matrix.sys.env }}-python-cx-logging
             mingw-w64-${{ matrix.sys.env }}-python-lief
+            mingw-w64-${{ matrix.sys.env }}-python-packaging
           update: true
       -
         name: Variables
@@ -272,7 +273,6 @@ jobs:
         with:
           activate-environment: freeze-${{ matrix.config.name }}
           python-version: ${{ matrix.config.version }}
-          #architecture: ${{ matrix.architecture }}
           channels: conda-forge
       -
         run: conda info

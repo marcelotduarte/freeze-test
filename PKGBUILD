@@ -4,7 +4,7 @@ _name=cx_Freeze
 _realname=cx-freeze
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=6.11
+pkgver=6.13.1
 pkgrel=1
 pkgdesc="Creates standalone executables from Python scripts, with the same performance (mingw-w64)"
 arch=('any')
@@ -13,8 +13,8 @@ license=('PSF')
 url="https://github.com/marcelotduarte/cx_Freeze/"
 depends=("${MINGW_PACKAGE_PREFIX}-python"
          "${MINGW_PACKAGE_PREFIX}-python-cx-logging"
-         "${MINGW_PACKAGE_PREFIX}-python-importlib-metadata"
-         "${MINGW_PACKAGE_PREFIX}-python-lief")
+         "${MINGW_PACKAGE_PREFIX}-python-lief"
+         "${MINGW_PACKAGE_PREFIX}-python-packaging")
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-tools"
              "${MINGW_PACKAGE_PREFIX}-python-setuptools")
