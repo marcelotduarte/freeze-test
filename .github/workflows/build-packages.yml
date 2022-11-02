@@ -200,6 +200,9 @@ jobs:
             name=${CONFIG:12:-5}
             python_and_version=$(echo $name|awk -F_ '{print $3}')
             version="${python_and_version:6:-1}"
+            if [ version == '3.11' ]; then
+              continue
+            fi
             CONFIGS="${CONFIGS}{\"name\":\"${name}\",\"version\":\"${version}\",\"os\":\"windows\"}, "
           done
           echo "config=[${CONFIGS::-2}]" >> $GITHUB_OUTPUT
