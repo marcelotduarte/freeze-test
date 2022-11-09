@@ -7,7 +7,46 @@ on:
   workflow_dispatch:
 
 jobs:
+
+  build_wheel_windows_cx_logging_31:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        architecture: [x64, x86]
+    name: Build [${{ matrix.os }} ${{ matrix.architecture }}][Python ${{ matrix.python-version }}]
+    runs-on: ${{ matrix.os }}
+    steps:
+      -
+        uses: actions/checkout@v3
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Logging
+      -
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.architecture }}
+      -
+        name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip build
+          pip install --upgrade "setuptools>=61.2" "wheel>=0.37.1"
+        shell: bash
+      -
+        name: Build the wheel
+        run: python -m build -o wheelhouse -n .
+        shell: bash
+      -
+        name: Upload the artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: cx-logging-wheelhouse
+          path: wheelhouse
+
   build_wheel_windows:
+    needs: [build_wheel_windows_cx_logging_31]
     strategy:
       fail-fast: false
       matrix:
@@ -34,26 +73,21 @@ jobs:
           python -m sysconfig
         shell: bash
       -
+        name: Download the wheelhouse artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: cx-logging-wheelhouse
+          path: cx-logging-wheelhouse
+      -
         name: Install build dependencies
         run: |
           python -m pip install --upgrade pip build
+          pip install --upgrade "setuptools>=61.2" "wheel>=0.37.1"
+          pip install -f cx-logging-wheelhouse cx_Logging
+        shell: bash
       -
         name: Build the wheel
-        run: |
-          pip install --upgrade "setuptools>=61.2" "wheel>=0.37.1"
-          git clone https://github.com/anthony-tuininga/cx_Logging.git
-          pushd cx_Logging
-          git checkout 3.0
-          git config user.name "Marcelo Duarte"
-          git config user.email marcelotduarte@users.noreply.github.com
-          # PR #6
-          git cherry-pick 86210c042ffac038b090616a13cf69ef31836ea1
-          # PR #7 fix for py311
-          git cherry-pick 3512a9f7b7f66b1d8c0c94dc1f7aab99a8eb5e9c
-          popd
-          python -m build -o wheelhouse -n ./cx_Logging
-          pip install -f wheelhouse cx_Logging
-          python -m build -o wheelhouse -n .
+        run: python -m build -o wheelhouse -n .
         shell: bash
       -
         name: Upload the artifact
@@ -371,7 +405,13 @@ jobs:
           git push origin :gh-pages || true
           git checkout --orphan gh-pages
       -
-        name: Download the wheelhouse artifact
+        name: Download the cx_Logging wheels
+        uses: actions/download-artifact@v3
+        with:
+          name: cx-logging-wheelhouse
+          path: cx-logging
+      -
+        name: Download the cx_Freeze wheels
         uses: actions/download-artifact@v3
         with:
           name: cx-freeze-wheelhouse
@@ -391,9 +431,9 @@ jobs:
       -
         name: Create packages template
         run: |
-          # cx_Freeze wheels (and cx_logging)
-          mkdir cx-logging && mv cx-freeze/cx_Logging-* cx-logging/
+          # cx_Logging wheels
           python make_index.py cx-logging --base cx_Logging
+          # cx_Freeze wheels
           python make_index.py cx-freeze --base cx_Freeze
           # mingw packages
           python make_index.py mingw --base python-cx-freeze
@@ -408,7 +448,7 @@ jobs:
           echo -e "Development packages for MSYS2 [python-cx-freeze](mingw/index.md).\n">>index.md
           #echo -e "{% include_relative python-cx-freeze/index.md %}\n">>index.md
           echo -e "Development packages for conda-forge [cx_freeze](conda/index.md).\n">>index.md
-          echo -e "# Packages for cx_Logging 3.0 \[Windows\]\[Python 3.7-3.11\]\n">>index.md
+          echo -e "# Packages for cx_Logging 3.1 \[Windows\]\[Python 3.7-3.11\]\n">>index.md
           echo -e "Unofficial wheels for [cx_Logging](cx-logging/index.md).\n">>index.md
           echo "theme: jekyll-theme-architect">_config.yml
       -
