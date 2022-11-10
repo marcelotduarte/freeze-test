@@ -29,14 +29,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
       -
-        name: Install build dependencies
-        run: |
-          python -m pip install --upgrade pip build
-          pip install --upgrade "setuptools>=61.2" "wheel>=0.37.1"
+        name: Install cibuildwheel
+        run: python -m pip install "cibuildwheel>=2.11.2"
         shell: bash
       -
-        name: Build the wheel
-        run: python -m build -o wheelhouse -n .
+        name: Build wheels
+        run: python -m cibuildwheel --output-dir wheelhouse
         shell: bash
       -
         name: Upload the artifact
@@ -83,7 +81,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip build
           pip install --upgrade "setuptools>=61.2" "wheel>=0.37.1"
-          pip install -f cx-logging-wheelhouse cx_Logging
+          pip install --no-index -f cx-logging-wheelhouse cx_Logging
         shell: bash
       -
         name: Build the wheel
@@ -122,8 +120,11 @@ jobs:
         with:
           platforms: arm64
       -
+        name: Install cibuildwheel
+        run: python -m pip install "cibuildwheel>=2.11.2"
+      -
         name: Build wheels
-        uses: pypa/cibuildwheel@v2.11.2
+        run: python -m cibuildwheel --output-dir wheelhouse
       -
         name: Upload the artifact
         uses: actions/upload-artifact@v3
