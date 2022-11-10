@@ -27,6 +27,8 @@ jobs:
           python-version: "3.11"
       -
         name: Install cibuildwheel
+        env:
+          CIBW_BUILD: 'cp3*'
         run: python -m pip install "cibuildwheel>=2.11.2"
         shell: bash
       -
