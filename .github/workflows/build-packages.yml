@@ -13,9 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
-        architecture: [x64, x86]
-    name: cx_Logging [${{ matrix.os }} ${{ matrix.architecture }}][Python ${{ matrix.python-version }}]
+    name: Build cx_Logging [${{ matrix.os }}] using cibuildwheel
     runs-on: ${{ matrix.os }}
     steps:
       -
@@ -26,8 +24,7 @@ jobs:
       -
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.architecture }}
+          python-version: "3.11"
       -
         name: Install cibuildwheel
         run: python -m pip install "cibuildwheel>=2.11.2"
@@ -112,7 +109,7 @@ jobs:
       -
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
       -
         name: Set up QEMU
         if: runner.os == 'Linux'
@@ -259,7 +256,7 @@ jobs:
       -
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
       -
         uses: actions/checkout@v3
         with:
@@ -354,7 +351,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: freeze-index
-          python-version: "3.10"
+          python-version: "3.11"
           channels: conda-forge
       -
         name: Download the conda artifacts
@@ -396,7 +393,7 @@ jobs:
       -
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
       -
         name: Recreate branch gh-pages
         run: |
