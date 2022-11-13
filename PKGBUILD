@@ -26,7 +26,7 @@ prepare() {
   rm -Rf python-${_realname}-${MSYSTEM}
   git clone -b develop https://github.com/marcelotduarte/cx_Freeze.git python-${_realname}-${MSYSTEM}
   pushd python-${_realname}-${MSYSTEM}
-  patch -p1 0001-patch-migw
+  patch -p1 -i "${srcdir}/0001-patch-migw"
   popd
 }
 
