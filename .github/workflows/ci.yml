@@ -7,25 +7,29 @@ jobs:
 
   pre_commit:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v3
-      with:
-        ref: develop
-        repository: marcelotduarte/cx_Freeze
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        cache: 'pip'
-        python-version: "3.11"
-    - name: Install dependencies
-      run: |
+      - uses: actions/checkout@v3
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          cache: 'pip'
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
           pip install -v -e . --no-deps --no-build-isolation
-    - name: Run pre-commit
-      uses: pre-commit/action@v3.0.0
-      with:
-        extra_args: --all-files --hook-stage=manual
+
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.0
+        with:
+          extra_args: --all-files --hook-stage=manual
 
   tests:
     runs-on: ${{ matrix.os }}
@@ -34,44 +38,50 @@ jobs:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
       fail-fast: false
+
     steps:
-    - uses: actions/checkout@v3
-      with:
-        ref: develop
-        repository: marcelotduarte/cx_Freeze
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        cache: 'pip'
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        if [[ ${{ matrix.python-version }} == *-dev ]] ; then
-          pip install --upgrade setuptools wheel
-          if [ ${{ runner.os }} == 'Windows' ] ; then
-            export PIP_EXTRA_INDEX_URL="https://marcelotduarte.github.io/packages/"
-            export PIP_FIND_LINKS="https://lief.s3-website.fr-par.scw.cloud/latest/lief/"
-            export PIP_ONLY_BINARY=lief
+      - uses: actions/checkout@v3
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          cache: 'pip'
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [[ ${{ matrix.python-version }} == *-dev ]] ; then
+            pip install --upgrade setuptools wheel
+            if [ ${{ runner.os }} == 'Windows' ] ; then
+              export PIP_EXTRA_INDEX_URL="https://marcelotduarte.github.io/packages/"
+              export PIP_FIND_LINKS="https://lief.s3-website.fr-par.scw.cloud/latest/lief/"
+              export PIP_ONLY_BINARY=lief
+            fi
+            if [ ${{ runner.os }} == 'Linux' ] ; then
+              # force pure python build
+              pip install pyyaml -v --no-build-isolation
+            fi
+            export PIP_PRE=1
           fi
-          if [ ${{ runner.os }} == 'Linux' ] ; then
-            # force pure python build
-            pip install pyyaml -v --no-build-isolation
-          fi
-          export PIP_PRE=1
-        fi
-        pip install -r requirements-dev.txt --upgrade-strategy eager
-        pip install -v -e . --no-deps --no-build-isolation
-      shell: bash
-    - name: Run tests with Pytest
-      if: matrix.python-version != '3.10'
-      run: python -m pytest
-    - name: Run tests with Pytest cov-report
-      if: matrix.python-version == '3.10'
-      run: python -m pytest -m "not long" --cov="cx_Freeze" --cov-report=html
-    - name: Upload the cov-report
-      if: matrix.python-version == '3.10'
-      uses: actions/upload-artifact@v3
-      with:
-        name: coverage-${{ matrix.os }}
-        path: ./htmlcov/*
+          pip install -r requirements-dev.txt --upgrade-strategy eager
+          pip install -v -e . --no-deps --no-build-isolation
+        shell: bash
+
+      - name: Run tests with Pytest
+        if: matrix.python-version != '3.11'
+        run: python -m pytest
+
+      - name: Run tests with Pytest cov-report
+        if: matrix.python-version == '3.11'
+        run: python -m pytest -m "not long" --cov="cx_Freeze" --cov-report=html
+
+      - name: Upload the cov-report
+        if: matrix.python-version == '3.11'
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-${{ matrix.os }}
+          path: ./htmlcov/*
