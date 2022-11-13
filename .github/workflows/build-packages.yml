@@ -13,119 +13,82 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-    name: Build cx_Logging [${{ matrix.os }}] using cibuildwheel
+    name: Build cx_Logging [${{ matrix.os }}]
     runs-on: ${{ matrix.os }}
+
     steps:
-      -
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           ref: develop
           repository: marcelotduarte/cx_Logging
-      -
-        uses: actions/setup-python@v4
+
+      - uses: actions/setup-python@v4
         with:
+          cache: 'pip'
           python-version: "3.11"
-      -
-        name: Install cibuildwheel
+
+      - name: Install cibuildwheel
         run: python -m pip install "cibuildwheel>=2.11.2"
         shell: bash
-      -
-        name: Build wheels
-        env:
-          CIBW_BUILD: 'cp3*'
+
+      - name: Build wheels
         run: python -m cibuildwheel --output-dir wheelhouse
         shell: bash
-      -
-        name: Upload the artifact
+
+      - name: Upload the artifact
         uses: actions/upload-artifact@v3
         with:
           name: cx-logging-wheelhouse
           path: wheelhouse
 
-  build_wheel_windows:
+  build_wheel:
     needs: [build_wheel_windows_cx_logging_31]
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
-        architecture: [x64, x86]
-    name: cx_Freeze [${{ matrix.os }} ${{ matrix.architecture }}][Python ${{ matrix.python-version }}]
-    runs-on: ${{ matrix.os }}
-    steps:
-      -
-        uses: actions/checkout@v3
-        with:
-          ref: develop
-          repository: marcelotduarte/cx_Freeze
-      -
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.architecture }}
-      -
-        name: Variables
-        run: |
-          declare || true
-          python -m sysconfig
-        shell: bash
-      -
-        name: Download the wheelhouse artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: cx-logging-wheelhouse
-          path: cx-logging-wheelhouse
-      -
-        name: Install build dependencies
-        run: |
-          python -m pip install --upgrade pip build
-          pip install --upgrade "setuptools>=61.2" "wheel>=0.37.1"
-          pip install --no-index -f cx-logging-wheelhouse cx_Logging
-        shell: bash
-      -
-        name: Build the wheel
-        run: python -m build -o wheelhouse -n .
-        shell: bash
-      -
-        name: Upload the artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: cx-freeze-wheelhouse
-          path: wheelhouse
-
-  build_wheel_unix:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-latest, ubuntu-latest]
-    name: Build [${{ matrix.os }}] using cibuildwheel
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    name: Build wheel [${{ matrix.os }}]
     env:
       COMMIT_SHA: ${{ github.sha }}
     runs-on: ${{ matrix.os }}
+
     steps:
-      -
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
-      -
-        uses: actions/setup-python@v4
+
+      - uses: actions/setup-python@v4
         with:
+          cache: 'pip'
           python-version: "3.11"
-      -
-        name: Set up QEMU
+
+      - name: Set up QEMU
         if: runner.os == 'Linux'
         uses: docker/setup-qemu-action@v2
         with:
           platforms: arm64
-      -
-        name: Install cibuildwheel
+
+      - name: Download the cx_Logging artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: cx-logging-wheelhouse
+          path: cx-logging-wheelhouse
+
+      - name: Install cibuildwheel
         run: python -m pip install "cibuildwheel>=2.11.2"
-      -
-        name: Build wheels
+
+      - name: Build wheels
+        if: runner.os != 'Windows'
         run: python -m cibuildwheel --output-dir wheelhouse
-      -
-        name: Upload the artifact
+
+      - name: Build wheels
+        if: runner.os == 'Windows'
+        env:
+          CIBW_BEFORE_BUILD: "pip install --no-index -f {package}/cx-logging-wheelhouse cx_Logging"
+        run: python -m cibuildwheel --output-dir wheelhouse
+
+      - name: Upload the artifact
         uses: actions/upload-artifact@v3
         with:
           name: cx-freeze-wheelhouse
@@ -379,8 +342,7 @@ jobs:
 
   packages:
     needs:
-      - build_wheel_windows
-      - build_wheel_unix
+      - build_wheel
       - build_msys2
       - build_conda_index
     runs-on: ubuntu-latest
