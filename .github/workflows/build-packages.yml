@@ -68,12 +68,6 @@ jobs:
         with:
           platforms: arm64
 
-      - name: Download the cx_Logging artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: cx-logging-wheelhouse
-          path: cx-logging-wheelhouse
-
       - name: Install cibuildwheel
         run: python -m pip install "cibuildwheel>=2.11.2"
 
