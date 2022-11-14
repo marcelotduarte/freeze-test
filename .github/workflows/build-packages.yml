@@ -98,8 +98,7 @@ jobs:
         with:
           msystem: ${{ matrix.sys.msystem }}
           install: >-
-            dos2unix git
-            mingw-w64-${{ matrix.sys.env }}-base-devel
+            base-devel dos2unix git
             mingw-w64-${{ matrix.sys.env }}-cc
             mingw-w64-${{ matrix.sys.env }}-tools
             mingw-w64-${{ matrix.sys.env }}-python-setuptools
