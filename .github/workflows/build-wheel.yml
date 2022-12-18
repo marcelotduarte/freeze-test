@@ -68,14 +68,19 @@ jobs:
           SHA256SUM1=$(cat source/*.c source/bases/* | sha256sum | awk '{print $1}')
           SHA256SUM2=$(cat cx_Freeze/bases/__init__.py | awk '{print $2}')
           if [ $SHA256SUM1 != $SHA256SUM2 ]; then
+            git config user.name "Marcelo Duarte"
+            git config user.email marcelotduarte@users.noreply.github.com
+            # Remove any file that match - remove previous versions too
+            git rm cx_Freeze/bases/*-win*.exe cx_Freeze/util.*-win*.pyd
             # Extract base executables and util module
             for file in wheelhouse/*.whl; do
               unzip -o $file 'cx_Freeze/bases/*-win*.exe' 'cx_Freeze/util.*-win*.pyd'
             done
-            # Update
-            git config user.name "Marcelo Duarte"
-            git config user.email marcelotduarte@users.noreply.github.com
             git add cx_Freeze/bases/*-win*.exe cx_Freeze/util.*-win*.pyd
+            # Save the new SHA256SUM
+            echo "# $SHA256SUM1" > cx_Freeze/bases/__init__.py
+            git add cx_Freeze/bases/__init__.py
+            # Update
             git commit -m "bases: update base executables and util module"
             git push --set-upstream origin develop
           fi
