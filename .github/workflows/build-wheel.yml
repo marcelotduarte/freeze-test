@@ -6,122 +6,107 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_wheel_macosx:
+  build_wheel:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
-        architecture: [x64]
-    name: Build [${{ matrix.os }} ${{ matrix.architecture }}][Python ${{ matrix.python-version }}]
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    name: Build wheel on [${{ matrix.os }}]
     runs-on: ${{ matrix.os }}
+
     steps:
-      -
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
-      -
-        uses: actions/setup-python@v3
+
+      - uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.architecture }}
-      -
-        name: Variables
-        run: |
-          declare || true
-          python -m sysconfig
-        shell: bash
-      -
-        name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install --upgrade build setuptools
-        shell: bash
-      -
-        name: Build the wheel
-        run: |
-          # build-packages.yml has a limeted comparison
-          if [ "${{ matrix.python-version }}" != "3.7" ] ; then
-            export MACOSX_DEPLOYMENT_TARGET="10.9"
-            if [ "${{ matrix.architecture }}" == "arm64" ] ; then
-              export _PYTHON_HOST_PLATFORM="macosx-11.0-arm64"
-              export ARCHFLAGS="-arch arm64"
-            elif [ "${{ matrix.architecture }}" == "universal2" ] ; then
-              export _PYTHON_HOST_PLATFORM="macosx-10.9-universal2"
-              export ARCHFLAGS="-arch arm64 -arch x86_64"
-            #else
-            #  export _PYTHON_HOST_PLATFORM="macosx-10.9-x86_64"
-            #  export ARCHFLAGS="-arch x86_64"
-            fi
-          fi
-          python -m build -o wheelhouse
-      -
-        name: Upload the artifact
+          cache: 'pip'
+          python-version: "3.11"
+
+      - name: Set up QEMU
+        if: runner.os == 'Linux'
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: arm64
+
+      - name: Install cibuildwheel
+        run: python -m pip install "cibuildwheel>=2.11.2"
+
+      - name: Build wheels
+        run: python -m cibuildwheel --output-dir wheelhouse
+
+      - name: Upload the artifact
         uses: actions/upload-artifact@v3
         with:
           name: cx-freeze-wheelhouse
           path: wheelhouse
 
-  build:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-11]
-        architecture: [universal2]
-        python-version: ["39", "310"]
-    name: Build [${{ matrix.os }} ${{ matrix.architecture }}][Python ${{ matrix.python-version }}]
-    runs-on: ${{ matrix.os }}
+  update_bases:
+    needs:
+      - build_wheel
+    runs-on: ubuntu-latest
+    name: Update cx_Freeze/bases and util module
+
     steps:
-      -
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
+          fetch-depth: 0
           ref: develop
           repository: marcelotduarte/cx_Freeze
-      -
-        name: Install MacPorts
-        run: |
-          curl -LO https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-11-BigSur.pkg
-          sudo installer -pkg MacPorts-2.7.1-11-BigSur.pkg -target /
-          echo "/opt/local/bin:/opt/local/sbin" >> $GITHUB_PATH
-      -
-        name: Install python
-        run: |
-          sudo port install python${{ matrix.python-version }} +universal
-          sudo port select --set python python${{ matrix.python-version }}
-      -
-        name: Variables
-        run: |
-          declare || true
-          python -m sysconfig
-      -
-        name: Install dependencies
-        run: |
-          sudo port install py${{ matrix.python-version }}-pip +universal
-          sudo port select --set pip pip${{ matrix.python-version }}
-          sudo port install py${{ matrix.python-version }}-build +universal
-      -
-        name: Build the wheel
-        env:
-          PIP_DISABLE_PIP_VERSION_CHECK: "1"
-          MACOSX_DEPLOYMENT_TARGET: "10.9"
-        run: |
-          if [ ${{ matrix.python-version }} != "37" ] ; then
-            if [ ${{ matrix.architecture }} == "arm64" ] ; then
-              export _PYTHON_HOST_PLATFORM="macosx-11.0-arm64"
-              export ARCHFLAGS="-arch arm64"
-            elif [ ${{ matrix.architecture }} == "universal2" ] ; then
-              export _PYTHON_HOST_PLATFORM="macosx-10.9-universal2"
-              export ARCHFLAGS="-arch arm64 -arch x86_64"
-            #else
-            #  export _PYTHON_HOST_PLATFORM="macosx-10.9-x86_64"
-            #  export ARCHFLAGS="-arch x86_64"
-            fi
-          fi
-          python -m build -o wheelhouse
-      -
-        name: Upload the artifact
-        uses: actions/upload-artifact@v3
+          token: ${{ secrets.PUSH }}
+
+      - name: Download the artifact
+        uses: actions/download-artifact@v3
         with:
-          name: cx-freeze-macports
+          name: cx-freeze-wheelhouse
           path: wheelhouse
+
+      - name: If changed, extract and update the base executables and util module
+        run: |
+          SHA256SUM1=$(cat source/*.c source/bases/* | sha256sum | awk '{print $1}')
+          SHA256SUM2=$(cat cx_Freeze/bases/__init__.py | awk '{print $2}')
+          if [ $SHA256SUM1 != $SHA256SUM2 ]; then
+            # Extract base executables and util module
+            for file in wheelhouse/*.whl; do
+              unzip -o $file 'cx_Freeze/bases/*-win*.exe' 'cx_Freeze/util.*-win*.pyd'
+            done
+            # Update
+            git config user.name "Marcelo Duarte"
+            git config user.email marcelotduarte@users.noreply.github.com
+            git add cx_Freeze/bases/*-win*.exe cx_Freeze/util.*-win*.pyd
+            git commit -m "bases: update base executables and util module"
+            git push --set-upstream origin develop
+          fi
+
+  publish:
+    needs:
+      - build_wheel
+    runs-on: ubuntu-latest
+    name: Publish package to PyPI
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          cache: 'pip'
+          python-version: "3.11"
+
+      - name: Download the artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: cx-freeze-wheelhouse
+          path: wheelhouse
+
+      - name: Publish package to PyPI
+        if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}
+          packages_dir: wheelhouse/
+          skip_existing: true
+          verbose: true
