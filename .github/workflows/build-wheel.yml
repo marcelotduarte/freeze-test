@@ -73,7 +73,7 @@ jobs:
             # Remove any file that match - remove previous versions too
             git rm cx_Freeze/bases/*-win*.exe cx_Freeze/util.*-win*.pyd
             # Extract base executables and util module
-            for file in wheelhouse/*.whl; do
+            for file in wheelhouse/*-win*.whl; do
               unzip -o $file 'cx_Freeze/bases/*-win*.exe' 'cx_Freeze/util.*-win*.pyd'
             done
             git add cx_Freeze/bases/*-win*.exe cx_Freeze/util.*-win*.pyd
@@ -93,6 +93,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
 
       - name: Setup Python
         uses: actions/setup-python@v4
