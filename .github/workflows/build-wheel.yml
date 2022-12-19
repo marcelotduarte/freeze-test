@@ -44,6 +44,43 @@ jobs:
           name: cx-freeze-wheelhouse
           path: wheelhouse
 
+  publish:
+    needs:
+      - build_wheel
+    runs-on: ubuntu-latest
+    name: Publish package to PyPI
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          cache: 'pip'
+          python-version: "3.11"
+
+      - name: Download the artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: cx-freeze-wheelhouse
+          path: wheelhouse
+
+      - name: Add sdist
+        run: python setup.py sdist -d wheelhouse/
+
+      - name: Publish package to PyPI
+        if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}
+          packages_dir: wheelhouse/
+          skip_existing: true
+          verbose: true
+
   update_bases:
     needs:
       - build_wheel
@@ -85,37 +122,3 @@ jobs:
             git commit -m "bases: update base executables and util module"
             git push --set-upstream origin develop
           fi
-
-  publish:
-    needs:
-      - build_wheel
-    runs-on: ubuntu-latest
-    name: Publish package to PyPI
-
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: develop
-          repository: marcelotduarte/cx_Freeze
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          cache: 'pip'
-          python-version: "3.11"
-
-      - name: Download the artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: cx-freeze-wheelhouse
-          path: wheelhouse
-
-      - name: Publish package to PyPI
-        if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags')
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.pypi_password }}
-          packages_dir: wheelhouse/
-          skip_existing: true
-          verbose: true
