@@ -13,8 +13,7 @@ license=('PSF')
 url="https://github.com/marcelotduarte/cx_Freeze/"
 depends=("${MINGW_PACKAGE_PREFIX}-python"
          "${MINGW_PACKAGE_PREFIX}-python-cx-logging"
-         "${MINGW_PACKAGE_PREFIX}-python-lief"
-         "${MINGW_PACKAGE_PREFIX}-python-packaging")
+         "${MINGW_PACKAGE_PREFIX}-python-lief")
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-tools"
              "${MINGW_PACKAGE_PREFIX}-python-setuptools")

@@ -104,7 +104,6 @@ jobs:
             mingw-w64-${{ matrix.sys.env }}-python-setuptools
             mingw-w64-${{ matrix.sys.env }}-python-cx-logging
             mingw-w64-${{ matrix.sys.env }}-python-lief
-            mingw-w64-${{ matrix.sys.env }}-python-packaging
           update: true
 
       - name: Variables

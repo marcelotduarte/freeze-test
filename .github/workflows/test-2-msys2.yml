@@ -67,8 +67,6 @@ jobs:
           msystem: ${{ matrix.sys.msystem }}
           install: >-
             mingw-w64-${{ matrix.sys.env }}-python-pip
-            mingw-w64-${{ matrix.sys.env }}-python-importlib-metadata
-            mingw-w64-${{ matrix.sys.env }}-python-packaging
             mingw-w64-${{ matrix.sys.env }}-python-cx-logging
             mingw-w64-${{ matrix.sys.env }}-python-lief
           update: true
