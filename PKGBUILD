@@ -29,26 +29,24 @@ source=()
 sha256sums=()
 
 prepare() {
-  #cd "${srcdir}/${_realname}-${pkgver}"
-  rm -Rf "${_realname}-${pkgver}"
-  git clone -b develop https://github.com/marcelotduarte/cx_Freeze.git "${_realname}-${pkgver}"
+  rm -Rf python-${_realname}-${CARCH}
+  git clone -b develop https://github.com/marcelotduarte/cx_Freeze.git python-${_realname}-${CARCH}
 }
 
 pkgver() {
-  cd "${_realname}-${pkgver}"
+  cd python-${_realname}-${CARCH}
   grep "__version__ = " cx_Freeze/__init__.py | sed 's/-/./' | awk -F\" '{print $2}'
 }
 
 build() {
   msg "Python build for ${MSYSTEM}"
-  cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}"
-  cd "python-build-${MSYSTEM}"
-  "${MINGW_PREFIX}"/bin/python setup.py build
+  cd python-${_realname}-${CARCH}
+  ${MINGW_PREFIX}/bin/python setup.py build
 }
 
 package() {
-  msg "Python install for ${MSYSTEM}"
-  cd "python-build-${MSYSTEM}"
+  msg "Python package install for ${MSYSTEM}"
+  cd python-${_realname}-${CARCH}
   echo "setup install --root=${pkgdir} --prefix=${MINGW_PREFIX}"
   MSYS2_ARG_CONV_EXCL="--prefix=;--install-scripts=;--install-platlib=" \
     "${MINGW_PREFIX}"/bin/python setup.py install --prefix="${MINGW_PREFIX}" \
