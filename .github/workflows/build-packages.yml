@@ -102,6 +102,7 @@ jobs:
             mingw-w64-${{ matrix.sys.env }}-cc
             mingw-w64-${{ matrix.sys.env }}-tools
             mingw-w64-${{ matrix.sys.env }}-python-setuptools
+            mingw-w64-${{ matrix.sys.env }}-python-packaging
             mingw-w64-${{ matrix.sys.env }}-python-cx-logging
             mingw-w64-${{ matrix.sys.env }}-python-lief
           update: true
