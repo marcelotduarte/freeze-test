@@ -40,7 +40,7 @@ build() {
 package() {
   local _mingw_prefix=$(cygpath -wm ${MINGW_PREFIX})
   cd python-${_realname}-${MSYSTEM}
-  echo "setup install ${MINGW_PREFIX}"
+  echo "setup install --root=${pkgdir} --prefix=${MINGW_PREFIX}"
   MSYS2_ARG_CONV_EXCL="--prefix=;--install-scripts=;--install-platlib=" \
     ${MINGW_PREFIX}/bin/python setup.py install --prefix=${MINGW_PREFIX} \
     --root="${pkgdir}" --optimize=1 --skip-build
