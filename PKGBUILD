@@ -46,13 +46,6 @@ build() {
   "${MINGW_PREFIX}"/bin/python setup.py build
 }
 
-check() {
-  msg "Python test for ${MSYSTEM}"
-  cd "python-build-${MSYSTEM}"
-  "${MINGW_PREFIX}"/bin/python setup.py develop --no-deps
-  "${MINGW_PREFIX}"/bin/python -m pytest tests/test___init__.py
-}
-
 package() {
   msg "Python install for ${MSYSTEM}"
   cd "python-build-${MSYSTEM}"
