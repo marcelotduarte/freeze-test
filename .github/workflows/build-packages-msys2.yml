@@ -41,7 +41,7 @@ jobs:
       - name: Build the package
         run: |
           dos2unix PKGBUILD
-          MINGW_ARCH=${{ matrix.sys.msystem }} makepkg-mingw -sCLf
+          MINGW_ARCH=${{ matrix.sys.msystem }} makepkg-mingw -sCLf --noconfirm
 
       - name: Upload the artifact
         uses: actions/upload-artifact@v3
