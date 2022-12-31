@@ -1,0 +1,50 @@
+name: Build packages msys2
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  build_msys2:
+    strategy:
+      fail-fast: false
+      matrix:
+        #sys: [ { msystem: MINGW32, env: i686 }, { msystem: MINGW64, env: x86_64 }, { msystem: UCRT64, env: ucrt-x86_64 }]
+        sys: [ { msystem: MINGW64, env: x86_64 }]
+    name: Build [${{ matrix.sys.msystem }} ${{ matrix.sys.env }}]
+    defaults:
+      run:
+        shell: msys2 {0}
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.sys.msystem }}
+          install: >-
+            base-devel dos2unix git
+            mingw-w64-${{ matrix.sys.env }}-cc
+            mingw-w64-${{ matrix.sys.env }}-tools
+            mingw-w64-${{ matrix.sys.env }}-python-setuptools
+            mingw-w64-${{ matrix.sys.env }}-python-packaging
+            mingw-w64-${{ matrix.sys.env }}-python-cx-logging
+            mingw-w64-${{ matrix.sys.env }}-python-lief
+          update: true
+
+      - name: Variables
+        run: |
+          declare || true
+          python -m sysconfig
+
+      - name: Build the package
+        run: |
+          dos2unix PKGBUILD
+          MINGW_ARCH=${{ matrix.sys.msystem }} makepkg-mingw -sCLf
+
+      - name: Upload the artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: cx-freeze-mingw
+          path: mingw-w64-*.pkg.*
