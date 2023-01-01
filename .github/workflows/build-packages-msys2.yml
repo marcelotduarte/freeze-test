@@ -9,42 +9,59 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        #sys: [ { msystem: MINGW32, env: i686 }, { msystem: MINGW64, env: x86_64 }, { msystem: UCRT64, env: ucrt-x86_64 }]
-        sys: [ { msystem: MINGW64, env: x86_64 }]
-    name: Build [${{ matrix.sys.msystem }} ${{ matrix.sys.env }}]
+        include:
+          - { sys: mingw64, env: x86_64, icon: '🟦' }
+          #- { sys: mingw32, env: i686, icon: ⬛' }
+          #- { sys: ucrt64,  env: ucrt-x86_64, icon: '🟨' }  # Experimental!
+          - { sys: clang64, env: clang-x86_64, '🟧' } # Experimental!
+    name: Build [${{ matrix.sys }} ${{ matrix.env }}]
     defaults:
       run:
         shell: msys2 {0}
+    env:
+      MINGW_ARCH: ${{ matrix.sys }}
     runs-on: windows-latest
-
     steps:
-      - uses: actions/checkout@v3
 
-      - uses: msys2/setup-msys2@v2
-        with:
-          msystem: ${{ matrix.sys.msystem }}
-          install: >-
-            base-devel dos2unix git
-            mingw-w64-${{ matrix.sys.env }}-cc
-            mingw-w64-${{ matrix.sys.env }}-tools
-            mingw-w64-${{ matrix.sys.env }}-python-setuptools
-            mingw-w64-${{ matrix.sys.env }}-python-packaging
-            mingw-w64-${{ matrix.sys.env }}-python-cx-logging
-            mingw-w64-${{ matrix.sys.env }}-python-lief
-          update: true
+    - name: '⚙️ git config'
+      run: git config --global core.autocrlf input
+      shell: bash
 
-      - name: Variables
-        run: |
-          declare || true
-          python -m sysconfig
+    - name: '🧰 Checkout'
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
-      - name: Build the package
-        run: |
-          dos2unix PKGBUILD
-          MINGW_ARCH=${{ matrix.sys.msystem }} makepkg-mingw -sCLf --noconfirm
+    - name: '${{ matrix.icon }} Setup MSYS2'
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{matrix.sys}}
+        install: >-
+          base-devel git tree
+          mingw-w64-${{ matrix.env }}-cc
+          mingw-w64-${{ matrix.env }}-tools
+          mingw-w64-${{ matrix.env }}-python-setuptools
+          mingw-w64-${{ matrix.env }}-python-cx-logging
+          mingw-w64-${{ matrix.env }}-python-lief
+        #update: true
 
-      - name: Upload the artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: cx-freeze-mingw
-          path: mingw-w64-*.pkg.*
+    - name: Variables
+      run: |
+        declare || true
+        python -m sysconfig
+
+    - name: '🚧 Build package'
+      run: makepkg-mingw -sCLf --noconfirm --noprogressbar
+
+    - name: '📤 Upload artifact: package'
+      uses: actions/upload-artifact@v3
+      with:
+        name: cx-freeze-mingw
+        path: *.zst
+
+    - name: '🔍 Show package content'
+      run: |
+        mkdir tmp
+        cd tmp
+        tar -xf ../${{ inputs.path }}/*.zst
+        tree .
