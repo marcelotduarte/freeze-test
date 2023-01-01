@@ -57,7 +57,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: cx-freeze-mingw
-        path: *.zst
+        path: mingw-w64-*.zst
 
     - name: '🔍 Show package content'
       run: |
