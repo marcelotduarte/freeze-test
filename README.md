@@ -1,9 +1,7 @@
 | Version | Downloads | Python | Code |
 | --- | --- | --- | --- |
 | [![PyPI version](https://img.shields.io/pypi/v/cx_Freeze)](https://pypi.org/project/cx-freeze/) | [![PyPi Downloads](https://img.shields.io/pypi/dm/cx_Freeze)](https://pypistats.org/packages/cx-freeze) | [![Python](https://img.shields.io/pypi/pyversions/cx-freeze)](https://www.python.org/) | [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![LGTM](https://img.shields.io/lgtm/grade/python/g/marcelotduarte/cx_Freeze.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/marcelotduarte/cx_Freeze) |
-| [![Conda Version](https://img.shields.io/conda/vn/conda-forge/cx_freeze.svg)](https://anaconda.org/conda-forge/cx_freeze) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/cx_freeze.svg)](https://anaconda.org/conda-forge/cx_freeze) | [![Platforms](https://img.shields.io/conda/pn/conda-forge/cx_freeze)]() |
-| [![MSYS2 mingw package](https://repology.org/badge/version-for-repo/msys2_mingw/python:cx-freeze.svg)](https://repology.org/project/python:cx-freeze/versions) | | [![MSYS2 mingw package](https://repology.org/badge/version-for-repo/msys2_mingw/python.svg)](https://repology.org/project/python/versions) |
-
+| [![Conda Version](https://img.shields.io/conda/vn/conda-forge/cx_freeze.svg)](https://anaconda.org/conda-forge/cx_freeze) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/cx_freeze.svg)](https://anaconda.org/conda-forge/cx_freeze) | | |
 
 **cx\_Freeze** creates standalone executables from Python scripts, with the same
 performance, is cross-platform and should work on any platform that Python
@@ -18,6 +16,7 @@ pip install --upgrade cx_Freeze
 ```
 
 To install the latest development build:
+
 ```
 pip install --pre --extra-index-url https://marcelotduarte.github.io/packages/ cx_Freeze
 ```
@@ -35,24 +34,24 @@ The official documentation is available
 
 If you need help you can also ask on the [discussion](https://github.com/marcelotduarte/cx_Freeze/discussions) channel.
 
-# Highlights of Version 6.11:
-- Binary wheels for manylinux and macOS (including Apple Silicon)
-- Complete integration to use setuptools instead of distutils
-- More code modernization
+# Highlights of Version 6.13:
+- New hooks for PyQt6 (6.3.1 and 6.4.0)
+- Improved hooks to support new PySide6 6.4.0
 - Bug fixes and improvements
 
-# Highlights of Version 6.2 up to 6.10:
+# Highlights of Version 6.2 up to 6.12:
+- Binary wheels (x86_64 and aarch64) for manylinux and macOS (including Apple Silicon)
+- New or improved hooks, especially matplotlib, numpy, PyQt5, PySide2, PySide6 and Tkinter
 - Support Application Manifests in Windows: manifest and uac-admin
+- Complete integration to setuptools instead of distutils
 - New dependency resolver on Windows
 - Support for pathlib.Path
-- New or improved hooks, with emphasis on matplotlib, numpy, PyQt5 and PySide2
 - New ModuleFinder engine uses importlib.machinery
 - Refactored Freezer
 - New support for package metadata improving Module and new DitributionCache
-- Enhanced support for Python 3.8 and Python 3.9, including MSYS2 and Anaconda distributions
+- Enhanced support for Python 3.8 to 3.11, including MSYS2 and Anaconda distributions
 - Improvements for multiprocessing
 - Optimizations in detection and distribution of libraries
-- Integrated to setuptools and importlib-metadata
 - Code modernization
 - Various bug fixes.
 
