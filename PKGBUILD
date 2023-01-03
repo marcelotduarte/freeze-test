@@ -18,7 +18,9 @@ depends=("${MINGW_PACKAGE_PREFIX}-python"
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-tools"
              "${MINGW_PACKAGE_PREFIX}-python"
-             "${MINGW_PACKAGE_PREFIX}-python-setuptools")
+             "${MINGW_PACKAGE_PREFIX}-python-pip"
+             "${MINGW_PACKAGE_PREFIX}-python-setuptools"
+             "${MINGW_PACKAGE_PREFIX}-python-wheel")
 checkdepends=("${MINGW_PACKAGE_PREFIX}-python-nose"
               "${MINGW_PACKAGE_PREFIX}-python-pytest"
               "${MINGW_PACKAGE_PREFIX}-python-pytest-cov"
@@ -42,6 +44,7 @@ build() {
   msg "Python build for ${MSYSTEM}"
   cd python-${_realname}-${CARCH}
   ${MINGW_PREFIX}/bin/python setup.py build
+  # ${MINGW_PREFIX}/bin/python -m pip wheel -w dist --no-build-isolation --no-deps
 }
 
 package() {
