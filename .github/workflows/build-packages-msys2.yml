@@ -2,6 +2,7 @@ name: Build packages msys2
 
 on:
   workflow_dispatch:
+  workflow_call:
 
 jobs:
 
@@ -10,10 +11,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - { sys: ucrt64,  env: ucrt-x86_64, icon: '🟨' }
           - { sys: mingw64, env: x86_64, icon: '🟦' }
-          - { sys: clang64, env: clang-x86_64, '🟧' }
-          #- { sys: mingw32, env: i686, icon: ⬛' }
-          #- { sys: ucrt64,  env: ucrt-x86_64, icon: '🟨' }
+          - { sys: mingw32, env: i686, icon: ⬛' }
+          #- { sys: clang64, env: clang-x86_64, '🟧' }
     name: Build [${{ matrix.sys }} ${{ matrix.env }}]
     defaults:
       run:
