@@ -81,6 +81,7 @@ jobs:
           path: wheelhouse
 
   build_msys2:
+    name: Build msys2
     uses: ./.github/workflows/build-packages-msys2.yml
 
   conda_recipe:
