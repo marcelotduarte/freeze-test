@@ -55,7 +55,7 @@ jobs:
         continue-on-error: true
 
       - name: Freeze and run "${{ matrix.sample }}" (bdist_mac)
-        id: freeze-and-run
+        id: freeze-and-run-mac
         env:
           TEST_BDIST_MAC: 1
         if: runner.os == 'macOS'
