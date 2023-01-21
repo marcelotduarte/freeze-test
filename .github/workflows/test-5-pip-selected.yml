@@ -49,8 +49,16 @@ jobs:
 
       - name: Freeze and run "${{ matrix.sample }}" (build_exe)
         id: freeze-and-run
+        run: |
+          ./ci/build-test-one.sh ${{ matrix.sample }} --debug
+          echo "status=$?" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Freeze and run "${{ matrix.sample }}" (bdist_mac)
+        id: freeze-and-run
         env:
           TEST_BDIST_MAC: 1
+        if: runner.os == 'macOS'
         run: |
           ./ci/build-test-one.sh ${{ matrix.sample }} --debug
           echo "status=$?" >> $GITHUB_OUTPUT
