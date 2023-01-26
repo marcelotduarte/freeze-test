@@ -1,6 +1,6 @@
 | Version | Downloads | Python | Code |
 | --- | --- | --- | --- |
-| [![PyPI version](https://img.shields.io/pypi/v/cx_Freeze)](https://pypi.org/project/cx-freeze/) | [![PyPi Downloads](https://img.shields.io/pypi/dm/cx_Freeze)](https://pypistats.org/packages/cx-freeze) | [![Python](https://img.shields.io/pypi/pyversions/cx-freeze)](https://www.python.org/) | [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![LGTM](https://img.shields.io/lgtm/grade/python/g/marcelotduarte/cx_Freeze.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/marcelotduarte/cx_Freeze) |
+| [![PyPI version](https://img.shields.io/pypi/v/cx_Freeze)](https://pypi.org/project/cx-freeze/) | [![PyPi Downloads](https://img.shields.io/pypi/dm/cx_Freeze)](https://pypistats.org/packages/cx-freeze) | [![Python](https://img.shields.io/pypi/pyversions/cx-freeze)](https://www.python.org/) | [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) |
 | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/cx_freeze.svg)](https://anaconda.org/conda-forge/cx_freeze) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/cx_freeze.svg)](https://anaconda.org/conda-forge/cx_freeze) | | |
 
 **cx\_Freeze** creates standalone executables from Python scripts, with the same
@@ -34,14 +34,18 @@ The official documentation is available
 
 If you need help you can also ask on the [discussion](https://github.com/marcelotduarte/cx_Freeze/discussions) channel.
 
-# Highlights of Version 6.13:
-- New hooks for PyQt6 (6.3.1 and 6.4.0)
-- Improved hooks to support new PySide6 6.4.0
+# Highlights of Version 6.14:
+- Support Python 3.11
+- Binary wheels (x86_64 and aarch64) for musllinux
+- Maintain Windows base executables on git (install from sources without C compiler)
+- Improved documentation
+- New hooks: charset_normalizer, shapely, sklearn, pytorch
+- Improved hooks: scipy, sqlite3
 - Bug fixes and improvements
 
-# Highlights of Version 6.2 up to 6.12:
+# Highlights of Version 6.2 up to 6.13:
 - Binary wheels (x86_64 and aarch64) for manylinux and macOS (including Apple Silicon)
-- New or improved hooks, especially matplotlib, numpy, PyQt5, PySide2, PySide6 and Tkinter
+- New or improved hooks, especially matplotlib, numpy, PyQt5, PyQt6, PySide2, PySide6 and Tkinter
 - Support Application Manifests in Windows: manifest and uac-admin
 - Complete integration to setuptools instead of distutils
 - New dependency resolver on Windows
@@ -49,7 +53,7 @@ If you need help you can also ask on the [discussion](https://github.com/marcelo
 - New ModuleFinder engine uses importlib.machinery
 - Refactored Freezer
 - New support for package metadata improving Module and new DitributionCache
-- Enhanced support for Python 3.8 to 3.11, including MSYS2 and Anaconda distributions
+- Enhanced support for Python 3.8 to 3.10, including MSYS2 and conda-forge distributions
 - Improvements for multiprocessing
 - Optimizations in detection and distribution of libraries
 - Code modernization
