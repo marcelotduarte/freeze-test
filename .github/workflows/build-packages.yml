@@ -351,7 +351,8 @@ jobs:
           # mingw packages
           python make_index.py mingw --base python-cx-freeze
           # conda packages
-          python make_index.py conda --mask "cx_freeze-*.*"
+          python make_index.py conda --mask "cx_freeze*.conda" --mask "cx_freeze*.tar.bz2"
+
           # cleanup
           rm make_index.py
           # template
