@@ -201,8 +201,8 @@ jobs:
         with:
           name: cx-freeze-conda
           path: |
-            ./build_artifacts/*/cx_freeze*.tar.bz2
             ./build_artifacts/*/cx_freeze*.conda
+            ./build_artifacts/*/cx_freeze*.tar.bz2
 
   build_conda_windows:
     needs: [conda_recipe]
@@ -248,7 +248,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: cx-freeze-conda
-          path: ./build_artifacts/*/cx_freeze*.tar.bz2
+          path: |
+            ./build_artifacts/*/cx_freeze*.conda
+            ./build_artifacts/*/cx_freeze*.tar.bz2
 
   build_conda_index:
     needs: [build_conda_unix, build_conda_windows]
@@ -349,7 +351,7 @@ jobs:
           # mingw packages
           python make_index.py mingw --base python-cx-freeze
           # conda packages
-          python make_index.py conda --mask "cx_freeze-*.tar.bz2"
+          python make_index.py conda --mask "cx_freeze-*.*"
           # cleanup
           rm make_index.py
           # template
