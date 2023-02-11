@@ -33,8 +33,10 @@ jobs:
         sample: ${{ fromJSON(needs.matrix.outputs.samples) }}
         sys: [ { msystem: MINGW32, env: i686 }, { msystem: MINGW64, env: x86_64 }, { msystem: UCRT64, env: ucrt-x86_64 } ]
         exclude:
-          - sample: pyqt6, sys.msystem: MINGW32
-          - sample: pyside6, sys.msystem: MINGW32
+          - sample: pyqt6
+            sys.msystem: MINGW32
+          - sample: pyside6
+            sys.msystem: MINGW32
     name: ${{ matrix.sample }}-${{ matrix.sys.msystem }}
     env:
       PACKAGES: https://marcelotduarte.github.io/packages
