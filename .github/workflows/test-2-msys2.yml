@@ -22,31 +22,19 @@ jobs:
         with:
           python-version: "3.11"
       -
-        run: |
-          import json
-          with open("ci/build-test.json") as fp:
-              data = json.load(fp)
-          with open("ci/build-test.data", "w+") as out:
-              out.write(json.dumps(list(data.keys())))
-        shell: python
-      -
         id: set-matrix
-        run: echo "matrix=$(cat ci/build-test.data)" >> $GITHUB_OUTPUT
+        run: python ci/_platform.py mingw >> $GITHUB_OUTPUT
 
   tests:
     needs: [matrix]
     strategy:
       fail-fast: false
       matrix:
-        sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
+        sample: ${{ fromJSON(needs.matrix.outputs.samples) }}
         sys: [ { msystem: MINGW32, env: i686 }, { msystem: MINGW64, env: x86_64 }, { msystem: UCRT64, env: ucrt-x86_64 } ]
         exclude:
-          - sample: orjson
-          - sample: pythonnet-demo
-          - sample: pyqt5-simplebrowser
-          - sample: pyqt6-simplebrowser
-          - sample: pyside2-simplebrowser
-          - sample: pyside6-simplebrowser
+          - sample: pyqt6, sys.msystem: MINGW32
+          - sample: pyside6, sys.msystem: MINGW32
     name: ${{ matrix.sample }}-${{ matrix.sys.msystem }}
     env:
       PACKAGES: https://marcelotduarte.github.io/packages

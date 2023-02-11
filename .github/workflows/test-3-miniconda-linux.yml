@@ -22,30 +22,19 @@ jobs:
         with:
           python-version: "3.11"
       -
-        run: |
-          import json
-          with open("ci/build-test.json") as fp:
-              data = json.load(fp)
-          with open("ci/build-test.data", "w+") as out:
-              out.write(json.dumps(list(data.keys())))
-        shell: python
-      -
         id: set-matrix
-        run: echo "matrix=$(cat ci/build-test.data)" >> $GITHUB_OUTPUT
+        run: python ci/_platform.py linux >> $GITHUB_OUTPUT
 
   tests:
     needs: [matrix]
     strategy:
       fail-fast: false
       matrix:
-        sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
+        sample: ${{ fromJSON(needs.matrix.outputs.samples) }}
         os: [ubuntu-latest]
         python-version: ["3.8", "3.9", "3.10", "3.11"]
         architecture: [x64]
         exclude:
-          - sample: pythonnet-demo
-          - sample: service
-          - sample: service-asyncio
           - sample: pyqt6
           - sample: pyqt6-simplebrowser
           - sample: pyside6
