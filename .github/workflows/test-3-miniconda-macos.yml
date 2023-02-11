@@ -23,14 +23,14 @@ jobs:
           python-version: "3.11"
       -
         id: set-matrix
-        run: python ci/_platform.py macos >> $GITHUB_OUTPUT
+        run: echo "matrix=$(python ci/_platform.py macos)" >> $GITHUB_OUTPUT
 
   tests:
     needs: [matrix]
     strategy:
       fail-fast: false
       matrix:
-        sample: ${{ fromJSON(needs.matrix.outputs.samples) }}
+        sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         os: [macos-latest]
         python-version: ["3.8", "3.9", "3.10", "3.11"]
         architecture: [x64]

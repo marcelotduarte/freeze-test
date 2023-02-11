@@ -10,7 +10,7 @@ jobs:
     name: Generate matrix of samples
     runs-on: ubuntu-latest
     outputs:
-      samples: ${{ steps.set-matrix.outputs.samples }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       -
         uses: actions/checkout@v3
@@ -23,14 +23,14 @@ jobs:
           python-version: "3.11"
       -
         id: set-matrix
-        run: python ci/_platform.py mingw >> $GITHUB_OUTPUT
+        run: echo "matrix=$(echo "matrix=$(python ci/_platform.py mingw)" >> $GITHUB_OUTPUT
 
   tests:
     needs: [matrix]
     strategy:
       fail-fast: false
       matrix:
-        sample: ${{ fromJSON(needs.matrix.outputs.samples) }}
+        sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         sys: [ { msystem: MINGW32, env: i686 }, { msystem: MINGW64, env: x86_64 }, { msystem: UCRT64, env: ucrt-x86_64 } ]
         exclude:
           - sample: pyqt6
