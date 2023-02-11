@@ -31,13 +31,16 @@ jobs:
       fail-fast: false
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
-        sys: [ { msystem: MINGW32, env: i686 }, { msystem: MINGW64, env: x86_64 }, { msystem: UCRT64, env: ucrt-x86_64 } ]
+        include:
+          - { sys: ucrt64,  env: ucrt-x86_64, icon: '🟨' }
+          - { sys: mingw64, env: x86_64, icon: '🟦' }
+          - { sys: mingw32, env: i686, icon: ⬛' }
         exclude:
           - sample: pyqt6
-            sys.msystem: MINGW32
+            sys: mingw32
           - sample: pyside6
-            sys.msystem: MINGW32
-    name: ${{ matrix.sample }}-${{ matrix.sys.msystem }}
+            sys: mingw32
+    name: ${{ matrix.sample }}-${{ matrix.sys }}
     env:
       PACKAGES: https://marcelotduarte.github.io/packages
     runs-on: windows-latest
@@ -54,17 +57,17 @@ jobs:
       -
         uses: msys2/setup-msys2@v2
         with:
-          msystem: ${{ matrix.sys.msystem }}
+          msystem: ${{ matrix.sys }}
           install: >-
-            mingw-w64-${{ matrix.sys.env }}-python-pip
-            mingw-w64-${{ matrix.sys.env }}-python-cx-logging
-            mingw-w64-${{ matrix.sys.env }}-python-lief
+            mingw-w64-${{ matrix.env }}-python-pip
+            mingw-w64-${{ matrix.env }}-python-cx-logging
+            mingw-w64-${{ matrix.env }}-python-lief
           update: true
       -
         name: Install from package
         run: |
           VERSION=$(grep "__version__ = " cx_Freeze/__init__.py | sed 's/-/./' | awk -F\" '{print $2}')
-          NAME=mingw-w64-${{ matrix.sys.env }}-python-cx-freeze-${VERSION}-1-any.pkg.tar.zst
+          NAME=mingw-w64-${{ matrix.env }}-python-cx-freeze-${VERSION}-1-any.pkg.tar.zst
           curl ${{ env.PACKAGES }}/mingw/${NAME} -O
           pacman --noconfirm --needed -U ${NAME}
       -
