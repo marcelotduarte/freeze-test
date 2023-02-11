@@ -23,7 +23,7 @@ jobs:
           python-version: "3.11"
       -
         id: set-matrix
-        run: echo "matrix=$(echo "matrix=$(python ci/_platform.py linux)" >> $GITHUB_OUTPUT
+        run: echo "matrix=$(python ci/_platform.py linux)" >> $GITHUB_OUTPUT
 
   tests:
     needs: [matrix]
