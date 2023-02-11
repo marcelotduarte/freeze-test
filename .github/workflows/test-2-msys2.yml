@@ -10,7 +10,7 @@ jobs:
     name: Generate matrix of samples
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      samples: ${{ steps.set-matrix.outputs.samples }}
     steps:
       -
         uses: actions/checkout@v3
