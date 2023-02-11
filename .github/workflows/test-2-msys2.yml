@@ -31,10 +31,7 @@ jobs:
       fail-fast: false
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
-        include:
-          - { sys: ucrt64,  env: ucrt-x86_64, icon: '🟨' }
-          - { sys: mingw64, env: x86_64, icon: '🟦' }
-          - { sys: mingw32, env: i686, icon: ⬛' }
+        sys: [ ucrt64, mingw64, mingw32 ]
         exclude:
           - sample: pyqt6
             sys: mingw32
@@ -58,16 +55,16 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.sys }}
-          install: >-
-            mingw-w64-${{ matrix.env }}-python-pip
-            mingw-w64-${{ matrix.env }}-python-cx-logging
-            mingw-w64-${{ matrix.env }}-python-lief
+          pacboy: >-
+            python-pip:p
+            python-cx-logging:p
+            python-lief:p
           update: true
       -
         name: Install from package
         run: |
           VERSION=$(grep "__version__ = " cx_Freeze/__init__.py | sed 's/-/./' | awk -F\" '{print $2}')
-          NAME=mingw-w64-${{ matrix.env }}-python-cx-freeze-${VERSION}-1-any.pkg.tar.zst
+          NAME=${MINGW_PACKAGE_PREFIX}-python-cx-freeze-${VERSION}-1-any.pkg.tar.zst
           curl ${{ env.PACKAGES }}/mingw/${NAME} -O
           pacman --noconfirm --needed -U ${NAME}
       -
