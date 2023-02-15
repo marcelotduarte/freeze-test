@@ -50,9 +50,4 @@ package() {
   MSYS2_ARG_CONV_EXCL="--prefix=" \
     ${MINGW_PREFIX}/bin/python -m installer --prefix=${MINGW_PREFIX} \
     --destdir="${pkgdir}" dist/*.whl
-  # fix python command in files
-  for _f in "${pkgdir}${MINGW_PREFIX}"/bin/*-script.py; do
-    # Remove shebang line
-    sed -e '1 { s/^#!.*$// }' -i "${_f}"
-  done
 }
