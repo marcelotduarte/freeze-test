@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cx_Freeze"
-version = "6.14.0-dev1"
+version = "6.15.0-dev1"
 description = "Create standalone executables from Python scripts"
 authors = [{name = "Anthony Tuininga", email = "anthony.tuininga@gmail.com"}]
 maintainers = [{name = "Marcelo Duarte", email = "marcelotduarte@users.noreply.github.com"}]
@@ -36,7 +36,7 @@ classifiers = [
 keywords = ["cx-freeze cxfreeze cx_Freeze freeze python"]
 requires-python = ">=3.7.4"
 dependencies = [
-    "setuptools>=61.2,<66",
+    "setuptools>=61.2,<68",
     "cx_Logging>=3.1 ;sys_platform == 'win32'",
     "lief>=0.12.0 ;sys_platform == 'win32'",
     "patchelf>=0.14 ;sys_platform == 'linux' and platform_machine == 'x86_64'",
@@ -44,6 +44,28 @@ dependencies = [
     "patchelf>=0.14 ;sys_platform == 'linux' and platform_machine == 'aarch64'",
     "patchelf>=0.14 ;sys_platform == 'linux' and platform_machine == 'ppc64le'",
     "patchelf>=0.14 ;sys_platform == 'linux' and platform_machine == 's390x'",
+]
+
+[project.optional-dependencies]
+dev = [
+    "bump2version>=1.0.1",
+    "cibuildwheel>=2.11.2",
+    "pre-commit>=2.20.0",
+    "pylint>=2.15.4",
+    "wheel>=0.37.1",
+]
+doc = [
+    "sphinx==5.3.0",
+    "sphinx-tabs",
+    "furo",
+]
+test = [
+    "nose==1.3.7",
+    "pygments>=2.13.0",
+    "pytest>=7.1.3",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.10.0",
+    "pytest-timeout>=2.1.0",
 ]
 
 [project.readme]
@@ -57,28 +79,6 @@ Documentation = "https://cx-freeze.readthedocs.io"
 Source = "https://github.com/marcelotduarte/cx_Freeze"
 Tracker = "https://github.com/marcelotduarte/cx_Freeze/issues"
 Workflows = "https://github.com/marcelotduarte/cx_Freeze/actions?query=branch:main"
-
-[project.optional-dependencies]
-dev = [
-    "bump2version>=1.0.1",
-    "cibuildwheel>=2.11.2",
-    "pre-commit>=2.20.0",
-    "pylint>=2.15.4",
-    "tomli>=2.0.1",
-    "wheel>=0.37.1",
-]
-doc = [
-    "sphinx==5.3.0",
-    "sphinx-rtd-theme==1.1.1",
-]
-test = [
-    "nose==1.3.7",
-    "pygments>=2.13.0",
-    "pytest>=7.1.3",
-    "pytest-cov>=4.0.0",
-    "pytest-mock>=3.10.0",
-    "pytest-timeout>=2.1.0",
-]
 
 [project.scripts]
 cxfreeze = "cx_Freeze.cli:main"
@@ -106,8 +106,9 @@ exclude = """
 .git,
 __pycache__,
 doc/src/conf.py"""
+# E203, W503 - Incompatible with black see https://github.com/ambv/black/issues/315
 ignore = """
-E203, W503, # Incompatible with black see https://github.com/ambv/black/issues/315
+E203, W503,
 E266,"""
 inline-quotes = "double"
 
@@ -126,7 +127,6 @@ add_imports = ["from __future__ import annotations"]
 format.max-line-length = 79
 master.ignore="""
 darwintools.py,
-freezer.py,
 setupwriter.py
 """
 master.ignore-paths = """
