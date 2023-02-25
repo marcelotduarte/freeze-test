@@ -50,7 +50,7 @@ dependencies = [
 dev = [
     "bump2version==1.0.1 ;python_version>='3.7'",
     "cibuildwheel==2.11.2 ;python_version>='3.7'",
-    "pre-commit==2.20.0 ;python_version>='3.7'",
+    "pre-commit==3.1.0 ;python_version>='3.7'",
     "pylint==2.15.4 ;python_version>='3.7'",
     "wheel==0.38.4 ;python_version>='3.7'",
 ]
