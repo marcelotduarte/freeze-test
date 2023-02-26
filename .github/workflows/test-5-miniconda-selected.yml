@@ -11,15 +11,8 @@ jobs:
       fail-fast: false
       matrix:
         sample:
-          - matplotlib
-          - pillow
-          - requests
-          - ssl
           - simple
-          - sqlite
-          #- "pyqt5-simplebrowser"
-          #- "pyside2"
-          #- "pyside2-simplebrowser"
+          - requests
         os: [windows-latest]
         python-version: ["3.10"]
         architecture: [x64]
