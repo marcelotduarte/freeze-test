@@ -32,6 +32,9 @@ sha256sums=()
 prepare() {
   rm -Rf "${srcdir}"/python-${_realname}-${MSYSTEM}
   git clone -b develop https://github.com/marcelotduarte/cx_Freeze.git "${srcdir}"/python-${_realname}-${MSYSTEM}
+  cd "${srcdir}"/python-${_realname}-${MSYSTEM}
+  # ignore version check for setuptools
+  sed -i 's/"setuptools>=.*"/"setuptools"/' pyproject.toml
 }
 
 pkgver() {
