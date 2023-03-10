@@ -11,6 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         sample:
+          - pyside6-simplebrowser
           - pyqt6-simplebrowser
         os: [windows-latest]
         python-version: ["3.10"]
