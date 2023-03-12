@@ -12,17 +12,14 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      -
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
-      -
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: "3.11"
-      -
-        id: set-matrix
+      - id: set-matrix
         run: echo "matrix=$(python ci/_platform.py macos)" >> $GITHUB_OUTPUT
 
   tests:
@@ -48,32 +45,36 @@ jobs:
       KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
     steps:
-      -
-        name: Checkout cx_Freeze
+      - name: Checkout cx_Freeze
         uses: actions/checkout@v3
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
-      -
-        uses: conda-incubator/setup-miniconda@v2
+      - uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: freeze-${{ env.KEY_BASE }}
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
-      -
-        name: Freeze and run "${{ matrix.sample }}"
+      - name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         run: |
           ./ci/build-test-one.sh ${{ matrix.sample }} --debug
           echo "status=$?" >> $GITHUB_OUTPUT
         continue-on-error: true
-      -
-        name: Collect images and logs
+      - name: Freeze and run "${{ matrix.sample }}"  (bdist_mac)
+        id: freeze-and-run-bdist-mac
+        if: startsWith(matrix.os, 'macos')
+        env:
+          TEST_BDIST_MAC: 1
+        run: |
+          ./ci/build-test-one.sh ${{ matrix.sample }} --debug
+          echo "status=$?" >> $GITHUB_OUTPUT
+        continue-on-error: true
+      - name: Collect images and logs
         working-directory: samples/${{ matrix.sample }}
         run: mv build/*/*.{err,log,png} . || true
-      -
-        name: Upload the snapshots and logs
+      - name: Upload the snapshots and logs
         uses: actions/upload-artifact@v3
         with:
           name: screensnapshots
@@ -82,8 +83,7 @@ jobs:
             ./samples/${{ matrix.sample }}/*.log
             ./samples/${{ matrix.sample }}/*.png
           if-no-files-found: ignore
-      -
-        name: Return sucess or error code
+      - name: Return sucess or error code
         run: |
           if [ "${{ steps.freeze-and-run.outputs.status }}" == "" ] ; then
             exit -1
