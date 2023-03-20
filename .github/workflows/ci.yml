@@ -75,9 +75,13 @@ jobs:
         if: matrix.python-version != '3.11'
         run: python -m pytest
 
-      - name: Run tests with Pytest cov-report
+      - name: Generate coverage report
         if: matrix.python-version == '3.11'
-        run: python -m pytest -m "not long" --cov="cx_Freeze" --cov-report=html
+        run: python -m pytest --cov="cx_Freeze" --cov-report=html --cov-report=xml
+
+      - name: Upload coverage to Codecov
+        if: matrix.python-version == '3.11'
+        uses: codecov/codecov-action@v3
 
       - name: Upload the cov-report
         if: matrix.python-version == '3.11'
