@@ -1,4 +1,4 @@
-name: Test-5-miniconda-selected
+name: Test-5-conda-selected
 
 on:
   #push:
@@ -11,9 +11,10 @@ jobs:
       fail-fast: false
       matrix:
         sample:
-          - pyside6-simplebrowser
-          - pyqt6-simplebrowser
-        os: [windows-latest]
+          - ssl
+          - sslfix
+          - requests
+        os: [windows-latest, macos-latest]
         python-version: ["3.10"]
         architecture: [x64]
         branch: [develop]

@@ -1,4 +1,4 @@
-name: Test-3-miniconda (Linux)
+name: Test-3-conda (Linux)
 
 on:
   #push:
