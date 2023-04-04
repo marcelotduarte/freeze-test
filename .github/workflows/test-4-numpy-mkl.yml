@@ -77,6 +77,9 @@ jobs:
         os: [windows-latest]
         python-version: ["3.8", "3.9", "3.10", "3.11"]
         architecture: [x64]
+    defaults:
+      run:
+        shell: bash
     env:
       PIP_PRE: ${{startsWith(matrix.python-version, '3.12') }}
       PIP_ONLY_BINARY: numpy,pandas
