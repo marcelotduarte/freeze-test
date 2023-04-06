@@ -12,13 +12,14 @@ jobs:
       matrix:
         sample: [pandas]
         os: [windows-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.9", "3.10", "3.11"]
     defaults:
       run:
         shell: bash
     env:
-      PIP_PRE: ${{startsWith(matrix.python-version, '3.12') }}
       PIP_ONLY_BINARY: numpy,pandas
+      LINK: https://github.com/cgohlke/numpy-mkl.whl/releases/download/v2023.1.4
+      VERSION: 1.23.5
     name: root-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     steps:
@@ -36,8 +37,10 @@ jobs:
 
       - run: python -m sysconfig
 
-      - name: Install mkl requirements
-        run: pip install mkl
+      - name: Install numpy+mkl requirements
+        run: |
+          CP3x=$(python -c "import sys; print(sys.implementation.cache_tag.replace('ython-',''))")
+          pip install $LINK/numpy-$VERSION+mkl-$CP3x-$CP3x-win_amd64.whl
 
       - name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
         id: freeze-and-run
@@ -75,14 +78,15 @@ jobs:
       matrix:
         sample: [pandas]
         os: [windows-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.9", "3.10", "3.11"]
         architecture: [x64]
     defaults:
       run:
         shell: bash
     env:
-      PIP_PRE: ${{startsWith(matrix.python-version, '3.12') }}
       PIP_ONLY_BINARY: numpy,pandas
+      LINK: https://github.com/cgohlke/numpy-mkl.whl/releases/download/v2023.1.4
+      VERSION: 1.23.5
     name: venv-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     steps:
@@ -100,8 +104,10 @@ jobs:
 
       - run: python -m sysconfig
 
-      - name: Install mkl requirements
-        run: pip install mkl
+      - name: Install numpy+mkl requirements
+        run: |
+          CP3x=$(python -c "import sys; print(sys.implementation.cache_tag.replace('ython-',''))")
+          pip install $LINK/numpy-$VERSION+mkl-$CP3x-$CP3x-win_amd64.whl
 
       - name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
         id: freeze-and-run
