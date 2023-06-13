@@ -340,6 +340,18 @@ jobs:
           name: cx-freeze-conda
           path: conda
 
+      - name: Download the LIEF wheels
+        env:
+          LIEF_LINK: https://lief.s3-website.fr-par.scw.cloud
+        run: |
+          mkdir lief
+          cd lief
+          for f in $(
+            curl $LIEF_LINK/latest/lief/ | grep -Eo "href=\"(.*win.*)\"" | cut -c"7-" | cut -d \" -f 1
+          ); do
+            curl -O $LIEF_LINK$f
+          done
+
       - name: Create packages template
         run: |
           # cx_Logging wheels
@@ -350,19 +362,25 @@ jobs:
           python make_index.py mingw --base python-cx-freeze
           # conda packages
           python make_index.py conda --mask "cx_freeze*.conda" --mask "cx_freeze*.tar.bz2"
+          # LIEF wheels
+          python make_index.py lief --base LIEF
 
           # cleanup
           rm make_index.py
+
+          # configuration
+          echo "theme: jekyll-theme-architect">_config.yml
+
           # template
           VERSION=$(ls cx-freeze | (read name; echo $name) | sed 's/-/ /g' | awk '{print $2}')
           echo -e "# Development packages for cx_Freeze $VERSION\n">index.md
           echo -e "Development wheels for [cx_Freeze](cx-freeze/index.md).\n">>index.md
           echo -e "Development packages for MSYS2 [python-cx-freeze](mingw/index.md).\n">>index.md
-          #echo -e "{% include_relative python-cx-freeze/index.md %}\n">>index.md
           echo -e "Development packages for conda-forge [cx_freeze](conda/index.md).\n">>index.md
-          echo -e "# Packages for cx_Logging 3.1 \[Windows\]\[Python 3.7-3.11\]\n">>index.md
+          echo -e "# Packages for cx_Logging 3.1 \[Windows\]\[Python 3.7-3.12\]\n">>index.md
           echo -e "Unofficial wheels for [cx_Logging](cx-logging/index.md).\n">>index.md
-          echo "theme: jekyll-theme-architect">_config.yml
+          echo -e "# Packages for LIEF \[Windows\]\[Python 3.8-3.12\]\n">>index.md
+          echo -e "Development wheels for [LIEF](lief/index.md).\n">>index.md
 
       - name: Publish cx_Freeze packages
         run: |
