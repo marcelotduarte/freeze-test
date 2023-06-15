@@ -56,14 +56,11 @@ jobs:
           python -m pip install --upgrade pip
           if [[ ${{ matrix.python-version }} == *-dev ]] ; then
             pip install --upgrade setuptools wheel
-            if [ ${{ runner.os }} == 'Windows' ] ; then
-              export PIP_EXTRA_INDEX_URL="https://marcelotduarte.github.io/packages/"
-              export PIP_ONLY_BINARY=lief
-            fi
-            if [ ${{ runner.os }} == 'Linux' ] ; then
-              # force pure python build
-              pip install pyyaml -v --no-build-isolation
-            fi
+            # build pyyaml to work w/ python 3.12-dev
+            git clone https://github.com/yaml/pyyaml.git
+            cd pyyaml
+            python setup.py --without-libyaml install
+            cd ..
             export PIP_PRE=1
           fi
           pip install -r requirements-dev.txt --upgrade-strategy eager
