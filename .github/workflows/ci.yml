@@ -36,7 +36,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12-dev"]
       fail-fast: false
 
     steps:
@@ -58,7 +58,6 @@ jobs:
             pip install --upgrade setuptools wheel
             if [ ${{ runner.os }} == 'Windows' ] ; then
               export PIP_EXTRA_INDEX_URL="https://marcelotduarte.github.io/packages/"
-              export PIP_FIND_LINKS="https://lief.s3-website.fr-par.scw.cloud/latest/lief/"
               export PIP_ONLY_BINARY=lief
             fi
             if [ ${{ runner.os }} == 'Linux' ] ; then
