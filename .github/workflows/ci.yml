@@ -55,6 +55,7 @@ jobs:
           python -m pip install --upgrade pip
           if [[ ${{ matrix.python-version }} == *-dev ]] ; then
             pip install -r requirements.txt --pre
+            pip install --upgrade wheel
             pip install -v -e .[test] --no-build-isolation
           else
             pip install -v -e .[test]
