@@ -23,8 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
-          pip install -v -e . --no-deps --no-build-isolation
+          pip install -v -e .[dev,doc]
 
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.0
@@ -55,16 +54,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [[ ${{ matrix.python-version }} == *-dev ]] ; then
-            pip install --upgrade setuptools wheel
-            # build pyyaml to work w/ python 3.12-dev
-            git clone https://github.com/yaml/pyyaml.git
-            cd pyyaml
-            python setup.py --without-libyaml install
-            cd ..
-            export PIP_PRE=1
+            pip install -r requirements.txt --pre
+            pip install -v -e .[test] --no-build-isolation
+          else
+            pip install -v -e .[test]
           fi
-          pip install -r requirements-dev.txt --upgrade-strategy eager
-          pip install -v -e . --no-deps --no-build-isolation
         shell: bash
 
       - name: Run tests with Pytest
