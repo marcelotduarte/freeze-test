@@ -28,9 +28,11 @@ jobs:
           python-version: "3.11"
 
       - name: Install cibuildwheel
-        run: python -m pip install "cibuildwheel>=2.13.0"
+        run: python -m pip install "cibuildwheel>=2.13.1"
 
       - name: Build wheels
+        env:
+          CIBW_BUILD: "cp312*"
         run: python -m cibuildwheel --output-dir wheelhouse --prerelease-pythons
 
       - name: Upload the artifact
@@ -378,7 +380,7 @@ jobs:
           echo -e "Development wheels for [cx_Freeze](cx-freeze/index.md).\n">>index.md
           echo -e "Development packages for MSYS2 [python-cx-freeze](mingw/index.md).\n">>index.md
           echo -e "Development packages for conda-forge [cx_freeze](conda/index.md).\n">>index.md
-          echo -e "# Packages for cx_Logging 3.1 \[Windows\]\[Python 3.7-3.12\]\n">>index.md
+          echo -e "# Packages for cx_Logging 3.1 \[Windows\]\[Python 3.12\]\n">>index.md
           echo -e "Unofficial wheels for [cx_Logging](cx-logging/index.md).\n">>index.md
           echo -e "# Packages for LIEF \[Windows\]\[Python 3.8-3.12\]\n">>index.md
           echo -e "Development wheels for [LIEF](lief/index.md).\n">>index.md
