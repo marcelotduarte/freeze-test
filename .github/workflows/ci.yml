@@ -1,4 +1,4 @@
-name: CI Test using development packages
+name: CI pre-commit and test using develop branch
 
 on:
   workflow_dispatch:
