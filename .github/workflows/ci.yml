@@ -68,7 +68,11 @@ jobs:
 
       - name: Generate coverage report
         if: matrix.python-version == '3.11'
-        run: python -m pytest -n auto --cov="cx_Freeze" --cov-report=html --cov-report=xml
+        run: >-
+          python -m pytest
+          --cov="cx_Freeze"
+          --cov-report=html:./build/coverage
+          --cov-report=xml
 
       - name: Upload coverage to Codecov
         if: matrix.python-version == '3.11'
@@ -79,4 +83,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: coverage-${{ matrix.os }}
-          path: ./htmlcov/*
+          path: ./build/coverage/*

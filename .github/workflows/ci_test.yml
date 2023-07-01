@@ -1,0 +1,49 @@
+name: CI Test using develop branch
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12-dev"]
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: develop
+          repository: marcelotduarte/cx_Freeze
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          cache: 'pip'
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: >-
+          pip install --upgrade cx_Freeze[test]
+          --extra-index-url https://marcelotduarte.github.io/packages/ --pre
+
+      - name: Run tests with Pytest
+        if: matrix.python-version != '3.11'
+        run: python -m pytest
+
+      - name: Generate coverage report
+        if: matrix.python-version == '3.11'
+        run: >-
+          python -m pytest
+          --cov="cx_Freeze"
+          --cov-report=html:./build/coverage
+
+      - name: Upload the cov-report
+        if: matrix.python-version == '3.11'
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-${{ matrix.os }}
+          path: ./build/coverage/*
