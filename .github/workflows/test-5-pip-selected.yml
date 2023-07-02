@@ -15,7 +15,7 @@ jobs:
           - sslfix
           - requests
         os: [windows-latest, ubuntu-latest, macos-latest]
-        python-version: ["3.11"]
+        python-version: ["3.10"]
         branch: [develop]
     defaults:
       run:
@@ -54,17 +54,16 @@ jobs:
 
       - name: Install cx_Freeze
         run: |
-          python ci/build_test.py ${{ matrix.sample }} --basic-requirements
-          pip install -f wheelhouse/ cx_Freeze --no-deps --no-index
+          pip install -f wheelhouse/ cx_Freeze --pre
 
       - name: Install requests requirements
-        run: pip install requests
         if: matrix.sample == 'requests'
+        run: pip install requests
 
       - name: Freeze and run "${{ matrix.sample }}" (build_exe)
         id: freeze-and-run
         run: |
-          ./ci/build-test-one.sh ${{ matrix.sample }} --debug
+          ./ci/build-test-one.sh ${{ matrix.sample }} --debug --no-deps
           echo "status=$?" >> $GITHUB_OUTPUT
         #continue-on-error: true
 
@@ -74,7 +73,7 @@ jobs:
           TEST_BDIST_MAC: 1
         if: runner.os == 'macOS'
         run: |
-          ./ci/build-test-one.sh ${{ matrix.sample }} --debug
+          ./ci/build-test-one.sh ${{ matrix.sample }} --debug --no-deps
           echo "status=$?" >> $GITHUB_OUTPUT
         continue-on-error: true
 
