@@ -28,7 +28,22 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install --upgrade cx_Freeze[test] --extra-index-url https://marcelotduarte.github.io/packages/ --pre
+          if [[ ${{ matrix.python-version }} == *-dev ]] ; then
+            pip install -r requirements.txt --pre
+            pip install --upgrade wheel
+            pip install -v -e .[test] --no-build-isolation
+          else
+            pip install -v -e .[test]
+          fi
+        shell: bash
+
+      - name: Use the distributed executables
+        run: |
+          # This is important for manylinux, macOS and python-dev
+          mkdir -p wheelhouse
+          pip download cx_Freeze --extra-index-url https://marcelotduarte.github.io/packages/ --pre --no-deps -d wheelhouse
+          unzip -o wheelhouse/cx_Freeze*.zip "cx_Freeze/bases/*" -x "*.py"
+        shell: bash
 
       - name: Run tests with Pytest
         if: matrix.python-version != '3.11'
