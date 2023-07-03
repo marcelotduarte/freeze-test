@@ -47,7 +47,7 @@ jobs:
 
       - name: Run tests with Pytest
         if: matrix.python-version != '3.11'
-        run: python -m pytest
+        run: python -m pytest -o pythonpath=cx_Freeze/bases/lib-dynload/
 
       - name: Generate coverage report
         if: matrix.python-version == '3.11'
