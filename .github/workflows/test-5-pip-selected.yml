@@ -37,24 +37,23 @@ jobs:
           cache: 'pip'
           python-version: ${{ matrix.python-version }}
 
-      - name: Install cibuildwheel
-        run: python -m pip install --upgrade cibuildwheel
-
-      - name: Build wheels (Linux)
-        if: runner.os == 'Linux'
-        run: python -m cibuildwheel --only cp310-manylinux_x86_64
-
-      - name: Build wheels (macOS)
-        if: runner.os == 'macOS'
-        run: python -m cibuildwheel --only cp310-macosx_x86_64
-
-      - name: Build wheels (Windows)
-        if: runner.os == 'Windows'
-        run: python -m cibuildwheel --only cp310-win_amd64
-
-      - name: Install cx_Freeze
+      - name: Install dependencies
         run: |
-          pip install -f wheelhouse/ cx_Freeze --pre
+          python -m pip install --upgrade pip
+          if [[ ${{ matrix.python-version }} == *-dev ]] ; then
+            pip install -r requirements.txt --pre
+            pip install --upgrade wheel
+            pip install -v -e .[test] --no-build-isolation
+          else
+            pip install -v -e .[test]
+          fi
+
+      - name: Use the distributed executables
+        run: |
+          # This is important for manylinux, macOS and python-dev
+          mkdir -p wheelhouse
+          pip download cx_Freeze --extra-index-url https://marcelotduarte.github.io/packages/ --pre --no-deps -d wheelhouse
+          unzip -o wheelhouse/cx_Freeze*.whl "cx_Freeze/bases/*" -x "*.py"
 
       - name: Install requests requirements
         if: matrix.sample == 'requests'
