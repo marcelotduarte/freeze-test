@@ -41,6 +41,9 @@ jobs:
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
 
+      - name: Install libpython-static
+        run: conda install -c conda-forge libpython-static
+
       - name: Install cx_Freeze development mode
         run: |
           python ci/build_test.py ${{ matrix.sample }} --basic-requirements
