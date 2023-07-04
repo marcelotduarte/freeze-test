@@ -41,8 +41,14 @@ jobs:
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
 
+      - name: sysconfig
+        run: python -m sysconfig
+
       - name: Install libpython-static
-        run: conda install -c conda-forge libpython-static
+        if: runner.os != 'Windows'
+        run: |
+          conda install -c conda-forge libpython-static
+          python -m sysconfig
 
       - name: Install cx_Freeze development mode
         run: |
