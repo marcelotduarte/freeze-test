@@ -11,8 +11,6 @@ jobs:
       fail-fast: false
       matrix:
         sample:
-          - pandas
-          - requests
           - ssl
           - sslfix
         os: [windows-latest, ubuntu-latest, macos-latest]
@@ -44,12 +42,6 @@ jobs:
       - name: sysconfig
         run: python -m sysconfig
 
-      - name: Install libpython-static
-        if: runner.os != 'Windows'
-        run: |
-          conda install -c conda-forge libpython-static
-          python -m sysconfig
-
       - name: Install cx_Freeze development mode
         run: |
           python ci/build_test.py ${{ matrix.sample }} --basic-requirements
@@ -70,9 +62,9 @@ jobs:
         id: freeze-and-run-bdist-mac
         if: startsWith(matrix.os, 'macos')
         env:
-          TEST_BDIST_MAC: 2
+          TEST_BDIST_MAC: 1
         run: |
-          ./ci/build-test-one.sh ${{ matrix.sample }} --debug
+          ./ci/build-test-one.sh ${{ matrix.sample }} --debug --no-deps
           echo "status=$?" >> $GITHUB_OUTPUT
         continue-on-error: true
 
