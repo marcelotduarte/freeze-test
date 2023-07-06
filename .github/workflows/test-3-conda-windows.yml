@@ -12,17 +12,17 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      -
-        uses: actions/checkout@v3
+
+      - uses: actions/checkout@v3
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
-      -
-        uses: actions/setup-python@v4
+
+      - uses: actions/setup-python@v4
         with:
           python-version: "3.11"
-      -
-        id: set-matrix
+
+      - id: set-matrix
         run: echo "matrix=$(python ci/_platform.py windows)" >> $GITHUB_OUTPUT
 
   tests:
@@ -39,6 +39,10 @@ jobs:
           - sample: pyqt6-simplebrowser
           - sample: pyside6
           - sample: pyside6-simplebrowser
+          - sample: pyside2
+            python-version: "3.11"
+          - sample: pyside2-simplebrowser
+            python-version: "3.11"
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:

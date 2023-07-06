@@ -12,26 +12,29 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      -
-        uses: actions/checkout@v3
+
+      - uses: actions/checkout@v3
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
-      -
-        uses: actions/setup-python@v4
+
+      - uses: actions/setup-python@v4
         with:
           python-version: "3.11"
-      -
-        run: |
+
+      - run: |
           import json
           with open("ci/build-test.json") as fp:
               data = json.load(fp)
           with open("ci/build-test.data", "w+") as out:
               out.write(json.dumps(list(data.keys())))
         shell: python
-      -
-        id: set-matrix
+
+      - id: set-matrix-old
         run: echo "matrix=$(cat ci/build-test.data)" >> $GITHUB_OUTPUT
+
+      - id: set-matrix
+        run: echo "matrix=$(python ci/_platform.py windows)" >> $GITHUB_OUTPUT
 
   tests:
     needs: [matrix]
@@ -55,6 +58,10 @@ jobs:
             sample: service
           - os: macos-latest
             sample: service-asyncio
+          - sample: pyside2
+            python-version: "3.11"
+          - sample: pyside2-simplebrowser
+            python-version: "3.11"
           #- sample: pandas
           #  python-version: "3.11"
         branch: [develop]
