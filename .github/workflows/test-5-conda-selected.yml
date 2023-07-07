@@ -11,9 +11,8 @@ jobs:
       fail-fast: false
       matrix:
         sample:
-          - pillow
+          - opencv
           - pyqt5
-          - requests
           - ssl
         os: [windows-latest, ubuntu-latest, macos-latest]
         python-version: ["3.10"]
