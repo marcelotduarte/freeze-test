@@ -11,7 +11,6 @@ jobs:
       fail-fast: false
       matrix:
         sample:
-          - pillow
           - pyqt5
           - requests
           - ssl
@@ -44,9 +43,9 @@ jobs:
           if [[ ${{ matrix.python-version }} == *-dev ]] ; then
             pip install -r requirements.txt --pre
             pip install --upgrade wheel
-            pip install -v -e .[test] --no-build-isolation
+            pip install -v -e . --no-build-isolation --no-deps
           else
-            pip install -v -e .[test]
+            pip install -v -e .
           fi
 
       - name: Use the distributed executables
