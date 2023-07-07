@@ -53,7 +53,7 @@ jobs:
           # This is important for manylinux, macOS and python-dev
           mkdir -p wheelhouse
           pip download cx_Freeze --extra-index-url https://marcelotduarte.github.io/packages/ --pre --no-deps -d wheelhouse
-          unzip -o wheelhouse/cx_Freeze*.whl "cx_Freeze/bases/*" -x "*.py"
+          #unzip -o wheelhouse/cx_Freeze*.whl "cx_Freeze/bases/*" -x "*.py"
 
       - name: Install requests requirements
         if: matrix.sample == 'requests'
