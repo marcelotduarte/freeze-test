@@ -46,12 +46,7 @@ jobs:
           pip download cx_Freeze --extra-index-url https://marcelotduarte.github.io/packages/ --pre --no-deps -d wheelhouse
           unzip -o wheelhouse/cx_Freeze*.whl "cx_Freeze/bases/*" -x "*.py"
 
-      - name: Run tests with Pytest
-        if: matrix.python-version != '3.11'
-        run: python -m pytest -o pythonpath=cx_Freeze/bases/lib-dynload/
-
       - name: Generate coverage report
-        if: matrix.python-version == '3.11'
         run: >-
           python -m pytest -o pythonpath=cx_Freeze/bases/lib-dynload/
           --cov="cx_Freeze"
@@ -59,7 +54,6 @@ jobs:
           --cov-report=xml
 
       - name: Upload the cov-report
-        if: matrix.python-version == '3.11'
         uses: actions/upload-artifact@v3
         with:
           name: coverage-${{ matrix.os }}

@@ -64,12 +64,7 @@ jobs:
             pip install -v -e .[test]
           fi
 
-      - name: Run tests with Pytest
-        if: matrix.python-version != '3.11'
-        run: python -m pytest
-
       - name: Generate coverage report
-        if: matrix.python-version == '3.11'
         run: >-
           python -m pytest
           --cov="cx_Freeze"
@@ -77,11 +72,9 @@ jobs:
           --cov-report=xml
 
       - name: Upload coverage to Codecov
-        if: matrix.python-version == '3.11'
         uses: codecov/codecov-action@v3
 
       - name: Upload the cov-report
-        if: matrix.python-version == '3.11'
         uses: actions/upload-artifact@v3
         with:
           name: coverage-${{ matrix.os }}
