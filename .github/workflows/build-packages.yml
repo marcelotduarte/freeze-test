@@ -8,6 +8,10 @@ on:
 
 jobs:
 
+  build_wheel:
+    name: Build wheels
+    uses: ./.github/workflows/build-wheel.yml
+
   build_wheel_windows_cx_logging_31:
     strategy:
       fail-fast: false
@@ -41,52 +45,12 @@ jobs:
           name: cx-logging-wheelhouse
           path: wheelhouse
 
-  build_wheel:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-    name: Build wheel [${{ matrix.os }}]
-    env:
-      COMMIT_SHA: ${{ github.sha }}
-    runs-on: ${{ matrix.os }}
-
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: develop
-          repository: marcelotduarte/cx_Freeze
-
-      - uses: actions/setup-python@v4
-        with:
-          cache: 'pip'
-          python-version: "3.11"
-
-      - name: Set up QEMU
-        if: runner.os == 'Linux'
-        uses: docker/setup-qemu-action@v2
-        with:
-          platforms: arm64
-
-      - name: Install cibuildwheel
-        run: python -m pip install `grep cibuildwheel requirements-dev.txt`
-        shell: bash
-
-      - name: Build wheels
-        run: python -m cibuildwheel --output-dir wheelhouse --prerelease-pythons
-
-      - name: Upload the artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: cx-freeze-wheelhouse
-          path: wheelhouse
-
   build_msys2:
     name: Build msys2
     uses: ./.github/workflows/build-packages-msys2.yml
 
   conda_recipe:
-    name: Generate recipe
+    name: Generate conda-forge recipe
     runs-on: ubuntu-latest
 
     steps:
