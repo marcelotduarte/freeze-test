@@ -46,7 +46,7 @@ jobs:
             pip install --upgrade wheel
             pip install -v -e . --no-build-isolation --no-deps
           else
-            echo pip install -v -e .
+            pip install -v -e .
           fi
 
       - name: Use the distributed executables
