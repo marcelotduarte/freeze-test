@@ -45,14 +45,14 @@ jobs:
       run:
         shell: msys2 {0}
     steps:
-      -
-        name: Checkout cx_Freeze
+
+      - name: Checkout cx_Freeze
         uses: actions/checkout@v3
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
-      -
-        uses: msys2/setup-msys2@v2
+
+      - uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.sys }}
           pacboy: >-
@@ -60,26 +60,25 @@ jobs:
             python-cx-logging:p
             python-lief:p
           update: true
-      -
-        name: Install from package
+
+      - name: Install from package
         run: |
           VERSION=$(grep "__version__ = " cx_Freeze/__init__.py | sed 's/-/./' | awk -F\" '{print $2}')
           NAME=${MINGW_PACKAGE_PREFIX}-python-cx-freeze-${VERSION}-1-any.pkg.tar.zst
           curl ${{ env.PACKAGES }}/mingw/${NAME} -O
           pacman --noconfirm --needed -U ${NAME}
-      -
-        name: Freeze and run "${{ matrix.sample }}"
+
+      - name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
-        run: |
-          ./ci/build-test-one.sh ${{ matrix.sample }} --debug
-          echo "status=$?" >> $GITHUB_OUTPUT
-        continue-on-error: true
-      -
-        name: Collect images and logs
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug
+
+      - name: Collect images and logs
+        if: ${{ always() }}
         working-directory: samples/${{ matrix.sample }}
         run: mv build/*/*.{err,log,png} . || true
-      -
-        name: Upload the snapshots and logs
+
+      - name: Upload the snapshots and logs
+        if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
           name: screensnapshots
@@ -88,11 +87,3 @@ jobs:
             ./samples/${{ matrix.sample }}/*.log
             ./samples/${{ matrix.sample }}/*.png
           if-no-files-found: ignore
-      -
-        name: Return sucess or error code
-        run: |
-          if [ "${{ steps.freeze-and-run.outputs.status }}" == "" ] ; then
-            exit -1
-          else
-            exit ${{ steps.freeze-and-run.outputs.status }}
-          fi

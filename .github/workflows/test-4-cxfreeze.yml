@@ -19,37 +19,37 @@ jobs:
           - os: macos-latest
             architecture: x86
     name: cxfreeze-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
-    env:
-      LINK1: https://marcelotduarte.github.io/packages
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
     steps:
-      -
-        name: Checkout cx_Freeze
+
+      - name: Checkout cx_Freeze
         uses: actions/checkout@v3
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
-      -
-        uses: actions/setup-python@v4
+
+      - uses: actions/setup-python@v4
         with:
+          cache: 'pip'
           python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.architecture }}
-      -
-        name: Install dependencies
-        run: pip install --extra-index-url ${{ env.LINK1 }} cx_Freeze --pre
-      -
-        run: python -m sysconfig
-      -
-        run: cxfreeze --version
-      -
-        name: Freeze simple sample (2-different target-name)
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt --pre
+
+      - run: python -m sysconfig
+
+      - run: cxfreeze --version
+
+      - name: Freeze simple sample (2-different target-name)
         working-directory: samples/simple
         run: |
           cxfreeze hello.py --silent --target-name Hello-0.1 --target-dir build --excludes tkinter
           ls -l
           ls -l build
-        shell: bash
-      -
-        name: Run simple sample (2-different target-name)
+
+      - name: Run simple sample (2-different target-name)
         working-directory: samples/simple/build
         run: ./Hello-0.1

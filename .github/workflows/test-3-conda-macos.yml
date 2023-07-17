@@ -66,26 +66,22 @@ jobs:
 
       - name: Freeze and run "${{ matrix.sample }}" (build_exe)
         id: freeze-and-run
-        run: |
-          ./ci/build-test-one.sh ${{ matrix.sample }} --debug
-          echo "status=$?" >> $GITHUB_OUTPUT
-        continue-on-error: true
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug
 
       - name: Freeze and run "${{ matrix.sample }}"  (bdist_mac)
         id: freeze-and-run-bdist-mac
         if: startsWith(matrix.os, 'macos')
         env:
           TEST_BDIST_MAC: 1
-        run: |
-          ./ci/build-test-one.sh ${{ matrix.sample }} --debug --no-deps
-          echo "status=$?" >> $GITHUB_OUTPUT
-        continue-on-error: true
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --no-deps
 
       - name: Collect images and logs
+        if: ${{ always() }}
         working-directory: samples/${{ matrix.sample }}
         run: mv build/*/*.{err,log,png} . || true
 
       - name: Upload the snapshots and logs
+        if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
           name: screensnapshots
@@ -94,12 +90,3 @@ jobs:
             ./samples/${{ matrix.sample }}/*.log
             ./samples/${{ matrix.sample }}/*.png
           if-no-files-found: ignore
-
-      - name: Return sucess or error code
-        run: |
-          if [ "${{ steps.freeze-and-run.outputs.status }}" == "" ] ; then
-            exit -1
-          else
-            exit ${{ steps.freeze-and-run.outputs.status }}
-          fi
-        shell: bash

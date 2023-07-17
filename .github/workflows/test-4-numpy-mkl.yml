@@ -39,21 +39,21 @@ jobs:
 
       - name: Install numpy+mkl requirements
         run: |
-          CP3x=$(python -c "import sys; print(sys.implementation.cache_tag.replace('ython-',''))")
+          pyver=$(python -c "print('${{ matrix.python-version }}'.partition('-')[0].replace('.',''))")
+          CP3x="cp${pyver}"
           pip install $LINK/numpy-$VERSION+mkl-$CP3x-$CP3x-win_amd64.whl
 
       - name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
         id: freeze-and-run
-        run: |
-          ./ci/build-test-one.sh ${{ matrix.sample }} --debug
-          echo "status=$?" >> $GITHUB_OUTPUT
-        continue-on-error: true
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug
 
       - name: Collect images and logs
+        if: ${{ always() }}
         working-directory: samples/${{ matrix.sample }}
-        run: mv build/*/*.{err,png,log} . || true
+        run: mv build/*/*.{err,log,png} . || true
 
       - name: Upload the snapshots and logs
+        if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
           name: screensnapshots
@@ -62,14 +62,6 @@ jobs:
             ./samples/${{ matrix.sample }}/*.log
             ./samples/${{ matrix.sample }}/*.png
           if-no-files-found: ignore
-
-      - name: Return sucess or error code
-        run: |
-          if [ "${{ steps.freeze-and-run.outputs.status }}" == "" ] ; then
-            exit -1
-          else
-            exit ${{ steps.freeze-and-run.outputs.status }}
-          fi
 
   test2:
     needs: [test1]
@@ -106,21 +98,21 @@ jobs:
 
       - name: Install numpy+mkl requirements
         run: |
-          CP3x=$(python -c "import sys; print(sys.implementation.cache_tag.replace('ython-',''))")
+          pyver=$(python -c "print('${{ matrix.python-version }}'.partition('-')[0].replace('.',''))")
+          CP3x="cp${pyver}"
           pip install $LINK/numpy-$VERSION+mkl-$CP3x-$CP3x-win_amd64.whl
 
       - name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
         id: freeze-and-run
-        run: |
-          ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv
-          echo "status=$?" >> $GITHUB_OUTPUT
-        continue-on-error: true
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv
 
       - name: Collect images and logs
+        if: ${{ always() }}
         working-directory: samples/${{ matrix.sample }}
-        run: mv build/*/*.{err,png,log} . || true
+        run: mv build/*/*.{err,log,png} . || true
 
       - name: Upload the snapshots and logs
+        if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
           name: screensnapshots
@@ -129,11 +121,3 @@ jobs:
             ./samples/${{ matrix.sample }}/*.log
             ./samples/${{ matrix.sample }}/*.png
           if-no-files-found: ignore
-
-      - name: Return sucess or error code
-        run: |
-          if [ "${{ steps.freeze-and-run.outputs.status }}" == "" ] ; then
-            exit -1
-          else
-            exit ${{ steps.freeze-and-run.outputs.status }}
-          fi
