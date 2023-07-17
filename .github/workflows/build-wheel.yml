@@ -47,7 +47,7 @@ jobs:
       - name: Build wheel for Python ${{ matrix.python-version }}
         run: |
           pyver=$(python -c "print('${{ matrix.python-version }}'.partition('-')[0].replace('.',''))")
-          export CIBW_BUILD=cp${pyver}*
+          export CIBW_BUILD="cp${pyver}*"
           python -m cibuildwheel --output-dir wheelhouse --prerelease-pythons
 
       - name: Add sdist
@@ -137,5 +137,5 @@ jobs:
             git add cx_Freeze/bases/__init__.py
             # Update
             git commit -m "bases: update base executables and util module [skip ci]"
-            git push --set-upstream origin develop
+            git push --set-upstream origin ${{ inputs.branch }}
           fi
