@@ -13,6 +13,8 @@ jobs:
         sample: [pandas]
         os: [windows-latest]
         python-version: ["3.9", "3.10", "3.11"]
+    name: root-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         shell: bash
@@ -20,8 +22,6 @@ jobs:
       PIP_ONLY_BINARY: numpy,pandas
       LINK: https://github.com/cgohlke/numpy-mkl.whl/releases/download/v2023.1.4
       VERSION: 1.23.5
-    name: root-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
-    runs-on: ${{ matrix.os }}
     steps:
 
       - name: Checkout cx_Freeze
