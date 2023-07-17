@@ -5,6 +5,8 @@ on:
     inputs:
       branch:
         default: ${{ github.ref }}
+        required: true
+        type: string
   workflow_dispatch:
 
 jobs:
