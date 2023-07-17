@@ -11,6 +11,8 @@ jobs:
   build_wheel:
     name: Build wheels
     uses: ./.github/workflows/build-wheel.yml
+    with:
+      branch: develop
 
   build_wheel_windows_cx_logging_31:
     strategy:
@@ -48,6 +50,8 @@ jobs:
   build_msys2:
     name: Build msys2
     uses: ./.github/workflows/build-packages-msys2.yml
+    with:
+      branch: develop
 
   conda_recipe:
     name: Generate conda-forge recipe
