@@ -33,6 +33,8 @@ jobs:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         sys: [ ucrt64, mingw64, mingw32 ]
         exclude:
+          - sample: opencv
+            sys: mingw32
           - sample: pyqt6
             sys: mingw32
           - sample: pyside6
