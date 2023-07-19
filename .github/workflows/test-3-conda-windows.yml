@@ -37,12 +37,9 @@ jobs:
         exclude:
           - sample: pyqt6
           - sample: pyqt6-simplebrowser
-          - sample: pyside6
           - sample: pyside6-simplebrowser
-          - sample: pyside2
-            python-version: "3.11"
-          - sample: pyside2-simplebrowser
-            python-version: "3.11"
+          - sample: matplotlib_tk
+            python-version: "3.8"
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
