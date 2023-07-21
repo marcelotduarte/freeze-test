@@ -34,7 +34,6 @@ jobs:
         with:
           activate-environment: ${{ env.KEY_BASE }}
           python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.architecture }}
           channels: conda-forge
 
       - name: sysconfig
