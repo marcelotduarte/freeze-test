@@ -68,7 +68,7 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
-          name: screensnapshots
+          name: screensnapshots-${{ matrix.sample }}-conda
           path: |
             ./samples/${{ matrix.sample }}/*.err
             ./samples/${{ matrix.sample }}/*.log
