@@ -11,16 +11,10 @@ jobs:
       fail-fast: false
       matrix:
         sample:
-          - opencv
-          - pyqt6
+          - pyqt5
         os: [windows-latest, ubuntu-latest, macos-latest]
         python-version: ["3.10", "3.11"]
         branch: [develop]
-        exclude:
-          - sample: pyside2
-            python-version: "3.11"
-          - sample: pyside2-simplebrowser
-            python-version: "3.11"
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
