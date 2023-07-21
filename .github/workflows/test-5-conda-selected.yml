@@ -62,7 +62,10 @@ jobs:
       - name: Collect images and logs
         if: ${{ always() }}
         working-directory: samples/${{ matrix.sample }}
-        run: mv build/*/*.{err,log,png} . || true
+        run: |
+          mv build/*/*.{err,log,png} . || true
+          (python -m sysconfig > $KEY_BASE-sysconfig.log) || true
+          (tar cvf $KEY_BASE-build.tar build/) || true
 
       - name: Upload the snapshots and logs
         if: ${{ always() }}
