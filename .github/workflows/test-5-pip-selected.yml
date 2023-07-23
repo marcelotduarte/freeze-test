@@ -11,12 +11,14 @@ jobs:
       fail-fast: false
       matrix:
         sample:
-          - pyside2
-          - pyside6
-          - pyqt6
+          - pyqt5-simplebrowser
+          - pyside2-simplebrowser
         os: [windows-latest, ubuntu-latest, macos-latest]
         python-version: ["3.10", "3.11"]
         branch: [develop]
+        exclude:
+          - sample: pyside2-simplebrowser
+            python-version: "3.11"
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
