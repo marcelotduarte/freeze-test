@@ -32,6 +32,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.12-dev"]
         architecture: [x64, x86]
+        branch: [develop]
         exclude:
           - os: ubuntu-latest
             architecture: x86
@@ -59,14 +60,11 @@ jobs:
           - sample: pyqt6-simplebrowser
           - sample: pyside6
           - sample: pyside6-simplebrowser
-        branch: [develop]
-    name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.architecture }}
+    name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
       run:
         shell: bash
-    env:
-      PIP_DISABLE_PIP_VERSION_CHECK: '1'
     steps:
 
       - name: Checkout cx_Freeze
@@ -81,17 +79,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
 
-      - name: Change requirements
-        if: runner.os == 'Windows'
-        run: sed -i "s/ and python_version <= '3.11'/ /g" requirements.txt
-
       - name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         run: |
-          if [ ${{ runner.os == 'Windows' }} ] ; then
-            export PIP_PRE=${{ startsWith(matrix.python-version, '3.12-dev') }}
-            export PIP_ONLY_BINARY=lief,numpy,pandas,PySide2,PySide6,PyQt5,PyQt6
-          fi
+          export PIP_DISABLE_PIP_VERSION_CHECK=1
+          export PIP_PRE=${{ startsWith(matrix.python-version, '3.12-dev') }}
+          export PIP_ONLY_BINARY=lief,numpy,pandas,PySide2,PySide6,PyQt5,PyQt6
           ./ci/build-test-one.sh ${{ matrix.sample }} --debug
 
       - name: Collect images and logs
