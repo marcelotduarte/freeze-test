@@ -82,9 +82,9 @@ jobs:
       - name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         run: |
-          export PIP_DISABLE_PIP_VERSION_CHECK=1
           export PIP_PRE=${{ startsWith(matrix.python-version, '3.12-dev') }}
           export PIP_ONLY_BINARY=lief,numpy,pandas,PySide2,PySide6,PyQt5,PyQt6
+          python -m pip install --upgrade pip setuptools
           ./ci/build-test-one.sh ${{ matrix.sample }} --debug
 
       - name: Collect images and logs
