@@ -30,7 +30,7 @@ jobs:
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.12-dev"]
+        python-version: ["3.12"]
         architecture: [x64, x86]
         branch: [develop]
         exclude:
@@ -78,14 +78,14 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
+          allow-prereleases: true
 
       - name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         run: |
-          export PIP_PRE=${{ startsWith(matrix.python-version, '3.12-dev') }}
+          export PIP_PRE=true
           export PIP_ONLY_BINARY=lief,numpy,pandas,PySide2,PySide6,PyQt5,PyQt6
-          python -m pip install --upgrade pip setuptools
-          ./ci/build-test-one.sh ${{ matrix.sample }} --debug
+          ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv
 
       - name: Collect images and logs
         if: ${{ always() }}
