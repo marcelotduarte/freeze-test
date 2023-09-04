@@ -13,7 +13,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
@@ -51,7 +51,7 @@ jobs:
     steps:
 
       - name: Checkout cx_Freeze
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze

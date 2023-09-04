@@ -23,7 +23,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: develop
           repository: marcelotduarte/cx_Logging
@@ -58,11 +58,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: marcelotduarte/cx_freeze-feedstock
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
@@ -138,11 +138,11 @@ jobs:
         with:
           python-version: "3.11"
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: marcelotduarte/cx_freeze-feedstock
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
@@ -196,7 +196,7 @@ jobs:
 
       - run: conda install -c conda-forge conda-build
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: marcelotduarte/cx_freeze-feedstock
 
@@ -269,7 +269,7 @@ jobs:
     name: Update packages repository
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           repository: marcelotduarte/packages
