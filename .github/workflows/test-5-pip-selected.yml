@@ -11,14 +11,13 @@ jobs:
       fail-fast: false
       matrix:
         sample:
+          - pyqt5
           - pyqt5-simplebrowser
+          - pyside2
           - pyside2-simplebrowser
         os: [windows-latest, ubuntu-latest, macos-latest]
-        python-version: ["3.10", "3.11"]
+        python-version: ["3.10"]
         branch: [develop]
-        exclude:
-          - sample: pyside2-simplebrowser
-            python-version: "3.11"
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
@@ -42,9 +41,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          if [[ ${{ matrix.python-version }} == *-dev ]] ; then
+          if [[ "${{ matrix.python-version }}" == "3.12" ]]; then
             pip install -r requirements.txt --pre
-            pip install --upgrade wheel
             pip install -v -e . --no-build-isolation --no-deps
           else
             pip install -v -e .
