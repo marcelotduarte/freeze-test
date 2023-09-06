@@ -40,18 +40,9 @@ jobs:
       - name: sysconfig
         run: python -m sysconfig
 
-      - name: Install cx_Freeze development mode
-        run: |
-          python ci/build_test.py ${{ matrix.sample }} --basic-requirements
-          pip install -v -e . --no-deps --no-build-isolation
-
-      - name: Install requests requirements
-        run: conda install -n ${{ env.KEY_BASE }} -c conda-forge requests
-        if: matrix.sample == 'requests'
-
       - name: Freeze and run "${{ matrix.sample }}" (build_exe)
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=d
 
       - name: Freeze and run "${{ matrix.sample }}" (bdist_mac)
         id: freeze-and-run-bdist-mac
