@@ -15,11 +15,11 @@ jobs:
           - pyqt5-simplebrowser
           - pyside2
           - pyside2-simplebrowser
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [macos]
         python-version: ["3.10"]
         branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
     defaults:
       run:
         shell: bash
@@ -37,6 +37,16 @@ jobs:
         with:
           cache: 'pip'
           python-version: ${{ matrix.python-version }}
+        if: runner.os != 'macOS'
+
+      - name: Install Python ${{ matrix.python-version }}
+        if: runner.os == 'macOS'
+        run: |
+          brew update
+          brew install python3
+          #brew install pyenv
+          #pyenv install ${{ matrix.python-version }}
+          #pyenv global ${{ matrix.python-version }}
 
       - name: Install dependencies
         run: |
