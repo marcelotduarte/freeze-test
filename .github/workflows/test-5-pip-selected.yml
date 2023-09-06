@@ -25,6 +25,7 @@ jobs:
         shell: bash
     env:
       KEY_BASE: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
+      TEST_BDIST_MAC: 1
     steps:
 
       - name: Checkout cx_Freeze
@@ -38,22 +39,15 @@ jobs:
           cache: 'pip'
           python-version: ${{ matrix.python-version }}
 
-      - name: Freeze and run "${{ matrix.sample }}" (build_exe)
+      - name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
         run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=e --venv
-
-      - name: Freeze and run "${{ matrix.sample }}" (bdist_mac)
-        id: freeze-and-run-mac
-        env:
-          TEST_BDIST_MAC: 1
-        if: runner.os == 'macOS'
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --no-deps --venv
 
       - name: Collect images and logs
         if: ${{ always() }}
         working-directory: samples/${{ matrix.sample }}
         run: |
-          mv build/*/*.{err,log,png} . || true
+          mv build/exe.*/*.{err,log,png} . || true
           (python -m sysconfig > $KEY_BASE-sysconfig.log) || true
           (tar cvf $KEY_BASE-build.tar build/) || true
 
