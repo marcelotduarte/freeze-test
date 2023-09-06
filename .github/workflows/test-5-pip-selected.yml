@@ -48,6 +48,7 @@ jobs:
         working-directory: samples/${{ matrix.sample }}
         run: |
           mv build/*/*.{err,log,png} . || true
+          mv build/*.app/Contents/MacOS/*.{err,log,png} . || true
           (python -m sysconfig > $KEY_BASE-sysconfig.log) || true
           (tar cvf $KEY_BASE-build.tar build/) || true
 
