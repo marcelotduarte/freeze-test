@@ -43,7 +43,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew update
-          brew install python@${{ matrix.python-version }}
+          brew reinstall python@${{ matrix.python-version }}
           #brew install pyenv
           #pyenv install ${{ matrix.python-version }}
           #pyenv global ${{ matrix.python-version }}
