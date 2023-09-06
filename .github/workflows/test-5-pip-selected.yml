@@ -43,10 +43,8 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew update
-          brew reinstall python@${{ matrix.python-version }}
-          #brew install pyenv
-          #pyenv install ${{ matrix.python-version }}
-          #pyenv global ${{ matrix.python-version }}
+          brew install --overwrite python@${{ matrix.python-version }}
+          echo /usr/local/opt/python@${{ matrix.python-version }}/libexec/bin/ >> $GITHUB_PATH
 
       - name: Install dependencies
         run: |
