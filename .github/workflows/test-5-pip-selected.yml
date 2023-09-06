@@ -40,7 +40,7 @@ jobs:
 
       - name: Freeze and run "${{ matrix.sample }}" (build_exe)
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=d
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=e
 
       - name: Freeze and run "${{ matrix.sample }}" (bdist_mac)
         id: freeze-and-run-mac
