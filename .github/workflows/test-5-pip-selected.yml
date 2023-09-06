@@ -37,39 +37,10 @@ jobs:
         with:
           cache: 'pip'
           python-version: ${{ matrix.python-version }}
-        if: runner.os != 'macOS'
-
-      - name: Install Python ${{ matrix.python-version }}
-        if: runner.os == 'macOS'
-        run: |
-          #brew update
-          #brew install --overwrite python@${{ matrix.python-version }}
-          echo $(brew --prefix)/opt/python@${{ matrix.python-version }}/libexec/bin >> $GITHUB_PATH
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          if [[ "${{ matrix.python-version }}" == "3.12" ]]; then
-            pip install -r requirements.txt --pre
-            pip install -v -e . --no-build-isolation --no-deps
-          else
-            pip install -v -e .
-          fi
-
-      - name: Use the distributed executables
-        run: |
-          # This is important for manylinux, macOS and python-dev
-          mkdir -p wheelhouse
-          #pip download cx_Freeze --extra-index-url https://marcelotduarte.github.io/packages/ --pre --no-deps -d wheelhouse
-          #unzip -o wheelhouse/cx_Freeze*.whl "cx_Freeze/bases/*" -x "*.py"
-
-      - name: Install requests requirements
-        if: matrix.sample == 'requests'
-        run: pip install requests
 
       - name: Freeze and run "${{ matrix.sample }}" (build_exe)
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=d
 
       - name: Freeze and run "${{ matrix.sample }}" (bdist_mac)
         id: freeze-and-run-mac
