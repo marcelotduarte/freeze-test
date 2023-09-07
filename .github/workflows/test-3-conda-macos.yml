@@ -63,21 +63,18 @@ jobs:
           architecture: ${{ matrix.architecture }}
           channels: conda-forge
 
-      - name: Freeze and run "${{ matrix.sample }}" (build_exe)
-        id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug
-
-      - name: Freeze and run "${{ matrix.sample }}"  (bdist_mac)
-        id: freeze-and-run-bdist-mac
-        if: startsWith(matrix.os, 'macos')
+      - name: Freeze and run "${{ matrix.sample }}"
         env:
           TEST_BDIST_MAC: 1
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --no-deps
+        id: freeze-and-run
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug
 
       - name: Collect images and logs
         if: ${{ always() }}
         working-directory: samples/${{ matrix.sample }}
-        run: mv build/*/*.{err,log,png} . || true
+        run: |
+          mv build/*/*.{err,log,png} . || true
+          mv build/*.app/Contents/MacOS/*.{err,log,png} . || true
 
       - name: Upload the snapshots and logs
         if: ${{ always() }}

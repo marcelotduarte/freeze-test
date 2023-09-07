@@ -25,7 +25,6 @@ jobs:
         shell: bash
     env:
       KEY_BASE: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
-      TEST_BDIST_MAC: 1
     steps:
 
       - name: Checkout cx_Freeze
@@ -40,6 +39,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Freeze and run "${{ matrix.sample }}"
+        env:
+          TEST_BDIST_MAC: 1
         id: freeze-and-run
         run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=e --venv
 

@@ -81,6 +81,8 @@ jobs:
           allow-prereleases: true
 
       - name: Freeze and run "${{ matrix.sample }}"
+        env:
+          TEST_BDIST_MAC: 1
         id: freeze-and-run
         run: |
           export PIP_PRE=true
@@ -90,7 +92,9 @@ jobs:
       - name: Collect images and logs
         if: ${{ always() }}
         working-directory: samples/${{ matrix.sample }}
-        run: mv build/*/*.{err,log,png} . || true
+        run: |
+          mv build/*/*.{err,log,png} . || true
+          mv build/*.app/Contents/MacOS/*.{err,log,png} . || true
 
       - name: Upload the snapshots and logs
         if: ${{ always() }}
