@@ -22,8 +22,6 @@ jobs:
     defaults:
       run:
         shell: bash
-    env:
-      KEY_BASE: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
     steps:
 
       - name: Checkout cx_Freeze
@@ -46,12 +44,13 @@ jobs:
       - name: Collect images and logs
         if: ${{ always() }}
         working-directory: samples/${{ matrix.sample }}
+        env:
+          KEY_BASE: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
         run: |
-          mv build/*/*.{err,log,png} . || true
-          mv build/*.app/Contents/MacOS/*.{err,log,png} . || true
-          (python -m sysconfig > $KEY_BASE-sysconfig.log) || true
+          (python -m sysconfig > sysconfig-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
           # use one tar to speed up the upload
-          (tar cvf $KEY_BASE-build.tar build/) || true
+          (tar cvf build-exe-$KEY_BASE.tar build/exe.*/) || true
+          (tar cvf build-app-$KEY_BASE.tar build/*.app/) || true
 
       - name: Upload the snapshots and logs
         if: ${{ always() }}
@@ -59,9 +58,12 @@ jobs:
         with:
           name: screensnapshots-${{ matrix.sample }}
           path: |
-            ./samples/${{ matrix.sample }}/*.err
-            ./samples/${{ matrix.sample }}/*.log
-            ./samples/${{ matrix.sample }}/*.png
+            ./samples/${{ matrix.sample }}/build/exe.*/*.err
+            ./samples/${{ matrix.sample }}/build/exe.*/*.log
+            ./samples/${{ matrix.sample }}/build/exe.*/*.png
+            ./samples/${{ matrix.sample }}/build/*.app/Contents/MacOS/*.err
+            ./samples/${{ matrix.sample }}/build/*.app/Contents/MacOS/*.log
+            ./samples/${{ matrix.sample }}/build/*.app/Contents/MacOS/*.png
+            ./samples/${{ matrix.sample }}/build/*.dmg
             ./samples/${{ matrix.sample }}/*.tar
-            ./samples/${{ matrix.sample }}/dist/*
           if-no-files-found: ignore
