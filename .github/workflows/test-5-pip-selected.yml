@@ -50,7 +50,8 @@ jobs:
           mv build/*/*.{err,log,png} . || true
           mv build/*.app/Contents/MacOS/*.{err,log,png} . || true
           (python -m sysconfig > $KEY_BASE-sysconfig.log) || true
-          #(tar cvf $KEY_BASE-build.tar build/) || true
+          # use one tar to speed up the upload
+          (tar cvf $KEY_BASE-build.tar build/) || true
 
       - name: Upload the snapshots and logs
         if: ${{ always() }}
@@ -62,6 +63,5 @@ jobs:
             ./samples/${{ matrix.sample }}/*.log
             ./samples/${{ matrix.sample }}/*.png
             ./samples/${{ matrix.sample }}/*.tar
-            ./samples/${{ matrix.sample }}/build/**
             ./samples/${{ matrix.sample }}/dist/*
           if-no-files-found: ignore
