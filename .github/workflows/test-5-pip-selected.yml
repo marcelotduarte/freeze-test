@@ -62,4 +62,5 @@ jobs:
             ./samples/${{ matrix.sample }}/*.log
             ./samples/${{ matrix.sample }}/*.png
             ./samples/${{ matrix.sample }}/*.tar
+            ./samples/${{ matrix.sample }}/dist
           if-no-files-found: ignore
