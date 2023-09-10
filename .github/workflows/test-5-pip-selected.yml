@@ -48,9 +48,14 @@ jobs:
           KEY_BASE: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
         run: |
           (python -m sysconfig > sysconfig-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
+          mkdir ${{ matrix.sample }}-${{ matrix.os }}
+          cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }} || true
+          mkdir ${{ matrix.sample }}-${{ matrix.os }}/app-${{ matrix.python-version }}
+          cp build/*.app/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }}/app-${{ matrix.python-version }} || true
           # use one tar to speed up the upload
-          (tar cvf build-exe-$KEY_BASE.tar build/exe.*/) || true
-          (tar cvf build-app-$KEY_BASE.tar build/*.app/) || true
+          (cd build/exe.*/; tar cvf ../../build-exe-$KEY_BASE.tar) || true
+          (cd build/*.app/; tar cvf ../../build-app-$KEY_BASE.tar) || true
+          mv build/*.dmg .. || true
 
       - name: Upload the snapshots and logs
         if: ${{ always() }}
@@ -58,12 +63,8 @@ jobs:
         with:
           name: screensnapshots-${{ matrix.sample }}
           path: |
-            ./samples/${{ matrix.sample }}/build/exe.*/*.err
-            ./samples/${{ matrix.sample }}/build/exe.*/*.log
-            ./samples/${{ matrix.sample }}/build/exe.*/*.png
-            ./samples/${{ matrix.sample }}/build/*.app/Contents/MacOS/*.err
-            ./samples/${{ matrix.sample }}/build/*.app/Contents/MacOS/*.log
-            ./samples/${{ matrix.sample }}/build/*.app/Contents/MacOS/*.png
-            ./samples/${{ matrix.sample }}/build/*.dmg
+            ./samples/${{ matrix.sample }}/sysconfig-*.log
+            ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ matrix.os }}/**
+            ./samples/${{ matrix.sample }}/*.dmg
             ./samples/${{ matrix.sample }}/*.tar
           if-no-files-found: ignore
