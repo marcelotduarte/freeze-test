@@ -51,7 +51,7 @@ jobs:
           mkdir ${{ matrix.sample }}-${{ matrix.os }}
           cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }} || true
           mkdir ${{ matrix.sample }}-${{ matrix.os }}/app-${{ matrix.python-version }}
-          cp build/*.app/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }}/app-${{ matrix.python-version }} || true
+          cp build/*.app/Contents/MacOS/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }}/app-${{ matrix.python-version }} || true
           # use one tar to speed up the upload
           (cd build/exe.*/; tar cvf ../../build-exe-$KEY_BASE.tar) || true
           (cd build/*.app/; tar cvf ../../build-app-$KEY_BASE.tar) || true
