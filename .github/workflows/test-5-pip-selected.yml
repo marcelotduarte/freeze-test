@@ -37,7 +37,7 @@ jobs:
 
       - name: Freeze and run "${{ matrix.sample }}"
         env:
-          TEST_BDIST: bdist_dmg
+          TEST_BDIST: bdist_mac
         id: freeze-and-run
         run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=d --venv
 
@@ -52,9 +52,9 @@ jobs:
           cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }} || true
           mkdir ${{ matrix.sample }}-${{ matrix.os }}/app-${{ matrix.python-version }}
           cp build/*.app/Contents/MacOS/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }}/app-${{ matrix.python-version }} || true
-          # use one tar to speed up the upload
-          (cd build/exe.*/; tar cvf ../../build-exe-$KEY_BASE.tar) || true
-          (cd build/*.app/; tar cvf ../../build-app-$KEY_BASE.tar) || true
+          # use tar to reduce the number of files and speed up the upload
+          (cd build/exe.*/; tar cf ../../build-exe-$KEY_BASE.tar *) || true
+          (cd build/*.app/; tar cf ../../build-app-$KEY_BASE.tar *) || true
           mv build/*.dmg .. || true
 
       - name: Upload the snapshots and logs
