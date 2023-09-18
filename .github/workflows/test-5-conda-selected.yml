@@ -14,7 +14,7 @@ jobs:
           - pyqt5-simplebrowser
           - pyside2-simplebrowser
         os: [windows-latest, ubuntu-latest, macos-latest]
-        python-version: ["3.10", "3.11"]
+        python-version: ["3.10"]
         branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
@@ -41,23 +41,26 @@ jobs:
         run: python -m sysconfig
 
       - name: Freeze and run "${{ matrix.sample }}" (build_exe)
-        id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=d
-
-      - name: Freeze and run "${{ matrix.sample }}" (bdist_mac)
-        id: freeze-and-run-bdist-mac
-        if: startsWith(matrix.os, 'macos')
         env:
-          TEST_BDIST_MAC: 1
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --no-deps
+          TEST_BDIST: bdist_dmg
+        id: freeze-and-run
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=d --venv
 
       - name: Collect images and logs
         if: ${{ always() }}
         working-directory: samples/${{ matrix.sample }}
+        env:
+          KEY_BASE: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
         run: |
-          mv build/*/*.{err,log,png} . || true
-          (python -m sysconfig > $KEY_BASE-sysconfig.log) || true
-          (tar cvf $KEY_BASE-build.tar build/) || true
+          (python -m sysconfig > sysconfig-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
+          mkdir ${{ matrix.sample }}-${{ matrix.os }}
+          cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }} || true
+          mkdir ${{ matrix.sample }}-${{ matrix.os }}/app-${{ matrix.python-version }}
+          cp build/*.app/Contents/MacOS/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }}/app-${{ matrix.python-version }} || true
+          # use tar to reduce the number of files and speed up the upload
+          (cd build/exe.*/; tar cf ../../build-exe-$KEY_BASE.tar *) || true
+          (cd build/*.app/; tar cf ../../build-app-$KEY_BASE.tar *) || true
+          mv build/*.dmg .. || true
 
       - name: Upload the snapshots and logs
         if: ${{ always() }}
@@ -65,8 +68,8 @@ jobs:
         with:
           name: screensnapshots-${{ matrix.sample }}-conda
           path: |
-            ./samples/${{ matrix.sample }}/*.err
-            ./samples/${{ matrix.sample }}/*.log
-            ./samples/${{ matrix.sample }}/*.png
+            ./samples/${{ matrix.sample }}/sysconfig-*.log
+            ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ matrix.os }}/**
+            ./samples/${{ matrix.sample }}/*.dmg
             ./samples/${{ matrix.sample }}/*.tar
           if-no-files-found: ignore

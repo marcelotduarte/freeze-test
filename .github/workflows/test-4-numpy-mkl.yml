@@ -109,15 +109,14 @@ jobs:
       - name: Collect images and logs
         if: ${{ always() }}
         working-directory: samples/${{ matrix.sample }}
-        run: mv build/*/*.{err,log,png} . || true
+        run: |
+          mkdir ${{ matrix.sample }}-${{ matrix.os }}
+          cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }} || true
 
       - name: Upload the snapshots and logs
         if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
           name: screensnapshots
-          path: |
-            ./samples/${{ matrix.sample }}/*.err
-            ./samples/${{ matrix.sample }}/*.log
-            ./samples/${{ matrix.sample }}/*.png
+          path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ matrix.os }}/**
           if-no-files-found: ignore
