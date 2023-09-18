@@ -78,13 +78,13 @@ jobs:
         if: ${{ always() }}
         working-directory: samples/${{ matrix.sample }}
         run: |
-          mkdir ${{ matrix.sample }}-${{ matrix.os }}
-          cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }} || true
+          mkdir ${{ matrix.sample }}-${{ matrix.sys }}
+          cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.sys }} || true
 
       - name: Upload the snapshots and logs
         if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
           name: screensnapshots
-          path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ matrix.os }}/**
+          path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ matrix.sys }}/**
           if-no-files-found: ignore
