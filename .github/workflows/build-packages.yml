@@ -330,7 +330,7 @@ jobs:
           # cx_Freeze wheels
           python make_index.py cx-freeze --base cx_Freeze
           # mingw packages
-          python make_index.py mingw --base python-cx-freeze
+          python make_index.py mingw --base python-cx-freeze --mask "*.tar.zst"
           # conda packages
           python make_index.py conda --mask "cx_freeze*.conda" --mask "cx_freeze*.tar.bz2"
           # LIEF wheels
