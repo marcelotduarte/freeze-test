@@ -60,7 +60,7 @@ jobs:
           python -m sysconfig
 
       - name: '🚧 Build package'
-        run: makepkg-mingw -sCLf --noconfirm --noprogressbar
+        run: makepkg-mingw -sCLf --noconfirm --noprogressbar --skippgpcheck
 
       - name: '📤 Upload artifact: package'
         uses: actions/upload-artifact@v3
