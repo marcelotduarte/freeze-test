@@ -49,6 +49,7 @@ jobs:
             mingw-w64-${{ matrix.env }}-cc
             mingw-w64-${{ matrix.env }}-tools
             mingw-w64-${{ matrix.env }}-python-setuptools
+            mingw-w64-${{ matrix.env }}-python-wheel
             mingw-w64-${{ matrix.env }}-python-cx-logging
             mingw-w64-${{ matrix.env }}-python-lief
           update: true
@@ -65,7 +66,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: cx-freeze-mingw
-          path: mingw-w64-*.zst
+          path: mingw-w64-*.zst mingw-w64-*.zst.sig
 
       - name: '🔍 Show package content'
         run: |
