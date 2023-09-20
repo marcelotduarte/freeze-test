@@ -57,10 +57,6 @@ jobs:
       - uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.sys }}
-          pacboy: >-
-            python-pip:p
-            python-cx-logging:p
-            python-lief:p
           update: true
 
       - name: Freeze and run "${{ matrix.sample }}"
