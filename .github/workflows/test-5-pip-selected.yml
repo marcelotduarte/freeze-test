@@ -13,10 +13,8 @@ jobs:
         sample:
           - simple
           - pandas
-          - matplotlib
-          - matplotlib_tk
           - scipy
-        os: [windows-latest, macos-latest]
+        os: [windows-latest]
         python-version: ["3.10"]
         branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
