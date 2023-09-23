@@ -12,9 +12,8 @@ jobs:
       matrix:
         sample:
           - simple
-          - pandas
-          - scipy
-        os: [windows-latest]
+          - pyside2-simplebrowser
+        os: [macos-latest]
         python-version: ["3.10"]
         branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
