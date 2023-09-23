@@ -36,7 +36,7 @@ jobs:
 
       - name: Freeze and run "${{ matrix.sample }}"
         env:
-          TEST_BDIST: bdist_dmg
+          TEST_BDIST: bdist_mac
         id: freeze-and-run
         run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=d --venv
 
