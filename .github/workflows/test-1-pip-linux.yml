@@ -60,8 +60,8 @@ jobs:
           architecture: ${{ matrix.architecture }}
 
       - name: Freeze and run "${{ matrix.sample }}"
-        env:
-          TEST_BDIST: bdist_appimage
+        #env:
+        #  TEST_BDIST: bdist_appimage
         id: freeze-and-run
         run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv --deps=l
 
