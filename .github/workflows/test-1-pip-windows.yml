@@ -75,7 +75,7 @@ jobs:
 
       - name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug  --venv --deps=l
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug  --venv
 
       - name: Collect images and logs
         if: ${{ always() }}

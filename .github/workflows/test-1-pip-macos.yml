@@ -60,7 +60,7 @@ jobs:
         env:
           TEST_BDIST: bdist_mac
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv --deps=l
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv
 
       - name: Collect images and logs
         if: ${{ always() }}
