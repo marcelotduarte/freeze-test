@@ -13,6 +13,9 @@ jobs:
         sample:
           - pyside2-simplebrowser
           - pyside6-simplebrowser
+        include:
+          - sample: manifest
+            os: windows-latest
         os: [macos-latest]
         python-version: ["3.10"]
         branch: [develop]
