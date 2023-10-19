@@ -33,27 +33,24 @@ jobs:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         os: [windows-latest]
         python-version: ["3.8", "3.9", "3.10", "3.11"]
-        architecture: [x64, x86]
-        branch: [develop]
-        exclude:
-          - sample: matplotlib
-            architecture: x86
-          - sample: orjson
-            architecture: x86
-          - sample: pandas
-            architecture: x86
-          - sample: pyqt6
-            architecture: x86
-          - sample: pyqt6-simplebrowser
-            architecture: x86
-          - sample: pyside6
-            architecture: x86
-          - sample: pyside6-simplebrowser
+        architecture: [x64]
+        include:
+          - sample: simple
+            os: windows-latest
+            python-version: "3.10"
             architecture: x86
           - sample: pyside2
-            python-version: "3.11"
-          - sample: pyside2-simplebrowser
-            python-version: "3.11"
+            os: windows-latest
+            python-version: "3.10"
+            architecture: x86
+          - sample: service
+            os: windows-latest
+            python-version: "3.10"
+            architecture: x86
+          - sample: tkinter
+            os: windows-latest
+            python-version: "3.10"
+            architecture: x86
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
