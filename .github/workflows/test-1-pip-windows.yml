@@ -51,6 +51,11 @@ jobs:
             os: windows-latest
             python-version: "3.10"
             architecture: x86
+        exclude:
+          - sample: pyside2
+            python-version: "3.11"
+          - sample: pyside2-simplebrowser
+            python-version: "3.11"
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
