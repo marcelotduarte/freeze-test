@@ -11,12 +11,13 @@ jobs:
       fail-fast: false
       matrix:
         sample:
-          - pyqt6
-          - pyqt6-simplebrowser
-          - pyside6
-          - pyside6-simplebrowser
+          #- pyqt6
+          #- pyqt6-simplebrowser
+          #- pyside6
+          #- pyside6-simplebrowser
+          - simple
         os: [macos-latest]
-        python-version: ["3.10"]
+        python-version: ["3.11"]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
@@ -48,6 +49,10 @@ jobs:
           KEY_BASE: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
         run: |
           (python -m sysconfig > sysconfig-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
+          (python -m platform > platform-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
+          (python -c "import platform; print(platform.machine()" >> platform-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
+          (python -c "import platform; print(platform.architecture()" >> platform-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
+          (python -c "import platform; print(platform.uname()" >> platform-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
           mkdir ${{ matrix.sample }}-${{ matrix.os }}
           cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }} || true
           mkdir ${{ matrix.sample }}-${{ matrix.os }}/app-${{ matrix.python-version }}
