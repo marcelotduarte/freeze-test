@@ -68,7 +68,7 @@ jobs:
         with:
           name: screensnapshots-${{ matrix.sample }}
           path: |
-            ./samples/${{ matrix.sample }}/sysconfig-*.log
+            ./samples/${{ matrix.sample }}/*-*.log
             ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ matrix.os }}/**
             ./samples/${{ matrix.sample }}/*.dmg
             ./samples/${{ matrix.sample }}/*.tar
