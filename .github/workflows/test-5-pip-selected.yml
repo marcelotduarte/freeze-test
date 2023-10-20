@@ -49,10 +49,10 @@ jobs:
           KEY_BASE: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
         run: |
           (python -m sysconfig > sysconfig-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
-          (python -c "import platform; print(platform.platform())" > platform-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
-          (python -c "import platform; print(platform.machine())" >> platform-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
-          (python -c "import platform; print(platform.architecture())" >> platform-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
-          (python -c "import platform; print(platform.uname())" >> platform-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
+          (python -c "import platform; print('platform', platform.platform())" > platform-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
+          (python -c "import platform; print('machine', platform.machine())" >> platform-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
+          (python -c "import platform; print('architecture', platform.architecture())" >> platform-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
+          (python -c "import platform; print('uname', platform.uname())" >> platform-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
           mkdir ${{ matrix.sample }}-${{ matrix.os }}
           cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }} || true
           mkdir ${{ matrix.sample }}-${{ matrix.os }}/app-${{ matrix.python-version }}
