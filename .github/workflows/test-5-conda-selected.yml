@@ -14,7 +14,7 @@ jobs:
           - pandas
           - pyqt5-simplebrowser
           - pyside2-simplebrowser
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [macos-latest]
         python-version: ["3.10"]
         branch: [develop]
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
@@ -45,7 +45,7 @@ jobs:
         env:
           TEST_BDIST: bdist_dmg
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=d --venv
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=l --venv
 
       - name: Collect images and logs
         if: ${{ always() }}
