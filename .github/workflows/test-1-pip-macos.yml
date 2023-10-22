@@ -34,7 +34,6 @@ jobs:
         os: [macos-latest]
         python-version: ["3.8", "3.9", "3.10", "3.11"]
         architecture: [x64]
-        branch: [develop]
         exclude:
           - sample: pyside2
             python-version: "3.11"
@@ -47,7 +46,7 @@ jobs:
       - name: Checkout cx_Freeze
         uses: actions/checkout@v4
         with:
-          ref: develop
+          ref: develop615x
           repository: marcelotduarte/cx_Freeze
 
       - name: Setup Python
@@ -60,7 +59,7 @@ jobs:
         env:
           TEST_BDIST: bdist_mac
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv --deps=e
 
       - name: Collect images and logs
         if: ${{ always() }}
