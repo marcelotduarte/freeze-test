@@ -27,7 +27,7 @@ on:
           - macos-latest
           - windows-latest
 
-name: Test-1-wheels (${{ inputs.os }})
+name: Test-1-wheels
 jobs:
   matrix:
     name: Generate matrix of samples
