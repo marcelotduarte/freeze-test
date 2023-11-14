@@ -1,8 +1,6 @@
 name: Test-1-wheels (macOS)
 
 on:
-  #push:
-  #  branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -46,7 +44,7 @@ jobs:
       - name: Checkout cx_Freeze
         uses: actions/checkout@v4
         with:
-          ref: develop
+          ref: develop615x
           repository: marcelotduarte/cx_Freeze
 
       - name: Setup Python
