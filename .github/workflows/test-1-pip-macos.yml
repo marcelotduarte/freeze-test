@@ -44,7 +44,7 @@ jobs:
       - name: Checkout cx_Freeze
         uses: actions/checkout@v4
         with:
-          ref: develop615x
+          ref: develop
           repository: marcelotduarte/cx_Freeze
 
       - name: Setup Python
@@ -57,7 +57,7 @@ jobs:
         env:
           TEST_BDIST: bdist_mac
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv --deps=e
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv
 
       - name: Collect images and logs
         if: ${{ always() }}
