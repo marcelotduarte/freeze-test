@@ -13,6 +13,10 @@ on:
         default: ""
         required: false
         type: string
+      bdist:
+        default: ""
+        required: false
+        type: string
 
 name: Test-1-wheels
 jobs:
@@ -75,8 +79,8 @@ jobs:
           architecture: x64
 
       - name: Freeze and run "${{ matrix.sample }}"
-        #env:
-        #  TEST_BDIST: bdist_appimage
+        env:
+          TEST_BDIST: ${{ inputs.bdist }}
         id: freeze-and-run
         run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv --deps=${{ inputs.version }}
 
