@@ -25,16 +25,14 @@ on:
           - ""
           - "bdist_mac"
           - "bdist_dmg"
-          - "bdist_rpm"
-          - "bdist_deb"
-          - "bdist_appimage"
 
 name: Test-1-wheels (macOS)
 jobs:
   tests:
-    name: Test-1-wheels (macOS)
+    name: Test-wheels-macos-${{ inputs.branch }}-${{ inputs.version }}-${{ inputs.bdist }}
     uses: ./.github/workflows/test-1-pip-base.yml
     with:
       branch: ${{ inputs.branch }}
       version: ${{ inputs.version }}
+      bdist: ${{ inputs.bdist }}
       os: macos-latest
