@@ -1,9 +1,32 @@
 name: Test-5-pip-selected
 
 on:
-  #push:
-  #  branches: [ main ]
   workflow_dispatch:
+    inputs:
+      branch:
+        default: develop
+        required: true
+        type: choice
+        options:
+          - develop
+          - develop615x
+      version:
+        default: "d"
+        required: false
+        type: choice
+        options:
+          - ""
+          - "d"
+          - "e"
+          - "l"
+      bdist:
+        default: ""
+        required: false
+        type: choice
+        options:
+          - ""
+          - "bdist_mac"
+          - "bdist_dmg"
 
 jobs:
   tests:
@@ -31,7 +54,7 @@ jobs:
       - name: Checkout cx_Freeze
         uses: actions/checkout@v4
         with:
-          ref: develop
+          ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
       - uses: actions/setup-python@v4
@@ -41,9 +64,9 @@ jobs:
 
       - name: Freeze and run "${{ matrix.sample }}"
         env:
-          TEST_BDIST: bdist_mac
+          TEST_BDIST: ${{ inputs.bdist }}
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=d --venv
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv --deps=${{ inputs.version }}
 
       - name: Collect images and logs
         if: ${{ always() }}
