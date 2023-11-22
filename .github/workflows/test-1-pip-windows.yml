@@ -32,7 +32,7 @@ jobs:
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
         os: [windows-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.7"]
         architecture: [x64]
         include:
           - sample: simple
