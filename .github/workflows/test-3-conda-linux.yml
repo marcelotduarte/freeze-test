@@ -79,6 +79,6 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
-          name: screensnapshots
+          name: screensnapshots-conda-linux
           path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ matrix.os }}/**
           if-no-files-found: ignore
