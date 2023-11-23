@@ -1,0 +1,88 @@
+name: Test-1-wheels (Windows 32bit)
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        default: develop
+        required: true
+        type: choice
+        options:
+          - develop
+          - develop615x
+      version:
+        default: ""
+        required: false
+        type: choice
+        options:
+          - ""
+          - "d"
+          - "e"
+          - "l"
+
+jobs:
+  matrix:
+    name: Generate matrix of samples
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+          repository: marcelotduarte/cx_Freeze
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - id: set-matrix
+        run: echo "matrix=$(python ci/_platform.py windows)" >> $GITHUB_OUTPUT
+
+  tests:
+    needs: [matrix]
+    strategy:
+      fail-fast: false
+      matrix:
+        sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
+        os: [windows-latest]
+        python-version: ["3.10"]
+        architecture: [x86]
+    name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+
+      - name: Checkout cx_Freeze
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+          repository: marcelotduarte/cx_Freeze
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.architecture }}
+
+      - name: Freeze and run "${{ matrix.sample }}"
+        id: freeze-and-run
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug  --venv --deps=${{ inputs.version }}
+
+      - name: Collect images and logs
+        if: ${{ always() }}
+        working-directory: samples/${{ matrix.sample }}
+        run: |
+          mkdir ${{ matrix.sample }}-${{ matrix.os }}
+          cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }} || true
+
+      - name: Upload the snapshots and logs
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: screensnapshots
+          path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ matrix.os }}/**
+          if-no-files-found: ignore
