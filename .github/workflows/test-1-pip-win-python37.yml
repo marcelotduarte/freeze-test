@@ -48,6 +48,15 @@ jobs:
         os: [windows-latest]
         python-version: ["3.7"]
         architecture: [x64, x86]
+        exclude:
+          - sample: pyqt6
+            architecture: x86
+          - sample: pyqt6-simplebrowser
+            architecture: x86
+          - sample: pyside6
+            architecture: x86
+          - sample: pyside6-simplebrowser
+            architecture: x86
     name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
