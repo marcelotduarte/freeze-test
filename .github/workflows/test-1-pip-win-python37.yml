@@ -66,6 +66,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
+      - run: pip list
 
       - name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
