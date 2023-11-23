@@ -102,6 +102,6 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
-          name: screensnapshots-pip-${{ inputs.os }}
+          name: screensnapshots-conda-${{ inputs.os }}
           path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ inputs.os }}/**
           if-no-files-found: ignore
