@@ -1,83 +1,37 @@
-name: Test-3-conda (Windows)
-
 on:
-  #push:
-  #  branches: [ main ]
   workflow_dispatch:
+    inputs:
+      branch:
+        default: develop
+        required: true
+        type: choice
+        options:
+          - develop
+          - develop615x
+      version:
+        default: ""
+        required: false
+        type: choice
+        options:
+          - ""
+          - "d"
+          - "e"
+          - "l"
+      bdist:
+        default: ""
+        required: false
+        type: choice
+        options:
+          - ""
+          - "bdist_msi"
 
+name: Test-3-conda (Windows)
 jobs:
-  matrix:
-    name: Generate matrix of samples
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-
-      - uses: actions/checkout@v4
-        with:
-          ref: develop
-          repository: marcelotduarte/cx_Freeze
-
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.11"
-
-      - id: set-matrix
-        run: echo "matrix=$(python ci/_platform.py windows)" >> $GITHUB_OUTPUT
-
   tests:
-    needs: [matrix]
-    strategy:
-      fail-fast: false
-      matrix:
-        sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
-        os: [windows-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
-        architecture: [x64]
-        exclude:
-          - sample: pyqt6
-          - sample: pyqt6-simplebrowser
-          - sample: pyside6-simplebrowser
-          - sample: matplotlib_tk
-            python-version: "3.8"
-    name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
-    runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        shell: bash -l {0}
-    env:
-      KEY_BASE: ${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
-      PIP_DISABLE_PIP_VERSION_CHECK: '1'
-    steps:
-
-      - name: Checkout cx_Freeze
-        uses: actions/checkout@v4
-        with:
-          ref: develop
-          repository: marcelotduarte/cx_Freeze
-
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          activate-environment: ${{ env.KEY_BASE }}
-          python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.architecture }}
-          channels: conda-forge
-
-      - name: Freeze and run "${{ matrix.sample }}"
-        id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug
-
-      - name: Collect images and logs
-        if: ${{ always() }}
-        working-directory: samples/${{ matrix.sample }}
-        run: |
-          mkdir ${{ matrix.sample }}-${{ matrix.os }}
-          cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }} || true
-
-      - name: Upload the snapshots and logs
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: screensnapshots-conda-windows
-          path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ matrix.os }}/**
-          if-no-files-found: ignore
+    name: Test-conda-windows-${{ inputs.branch }}-${{ inputs.version }}-${{ inputs.bdist }}
+    uses: ./.github/workflows/test-3-conda-base.yml
+    with:
+      branch: ${{ inputs.branch }}
+      version: ${{ inputs.version }}
+      bdist: ${{ inputs.bdist }}
+      os: windows-latest

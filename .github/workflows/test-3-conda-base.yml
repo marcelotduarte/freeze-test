@@ -1,0 +1,107 @@
+on:
+  workflow_call:
+    inputs:
+      branch:
+        default: develop
+        required: true
+        type: string
+      os:
+        default: ubuntu-latest
+        required: true
+        type: string
+      version:
+        default: ""
+        required: false
+        type: string
+      bdist:
+        default: ""
+        required: false
+        type: string
+
+name: Test-3-conda
+jobs:
+  matrix:
+    name: Generate matrix of samples
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+          repository: marcelotduarte/cx_Freeze
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - id: set-matrix
+        run: |
+          if [ "${{ inputs.os }}" == "macos-latest" ]; then
+            PLATFORM=macos
+          elif [ "${{ inputs.os }}" == "windows-latest" ]; then
+            PLATFORM=windows
+          else
+            PLATFORM=linux
+          fi
+          echo "matrix=$(python ci/_platform.py $PLATFORM)" >> $GITHUB_OUTPUT
+
+  tests:
+    needs: [matrix]
+    strategy:
+      fail-fast: false
+      matrix:
+        sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        exclude:
+          - sample: pyqt6
+          - sample: pyqt6-simplebrowser
+          - sample: pyside6-simplebrowser
+          - sample: matplotlib_tk
+            python-version: "3.8"
+    name: ${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.python-version }}
+    runs-on: ${{ inputs.os }}
+    defaults:
+      run:
+        shell: bash -l {0}
+    env:
+      KEY_BASE: ${{ inputs.os }}-${{ matrix.python-version }}
+      PIP_DISABLE_PIP_VERSION_CHECK: '1'
+    steps:
+
+      - name: Checkout cx_Freeze
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+          repository: marcelotduarte/cx_Freeze
+
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: ${{ env.KEY_BASE }}
+          python-version: ${{ matrix.python-version }}
+          architecture: x64
+          channels: conda-forge
+
+      - name: Freeze and run "${{ matrix.sample }}"
+        id: freeze-and-run
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=${{ inputs.version }}
+
+      - name: Collect images and logs
+        if: ${{ always() }}
+        working-directory: samples/${{ matrix.sample }}
+        run: |
+          mkdir ${{ matrix.sample }}-${{ inputs.os }}
+          cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ inputs.os }} || true
+          if [[ ${{ inputs.os }} == macos-* ]]; then
+            mkdir ${{ matrix.sample }}-${{ inputs.os }}/app-${{ matrix.python-version }}
+            cp build/*.app/Contents/MacOS/*.{err,log,png} ${{ matrix.sample }}-${{ inputs.os }}/app-${{ matrix.python-version }} || true
+          fi
+
+      - name: Upload the snapshots and logs
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: screensnapshots-pip-${{ inputs.os }}
+          path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ inputs.os }}/**
+          if-no-files-found: ignore

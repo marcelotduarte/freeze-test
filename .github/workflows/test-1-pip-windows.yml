@@ -28,7 +28,7 @@ on:
 name: Test-1-wheels (Windows)
 jobs:
   tests:
-    name: Test-wheels-macos-${{ inputs.branch }}-${{ inputs.version }}-${{ inputs.bdist }}
+    name: Test-wheels-windows-${{ inputs.branch }}-${{ inputs.version }}-${{ inputs.bdist }}
     uses: ./.github/workflows/test-1-pip-base.yml
     with:
       branch: ${{ inputs.branch }}
