@@ -28,7 +28,8 @@ jobs:
     name: Generate matrix of samples
     runs-on: ${{ inputs.os }}
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      sample: ${{ steps.get-matrix.outputs.samples }}
+      python-version: ${{ steps.get-python.outputs.versions }}
     steps:
 
       - uses: actions/checkout@v4
@@ -40,16 +41,17 @@ jobs:
         with:
           python-version: "3.11"
 
-      - id: set-matrix
-        run: echo "matrix=$(python ci/_platform.py)" >> $GITHUB_OUTPUT
+      - id: get-matrix
+        run: echo "samples=$(python ci/_platform.py)" >> $GITHUB_OUTPUT
         shell: bash
 
-      - run: |
+      - id: get-python
+        run: |
           if [ "${{ inputs.python-version }}" == "${{ inputs.python-version.default }}" ]
           then
-            echo 'python-version=["3.8", "3.9", "3.10", "3.11"]' >> $GITHUB_OUTPUT
+            echo 'versions=["3.8", "3.9", "3.10", "3.11"]' >> $GITHUB_OUTPUT
           else
-            echo "python-version=[${{ inputs.python-version }}]" >> $GITHUB_OUTPUT
+            echo 'versions=["${{ inputs.python-version }}"]' >> $GITHUB_OUTPUT
           fi
         shell: bash
 
@@ -58,7 +60,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
+        sample: ${{ fromJSON(needs.matrix.outputs.sample) }}
         python-version: ${{ fromJSON(needs.matrix.outputs.python-version) }}
         exclude:
           - sample: pyside2
