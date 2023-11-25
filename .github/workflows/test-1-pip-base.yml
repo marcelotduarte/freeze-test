@@ -5,21 +5,20 @@ on:
         default: develop
         required: true
         type: string
-      os:
-        default: ubuntu-latest
-        required: true
-        type: string
       python-version:
         default: "3.8-3.11"
         required: false
         type: string
-      version:
-        default: ""
+      deps:
+        default: "p"
         required: false
         type: string
       bdist:
-        default: ""
         required: false
+        type: string
+      os:
+        default: ubuntu-latest
+        required: true
         type: string
 
 name: Test-1-wheels
@@ -29,7 +28,9 @@ jobs:
     runs-on: ${{ inputs.os }}
     outputs:
       sample: ${{ steps.get-matrix.outputs.samples }}
-      python-version: ${{ steps.get-python.outputs.versions }}
+      python-version: ${{ steps.get-python.outputs.python-version }}
+      branch: ${{ steps.get-python.outputs.branch }}
+      deps: ${{ steps.get-python.outputs.deps }}
     steps:
 
       - uses: actions/checkout@v4
@@ -49,9 +50,17 @@ jobs:
         run: |
           if [ "${{ inputs.python-version }}" == "${{ inputs.python-version.default }}" ]
           then
-            echo 'versions=["3.8", "3.9", "3.10", "3.11"]' >> $GITHUB_OUTPUT
+            echo 'python-version=["3.8", "3.9", "3.10", "3.11"]' >> $GITHUB_OUTPUT
           else
-            echo 'versions=["${{ inputs.python-version }}"]' >> $GITHUB_OUTPUT
+            echo 'python-version=["${{ inputs.python-version }}"]' >> $GITHUB_OUTPUT
+          fi
+          if [ "${{ inputs.python-version }}" == "3.7" ]
+          then
+            echo 'branch=develop615x' >> $GITHUB_OUTPUT
+            echo 'deps=d' >> $GITHUB_OUTPUT
+          else
+            echo 'branch=${{ inputs.branch }}' >> $GITHUB_OUTPUT
+            echo 'deps=${{ inputs.deps }}' >> $GITHUB_OUTPUT
           fi
         shell: bash
 
@@ -71,6 +80,8 @@ jobs:
             python-version: "3.12"
           - sample: pyside2-simplebrowser
             python-version: "3.12"
+        branch: ${{ fromJSON(needs.matrix.outputs.branch) }}
+        deps: ${{ fromJSON(needs.matrix.outputs.deps) }}
     name: ${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.python-version }}
     runs-on: ${{ inputs.os }}
     defaults:
@@ -81,7 +92,7 @@ jobs:
       - name: Checkout cx_Freeze
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.branch }}
+          ref: ${{ matrix.branch }}
           repository: marcelotduarte/cx_Freeze
 
       - name: Setup Python
@@ -94,7 +105,7 @@ jobs:
         env:
           TEST_BDIST: ${{ inputs.bdist }}
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv --deps=${{ inputs.version }}
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv --deps=${{ matrix.deps }}
 
       - name: Collect images and logs
         if: ${{ always() }}

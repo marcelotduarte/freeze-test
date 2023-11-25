@@ -16,12 +16,12 @@ on:
           - "3.8-3.11"
           - "3.7"
           - "3.12"
-      version:
-        default: ""
+      deps:
+        default: "p"
         required: false
         type: choice
         options:
-          - ""
+          - "p"
           - "d"
           - "e"
           - "l"
@@ -36,11 +36,11 @@ on:
 name: Test-1-wheels (Windows)
 jobs:
   tests:
-    name: Test-wheels-windows-${{ inputs.branch }}-${{ inputs.version }}-${{ inputs.bdist }}
+    name: Test-wheels-windows-${{ inputs.branch }}-${{ inputs.deps }}-${{ inputs.bdist }}
     uses: ./.github/workflows/test-1-pip-base.yml
     with:
       branch: ${{ inputs.branch }}
       python-version: ${{ inputs.python-version }}
-      version: ${{ inputs.version }}
+      deps: ${{ inputs.deps }}
       bdist: ${{ inputs.bdist }}
       os: windows-latest
