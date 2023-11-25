@@ -9,6 +9,10 @@ on:
         default: ubuntu-latest
         required: true
         type: string
+      python-version:
+        default: "3.8-3.11"
+        required: false
+        type: string
       version:
         default: ""
         required: false
@@ -22,7 +26,7 @@ name: Test-1-wheels
 jobs:
   matrix:
     name: Generate matrix of samples
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.os }}
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -37,15 +41,17 @@ jobs:
           python-version: "3.11"
 
       - id: set-matrix
-        run: |
-          if [ "${{ inputs.os }}" == "macos-latest" ]; then
-            PLATFORM=macos
-          elif [ "${{ inputs.os }}" == "windows-latest" ]; then
-            PLATFORM=windows
+        run: echo "matrix=$(python ci/_platform.py)" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - run: |
+          if [ "${{ inputs.python-version }}" == "${{ inputs.python-version.default }}" ]
+          then
+            echo "python-version=['3.8', '3.9', '3.10', '3.11']" >> $GITHUB_OUTPUT
           else
-            PLATFORM=linux
+            echo "python-version=[${{ inputs.python-version }}]" >> $GITHUB_OUTPUT
           fi
-          echo "matrix=$(python ci/_platform.py $PLATFORM)" >> $GITHUB_OUTPUT
+        shell: bash
 
   tests:
     needs: [matrix]
@@ -53,12 +59,16 @@ jobs:
       fail-fast: false
       matrix:
         sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ${{ fromJSON(needs.matrix.outputs.python-version) }}
         exclude:
           - sample: pyside2
             python-version: "3.11"
           - sample: pyside2-simplebrowser
             python-version: "3.11"
+          - sample: pyside2
+            python-version: "3.12"
+          - sample: pyside2-simplebrowser
+            python-version: "3.12"
     name: ${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.python-version }}
     runs-on: ${{ inputs.os }}
     defaults:

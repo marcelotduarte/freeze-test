@@ -8,6 +8,14 @@ on:
         options:
           - develop
           - develop615x
+      python-version:
+        default: "3.8-3.11"
+        required: false
+        type: choice
+        options:
+          - "3.8-3.11"
+          - "3.7"
+          - "3.12"
       version:
         default: ""
         required: false
@@ -34,6 +42,7 @@ jobs:
     uses: ./.github/workflows/test-1-pip-base.yml
     with:
       branch: ${{ inputs.branch }}
+      python-version: ${{ inputs.python-version }}
       version: ${{ inputs.version }}
       bdist: ${{ inputs.bdist }}
       os: ubuntu-latest

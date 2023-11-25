@@ -22,7 +22,7 @@ name: Test-3-conda
 jobs:
   matrix:
     name: Generate matrix of samples
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.os }}
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -37,15 +37,7 @@ jobs:
           python-version: "3.11"
 
       - id: set-matrix
-        run: |
-          if [ "${{ inputs.os }}" == "macos-latest" ]; then
-            PLATFORM=macos
-          elif [ "${{ inputs.os }}" == "windows-latest" ]; then
-            PLATFORM=windows
-          else
-            PLATFORM=linux
-          fi
-          echo "matrix=$(python ci/_platform.py $PLATFORM)" >> $GITHUB_OUTPUT
+        run: echo "matrix=$(python ci/_platform.py)" >> $GITHUB_OUTPUT
 
   tests:
     needs: [matrix]
