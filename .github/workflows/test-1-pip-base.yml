@@ -48,8 +48,7 @@ jobs:
 
       - id: get-python
         run: |
-          if [ "${{ inputs.python-version }}" == "${{ inputs.python-version.default }}" ]
-          then
+          if [[ ${{ inputs.python-version }} == 3.*-3.* ]]; then
             echo 'python-version=["3.8", "3.9", "3.10", "3.11"]' >> $GITHUB_OUTPUT
           else
             echo 'python-version=["${{ inputs.python-version }}"]' >> $GITHUB_OUTPUT
