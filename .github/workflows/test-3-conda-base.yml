@@ -109,6 +109,8 @@ jobs:
           channels: conda-forge
 
       - name: Freeze and run "${{ matrix.sample }}"
+        env:
+          TEST_BDIST: ${{ inputs.bdist }}
         id: freeze-and-run
         run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=${{ matrix.deps }}
 

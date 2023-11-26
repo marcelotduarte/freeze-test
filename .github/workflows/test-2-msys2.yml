@@ -1,16 +1,40 @@
-name: Test-2-msys2
-
 on:
-  #push:
-  #  branches: [ main ]
   workflow_dispatch:
+    inputs:
+      sys-version:
+        default: "ucrt64, mingw64, mingw32"
+        required: false
+        type: choice
+        options:
+          - "ucrt64, mingw64, mingw32"
+          - "ucrt64"
+          - "mingw64"
+          - "mingw32"
+      deps:
+        default: "p"
+        required: false
+        type: choice
+        options:
+          - "p"
+          - "d"
+          - "l"
+      bdist:
+        default: ""
+        required: false
+        type: choice
+        options:
+          - ""
+          - "bdist_msi"
 
+name: Test-2-msys2
 jobs:
   matrix:
     name: Generate matrix of samples
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      sample: ${{ steps.get-samples.outputs.samples }}
+      sys-version: ${{ steps.get-sys.outputs.version }}
+      deps: ${{ steps.get-deps.outputs.deps }}
     steps:
 
       - uses: actions/checkout@v4
@@ -22,16 +46,19 @@ jobs:
         with:
           python-version: "3.11"
 
-      - id: set-matrix
-        run: echo "matrix=$(python ci/_platform.py mingw)" >> $GITHUB_OUTPUT
+      - id: get-samples
+        run: echo "samples=$(python ci/_platform.py mingw)" >> $GITHUB_OUTPUT
+
+      - id: get-sys
+        run: echo 'version=[${{ inputs.sys-version }}]' >> $GITHUB_OUTPUT
 
   tests:
     needs: [matrix]
     strategy:
       fail-fast: false
       matrix:
-        sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
-        sys: [ ucrt64, mingw64, mingw32 ]
+        sample: ${{ fromJSON(needs.matrix.outputs.sample) }}
+        sys: ${{ fromJSON(needs.matrix.outputs.sys-version) }}
         exclude:
           - sample: opencv
             sys: mingw32
@@ -40,8 +67,6 @@ jobs:
           - sample: pyside6
             sys: mingw32
     name: ${{ matrix.sample }}-${{ matrix.sys }}
-    env:
-      PACKAGES: https://marcelotduarte.github.io/packages
     runs-on: windows-latest
     defaults:
       run:
@@ -61,8 +86,10 @@ jobs:
           update: true
 
       - name: Freeze and run "${{ matrix.sample }}"
+        env:
+          TEST_BDIST: ${{ inputs.bdist }}
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=l
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=${{ inputs.deps }}
 
       - name: Collect images and logs
         if: ${{ always() }}
