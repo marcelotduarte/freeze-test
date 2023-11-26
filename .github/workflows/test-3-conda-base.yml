@@ -5,17 +5,20 @@ on:
         default: develop
         required: true
         type: string
-      os:
-        default: ubuntu-latest
-        required: true
+      python-version:
+        default: "3.8-3.11"
+        required: false
         type: string
-      version:
-        default: ""
+      deps:
+        default: "p"
         required: false
         type: string
       bdist:
-        default: ""
         required: false
+        type: string
+      os:
+        default: ubuntu-latest
+        required: true
         type: string
 
 name: Test-3-conda
@@ -24,7 +27,10 @@ jobs:
     name: Generate matrix of samples
     runs-on: ${{ inputs.os }}
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      sample: ${{ steps.get-samples.outputs.samples }}
+      python-version: ${{ steps.get-python.outputs.python-version }}
+      branch: ${{ steps.get-branch.outputs.branch }}
+      deps: ${{ steps.get-deps.outputs.deps }}
     steps:
 
       - uses: actions/checkout@v4
@@ -36,22 +42,54 @@ jobs:
         with:
           python-version: "3.11"
 
-      - id: set-matrix
-        run: echo "matrix=$(python ci/_platform.py)" >> $GITHUB_OUTPUT
+      - id: get-samples
+        run: echo "samples=$(python ci/_platform.py)" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - id: get-python
+        run: |
+          if [[ ${{ inputs.python-version }} == 3.*-3.* ]]; then
+            echo 'python-version=["3.8", "3.9", "3.10", "3.11"]' >> $GITHUB_OUTPUT
+          else
+            echo 'python-version=["${{ inputs.python-version }}"]' >> $GITHUB_OUTPUT
+          fi
+        shell: bash
+
+      - id: get-branch
+        run: |
+          branch=${{ inputs.branch }}
+          if [ "${{ inputs.python-version }}" == "3.7" ]; then
+            branch=develop615x
+          fi
+          echo "branch=[\"$branch\"]" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - id: get-deps
+        run: |
+          deps=${{ inputs.deps }}
+          if [ "${{ inputs.python-version }}" == "3.7" ]; then
+            if [ "$deps" != "d" ] && [ "$deps" != "l" ]; then
+              deps=d
+            fi
+          fi
+          echo "deps=[\"$deps\"]" >> $GITHUB_OUTPUT
+        shell: bash
 
   tests:
     needs: [matrix]
     strategy:
       fail-fast: false
       matrix:
-        sample: ${{ fromJSON(needs.matrix.outputs.matrix) }}
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        sample: ${{ fromJSON(needs.matrix.outputs.sample) }}
+        python-version: ${{ fromJSON(needs.matrix.outputs.python-version) }}
         exclude:
           - sample: pyqt6
           - sample: pyqt6-simplebrowser
           - sample: pyside6-simplebrowser
           - sample: matplotlib_tk
             python-version: "3.8"
+        branch: ${{ fromJSON(needs.matrix.outputs.branch) }}
+        deps: ${{ fromJSON(needs.matrix.outputs.deps) }}
     name: ${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.python-version }}
     runs-on: ${{ inputs.os }}
     defaults:
@@ -65,7 +103,7 @@ jobs:
       - name: Checkout cx_Freeze
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.branch }}
+          ref: ${{ matrix.branch }}
           repository: marcelotduarte/cx_Freeze
 
       - uses: conda-incubator/setup-miniconda@v2
@@ -77,7 +115,7 @@ jobs:
 
       - name: Freeze and run "${{ matrix.sample }}"
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=${{ inputs.version }}
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=${{ matrix.deps }}
 
       - name: Collect images and logs
         if: ${{ always() }}
