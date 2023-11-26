@@ -8,12 +8,20 @@ on:
         options:
           - develop
           - develop615x
-      version:
-        default: ""
+      python-version:
+        default: "3.8-3.11"
         required: false
         type: choice
         options:
-          - ""
+          - "3.8-3.11"
+          - "3.7"
+          - "3.12"
+      deps:
+        default: "p"
+        required: false
+        type: choice
+        options:
+          - "p"
           - "d"
           - "e"
           - "l"
@@ -32,6 +40,7 @@ jobs:
     uses: ./.github/workflows/test-3-conda-base.yml
     with:
       branch: ${{ inputs.branch }}
-      version: ${{ inputs.version }}
+      python-version: ${{ inputs.python-version }}
+      deps: ${{ inputs.deps }}
       bdist: ${{ inputs.bdist }}
       os: windows-latest
