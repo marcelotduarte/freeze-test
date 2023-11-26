@@ -58,20 +58,12 @@ jobs:
       - id: get-branch
         run: |
           branch=${{ inputs.branch }}
-          if [ "${{ inputs.python-version }}" == "3.7" ]; then
-            branch=develop615x
-          fi
           echo "branch=[\"$branch\"]" >> $GITHUB_OUTPUT
         shell: bash
 
       - id: get-deps
         run: |
           deps=${{ inputs.deps }}
-          if [ "${{ inputs.python-version }}" == "3.7" ]; then
-            if [ "$deps" != "d" ] && [ "$deps" != "l" ]; then
-              deps=d
-            fi
-          fi
           echo "deps=[\"$deps\"]" >> $GITHUB_OUTPUT
         shell: bash
 

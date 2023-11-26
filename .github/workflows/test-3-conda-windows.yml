@@ -7,14 +7,12 @@ on:
         type: choice
         options:
           - develop
-          - develop615x
       python-version:
         default: "3.8-3.11"
         required: false
         type: choice
         options:
           - "3.8-3.11"
-          - "3.7"
           - "3.12"
       deps:
         default: "p"
@@ -23,7 +21,6 @@ on:
         options:
           - "p"
           - "d"
-          - "e"
           - "l"
       bdist:
         default: ""
