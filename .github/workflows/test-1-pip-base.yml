@@ -27,10 +27,10 @@ jobs:
     name: Generate matrix of samples
     runs-on: ${{ inputs.os }}
     outputs:
-      sample: ${{ steps.get-matrix.outputs.samples }}
+      sample: ${{ steps.get-samples.outputs.samples }}
       python-version: ${{ steps.get-python.outputs.python-version }}
-      branch: ${{ steps.get-python.outputs.branch }}
-      deps: ${{ steps.get-python.outputs.deps }}
+      branch: ${{ steps.get-branch.outputs.branch }}
+      deps: ${{ steps.get-deps.outputs.deps }}
     steps:
 
       - uses: actions/checkout@v4
@@ -42,7 +42,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - id: get-matrix
+      - id: get-samples
         run: echo "samples=$(python ci/_platform.py)" >> $GITHUB_OUTPUT
         shell: bash
 
@@ -54,14 +54,26 @@ jobs:
           else
             echo 'python-version=["${{ inputs.python-version }}"]' >> $GITHUB_OUTPUT
           fi
-          if [ "${{ inputs.python-version }}" == "3.7" ]
-          then
-            echo 'branch=develop615x' >> $GITHUB_OUTPUT
-            echo 'deps=d' >> $GITHUB_OUTPUT
-          else
-            echo 'branch=${{ inputs.branch }}' >> $GITHUB_OUTPUT
-            echo 'deps=${{ inputs.deps }}' >> $GITHUB_OUTPUT
+        shell: bash
+
+      - id: get-branch
+        run: |
+          local branch=${{ inputs.branch }}
+          if [ "${{ inputs.python-version }}" == "3.7" ]; then
+            branch=develop615x
           fi
+          echo "branch=$branch" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - id: get-deps
+        run: |
+          local deps=${{ inputs.deps }}
+          if [ "${{ inputs.python-version }}" == "3.7" ]; then
+            if [ "$deps" != "d" ] && [ "$deps" != "l" ]; then
+              deps=d
+            fi
+          fi
+          echo "deps=$deps" >> $GITHUB_OUTPUT
         shell: bash
 
   tests:
