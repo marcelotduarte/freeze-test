@@ -64,6 +64,9 @@ jobs:
       - id: get-deps
         run: |
           deps=${{ inputs.deps }}
+          if [ "${{ inputs.python-version }}" == "3.12" ]; then
+            deps=d
+          fi
           echo "deps=[\"$deps\"]" >> $GITHUB_OUTPUT
         shell: bash
 
