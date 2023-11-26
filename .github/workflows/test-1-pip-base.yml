@@ -58,7 +58,7 @@ jobs:
 
       - id: get-branch
         run: |
-          local branch=${{ inputs.branch }}
+          branch=${{ inputs.branch }}
           if [ "${{ inputs.python-version }}" == "3.7" ]; then
             branch=develop615x
           fi
@@ -67,7 +67,7 @@ jobs:
 
       - id: get-deps
         run: |
-          local deps=${{ inputs.deps }}
+          deps=${{ inputs.deps }}
           if [ "${{ inputs.python-version }}" == "3.7" ]; then
             if [ "$deps" != "d" ] && [ "$deps" != "l" ]; then
               deps=d
