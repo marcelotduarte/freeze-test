@@ -52,7 +52,7 @@ jobs:
       - id: get-sys
         run: |
           version="${{ inputs.sys-version }}"
-          version=$(python -c "print('$version'.replace(' ,', '\" ,\"'))")
+          version=$(python -c "print('$version'.replace(', ', '\", \"'))")
           echo "version=[\"$version\"]"
           echo "version=[\"$version\"]" >> $GITHUB_OUTPUT
 
