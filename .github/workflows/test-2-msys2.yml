@@ -50,10 +50,9 @@ jobs:
         run: echo "samples=$(python ci/_platform.py mingw)" >> $GITHUB_OUTPUT
 
       - id: get-sys
-        env:
-          version: "[${{ inputs.sys-version }}]"
         run: |
-          version=${{ toJSON(env.version) }}
+          version="[\"${{ inputs.sys-version }}\"]"
+          version=$(python -c "'$version'.replace(' ,', '\" ,\"')")
           echo "version=$version" >> $GITHUB_OUTPUT
 
   tests:
