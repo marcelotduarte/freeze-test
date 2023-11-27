@@ -51,7 +51,7 @@ jobs:
 
       - id: get-sys
         env:
-          version: [${{ inputs.sys-version }}]
+          version: "[${{ inputs.sys-version }}]"
         run: |
           version=${{ toJSON(env.version) }}
           echo "version=$version" >> $GITHUB_OUTPUT
