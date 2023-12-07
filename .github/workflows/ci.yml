@@ -15,7 +15,7 @@ jobs:
           repository: marcelotduarte/cx_Freeze
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           cache: 'pip'
           python-version: "3.11"
@@ -48,7 +48,7 @@ jobs:
           repository: marcelotduarte/cx_Freeze
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           cache: 'pip'
           python-version: ${{ matrix.python-version }}

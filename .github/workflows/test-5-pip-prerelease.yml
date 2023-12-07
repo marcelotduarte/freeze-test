@@ -16,7 +16,7 @@ jobs:
           ref: develop
           repository: marcelotduarte/cx_Freeze
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -74,7 +74,7 @@ jobs:
           repository: marcelotduarte/cx_Freeze
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
