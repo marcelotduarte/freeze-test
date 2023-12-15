@@ -168,7 +168,7 @@ jobs:
       - name: Upload the conda artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cx-freeze-conda-${{ matrix.config.os }}
+          name: cx-freeze-conda-${{ matrix.config.name }}
           path: |
             ./build_artifacts/*/cx_freeze*.conda
             ./build_artifacts/*/cx_freeze*.tar.bz2
@@ -216,7 +216,7 @@ jobs:
       - name: Upload the conda artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cx-freeze-conda-${{ matrix.config.os }}
+          name: cx-freeze-conda-${{ matrix.config.name }}
           path: |
             ./build_artifacts/*/cx_freeze*.conda
             ./build_artifacts/*/cx_freeze*.tar.bz2
