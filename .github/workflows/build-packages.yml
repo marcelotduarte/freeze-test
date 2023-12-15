@@ -168,7 +168,7 @@ jobs:
       - name: Upload the conda artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cx-freeze-conda
+          name: cx-freeze-conda-${{ matrix.config.os }}
           path: |
             ./build_artifacts/*/cx_freeze*.conda
             ./build_artifacts/*/cx_freeze*.tar.bz2
@@ -216,7 +216,7 @@ jobs:
       - name: Upload the conda artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cx-freeze-conda
+          name: cx-freeze-conda-${{ matrix.config.os }}
           path: |
             ./build_artifacts/*/cx_freeze*.conda
             ./build_artifacts/*/cx_freeze*.tar.bz2
@@ -238,10 +238,9 @@ jobs:
           python-version: "3.11"
           channels: conda-forge
 
-      - name: Download the conda artifacts
+      - name: Download all conda artifacts
         uses: actions/download-artifact@v4
         with:
-          name: cx-freeze-conda
           path: artifacts
 
       - run: ls -l artifacts
@@ -249,15 +248,17 @@ jobs:
       - run: conda install -c conda-forge conda-build
 
       - run: |
-          conda index -s linux-64 -s osx-64 -s osx-arm64 -s win-64 artifacts
+          mkdir -p build_artifacts
+          mv artifacts/cx-freeze-conda-*/* build_artifacts/
+          conda index -s linux-64 -s osx-64 -s osx-arm64 -s win-64 build_artifacts
 
-      - run: ls -l artifacts
+      - run: ls -l build_artifacts
 
       - name: Upload repository data to the conda artifact
         uses: actions/upload-artifact@v4
         with:
           name: cx-freeze-conda
-          path: ./artifacts/*/*
+          path: ./build_artifacts/*/*
 
   packages:
     needs:
@@ -287,29 +288,10 @@ jobs:
           git push origin :gh-pages || true
           git checkout --orphan gh-pages
 
-      - name: Download the cx_Logging wheels
+      - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
-          name: cx-logging-wheelhouse
-          path: cx-logging
-
-      - name: Download the cx_Freeze wheels
-        uses: actions/download-artifact@v4
-        with:
-          name: cx-freeze-wheelhouse
-          path: cx-freeze
-
-      - name: Download the mingw artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: cx-freeze-mingw
-          path: mingw
-
-      - name: Download the conda artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: cx-freeze-conda
-          path: conda
+          path: artifacts
 
       - name: Download the LIEF wheels
         env:
@@ -326,18 +308,27 @@ jobs:
       - name: Create packages template
         run: |
           # cx_Logging wheels
+          mkdir -p cx-logging
+          mv artifacts/cx-logging-*/* cx-logging/
           python make_index.py cx-logging --base cx_Logging
-          # cx_Freeze wheels
-          python make_index.py cx-freeze --base cx_Freeze
-          # mingw packages
-          python make_index.py mingw --base python-cx-freeze --mask "*.tar.zst"
-          # conda packages
+          # msys2 packages (process before wheels)
+          mkdir -p msys2
+          mv artifacts/cx-freeze-msys2-*/* msys2/
+          python make_index.py msys2 --base python-cx-freeze --mask "*.tar.zst"
+          # conda packages (process before wheels)
+          mkdir -p conda
+          mv artifacts/cx-freeze-conda/* conda/
           python make_index.py conda --mask "cx_freeze*.conda" --mask "cx_freeze*.tar.bz2"
+          # cx_Freeze wheels
+          mkdir -p cx-freeze
+          mv artifacts/cx-freeze-*/* cx-freeze/
+          python make_index.py cx-freeze --base cx_Freeze
           # LIEF wheels
           python make_index.py lief --base LIEF
 
           # cleanup
           rm make_index.py
+          rm -rf artifacts
 
           # configuration
           echo "theme: jekyll-theme-architect">_config.yml
@@ -346,7 +337,7 @@ jobs:
           VERSION=$(ls cx-freeze | (read name; echo $name) | sed 's/-/ /g' | awk '{print $2}')
           echo -e "# Development packages for cx_Freeze $VERSION\n">index.md
           echo -e "Development wheels for [cx_Freeze](cx-freeze/index.md).\n">>index.md
-          echo -e "Development packages for MSYS2 [python-cx-freeze](mingw/index.md).\n">>index.md
+          echo -e "Development packages for MSYS2 [python-cx-freeze](msys2/index.md).\n">>index.md
           echo -e "Development packages for conda-forge [cx_freeze](conda/index.md).\n">>index.md
           echo -e "# Packages for cx_Logging 3.1 \[Windows\]\[Python 3.12\]\n">>index.md
           echo -e "Unofficial wheels for [cx_Logging](cx-logging/index.md).\n">>index.md
