@@ -125,10 +125,10 @@ jobs:
             cp build/*.app/Contents/MacOS/*.{err,log,png} ${{ matrix.sample }}-${{ inputs.os }}/app-${{ matrix.python-version }} || true
           fi
 
-      - name: Upload the snapshots and logs
+      - name: Upload the logs (and screenshots)
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: screensnapshots-conda-${{ inputs.os }}
+          name: logs-conda-${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.python-version }}
           path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ inputs.os }}/**
           if-no-files-found: ignore

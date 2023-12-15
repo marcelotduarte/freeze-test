@@ -101,10 +101,10 @@ jobs:
           mkdir ${{ matrix.sample }}-${{ matrix.sys }}
           cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.sys }} || true
 
-      - name: Upload the snapshots and logs
+      - name: Upload the logs (and screenshots)
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: screensnapshots-mingw
+          name: logs-msys2-${{ matrix.sample }}-${{ matrix.sys }}
           path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ matrix.sys }}/**
           if-no-files-found: ignore

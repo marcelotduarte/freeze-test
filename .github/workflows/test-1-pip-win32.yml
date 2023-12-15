@@ -1,4 +1,4 @@
-name: Test-1-wheels (Windows 32bit)
+name: Test-1-pip (Windows 32bit)
 
 on:
   workflow_dispatch:
@@ -84,10 +84,10 @@ jobs:
           mkdir ${{ matrix.sample }}-${{ matrix.os }}
           cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }} || true
 
-      - name: Upload the snapshots and logs
+      - name: Upload the logs (and screenshots)
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: screensnapshots-pip-win32
+          name: logs-pip-${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.python-version }}-32bits
           path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ matrix.os }}/**
           if-no-files-found: ignore

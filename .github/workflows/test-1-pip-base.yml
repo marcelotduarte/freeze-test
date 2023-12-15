@@ -21,7 +21,7 @@ on:
         required: true
         type: string
 
-name: Test-1-wheels
+name: Test-1-pip
 jobs:
   matrix:
     name: Generate matrix of samples
@@ -129,10 +129,10 @@ jobs:
             cp build/*.app/Contents/MacOS/*.{err,log,png} ${{ matrix.sample }}-${{ inputs.os }}/app-${{ matrix.python-version }} || true
           fi
 
-      - name: Upload the snapshots and logs
+      - name: Upload the logs (and screenshots)
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: screensnapshots-pip-${{ inputs.os }}
+          name: logs-pip-${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.python-version }}
           path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ inputs.os }}/**
           if-no-files-found: ignore

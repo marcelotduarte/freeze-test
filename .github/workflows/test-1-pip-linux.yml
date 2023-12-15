@@ -35,10 +35,10 @@ on:
           - "bdist_deb"
           - "bdist_rpm"
 
-name: Test-1-wheels (Linux)
+name: Test-1-pip (Linux)
 jobs:
   tests:
-    name: Test-wheels-linux-${{ inputs.branch }}-${{ inputs.deps }}-${{ inputs.bdist }}
+    name: Test-pip-linux-${{ inputs.branch }}-${{ inputs.deps }}-${{ inputs.bdist }}
     uses: ./.github/workflows/test-1-pip-base.yml
     with:
       branch: ${{ inputs.branch }}

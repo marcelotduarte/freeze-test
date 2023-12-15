@@ -33,10 +33,10 @@ on:
           - ""
           - "bdist_msi"
 
-name: Test-1-wheels (Windows)
+name: Test-1-pip (Windows)
 jobs:
   tests:
-    name: Test-wheels-windows-${{ inputs.branch }}-${{ inputs.deps }}-${{ inputs.bdist }}
+    name: Test-pip-windows-${{ inputs.branch }}-${{ inputs.deps }}-${{ inputs.bdist }}
     uses: ./.github/workflows/test-1-pip-base.yml
     with:
       branch: ${{ inputs.branch }}

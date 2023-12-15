@@ -34,10 +34,10 @@ on:
           - "bdist_mac"
           - "bdist_dmg"
 
-name: Test-1-wheels (macOS)
+name: Test-1-pip (macOS)
 jobs:
   tests:
-    name: Test-wheels-macos-${{ inputs.branch }}-${{ inputs.deps }}-${{ inputs.bdist }}
+    name: Test-pip-macos-${{ inputs.branch }}-${{ inputs.deps }}-${{ inputs.bdist }}
     uses: ./.github/workflows/test-1-pip-base.yml
     with:
       branch: ${{ inputs.branch }}
