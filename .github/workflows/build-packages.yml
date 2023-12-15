@@ -239,7 +239,7 @@ jobs:
           channels: conda-forge
 
       - name: Download the conda artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: cx-freeze-conda
           path: artifacts
@@ -288,25 +288,25 @@ jobs:
           git checkout --orphan gh-pages
 
       - name: Download the cx_Logging wheels
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: cx-logging-wheelhouse
           path: cx-logging
 
       - name: Download the cx_Freeze wheels
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: cx-freeze-wheelhouse
           path: cx-freeze
 
       - name: Download the mingw artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: cx-freeze-mingw
           path: mingw
 
       - name: Download the conda artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: cx-freeze-conda
           path: conda
