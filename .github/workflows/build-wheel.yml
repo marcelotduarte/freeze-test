@@ -60,7 +60,7 @@ jobs:
       - name: Upload the artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cx-freeze-${{ matrix.os }}-${{ matrix.python-version }}
+          name: cx-freeze-pip-${{ matrix.os }}-${{ matrix.python-version }}
           path: wheelhouse
 
   publish:
@@ -95,7 +95,7 @@ jobs:
       - name: Join files to upload
         run: |
           mkdir -p wheelhouse
-          mv artifacts/cx-freeze-*/* wheelhouse/
+          mv artifacts/cx-freeze-pip-*/* wheelhouse/
 
       - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
@@ -134,7 +134,7 @@ jobs:
             # Remove any file that match - remove previous versions too
             git rm --ignore-unmatch 'cx_Freeze/bases/*-win*.exe' 'cx_Freeze/util.*-win*.pyd'
             # Extract base executables and util module
-            for file in artifacts/cx-freeze-windows-*/*-win*.whl; do
+            for file in artifacts/cx-freeze-pip-windows-*/*-win*.whl; do
               unzip -o $file 'cx_Freeze/bases/*-win*.exe' 'cx_Freeze/util.*-win*.pyd'
             done
             git add cx_Freeze/bases/*-win*.exe cx_Freeze/util.*-win*.pyd
