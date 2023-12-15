@@ -42,7 +42,7 @@ jobs:
         run: python -m cibuildwheel --output-dir wheelhouse --prerelease-pythons
 
       - name: Upload the artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cx-logging-wheelhouse
           path: wheelhouse
@@ -166,7 +166,7 @@ jobs:
       - run: ls -l build_artifacts
 
       - name: Upload the conda artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cx-freeze-conda
           path: |
@@ -214,7 +214,7 @@ jobs:
       - run: ls -l build_artifacts
 
       - name: Upload the conda artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cx-freeze-conda
           path: |
@@ -254,7 +254,7 @@ jobs:
       - run: ls -l artifacts
 
       - name: Upload repository data to the conda artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cx-freeze-conda
           path: ./artifacts/*/*
