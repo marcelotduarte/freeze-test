@@ -172,6 +172,7 @@ jobs:
           path: |
             ./build_artifacts/*/cx_freeze*.conda
             ./build_artifacts/*/cx_freeze*.tar.bz2
+            !./build_artifacts/pkg_cache/*
 
   build_conda_windows:
     needs: [conda_recipe]
@@ -220,6 +221,7 @@ jobs:
           path: |
             ./build_artifacts/*/cx_freeze*.conda
             ./build_artifacts/*/cx_freeze*.tar.bz2
+            !./build_artifacts/pkg_cache/*
 
   build_conda_index:
     needs: [build_conda_unix, build_conda_windows]
@@ -249,7 +251,7 @@ jobs:
 
       - run: |
           mkdir -p build_artifacts
-          cp -auv artifacts/cx-freeze-conda-*/* build_artifacts/
+          mv artifacts/cx-freeze-conda-*/* build_artifacts/
           conda index -s linux-64 -s osx-64 -s osx-arm64 -s win-64 build_artifacts
 
       - run: ls -l build_artifacts

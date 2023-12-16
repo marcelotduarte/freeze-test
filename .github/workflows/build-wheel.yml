@@ -61,7 +61,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cx-freeze-pip-${{ matrix.os }}-${{ matrix.python-version }}
-          path: wheelhouse
+          path: wheelhouse/*.whl
 
   publish:
     name: Publish package to PyPI
