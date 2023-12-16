@@ -50,6 +50,8 @@ jobs:
           pyver=$(python -c "print('${{ matrix.python-version }}'.partition('-')[0].replace('.',''))")
           export CIBW_BUILD="cp${pyver}*"
           python -m cibuildwheel --output-dir wheelhouse --prerelease-pythons
+          # remove extra files
+          rm wheelhouse/*.tar.gz
 
       - name: Add sdist
         if: runner.os == 'Linux' && '${{ matrix.python-version }}' == '3.11'
@@ -61,7 +63,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cx-freeze-pip-${{ matrix.os }}-${{ matrix.python-version }}
-          path: wheelhouse/*.whl
+          path: wheelhouse
 
   publish:
     name: Publish package to PyPI
@@ -100,8 +102,8 @@ jobs:
       - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages_dir: wheelhouse/
-          skip_existing: true
+          packages-dir: wheelhouse/
+          skip-existing: true
           verbose: true
 
   update_bases:
@@ -131,6 +133,7 @@ jobs:
           if [ $SHA256SUM1 != $SHA256SUM2 ]; then
             git config user.name "Marcelo Duarte"
             git config user.email marcelotduarte@users.noreply.github.com
+            git checkout -B update_bases ${{ inputs.branch }}
             # Remove any file that match - remove previous versions too
             git rm --ignore-unmatch 'cx_Freeze/bases/*-win*.exe' 'cx_Freeze/util.*-win*.pyd'
             # Extract base executables and util module
@@ -143,5 +146,5 @@ jobs:
             git add cx_Freeze/bases/__init__.py
             # Update
             git commit -m "bases: update base executables and util module [ci skip]"
-            git push --set-upstream origin ${{ inputs.branch }}
+            git push origin update_bases
           fi

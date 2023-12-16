@@ -224,7 +224,14 @@ jobs:
             !./build_artifacts/pkg_cache/*
 
   build_conda_index:
-    needs: [build_conda_unix, build_conda_windows]
+    needs:
+      # to build the index
+      - build_conda_unix
+      - build_conda_windows
+      # to wait for all artifacts
+      - build_msys2
+      - build_wheel
+      - build_wheel_windows_cx_logging_31
     strategy:
       fail-fast: false
     name: Conda index
@@ -265,9 +272,6 @@ jobs:
   packages:
     needs:
       - build_conda_index
-      - build_msys2
-      - build_wheel
-      - build_wheel_windows_cx_logging_31
     runs-on: ubuntu-latest
     name: Update packages repository
 
