@@ -1,5 +1,3 @@
-name: Test-5-pip-selected
-
 on:
   workflow_dispatch:
     inputs:
@@ -10,12 +8,23 @@ on:
         options:
           - develop
           - develop615x
-      version:
+      python-version:
+        default: "3.10"
+        required: false
+        type: choice
+        options:
+          - "3.7"
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
+          - "3.12"
+      deps:
         default: "d"
         required: false
         type: choice
         options:
-          - ""
+          - "p"
           - "d"
           - "e"
           - "l"
@@ -28,23 +37,16 @@ on:
           - "bdist_mac"
           - "bdist_dmg"
 
+name: Test-5-pip-selected
 jobs:
   tests:
     strategy:
       fail-fast: false
       matrix:
         sample:
-          - pyqt5
-          - pyqt5-simplebrowser
-          - pyqt6
-          - pyqt6-simplebrowser
-          - pyside2
-          - pyside2-simplebrowser
-          - pyside6
-          - pyside6-simplebrowser
-        os: [macos-latest]
-        python-version: ["3.10"]
-    name: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
+          - opencv
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    name: ${{ matrix.sample }}-${{ matrix.os }}-${{ inputs.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -60,39 +62,39 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           cache: 'pip'
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ inputs.python-version }}
 
       - name: Freeze and run "${{ matrix.sample }}"
         env:
           TEST_BDIST: ${{ inputs.bdist }}
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv --deps=${{ inputs.version }}
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv --deps=${{ inputs.deps }}
 
       - name: Collect images and logs
         if: ${{ always() }}
         working-directory: samples/${{ matrix.sample }}
         env:
-          KEY_BASE: ${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
+          KEY_BASE: ${{ matrix.sample }}-${{ matrix.os }}-${{ inputs.python-version }}
         run: |
-          (python -m sysconfig > sysconfig-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
-          (python -c "import platform; print('platform', platform.platform())" > platform-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
-          (python -c "import platform; print('machine', platform.machine())" >> platform-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
-          (python -c "import platform; print('architecture', platform.architecture())" >> platform-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
-          (python -c "import platform; print('uname', platform.uname())" >> platform-${{ matrix.os }}-${{ matrix.python-version }}.log) || true
+          (python -m sysconfig > sysconfig-${{ matrix.os }}-${{ inputs.python-version }}.log) || true
+          (python -c "import platform; print('platform', platform.platform())" > platform-${{ matrix.os }}-${{ inputs.python-version }}.log) || true
+          (python -c "import platform; print('machine', platform.machine())" >> platform-${{ matrix.os }}-${{ inputs.python-version }}.log) || true
+          (python -c "import platform; print('architecture', platform.architecture())" >> platform-${{ matrix.os }}-${{ inputs.python-version }}.log) || true
+          (python -c "import platform; print('uname', platform.uname())" >> platform-${{ matrix.os }}-${{ inputs.python-version }}.log) || true
           mkdir ${{ matrix.sample }}-${{ matrix.os }}
           cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }} || true
-          mkdir ${{ matrix.sample }}-${{ matrix.os }}/app-${{ matrix.python-version }}
-          cp build/*.app/Contents/MacOS/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }}/app-${{ matrix.python-version }} || true
+          mkdir ${{ matrix.sample }}-${{ matrix.os }}/app-${{ inputs.python-version }}
+          cp build/*.app/Contents/MacOS/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }}/app-${{ inputs.python-version }} || true
           # use tar to reduce the number of files and speed up the upload
           (cd build/exe.*/; tar cf ../../build-exe-$KEY_BASE.tar *) || true
           (cd build/*.app/; tar cf ../../build-app-$KEY_BASE.tar *) || true
           mv build/*.dmg .. || true
 
-      - name: Upload the snapshots and logs
+      - name: Upload the logs (and screenshots)
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: screensnapshots-${{ matrix.sample }}
+          name: logs-pip-${{ matrix.sample }}-${{ matrix.os }}-${{ inputs.python-version }}
           path: |
             ./samples/${{ matrix.sample }}/*-*.log
             ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ matrix.os }}/**
