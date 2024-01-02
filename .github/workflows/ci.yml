@@ -52,7 +52,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: develop
+          ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
       - name: Set up Python ${{ matrix.python-version }}
