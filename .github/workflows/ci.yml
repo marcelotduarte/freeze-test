@@ -1,7 +1,15 @@
-name: CI pre-commit and test using develop branch
-
 on:
   workflow_dispatch:
+    inputs:
+      branch:
+        default: develop
+        required: true
+        type: choice
+        options:
+          - develop
+          - develop615x
+
+name: CI pre-commit and test using develop branch
 
 jobs:
 
@@ -11,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: develop
+          ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
       - name: Set up Python
