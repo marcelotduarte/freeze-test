@@ -1,0 +1,108 @@
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        default: develop
+        required: true
+        type: choice
+        options:
+          - develop
+          - develop615x
+      python-version:
+        default: "3.10"
+        required: false
+        type: choice
+        options:
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
+          - "3.12"
+      deps:
+        default: "d"
+        required: false
+        type: choice
+        options:
+          - "p"
+          - "d"
+          - "e"
+          - "l"
+      bdist:
+        default: ""
+        required: false
+        type: choice
+        options:
+          - ""
+          - "bdist_mac"
+          - "bdist_dmg"
+
+name: Test-5-pip-selected
+jobs:
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        sample:
+          - movistar-u7d
+        os: [windows-latest]
+    name: ${{ matrix.sample }}-${{ matrix.os }}-${{ inputs.python-version }}
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+
+      - name: Checkout cx_Freeze
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+          repository: marcelotduarte/cx_Freeze
+
+      - uses: actions/setup-python@v5
+        with:
+          cache: 'pip'
+          python-version: ${{ inputs.python-version }}
+
+      - name: Freeze and run
+        env:
+          TEST_BDIST: ${{ inputs.bdist }}
+        id: freeze-and-run
+        run: |
+          pushd samples
+          git clone -b next https://github.com/jmarcet/movistar-u7d
+          cd movistar-u7d
+          pip install -r requirements-win.txt
+          popd
+          ./ci/build-test-one.sh ${{ matrix.sample }} --deps=${{ inputs.deps }}
+
+      - name: Collect images and logs
+        if: ${{ always() }}
+        working-directory: samples/${{ matrix.sample }}
+        env:
+          KEY_BASE: ${{ matrix.sample }}-${{ matrix.os }}-${{ inputs.python-version }}
+        run: |
+          (python -m sysconfig > sysconfig-${{ matrix.os }}-${{ inputs.python-version }}.log) || true
+          (python -c "import platform; print('platform', platform.platform())" > platform-${{ matrix.os }}-${{ inputs.python-version }}.log) || true
+          (python -c "import platform; print('machine', platform.machine())" >> platform-${{ matrix.os }}-${{ inputs.python-version }}.log) || true
+          (python -c "import platform; print('architecture', platform.architecture())" >> platform-${{ matrix.os }}-${{ inputs.python-version }}.log) || true
+          (python -c "import platform; print('uname', platform.uname())" >> platform-${{ matrix.os }}-${{ inputs.python-version }}.log) || true
+          mkdir ${{ matrix.sample }}-${{ matrix.os }}
+          cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }} || true
+          mkdir ${{ matrix.sample }}-${{ matrix.os }}/app-${{ inputs.python-version }}
+          cp build/*.app/Contents/MacOS/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }}/app-${{ inputs.python-version }} || true
+          # use tar to reduce the number of files and speed up the upload
+          (cd build/exe.*/; tar cf ../../build-exe-$KEY_BASE.tar *) || true
+          (cd build/*.app/; tar cf ../../build-app-$KEY_BASE.tar *) || true
+          mv build/*.dmg .. || true
+
+      - name: Upload the logs (and screenshots)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-pip-${{ matrix.sample }}-${{ matrix.os }}-${{ inputs.python-version }}
+          path: |
+            ./samples/${{ matrix.sample }}/*-*.log
+            ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ matrix.os }}/**
+            ./samples/${{ matrix.sample }}/*.dmg
+            ./samples/${{ matrix.sample }}/*.tar
+          if-no-files-found: ignore
