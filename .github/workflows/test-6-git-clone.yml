@@ -71,7 +71,9 @@ jobs:
           pushd samples
           git clone -b next https://github.com/jmarcet/movistar-u7d
           cd movistar-u7d
-          pip install -r requirements-win.txt
+          pip install --upgrade setuptools
+          pip install -r requirements-win.txt --pre
+          python setup.py build
           popd
           ./ci/build-test-one.sh ${{ matrix.sample }} --deps=${{ inputs.deps }}
 
