@@ -68,14 +68,15 @@ jobs:
           TEST_BDIST: ${{ inputs.bdist }}
         id: freeze-and-run
         run: |
+          ./ci/build-test-one.sh simple --deps=${{ inputs.deps }}
           pushd samples
           git clone -b next https://github.com/jmarcet/movistar-u7d
           cd movistar-u7d
-          pip install --upgrade setuptools
-          pip install -r requirements-win.txt --pre
+          sed -i 's/cx_Freeze/#cx_Freeze/g' requirements-win.txt
+          pip install -r requirements-win.txt
+          sed -i 's/+ ffmpeg/+ list(glob("*.dll"))/g' setup.py
           python setup.py build
           popd
-          ./ci/build-test-one.sh ${{ matrix.sample }} --deps=${{ inputs.deps }}
 
       - name: Collect images and logs
         if: ${{ always() }}
