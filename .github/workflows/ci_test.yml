@@ -1,7 +1,7 @@
 on:
   workflow_dispatch:
 
-name: CI test using development packages
+name: CI tests using "packages"
 
 jobs:
 
