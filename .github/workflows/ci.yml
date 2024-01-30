@@ -75,7 +75,7 @@ jobs:
             --cov="cx_Freeze" --cov-report=xml:./coverage/coverage0.xml
 
       - name: Extra coverage for Windows
-        if: startsWith(matrix.os, "windows") and matrix.python-version == "3.10"
+        if: startsWith(matrix.os, "windows") && matrix.python-version == "3.10"
         run: |
           # to test lief < 0.14
           pip install "lief==0.13.2"
