@@ -109,6 +109,9 @@ jobs:
       - name: Generate coverage report (Linux)
         if: runner.os == 'Linux'
         run: |
+          # Enable extra tests in test_command_deb
+          sudo apt-get install alien fakeroot
+          # Enable coverage in freezer._validate_path
           pip install "`grep cibuildwheel requirements-dev.txt`"
           CIBW_BUILD=cp310-manylinux_x86_64 cibuildwheel --output-dir wheelhouse
           unzip -q -o wheelhouse/cx_Freeze-*.whl "cx_Freeze/bases/*" -x "*.py"
