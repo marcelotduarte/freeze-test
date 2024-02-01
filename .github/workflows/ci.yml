@@ -60,6 +60,10 @@ jobs:
           cache: 'pip'
           python-version: ${{ matrix.python-version }}
 
+      - name: Install dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -y alien fakeroot rpm
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -109,8 +113,6 @@ jobs:
       - name: Generate coverage report (Linux)
         if: runner.os == 'Linux'
         run: |
-          # Enable extra tests in test_command_deb
-          sudo apt-get install -y alien fakeroot
           # Enable coverage in freezer._validate_path
           pip install "`grep cibuildwheel requirements-dev.txt`"
           PY_VERSION_NODOT=$(echo ${{ matrix.python-version }}|sed 's/\.//')
