@@ -39,8 +39,8 @@ jobs:
 
       - name: Install numpy+mkl requirements
         run: |
-          pyver=$(python -c "print('${{ matrix.python-version }}'.partition('-')[0].replace('.',''))")
-          CP3x="cp${pyver}"
+          PY_VERSION_NODOT=$(echo ${{ matrix.python-version }}|sed 's/\.//')
+          CP3x="cp${PY_VERSION_NODOT}"
           pip install $LINK/numpy-$VERSION+mkl-$CP3x-$CP3x-win_amd64.whl
 
       - name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
@@ -98,8 +98,8 @@ jobs:
 
       - name: Install numpy+mkl requirements
         run: |
-          pyver=$(python -c "print('${{ matrix.python-version }}'.partition('-')[0].replace('.',''))")
-          CP3x="cp${pyver}"
+          PY_VERSION_NODOT=$(echo ${{ matrix.python-version }}|sed 's/\.//')
+          CP3x="cp${PY_VERSION_NODOT}"
           pip install $LINK/numpy-$VERSION+mkl-$CP3x-$CP3x-win_amd64.whl
 
       - name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)

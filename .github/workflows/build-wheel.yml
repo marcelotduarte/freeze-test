@@ -47,8 +47,8 @@ jobs:
 
       - name: Build wheel for Python ${{ matrix.python-version }}
         run: |
-          pyver=$(python -c "print('${{ matrix.python-version }}'.partition('-')[0].replace('.',''))")
-          export CIBW_BUILD="cp${pyver}*"
+          PY_VERSION_NODOT=$(echo ${{ matrix.python-version }}|sed 's/\.//')
+          export CIBW_BUILD="cp${PY_VERSION_NODOT}-*"
           python -m cibuildwheel --output-dir wheelhouse --prerelease-pythons
 
       - name: Add sdist
