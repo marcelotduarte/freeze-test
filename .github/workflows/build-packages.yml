@@ -254,13 +254,17 @@ jobs:
       - run: ls -l artifacts/*/
 
       - name: Install conda build
-        run: conda install -c conda-forge conda-build
+        run: conda install -c conda-forge conda-index
 
       - name: Run conda index
         run: |
           mkdir -p build_artifacts
           cp -auv artifacts/cx-freeze-conda-*/* build_artifacts/
-          conda index -s linux-64 -s osx-64 -s osx-arm64 -s win-64 build_artifacts
+          python -m conda_index \
+            --subdir linux-64 \
+            --subdir osx-64 --subdir osx-arm64 \
+            --subdir win-64 \
+            build_artifacts
 
       - run: ls -l build_artifacts
 
