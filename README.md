@@ -9,14 +9,31 @@
 [![PyPI version](https://img.shields.io/pypi/v/cx_Freeze)](https://pypi.org/project/cx-freeze/)
 [![PyPi Downloads](https://img.shields.io/pypi/dm/cx_Freeze)](https://pypistats.org/packages/cx-freeze)
 </div>
+<div>
+
 [![Conda Version](https://img.shields.io/conda/vn/conda-forge/cx_freeze.svg)](https://anaconda.org/conda-forge/cx_freeze)
 [![Conda Downloads](https://anaconda.org/conda-forge/cx_freeze/badges/downloads.svg)](https://anaconda.org/conda-forge/cx_freeze)
-[![Python](https://img.shields.io/pypi/pyversions/cx-freeze)](https://www.python.org/)
-[![Actions status](https://github.com/marcelotduarte/cx_Freeze/workflows/CI/badge.svg)](https://github.com/marcelotduarte/cx_Freeze/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/marcelotduarte/cx_Freeze/workflows/CodeQL/badge.svg)](https://github.com/marcelotduarte/cx_Freeze/actions/workflows/codeql.yml)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+</div>
+<div>
 
+[![Python](https://img.shields.io/pypi/pyversions/cx-freeze)](https://www.python.org/)
+</div>
+<div>
+
+[![Actions status](https://github.com/marcelotduarte/cx_Freeze/workflows/CI/badge.svg)](https://github.com/marcelotduarte/cx_Freeze/actions/workflows/ci.yml)
+</div>
+<div>
+
+[![CodeQL](https://github.com/marcelotduarte/cx_Freeze/workflows/CodeQL/badge.svg)](https://github.com/marcelotduarte/cx_Freeze/actions/workflows/codeql.yml)
+</div>
+<div>
+
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+</div>
+<div>
+
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+</div>
 </div>
 
 
