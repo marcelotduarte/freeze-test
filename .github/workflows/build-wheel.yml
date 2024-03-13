@@ -54,12 +54,11 @@ jobs:
         run: |
           PY_VERSION_NODOT=$(echo ${{ matrix.python-version }}|sed 's/\.//')
           if [ "${{ matrix.os }}" == "macos-13" ]; then
-            export CIBW_BUILD="cp${PY_VERSION_NODOT}-macos_x86_64"
+            export CIBW_ARCHS="x86_64"
           elif [ "${{ matrix.os }}" == "macos-14" ]; then
-            export CIBW_BUILD="cp${PY_VERSION_NODOT}-macos_arm64"
-          else
-            export CIBW_BUILD="cp${PY_VERSION_NODOT}-*"
+            export CIBW_ARCHS="arm64"
           fi
+          export CIBW_BUILD="cp${PY_VERSION_NODOT}-*"
           python -m cibuildwheel --output-dir wheelhouse --prerelease-pythons
 
       - name: Add sdist
