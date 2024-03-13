@@ -53,7 +53,13 @@ jobs:
       - name: Build wheel for Python ${{ matrix.python-version }}
         run: |
           PY_VERSION_NODOT=$(echo ${{ matrix.python-version }}|sed 's/\.//')
-          export CIBW_BUILD="cp${PY_VERSION_NODOT}-*"
+          if [ "${{ matrix.os }}" == "macos-13" ]; then
+            export CIBW_BUILD="cp${PY_VERSION_NODOT}-macos_x86_64"
+          elif [ "${{ matrix.os }}" == "macos-14" ]; then
+            export CIBW_BUILD="cp${PY_VERSION_NODOT}-macos_arm64"
+          else
+            export CIBW_BUILD="cp${PY_VERSION_NODOT}-*"
+          fi
           python -m cibuildwheel --output-dir wheelhouse --prerelease-pythons
 
       - name: Add sdist
