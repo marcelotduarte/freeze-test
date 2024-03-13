@@ -48,7 +48,9 @@ jobs:
           platforms: arm64,ppc64le
 
       - name: Install cibuildwheel
-        run: python -m pip install "`grep cibuildwheel requirements-dev.txt`"
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "`grep cibuildwheel requirements-dev.txt`"
 
       - name: Build wheel for Python ${{ matrix.python-version }}
         run: |
