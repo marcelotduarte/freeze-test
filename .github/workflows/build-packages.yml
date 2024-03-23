@@ -344,10 +344,10 @@ jobs:
 
           # LIEF wheels
           python make_index.py lief --base LIEF
+          sed -i 's,${{ env.PACKAGES }},${{ env.LIEF_LINK }},g' lief/index.md
           echo '---'
           cat lief/index.md
           echo '---'
-          sed -i 's/${{ env.PACKAGES }}\/lief\//${{ env.LIEF_LINK }}\/lief\//g' lief/index.md
 
           # cleanup
           rm make_index.py
