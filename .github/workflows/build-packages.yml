@@ -26,7 +26,7 @@ jobs:
 
   build_wheel_lief:
     name: Build cx_Logging
-    uses: ./.github/workflows/build-wheel-cxl.yml
+    uses: ./.github/workflows/build-wheel-lief.yml
 
   conda_recipe:
     name: Generate conda-forge recipe
