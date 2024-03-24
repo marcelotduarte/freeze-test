@@ -302,10 +302,11 @@ jobs:
           mv lief/index.md lief/dev.md
           # local build
           mv artifacts/lief-*/*.whl lief/
-          python make_index.py lief --base LIEF
+          python make_index.py lief --base LIEF --mask "*.whl"
           mv lief/index.md lief/local.md
           # join
           cat lief/local.md lief/dev.md >lief/index.md
+          rm lief/local.md lief/dev.md
 
       - name: Create index for cx-logging wheels
         run: |
