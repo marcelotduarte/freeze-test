@@ -6,6 +6,7 @@ on:
 
 env:
   python-version: '3.13-dev'
+  SCCACHE_DIR: 'C:\Users\runner\AppData\Local\Mozilla\sccache'
   
 jobs:
   build-sdk:
@@ -16,7 +17,6 @@ jobs:
       fail-fast: false
     env:
       SCCACHE_CACHE_SIZE: 2G
-      SCCACHE_DIR: ${{ vars.SCCACHE_DIR }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -47,7 +47,7 @@ jobs:
         uses: actions/cache@v4
         continue-on-error: false
         with:
-          path: ${{ vars.SCCACHE_DIR }}
+          path: ${{ env.SCCACHE_DIR }}
           key: ${{ runner.os }}-${{ matrix.arch }}-sccache-sdk-${{ steps.get-date.outputs.date }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.arch }}-sccache-sdk
@@ -88,7 +88,6 @@ jobs:
       fail-fast: false
     env:
       SCCACHE_CACHE_SIZE: 2G
-      SCCACHE_DIR: ${{ vars.SCCACHE_DIR }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -114,7 +113,7 @@ jobs:
         uses: actions/cache@v4
         continue-on-error: false
         with:
-          path: ${{ vars.SCCACHE_DIR }}
+          path: ${{ env.SCCACHE_DIR }}
           key: ${{ runner.os }}-${{ matrix.arch }}-sccache-test-${{ steps.get-date.outputs.date }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.arch }}-sccache-test
@@ -168,7 +167,6 @@ jobs:
       fail-fast: false
     env:
       SCCACHE_CACHE_SIZE: 2G
-      SCCACHE_DIR: ${{ vars.SCCACHE_DIR }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -200,7 +198,7 @@ jobs:
         uses: actions/cache@v4
         continue-on-error: false
         with:
-          path: ${{ vars.SCCACHE_DIR }}
+          path: ${{ env.SCCACHE_DIR }}
           key: ${{ runner.os }}-${{ matrix.arch }}-sccache-${{ env.python-version }}-${{ steps.get-date.outputs.date }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.arch }}-sccache-${{ env.python-version }}
