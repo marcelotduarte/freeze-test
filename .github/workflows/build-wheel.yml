@@ -23,6 +23,9 @@ jobs:
             python-version: '3.8'
           - os: macos-14
             python-version: '3.9'
+        include:
+          - os: windows-latest
+            python-version: '3.13-dev'
     name: Build [${{ matrix.os }}-${{ matrix.python-version }}]
     runs-on: ${{ matrix.os }}
     defaults:
