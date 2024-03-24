@@ -284,7 +284,7 @@ jobs:
         with:
           path: artifacts
 
-      - name: Download the LIEF wheels
+      - name: Create index for LIEF
         run: |
           mkdir lief
           cd lief
@@ -293,38 +293,51 @@ jobs:
           ); do
             touch `basename $f`
           done
+          cd ..
+          # redirected files
+          python make_index.py lief --base LIEF
+          sed -i 's,${{ env.PACKAGES }},${{ env.LIEF_LINK }},g' lief/index.md
+          sed -i '/## /d' lief/index.md
+          rm -rf lief/*.whl
+          mv lief/index.md lief/dev.md
+          # local build
+          mv artifacts/lief-*/*.whl lief/
+          python make_index.py lief --base LIEF
+          mv lief/index.md lief/local.md
+          # join
+          cat lief/local.md lief/dev.md >lief/index.md
 
-      - name: Create packages template
+      - name: Create index for cx-logging wheels
         run: |
-          # cx_Logging wheels
           mkdir -p cx-logging
           mv artifacts/cx-logging-*/* cx-logging/
           python make_index.py cx-logging --base cx_Logging
 
-          # msys2 packages (process before wheels)
+      - name: Create index for python-cx-freeze (msys2)
+        run: |
           mkdir -p msys2
           mv artifacts/cx-freeze-msys2-*/* msys2/
           python make_index.py msys2 --base python-cx-freeze --mask "*.tar.zst"
 
-          # conda packages (process before wheels)
+      - name: Create index for cx_freeze (conda)
+        run: |
           mkdir -p conda
           mv artifacts/cx-freeze-conda/* conda/
           python make_index.py conda --mask "cx_freeze*.conda" --mask "cx_freeze*.tar.bz2"
 
-          # pip wheels
+      - name: Create index for cx_Freeze wheels
+        run: |
           mkdir -p cx-freeze
           mv artifacts/cx-freeze-pip-*/* cx-freeze/
           python make_index.py cx-freeze --base cx_Freeze
 
-          # LIEF wheels
-          python make_index.py lief --base LIEF
-          sed -i 's,${{ env.PACKAGES }},${{ env.LIEF_LINK }},g' lief/index.md
-
-          # cleanup
+      - name: Cleanup
+        run: |
           rm make_index.py
           rm -rf artifacts
-          rm -rf lief/*.whl
 
+      - name: Create packages template
+        run: |
           # configuration
           echo "theme: jekyll-theme-architect">_config.yml
 
@@ -336,7 +349,7 @@ jobs:
           echo -e "Development packages for conda-forge [cx_freeze](conda/index.md).\n">>index.md
           echo -e "# Packages for cx_Logging 3.2 \[Windows\]\[Python 3.13\]\n">>index.md
           echo -e "Unofficial wheels for [cx_Logging](cx-logging/index.md).\n">>index.md
-          echo -e "# Packages for LIEF \[Windows\]\[Python 3.8-3.12\]\n">>index.md
+          echo -e "# Packages for LIEF \[Windows\]\[Python 3.8-3.13\]\n">>index.md
           echo -e "Development wheels for [LIEF](lief/index.md).\n">>index.md
 
       - name: Publish cx_Freeze packages
