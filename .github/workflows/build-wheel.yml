@@ -64,7 +64,7 @@ jobs:
             export CIBW_ARCHS="arm64"
           fi
           if [ "$PY_VERSION_NODOT" == "313" ]; then
-            pip install --upgrade build setuptools wheel
+            pip install --upgrade build -r requirements.txt
             python -m build . --wheel -o wheelhouse -x -n
           else
             export CIBW_BUILD="cp${PY_VERSION_NODOT}-*"
