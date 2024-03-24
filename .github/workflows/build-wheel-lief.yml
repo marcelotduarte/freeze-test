@@ -32,6 +32,7 @@ jobs:
         run: |
           choco install ninja
           choco install sccache
+          python -m pip install --upgrade pip setuptools
 
       - uses: ilammy/msvc-dev-cmd@v1
         with:
@@ -101,6 +102,7 @@ jobs:
         run: |
           choco install ninja
           choco install sccache
+          python -m pip install --upgrade pip setuptools
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           vsversion: "2022"
@@ -182,7 +184,7 @@ jobs:
         run: |
           choco install ninja
           choco install sccache
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade pip setuptools
 
       - uses: ilammy/msvc-dev-cmd@v1
         with:
