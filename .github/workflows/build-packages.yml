@@ -305,7 +305,7 @@ jobs:
           python make_index.py lief --base LIEF --mask "*.whl"
           mv lief/index.md lief/local.md
           # join
-          cat lief/local.md lief/dev.md >lief/index.md
+          echo -e "`cat lief/local.md`\n`cat lief/dev.md`\n">lief/index.md
           rm lief/local.md lief/dev.md
 
       - name: Create index for cx-logging wheels
