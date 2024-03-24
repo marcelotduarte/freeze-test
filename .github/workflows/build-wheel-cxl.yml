@@ -1,0 +1,42 @@
+name: Build wheel (cx_Logging)
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  python-version: '3.13-dev'
+
+jobs:
+  build_wheel:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+    name: Build cx_Logging [${{ matrix.os }}]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: marcelotduarte/cx_Logging
+
+      - uses: actions/setup-python@v5
+        with:
+          cache: 'pip'
+          python-version: ${{ env.python-version }}
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip setuptools build wheel
+
+      - name: Build wheels
+        run: python -m build . --wheel -o wheelhouse -x -n
+
+      - name: Upload the artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cx-logging-wheelhouse
+          path: wheelhouse

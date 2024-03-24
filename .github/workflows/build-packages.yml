@@ -14,45 +14,19 @@ jobs:
     with:
       branch: develop
 
-  build_wheel_windows_cx_logging_31:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest]
-    name: Build cx_Logging [${{ matrix.os }}]
-    runs-on: ${{ matrix.os }}
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          repository: marcelotduarte/cx_Logging
-
-      - uses: actions/setup-python@v5
-        with:
-          cache: 'pip'
-          python-version: "3.13-dev"
-
-      - name: Install dependencies
-        #run: python -m pip install "cibuildwheel>=2.17.0"
-        run: python -m pip install --upgrade pip setuptools build wheel
-
-      - name: Build wheels
-        #env:
-        #  CIBW_BUILD: "cp313*"
-        #run: python -m cibuildwheel --output-dir wheelhouse --prerelease-pythons
-        run: python -m build . --wheel -o wheelhouse -x -n
-
-      - name: Upload the artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: cx-logging-wheelhouse
-          path: wheelhouse
-
   build_msys2:
     name: Build msys2
     uses: ./.github/workflows/build-packages-msys2.yml
     with:
       branch: develop
+
+  build_wheel_cx_logging:
+    name: Build cx_Logging
+    uses: ./.github/workflows/build-wheel-cxl.yml
+
+  build_wheel_lief:
+    name: Build cx_Logging
+    uses: ./.github/workflows/build-wheel-cxl.yml
 
   conda_recipe:
     name: Generate conda-forge recipe
@@ -232,7 +206,8 @@ jobs:
       # to wait for all artifacts
       - build_msys2
       - build_wheel
-      - build_wheel_windows_cx_logging_31
+      - build_wheel_cx_logging
+      - build_wheel_lief
     strategy:
       fail-fast: false
     name: Conda index
@@ -316,7 +291,6 @@ jobs:
           for f in $(
             curl $LIEF_LINK/lief/ | grep -Eo "href=\"(.*win.*)\"" | cut -c"7-" | cut -d \" -f 1
           ); do
-            #curl -O $LIEF_LINK/lief/`basename $f`
             touch `basename $f`
           done
 
@@ -345,13 +319,11 @@ jobs:
           # LIEF wheels
           python make_index.py lief --base LIEF
           sed -i 's,${{ env.PACKAGES }},${{ env.LIEF_LINK }},g' lief/index.md
-          echo '---'
-          cat lief/index.md
-          echo '---'
 
           # cleanup
           rm make_index.py
           rm -rf artifacts
+          rm -rf lief/*.whl
 
           # configuration
           echo "theme: jekyll-theme-architect">_config.yml

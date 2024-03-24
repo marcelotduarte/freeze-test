@@ -1,12 +1,7 @@
-name: Build LIEF Windows
+name: Build wheel (LIEF)
 
 on:
   workflow_call:
-    inputs:
-      branch:
-        default: ${{ github.ref }}
-        required: true
-        type: string
   workflow_dispatch:
 
 env:
