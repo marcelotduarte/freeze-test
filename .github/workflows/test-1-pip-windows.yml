@@ -13,9 +13,9 @@ on:
         required: false
         type: choice
         options:
-          - "3.8-3.11"
-          - "3.7"
+          - "3.8 - 3.11"
           - "3.12"
+          - "3.13"
       deps:
         default: "p"
         required: false

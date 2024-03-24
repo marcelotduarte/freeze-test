@@ -6,7 +6,7 @@ on:
         required: true
         type: string
       python-version:
-        default: "3.8-3.11"
+        default: "3.8 - 3.11"
         required: false
         type: string
       deps:
@@ -91,6 +91,10 @@ jobs:
             python-version: "3.12"
           - sample: pyside2-simplebrowser
             python-version: "3.12"
+          - sample: pyside2
+            python-version: "3.13"
+          - sample: pyside2-simplebrowser
+            python-version: "3.13"
         branch: ${{ fromJSON(needs.matrix.outputs.branch) }}
         deps: ${{ fromJSON(needs.matrix.outputs.deps) }}
     name: ${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.python-version }}
@@ -111,6 +115,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
+          allow-prereleases: true
 
       - name: Freeze and run "${{ matrix.sample }}"
         env:
