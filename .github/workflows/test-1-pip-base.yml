@@ -6,7 +6,7 @@ on:
         required: true
         type: string
       python-version:
-        default: "3.8 - 3.11"
+        default: "3.8-3.12"
         required: false
         type: string
       deps:
@@ -29,8 +29,6 @@ jobs:
     outputs:
       sample: ${{ steps.get-samples.outputs.samples }}
       python-version: ${{ steps.get-python.outputs.python-version }}
-      branch: ${{ steps.get-branch.outputs.branch }}
-      deps: ${{ steps.get-deps.outputs.deps }}
     steps:
 
       - uses: actions/checkout@v4
@@ -49,30 +47,10 @@ jobs:
       - id: get-python
         run: |
           if [[ ${{ inputs.python-version }} == 3.*-3.* ]]; then
-            echo 'python-version=["3.8", "3.9", "3.10", "3.11"]' >> $GITHUB_OUTPUT
+            echo 'python-version=["3.8", "3.9", "3.10", "3.11", "3.12"]' >> $GITHUB_OUTPUT
           else
             echo 'python-version=["${{ inputs.python-version }}"]' >> $GITHUB_OUTPUT
           fi
-        shell: bash
-
-      - id: get-branch
-        run: |
-          branch=${{ inputs.branch }}
-          if [ "${{ inputs.python-version }}" == "3.7" ]; then
-            branch=develop615x
-          fi
-          echo "branch=[\"$branch\"]" >> $GITHUB_OUTPUT
-        shell: bash
-
-      - id: get-deps
-        run: |
-          deps=${{ inputs.deps }}
-          if [ "${{ inputs.python-version }}" == "3.7" ]; then
-            if [ "$deps" != "d" ] && [ "$deps" != "l" ]; then
-              deps=d
-            fi
-          fi
-          echo "deps=[\"$deps\"]" >> $GITHUB_OUTPUT
         shell: bash
 
   tests:
@@ -95,8 +73,6 @@ jobs:
             python-version: "3.13"
           - sample: pyside2-simplebrowser
             python-version: "3.13"
-        branch: ${{ fromJSON(needs.matrix.outputs.branch) }}
-        deps: ${{ fromJSON(needs.matrix.outputs.deps) }}
     name: ${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.python-version }}
     runs-on: ${{ inputs.os }}
     defaults:
@@ -107,7 +83,7 @@ jobs:
       - name: Checkout cx_Freeze
         uses: actions/checkout@v4
         with:
-          ref: ${{ matrix.branch }}
+          ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
       - name: Setup Python
@@ -121,7 +97,7 @@ jobs:
         env:
           TEST_BDIST: ${{ inputs.bdist }}
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv --deps=${{ matrix.deps }}
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv --deps=${{ inputs.deps }}
 
       - name: Collect images and logs
         if: ${{ always() }}
