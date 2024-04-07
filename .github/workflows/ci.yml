@@ -164,6 +164,12 @@ jobs:
           PY_VERSION_NODOT=$(echo ${{ matrix.python-version }}|sed 's/\.//')
           cibuildwheel --only cp${PY_VERSION_NODOT}-manylinux_x86_64
 
+      - name: Upload the artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cx-freeze-pip-${{ matrix.os }}-${{ matrix.python-version }}
+          path: wheelhouse
+
       - name: Install dependencies - tests
         run: |
           pip install -r requirements.txt --pre
