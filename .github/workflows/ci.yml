@@ -167,8 +167,8 @@ jobs:
       - name: Install dependencies - tests
         run: |
           pip install -r requirements.txt --pre
-          pip install -r requirements-dev.txt
-          pip install --no-index --no-deps -f wheelhouse cx_Freeze
+          pip install -r requirements-test.txt
+          pip install cx_Freeze --no-index --no-deps -f wheelhouse
 
       - name: Generate coverage report
         run: python -m pytest -nauto --cov="cx_Freeze" --cov-report=xml
