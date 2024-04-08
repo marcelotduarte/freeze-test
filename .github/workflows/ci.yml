@@ -162,6 +162,7 @@ jobs:
       - name: Build wheel for Python ${{ matrix.python-version }}
         run: |
           PY_VERSION_NODOT=$(echo ${{ matrix.python-version }}|sed 's/\.//')
+          PY_VERSION_NODOT=310
           cibuildwheel --only cp${PY_VERSION_NODOT}-manylinux_x86_64
 
       - name: Upload the artifact
