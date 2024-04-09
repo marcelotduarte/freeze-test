@@ -176,6 +176,8 @@ jobs:
           pip install -r requirements-test.txt
           pip install cx_Freeze --no-index --no-deps -f wheelhouse
 
+      - run: pip list -v
+
       - name: Generate coverage report
         run: python -m pytest -nauto --cov="cx_Freeze" --cov-report=xml
 
