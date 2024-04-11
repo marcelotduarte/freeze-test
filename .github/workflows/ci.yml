@@ -173,7 +173,7 @@ jobs:
       - name: Install dependencies - tests
         run: |
           pip install -r requirements.txt --pre
-          pip install -r requirements-test.txt
+          pip install -r requirements-test.txt pytest-md pytest-emoji
           pip install cx_Freeze --no-index --no-deps -f wheelhouse
 
       - run: pip list -v
