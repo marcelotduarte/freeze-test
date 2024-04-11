@@ -179,7 +179,9 @@ jobs:
       - run: pip list -v
 
       - name: Generate coverage report
-        run: python -m pytest -nauto --cov="cx_Freeze" --cov-report=xml
+        uses: pavelzw/pytest-action@v2
+        with:
+          custom-arguments: '-nauto --cov="cx_Freeze" --cov-report=xml'
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
