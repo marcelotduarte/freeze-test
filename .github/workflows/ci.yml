@@ -75,7 +75,9 @@ jobs:
           pip install -v -e .[test] --no-build-isolation
 
       - name: Generate coverage report
-        run: pytest -nauto --cov="cx_Freeze" --cov-report=xml
+        run: |
+          pytest -nauto --cov="cx_Freeze" --cov-report=xml
+          coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -124,6 +126,7 @@ jobs:
             pip install "${{ matrix.extra-requirement }}"
           fi
           pytest -nauto --cov="cx_Freeze" --cov-report=xml
+          coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -179,7 +182,9 @@ jobs:
       - run: pip list -v
 
       - name: Generate coverage report
-        run: pytest -nauto --cov="cx_Freeze" --cov-report=xml
+        run: |
+          pytest -nauto --cov="cx_Freeze" --cov-report=xml
+          coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
