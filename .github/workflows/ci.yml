@@ -35,8 +35,7 @@ jobs:
       - name: Run pre-commit
         run: |
           echo "```" > output.md
-          pre-commit run --show-diff-on-failure --color=always \
-          --all-files --hook-stage=manual >> output.md
+          pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage=manual >> output.md
           echo "```" >> output.md
           cat output.md >> $GITHUB_STEP_SUMMARY
 
@@ -97,8 +96,7 @@ jobs:
         extra-requirement:
           - lief==0.13.2
           - lief-disabled
-          - pywin32
-          - pandas
+          - pywin32,pandas
     defaults:
       run:
         shell: bash
