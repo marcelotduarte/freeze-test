@@ -34,9 +34,10 @@ jobs:
 
       - name: Run pre-commit
         run: |
-          echo "```" > output.md
-          pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage=manual >> output.md
-          echo "```" >> output.md
+          pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage=manual >output.txt
+          echo '```' > output.md
+          cat output.txt >> output.md
+          echo '```' >> output.md
           cat output.md >> $GITHUB_STEP_SUMMARY
 
   tests:
@@ -96,7 +97,7 @@ jobs:
         extra-requirement:
           - lief==0.13.2
           - lief-disabled
-          - pywin32,pandas
+          - pywin32
     defaults:
       run:
         shell: bash
@@ -176,8 +177,10 @@ jobs:
       - name: Install dependencies - tests
         run: |
           pip install -r requirements.txt --pre
-          pip install -r requirements-test.txt pytest-md pytest-emoji
+          pip install -r requirements-test.txt
           pip install cx_Freeze --no-index --no-deps -f wheelhouse
+          # enable extra test - pandas
+          pip install pandas
 
       - run: pip list -v
 
