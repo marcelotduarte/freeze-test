@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           cache: 'pip'
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
@@ -34,7 +34,7 @@ jobs:
 
       - name: Run pre-commit
         run: |
-          pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage=manual >output.txt
+          pre-commit run --show-diff-on-failure --all-files --hook-stage=manual >output.txt
           echo '```' > output.md
           cat output.txt >> output.md
           echo '```' >> output.md
@@ -141,7 +141,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-        python-version: ['3.11']
+        python-version: ['3.12']
     defaults:
       run:
         shell: bash
