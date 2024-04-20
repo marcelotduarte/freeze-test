@@ -165,8 +165,14 @@ jobs:
 
       - name: Build wheel for Python ${{ matrix.python-version }}
         run: |
-          PY_VERSION_NODOT=$(echo ${{ matrix.python-version }}|sed 's/\.//')
-          cibuildwheel --only cp${PY_VERSION_NODOT}-manylinux_x86_64
+          PYTHON_TAG=cp$(echo ${{ matrix.python-version }}|sed 's/\.//')
+          ARCH=$(python -c "import platform; print(platform.machine().lower())")
+          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            PLATFORM_TAG=manylinux_$ARCH
+          else
+            PLATFORM_TAG=macosx_$ARCH
+          fi
+          cibuildwheel --only ${PYTHON_TAG}-${PLATFORM_TAG}
 
       - name: Upload the artifact
         uses: actions/upload-artifact@v4
