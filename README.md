@@ -1,5 +1,5 @@
-**cx\_Freeze** creates standalone executables from Python scripts, with the same
-performance, is cross-platform and should work on any platform that Python
+**cx\_Freeze** creates standalone executables from Python scripts, with the
+same performance, is cross-platform and should work on any platform that Python
 itself works on.
 
 #
@@ -27,15 +27,18 @@ To install the latest development build:
 pip install --force --no-cache --pre --extra-index-url https://marcelotduarte.github.io/packages/ cx_Freeze
 ```
 
-Please check the [installation](https://cx-freeze.readthedocs.io/en/latest/installation.html)
+Please check the [installation]
+(https://cx-freeze.readthedocs.io/en/latest/installation.html)
 for more information and how to install in other environments such as pipenv,
 conda-forge, etc.
 
 # Documentation
 
-The official documentation is available [here](https://cx-freeze.readthedocs.io).
+The official documentation is available
+[here](https://cx-freeze.readthedocs.io).
 
-If you need help you can also ask on the [discussion](https://github.com/marcelotduarte/cx_Freeze/discussions) channel.
+If you need help you can also ask on the
+[discussion](https://github.com/marcelotduarte/cx_Freeze/discussions) channel.
 
 # What's New:
 - Added support for [pyproject.toml](https://cx-freeze.readthedocs.io/en/stable/setup_script.html)
@@ -48,8 +51,6 @@ If you need help you can also ask on the [discussion](https://github.com/marcelo
 - Bug fixes and improvements
 
 # License
-
-[![License](https://img.shields.io/pypi/l/cx_Freeze.svg)](https://cx-freeze.readthedocs.io/en/stable/license.html)
 
 cx\_Freeze uses a license derived from the
 [Python Software Foundation License](https://www.python.org/psf/license).
