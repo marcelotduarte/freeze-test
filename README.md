@@ -23,7 +23,9 @@ In a virtual environment, install by issuing the command:
 
 To install the latest development build:
 
-`pip install --force --no-cache --pre --extra-index-url https://marcelotduarte.github.io/packages/ cx_Freeze`
+```
+pip install --force --no-cache --pre --extra-index-url https://marcelotduarte.github.io/packages/ cx_Freeze
+```
 
 Please check the [installation](https://cx-freeze.readthedocs.io/en/latest/installation.html)
 for more information and how to install in other environments such as pipenv,
@@ -36,9 +38,13 @@ The official documentation is available [here](https://cx-freeze.readthedocs.io)
 If you need help you can also ask on the [discussion](https://github.com/marcelotduarte/cx_Freeze/discussions) channel.
 
 # What's New:
-- Breaking change: remove camelCase in Executable api
-- New hooks: lazy_loader, librosa, jpype, pyimagej, pyreadstat
-- Improved hooks: matplotlib, pytorch, PyQt6, PySide6, TkInter
+- Added support for [pyproject.toml](https://cx-freeze.readthedocs.io/en/stable/setup_script.html)
+- Create Linux AppImage format: [bdist_appimage](https://cx-freeze.readthedocs.io/en/stable/bdist_appimage.html)
+- Create an DEB distribution: [bdist_deb](https://cx-freeze.readthedocs.io/en/stable/bdist_deb.html)
+- Improved bdist_mac
+- New and updated hooks, including support for QtWebengine on macOS
+- Python 3.12 support.
+- Improved tests and coverage ( >80% ).
 - Bug fixes and improvements
 
 # License
