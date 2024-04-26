@@ -35,6 +35,8 @@ source=()
 sha256sums=()
 
 prepare() {
+  echo "pwd: $(pwd)" 
+  echo "srcdir: ${srcdir}"
   rm -Rf "${srcdir}"/python-${_realname}-${MSYSTEM}
   mkdir -p "${srcdir}"/python-${_realname}-${MSYSTEM}
   cp -a ../cx_Freeze "${srcdir}"/python-${_realname}-${MSYSTEM}
