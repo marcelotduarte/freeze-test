@@ -241,7 +241,7 @@ jobs:
       - uses: msys2/setup-msys2@v2
         with:
           msystem: ucrt64
-          install: base-devel mingw-w64-${{ matrix.env }}-python-pip
+          install: base-devel mingw-w64-ucrt-x86_64-python-pip
           update: true
 
       - name: Build package
