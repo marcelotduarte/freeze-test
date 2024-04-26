@@ -30,7 +30,7 @@ checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pytest"
               "${MINGW_PACKAGE_PREFIX}-python-pytest-mock"
               "${MINGW_PACKAGE_PREFIX}-python-pytest-timeout"
               "${MINGW_PACKAGE_PREFIX}-python-pytest-xdist"
-              "${MINGW_PACKAGE_PREFIX}-python-pytest-psutil")
+              "${MINGW_PACKAGE_PREFIX}-python-psutil")
 source=()
 sha256sums=()
 
