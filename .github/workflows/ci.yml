@@ -248,7 +248,7 @@ jobs:
         run: makepkg-mingw -sCLf --noconfirm --noprogressbar --skippgpcheck
 
       - name: Install package
-        run: pacman --no-confirm -U ${MINGW_PACKAGE_PREFIX}-python-cx-freeze-7.*-1-any.pkg.tar.zst
+        run: pacman --noconfirm -U ${MINGW_PACKAGE_PREFIX}-python-cx-freeze-7.*-1-any.pkg.tar.zst
 
       - name: Generate coverage report
         working-directory: cx_Freeze
