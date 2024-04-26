@@ -50,11 +50,6 @@ jobs:
           install: base-devel tree
           update: true
 
-      - name: Variables
-        run: |
-          declare || true
-          python -m sysconfig
-
       - name: '🚧 Build package'
         run: makepkg-mingw -sCLf --noconfirm --noprogressbar --skippgpcheck
 
