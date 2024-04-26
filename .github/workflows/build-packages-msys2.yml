@@ -35,10 +35,14 @@ jobs:
 
       - name: '🧰 Checkout'
         uses: actions/checkout@v4
+        path: mingw-w64-python-cx-freeze
+
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
         with:
-          #ref: ${{ inputs.branch }}
-          #repository: marcelotduarte/cx_Freeze
-          fetch-depth: 0
+          ref: ${{ inputs.branch }}
+          repository: marcelotduarte/cx_Freeze
+          path: cx_Freeze
 
       - name: '${{ matrix.icon }} Setup MSYS2'
         uses: msys2/setup-msys2@v2
@@ -60,6 +64,7 @@ jobs:
           python -m sysconfig
 
       - name: '🚧 Build package'
+        working-directory: mingw-w64-python-cx-freeze
         run: makepkg-mingw -sCLf --noconfirm --noprogressbar --skippgpcheck
 
       - name: '📤 Upload artifact: package'
@@ -67,8 +72,8 @@ jobs:
         with:
           name: cx-freeze-msys2-${{ matrix.sys }}
           path: |
-            mingw-w64-*.zst
-            mingw-w64-*.zst.sig
+            mingw-w64-python-cx-freeze/mingw-w64-*.zst
+            mingw-w64-python-cx-freeze/mingw-w64-*.zst.sig
 
       - name: '🔍 Show package content'
         run: |

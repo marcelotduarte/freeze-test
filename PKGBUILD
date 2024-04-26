@@ -4,13 +4,17 @@ _name=cx_Freeze
 _realname=cx-freeze
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=6.16.0
+pkgver=7.0.0
 pkgrel=1
 pkgdesc="Creates standalone executables from Python scripts, with the same performance (mingw-w64)"
 arch=('any')
-mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32')
+mingw_arch=('mingw64' 'ucrt64' 'clang64')
+msys2_references=(
+  'pypi: cx-Freeze'
+)
 license=('PSF')
 url="https://github.com/marcelotduarte/cx_Freeze/"
+options=(!strip)
 depends=("${MINGW_PACKAGE_PREFIX}-python"
          "${MINGW_PACKAGE_PREFIX}-python-setuptools"
          "${MINGW_PACKAGE_PREFIX}-python-wheel"
@@ -21,18 +25,20 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-wheel"
              "${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-tools")
-checkdepends=("${MINGW_PACKAGE_PREFIX}-python-nose"
-              "${MINGW_PACKAGE_PREFIX}-python-pytest"
+checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pytest"
               "${MINGW_PACKAGE_PREFIX}-python-pytest-cov"
               "${MINGW_PACKAGE_PREFIX}-python-pytest-mock"
-              "${MINGW_PACKAGE_PREFIX}-python-pytest-timeout")
-options=('staticlibs' 'strip' '!debug')
+              "${MINGW_PACKAGE_PREFIX}-python-pytest-timeout"
+              "${MINGW_PACKAGE_PREFIX}-python-pytest-xdist"
+              "${MINGW_PACKAGE_PREFIX}-python-pytest-psutil")
 source=()
 sha256sums=()
 
 prepare() {
   rm -Rf "${srcdir}"/python-${_realname}-${MSYSTEM}
-  git clone -b develop https://github.com/marcelotduarte/cx_Freeze.git "${srcdir}"/python-${_realname}-${MSYSTEM}
+  mkdir -p "${srcdir}"/python-${_realname}-${MSYSTEM}
+  cp -a ../cx_Freeze "${srcdir}"/python-${_realname}-${MSYSTEM}
+
   cd "${srcdir}"/python-${_realname}-${MSYSTEM}
   # ignore version check for setuptools
   sed -i 's/"setuptools>=.*"/"setuptools"/' pyproject.toml
