@@ -47,14 +47,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: ${{matrix.sys}}
-          install: >-
-            base-devel tree
-            mingw-w64-${{ matrix.env }}-cc
-            mingw-w64-${{ matrix.env }}-tools
-            mingw-w64-${{ matrix.env }}-python-setuptools
-            mingw-w64-${{ matrix.env }}-python-wheel
-            mingw-w64-${{ matrix.env }}-python-cx-logging
-            mingw-w64-${{ matrix.env }}-python-lief
+          install: base-devel tree
           update: true
 
       - name: Variables
