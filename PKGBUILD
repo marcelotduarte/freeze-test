@@ -62,3 +62,9 @@ package() {
     ${MINGW_PREFIX}/bin/python -m installer --prefix=${MINGW_PREFIX} \
     --destdir="${pkgdir}" dist/*.whl
 }
+
+check() {
+  cd python-${_realname}-${MSYSTEM}
+  ${MINGW_PREFIX}/bin/python -m pip install "pytest-datafiles==3.0.0"
+  ${MINGW_PREFIX}/bin/python -m pytest -nauto --cov="cx_Freeze" --cov-report=xml
+}
