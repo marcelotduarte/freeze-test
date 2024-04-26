@@ -35,7 +35,8 @@ jobs:
 
       - name: '🧰 Checkout'
         uses: actions/checkout@v4
-        path: mingw-w64-python-cx-freeze
+        with:
+          path: mingw-w64-python-cx-freeze
 
       - name: '🧰 Checkout'
         uses: actions/checkout@v4
