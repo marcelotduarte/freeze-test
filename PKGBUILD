@@ -15,23 +15,29 @@ msys2_references=(
 license=('PSF')
 url="https://github.com/marcelotduarte/cx_Freeze/"
 options=(!strip)
-depends=("${MINGW_PACKAGE_PREFIX}-python"
-         "${MINGW_PACKAGE_PREFIX}-python-pip"
-         "${MINGW_PACKAGE_PREFIX}-python-setuptools"
-         "${MINGW_PACKAGE_PREFIX}-python-wheel"
-         "${MINGW_PACKAGE_PREFIX}-python-cx-logging"
-         "${MINGW_PACKAGE_PREFIX}-python-lief")
-makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
-             "${MINGW_PACKAGE_PREFIX}-python-installer"
-             "${MINGW_PACKAGE_PREFIX}-python-wheel"
-             "${MINGW_PACKAGE_PREFIX}-cc"
-             "${MINGW_PACKAGE_PREFIX}-tools")
-checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pytest"
-              "${MINGW_PACKAGE_PREFIX}-python-pytest-cov"
-              "${MINGW_PACKAGE_PREFIX}-python-pytest-mock"
-              "${MINGW_PACKAGE_PREFIX}-python-pytest-timeout"
-              "${MINGW_PACKAGE_PREFIX}-python-pytest-xdist"
-              "${MINGW_PACKAGE_PREFIX}-python-psutil")
+depends=(
+    "${MINGW_PACKAGE_PREFIX}-python"
+    "${MINGW_PACKAGE_PREFIX}-python-setuptools"
+    "${MINGW_PACKAGE_PREFIX}-python-wheel"
+    "${MINGW_PACKAGE_PREFIX}-python-cx-logging"
+    "${MINGW_PACKAGE_PREFIX}-python-lief"
+)
+makedepends=(
+    "${MINGW_PACKAGE_PREFIX}-python-build"
+    "${MINGW_PACKAGE_PREFIX}-python-installer"
+    "${MINGW_PACKAGE_PREFIX}-python-wheel"
+    "${MINGW_PACKAGE_PREFIX}-cc"
+    "${MINGW_PACKAGE_PREFIX}-tools"
+)
+checkdepends=(
+    "${MINGW_PACKAGE_PREFIX}-python-pytest"
+    "${MINGW_PACKAGE_PREFIX}-python-pytest-cov"
+    "${MINGW_PACKAGE_PREFIX}-python-pytest-datafiles"
+    "${MINGW_PACKAGE_PREFIX}-python-pytest-mock"
+    "${MINGW_PACKAGE_PREFIX}-python-pytest-timeout"
+    "${MINGW_PACKAGE_PREFIX}-python-pytest-xdist"
+    "${MINGW_PACKAGE_PREFIX}-python-psutil"
+)
 source=()
 sha256sums=()
 
@@ -64,7 +70,6 @@ build() {
 check() {
   cd python-${_realname}-${MSYSTEM}
   ${MINGW_PREFIX}/bin/pip install cx_Freeze -f dist --no-deps --no-index
-  ${MINGW_PREFIX}/bin/pip install "pytest-datafiles==3.0.0"
   ${MINGW_PREFIX}/bin/pytest -nauto --cov="cx_Freeze" --cov-report=xml
 }
 
