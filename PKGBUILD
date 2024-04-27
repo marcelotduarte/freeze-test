@@ -40,7 +40,11 @@ prepare() {
   echo "srcdir: ${srcdir}"
   rm -Rf "${srcdir}"/python-${_realname}-${MSYSTEM}
   mkdir -p "${srcdir}"/python-${_realname}-${MSYSTEM}
-  cp -a ../cx_Freeze/* "${srcdir}"/python-${_realname}-${MSYSTEM}
+  if [ -d ../cx_Freeze ]; then
+    cp -a ../cx_Freeze/* "${srcdir}"/python-${_realname}-${MSYSTEM}
+  else
+    cp -a ../../cx_Freeze/* "${srcdir}"/python-${_realname}-${MSYSTEM}
+  fi
 
   cd "${srcdir}"/python-${_realname}-${MSYSTEM}
   # ignore version check for setuptools
@@ -66,6 +70,7 @@ package() {
 
 check() {
   cd python-${_realname}-${MSYSTEM}
-  ${MINGW_PREFIX}/bin/python -m pip install "pytest-datafiles==3.0.0"
-  ${MINGW_PREFIX}/bin/python -m pytest -nauto --cov="cx_Freeze" --cov-report=xml || warning "Tests failed"
+  ${MINGW_PREFIX}/bin/pip install cx_Freeze -f dist --no-deps --no-index
+  ${MINGW_PREFIX}/bin/pip install "pytest-datafiles==3.0.0"
+  ${MINGW_PREFIX}/bin/pytest -nauto --cov="cx_Freeze" --cov-report=xml || warning "Tests failed"
 }
