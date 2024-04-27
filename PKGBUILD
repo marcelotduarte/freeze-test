@@ -61,16 +61,16 @@ build() {
   ${MINGW_PREFIX}/bin/python -m build --wheel --skip-dependency-check --no-isolation
 }
 
+check() {
+  cd python-${_realname}-${MSYSTEM}
+  ${MINGW_PREFIX}/bin/pip install cx_Freeze -f dist --no-deps --no-index
+  ${MINGW_PREFIX}/bin/pip install "pytest-datafiles==3.0.0"
+  ${MINGW_PREFIX}/bin/pytest -nauto --cov="cx_Freeze" --cov-report=xml
+}
+
 package() {
   cd python-${_realname}-${MSYSTEM}
   MSYS2_ARG_CONV_EXCL="--prefix=" \
     ${MINGW_PREFIX}/bin/python -m installer --prefix=${MINGW_PREFIX} \
     --destdir="${pkgdir}" dist/*.whl
-}
-
-check() {
-  cd python-${_realname}-${MSYSTEM}
-  ${MINGW_PREFIX}/bin/pip install cx_Freeze -f dist --no-deps --no-index
-  ${MINGW_PREFIX}/bin/pip install "pytest-datafiles==3.0.0"
-  ${MINGW_PREFIX}/bin/pytest -nauto --cov="cx_Freeze" --cov-report=xml || warning "Tests failed"
 }

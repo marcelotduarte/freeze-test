@@ -241,23 +241,13 @@ jobs:
           install: base-devel mingw-w64-ucrt-x86_64-python-pip
           update: true
 
-      - name: Build package
-        run: makepkg-mingw -sCLf --noconfirm --noprogressbar --skippgpcheck
-
-      - name: Install package
-        run: pacman --noconfirm -U ${MINGW_PACKAGE_PREFIX}-python-cx-freeze-7.*-1-any.pkg.tar.zst
-
       - name: Generate coverage report
-        working-directory: cx_Freeze
-        run: |
-          pip install cx_Freeze -f ../src/python-cx-freeze-${{ env.MINGW_ARCH }}/dist --no-deps --no-index
-          pip install "pytest-datafiles==3.0.0"
-          pytest -nauto --cov="cx_Freeze" --cov-report=xml
+        run: makepkg-mingw -sCLf --noconfirm --noprogressbar --skippgpcheck
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
           fail_ci_if_error: true
-          file: cx_Freeze/coverage.xml
+          file: src/python-cx-freeze-${{ env.MINGW_ARCH }}/coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
