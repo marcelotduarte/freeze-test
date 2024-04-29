@@ -211,7 +211,24 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
 
-  tests_msys2:
+  build_msys2:
+    name: Build msys2
+    uses: ./.github/workflows/build-packages-msys2.yml
+    with:
+      branch: ${{ inputs.branch }}
+
+    steps:
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          fail_ci_if_error: true
+          file: src/python-cx-freeze-${{ env.MINGW_ARCH }}/coverage.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true
+
+
+  tests_msys2_x:
     runs-on: windows-latest
     strategy:
       fail-fast: false

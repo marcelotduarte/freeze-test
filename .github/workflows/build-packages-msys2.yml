@@ -47,7 +47,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: ${{matrix.sys}}
-          install: base-devel tree
+          install: base-devel
           update: true
 
       - name: '🚧 Build package'
@@ -60,10 +60,4 @@ jobs:
           path: |
             mingw-w64-*.zst
             mingw-w64-*.zst.sig
-
-      - name: '🔍 Show package content'
-        run: |
-          mkdir tmp
-          cd tmp
-          tar -xf ../${{ inputs.path }}/*.zst
-          tree .
+            src/python-cx-freeze-${{ matrix.sys }}/coverage.xml
