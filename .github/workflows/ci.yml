@@ -33,12 +33,9 @@ jobs:
           pip install -v -e .[dev,doc]
 
       - name: Run pre-commit
-        run: |
-          pre-commit run --show-diff-on-failure --all-files --hook-stage=manual >output.txt
-          echo '```' > output.md
-          cat output.txt >> output.md
-          echo '```' >> output.md
-          cat output.md >> $GITHUB_STEP_SUMMARY
+        run: >-
+          pre-commit run --show-diff-on-failure --color=always
+          --all-files --hook-stage=manual
 
   tests:
     runs-on: ${{ matrix.os }}
@@ -235,9 +232,9 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           fail_ci_if_error: true
-          files: coverage-*.xml
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
+          #files: coverage-*.xml
 
 
   tests_msys2_x:
