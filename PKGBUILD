@@ -17,6 +17,7 @@ url="https://github.com/marcelotduarte/cx_Freeze/"
 options=(!strip)
 depends=(
     "${MINGW_PACKAGE_PREFIX}-python"
+    "${MINGW_PACKAGE_PREFIX}-python-pip"
     "${MINGW_PACKAGE_PREFIX}-python-setuptools"
     "${MINGW_PACKAGE_PREFIX}-python-wheel"
     "${MINGW_PACKAGE_PREFIX}-python-cx-logging"
