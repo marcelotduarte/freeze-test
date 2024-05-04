@@ -24,9 +24,9 @@ jobs:
     name: Build cx_Logging
     uses: ./.github/workflows/build-wheel-cxl.yml
 
-  build_wheel_lief:
-    name: Build LIEF
-    uses: ./.github/workflows/build-wheel-lief.yml
+  #build_wheel_lief:
+  #  name: Build LIEF
+  #  uses: ./.github/workflows/build-wheel-lief.yml
 
   conda_recipe:
     name: Generate conda-forge recipe
@@ -207,7 +207,7 @@ jobs:
       - build_msys2
       - build_wheel
       - build_wheel_cx_logging
-      - build_wheel_lief
+      #- build_wheel_lief
     strategy:
       fail-fast: false
     name: Conda index
@@ -301,7 +301,7 @@ jobs:
           rm -rf lief/*.whl
           mv lief/index.md lief/dev.md
           # local build
-          mv artifacts/lief-*/*.whl lief/
+          mv artifacts/lief-*/*.whl lief/ || true
           python make_index.py lief --base LIEF --mask "*.whl"
           mv lief/index.md lief/local.md
           # join
