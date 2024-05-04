@@ -24,9 +24,9 @@ jobs:
     name: Build cx_Logging
     uses: ./.github/workflows/build-wheel-cxl.yml
 
-  #build_wheel_lief:
-  #  name: Build LIEF
-  #  uses: ./.github/workflows/build-wheel-lief.yml
+  build_wheel_lief:
+    name: Build LIEF
+    uses: ./.github/workflows/build-wheel-lief.yml
 
   conda_recipe:
     name: Generate conda-forge recipe
@@ -87,9 +87,6 @@ jobs:
             name=${CONFIG:12:-5}
             python_and_version=$(echo $name|awk -F_ '{print $3}')
             version="${python_and_version:6:-1}"
-            #if [ "$version" == "3.11" ]; then
-            #  continue
-            #fi
             CONFIGS="${CONFIGS}{\"name\":\"${name}\",\"version\":\"${version}\",\"os\":\"windows\"}, "
           done
           echo "config=[${CONFIGS::-2}]" >> $GITHUB_OUTPUT
@@ -207,7 +204,7 @@ jobs:
       - build_msys2
       - build_wheel
       - build_wheel_cx_logging
-      #- build_wheel_lief
+      - build_wheel_lief
     strategy:
       fail-fast: false
     name: Conda index
