@@ -153,6 +153,8 @@ jobs:
           chcp 65001 #set code page to utf-8
 
       - name: Build Python ${{ env.python-version }}
+        env:
+          PYO3_USE_ABI3_FORWARD_COMPATIBILITY: 1
         run: |
           python -m pip -vvv wheel --wheel-dir=dist/ ./api/python
         shell: cmd
