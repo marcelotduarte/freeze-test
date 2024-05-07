@@ -47,4 +47,4 @@ jobs:
       python-version: ${{ inputs.python-version }}
       deps: ${{ inputs.deps }}
       bdist: ${{ inputs.bdist }}
-      os: macos-latest
+      os: macos-13
