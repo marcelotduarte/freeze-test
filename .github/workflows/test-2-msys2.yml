@@ -2,11 +2,11 @@ on:
   workflow_dispatch:
     inputs:
       sys-version:
-        default: "ucrt64,mingw64"
+        default: "ucrt64, mingw64"
         required: false
         type: choice
         options:
-          - "ucrt64,mingw64"
+          - "ucrt64, mingw64"
           - "ucrt64"
           - "mingw64"
           - "mingw32"
