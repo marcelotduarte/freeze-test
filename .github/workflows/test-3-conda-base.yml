@@ -6,7 +6,7 @@ on:
         required: true
         type: string
       python-version:
-        default: "3.8-3.11"
+        default: "3.8-3.12"
         required: false
         type: string
       deps:
@@ -49,7 +49,7 @@ jobs:
       - id: get-python
         run: |
           if [[ ${{ inputs.python-version }} == 3.*-3.* ]]; then
-            echo 'python-version=["3.8", "3.9", "3.10", "3.11"]' >> $GITHUB_OUTPUT
+            echo 'python-version=["3.8", "3.9", "3.10", "3.11", "3.12"]' >> $GITHUB_OUTPUT
           else
             echo 'python-version=["${{ inputs.python-version }}"]' >> $GITHUB_OUTPUT
           fi
@@ -64,7 +64,7 @@ jobs:
       - id: get-deps
         run: |
           deps=${{ inputs.deps }}
-          if [ "${{ inputs.python-version }}" == "3.12" ]; then
+          if [ "${{ inputs.python-version }}" == "3.13" ]; then
             deps=d
           fi
           echo "deps=[\"$deps\"]" >> $GITHUB_OUTPUT
