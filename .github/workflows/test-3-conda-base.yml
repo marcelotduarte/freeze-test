@@ -78,6 +78,10 @@ jobs:
         sample: ${{ fromJSON(needs.matrix.outputs.sample) }}
         python-version: ${{ fromJSON(needs.matrix.outputs.python-version) }}
         exclude:
+          - sample: pyside2
+            python-version: "3.12"
+          - sample: pyside2-simplebrowser
+            python-version: "3.12"
           - sample: pyqt6
           - sample: pyqt6-simplebrowser
           - sample: pyside6-simplebrowser
