@@ -182,7 +182,7 @@ jobs:
       - name: Build the conda package
         run: |
           mkdir -p build_artifacts
-          conda build recipe -m .ci_support\${{ matrix.config.name }}.yaml --output-folder build_artifacts
+          conda build recipe -m .ci_support/${{ matrix.config.name }}.yaml --output-folder build_artifacts
 
       - run: ls -l build_artifacts
 
