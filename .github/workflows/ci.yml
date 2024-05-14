@@ -30,12 +30,11 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade uv --disable-pip-version-check
-          uv venv
-          uv pip install -v -e .[dev,doc]
+          uv pip install --system -e.[dev,doc]
 
       - name: Run pre-commit
         run: >-
-          .venv/bin/pre-commit run --show-diff-on-failure --color=always
+          pre-commit run --show-diff-on-failure --color=always
           --all-files --hook-stage=manual
 
   tests:
@@ -79,7 +78,7 @@ jobs:
           uv venv
           uv pip install -r requirements.txt --pre
           uv pip install -r requirements-test.txt
-          uv pip install -v -e . --no-build-isolation --no-deps
+          uv pip install -e. -v
 
       - name: Generate coverage report
         run: |
@@ -124,7 +123,7 @@ jobs:
           uv venv
           uv pip install -r requirements.txt --pre
           uv pip install -r requirements-test.txt
-          uv pip install -v -e . --no-build-isolation --no-deps
+          uv pip install -e. --no-build-isolation --no-deps
 
       - name: Generate coverage report
         run: |
@@ -167,8 +166,7 @@ jobs:
       - name: Install dependencies - build wheel
         run: |
           python -m pip install --upgrade uv --disable-pip-version-check
-          uv venv
-          uv pip install "`grep cibuildwheel requirements-dev.txt`"
+          uv pip install --system "`grep cibuildwheel requirements-dev.txt`"
 
       - name: Build wheel for Python ${{ matrix.python-version }}
         run: |
@@ -179,7 +177,7 @@ jobs:
           else
             PLATFORM_TAG=macosx_$ARCH
           fi
-          .venv/bin/cibuildwheel --only ${PYTHON_TAG}-${PLATFORM_TAG}
+          cibuildwheel --only ${PYTHON_TAG}-${PLATFORM_TAG}
 
       - name: Upload the artifact
         uses: actions/upload-artifact@v4
@@ -189,6 +187,7 @@ jobs:
 
       - name: Install dependencies - tests
         run: |
+          uv venv
           uv pip install -r requirements.txt --pre
           uv pip install -r requirements-test.txt
           uv pip install cx_Freeze --no-index --no-deps -f wheelhouse
