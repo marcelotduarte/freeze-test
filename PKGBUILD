@@ -17,7 +17,6 @@ url="https://github.com/marcelotduarte/cx_Freeze/"
 options=(!strip)
 depends=(
     "${MINGW_PACKAGE_PREFIX}-python"
-    "${MINGW_PACKAGE_PREFIX}-python-pip"
     "${MINGW_PACKAGE_PREFIX}-python-setuptools"
     "${MINGW_PACKAGE_PREFIX}-python-wheel"
     "${MINGW_PACKAGE_PREFIX}-python-cx-logging"
@@ -69,8 +68,11 @@ build() {
 }
 
 check() {
+  local site_packages=$(${MINGW_PREFIX}/bin/python -c "import site; print(site.getsitepackages()[0])")
+
   cd python-${_realname}-${MSYSTEM}
-  ${MINGW_PREFIX}/bin/pip install cx_Freeze -f dist --no-deps --no-index
+  ${MINGW_PREFIX}/bin/python -m installer --destdir=test_dir dist/*.whl
+  export PYTHONPATH="$PWD/test_dir/$site_packages:$PYTHONPATH"
   ${MINGW_PREFIX}/bin/pytest -nauto --cov="cx_Freeze" --cov-report=xml
 }
 
