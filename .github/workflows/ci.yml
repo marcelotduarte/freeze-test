@@ -79,7 +79,8 @@ jobs:
              [ "${{ matrix.python-version }}" == "3.13" ]; then
             uv pip install cx_Logging lief --extra-index-url=https://marcelotduarte.github.io/packages/
           fi
-          uv pip install --system -e.[test] --no-build-isolation
+          uv pip install --system -r requirements.txt -r requirements-test.txt
+          uv pip install --system -e. --no-build-isolation --no-deps
 
       - name: Generate coverage report
         run: pytest -nauto --cov="cx_Freeze" --cov-report=xml
