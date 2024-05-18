@@ -12,7 +12,7 @@ jobs:
       matrix:
         sample: [pandas]
         os: [windows-latest]
-        python-version: ["3.9", "3.10", "3.11"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
     name: root-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
@@ -20,8 +20,8 @@ jobs:
         shell: bash
     env:
       PIP_ONLY_BINARY: numpy,pandas
-      LINK: https://github.com/cgohlke/numpy-mkl.whl/releases/download/v2023.1.4
-      VERSION: 1.23.5
+      LINK: https://github.com/cgohlke/numpy-mkl-wheels/releases/download/v2024.1.3
+      VERSION: 1.26.3
     steps:
 
       - name: Checkout cx_Freeze
@@ -41,7 +41,7 @@ jobs:
         run: |
           PY_VERSION_NODOT=$(echo ${{ matrix.python-version }}|sed 's/\.//')
           CP3x="cp${PY_VERSION_NODOT}"
-          pip install $LINK/numpy-$VERSION+mkl-$CP3x-$CP3x-win_amd64.whl
+          pip install $LINK/numpy-$VERSION-$CP3x-$CP3x-win_amd64.whl
 
       - name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
         id: freeze-and-run
@@ -70,15 +70,15 @@ jobs:
       matrix:
         sample: [pandas]
         os: [windows-latest]
-        python-version: ["3.9", "3.10", "3.11"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
         architecture: [x64]
     defaults:
       run:
         shell: bash
     env:
       PIP_ONLY_BINARY: numpy,pandas
-      LINK: https://github.com/cgohlke/numpy-mkl.whl/releases/download/v2023.1.4
-      VERSION: 1.23.5
+      LINK: https://github.com/cgohlke/numpy-mkl-wheels/releases/download/v2024.1.3
+      VERSION: 1.26.3
     name: venv-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     steps:
@@ -100,11 +100,15 @@ jobs:
         run: |
           PY_VERSION_NODOT=$(echo ${{ matrix.python-version }}|sed 's/\.//')
           CP3x="cp${PY_VERSION_NODOT}"
-          pip install $LINK/numpy-$VERSION+mkl-$CP3x-$CP3x-win_amd64.whl
+          python -m pip install --upgrade uv --disable-pip-version-check
+          uv venv
+          uv pip install $LINK/numpy-$VERSION-$CP3x-$CP3x-win_amd64.whl
 
       - name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --venv
+        run: |
+          source .venv/Scripts/activate
+          ./ci/build-test-one.sh ${{ matrix.sample }} --debug
 
       - name: Collect images and logs
         if: ${{ always() }}
