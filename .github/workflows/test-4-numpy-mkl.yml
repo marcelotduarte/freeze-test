@@ -50,17 +50,20 @@ jobs:
       - name: Collect images and logs
         if: ${{ always() }}
         working-directory: samples/${{ matrix.sample }}
-        run: mv build/*/*.{err,log,png} . || true
+        run: |
+          mkdir ${{ matrix.sample }}-${{ inputs.os }}
+          cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ inputs.os }} || true
+          if [[ ${{ inputs.os }} == macos-* ]]; then
+            mkdir ${{ matrix.sample }}-${{ inputs.os }}/app-${{ matrix.python-version }}
+            cp build/*.app/Contents/MacOS/*.{err,log,png} ${{ matrix.sample }}-${{ inputs.os }}/app-${{ matrix.python-version }} || true
+          fi
 
-      - name: Upload the snapshots and logs
+      - name: Upload the logs (and screenshots)
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: screensnapshots
-          path: |
-            ./samples/${{ matrix.sample }}/*.err
-            ./samples/${{ matrix.sample }}/*.log
-            ./samples/${{ matrix.sample }}/*.png
+          name: logs-pip-${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.python-version }}
+          path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ inputs.os }}/**
           if-no-files-found: ignore
 
   test2:
@@ -114,13 +117,17 @@ jobs:
         if: ${{ always() }}
         working-directory: samples/${{ matrix.sample }}
         run: |
-          mkdir ${{ matrix.sample }}-${{ matrix.os }}
-          cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }} || true
+          mkdir ${{ matrix.sample }}-${{ inputs.os }}
+          cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ inputs.os }} || true
+          if [[ ${{ inputs.os }} == macos-* ]]; then
+            mkdir ${{ matrix.sample }}-${{ inputs.os }}/app-${{ matrix.python-version }}
+            cp build/*.app/Contents/MacOS/*.{err,log,png} ${{ matrix.sample }}-${{ inputs.os }}/app-${{ matrix.python-version }} || true
+          fi
 
-      - name: Upload the snapshots and logs
+      - name: Upload the logs (and screenshots)
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: screensnapshots
-          path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ matrix.os }}/**
+          name: logs-pip-${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.python-version }}
+          path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ inputs.os }}/**
           if-no-files-found: ignore
