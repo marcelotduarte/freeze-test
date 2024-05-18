@@ -41,6 +41,7 @@ jobs:
         run: |
           PY_VERSION_NODOT=$(echo ${{ matrix.python-version }}|sed 's/\.//')
           CP3x="cp${PY_VERSION_NODOT}"
+          pip install --upgrade setuptools
           pip install $NUMPY_LINK/numpy-$VERSION-$CP3x-$CP3x-win_amd64.whl
 
       - name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
@@ -101,6 +102,7 @@ jobs:
           CP3x="cp${PY_VERSION_NODOT}"
           python -m pip install --upgrade uv --disable-pip-version-check
           uv venv
+          uv pip install --upgrade setuptools
           uv pip install $NUMPY_LINK/numpy-$VERSION-$CP3x-$CP3x-win_amd64.whl
 
       - name: Freeze and run "${{ matrix.sample }}" (numpy+mkl)
