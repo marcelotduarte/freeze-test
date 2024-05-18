@@ -51,19 +51,15 @@ jobs:
         if: ${{ always() }}
         working-directory: samples/${{ matrix.sample }}
         run: |
-          mkdir ${{ matrix.sample }}-${{ inputs.os }}
-          cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ inputs.os }} || true
-          if [[ ${{ inputs.os }} == macos-* ]]; then
-            mkdir ${{ matrix.sample }}-${{ inputs.os }}/app-${{ matrix.python-version }}
-            cp build/*.app/Contents/MacOS/*.{err,log,png} ${{ matrix.sample }}-${{ inputs.os }}/app-${{ matrix.python-version }} || true
-          fi
+          mkdir ${{ matrix.sample }}-${{ matrix.os }}
+          cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }} || true
 
       - name: Upload the logs (and screenshots)
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: logs-pip-${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.python-version }}
-          path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ inputs.os }}/**
+          name: logs-pip-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
+          path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ matrix.os }}/**
           if-no-files-found: ignore
 
   test2:
@@ -117,17 +113,13 @@ jobs:
         if: ${{ always() }}
         working-directory: samples/${{ matrix.sample }}
         run: |
-          mkdir ${{ matrix.sample }}-${{ inputs.os }}
-          cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ inputs.os }} || true
-          if [[ ${{ inputs.os }} == macos-* ]]; then
-            mkdir ${{ matrix.sample }}-${{ inputs.os }}/app-${{ matrix.python-version }}
-            cp build/*.app/Contents/MacOS/*.{err,log,png} ${{ matrix.sample }}-${{ inputs.os }}/app-${{ matrix.python-version }} || true
-          fi
+          mkdir ${{ matrix.sample }}-${{ matrix.os }}
+          cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.os }} || true
 
       - name: Upload the logs (and screenshots)
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: logs-pip-${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.python-version }}
-          path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ inputs.os }}/**
+          name: logs-pip-${{ matrix.sample }}-${{ matrix.os }}-${{ matrix.python-version }}
+          path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ matrix.os }}/**
           if-no-files-found: ignore
