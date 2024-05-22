@@ -188,7 +188,9 @@ jobs:
           uv venv
           uv pip install -r requirements.txt -r requirements-test.txt
           uv pip install cx_Freeze --no-index --no-deps -f wheelhouse
-          # enable extra test - pandas
+          # enable extra test - pandas, numpy
+          source .venv/bin/activate
+          pip install -i https://pypi.anaconda.org/intel/simple numpy
           uv pip install pandas
 
       - name: Pip list
