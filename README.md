@@ -19,7 +19,9 @@ itself works on.
 
 In a virtual environment, install by issuing the command:
 
-`pip install --upgrade cx_Freeze`
+```
+pip install --upgrade cx_Freeze
+```
 
 To install the latest development build:
 
@@ -27,8 +29,8 @@ To install the latest development build:
 pip install --force --no-cache --pre --extra-index-url https://marcelotduarte.github.io/packages/ cx_Freeze
 ```
 
-Please check the [installation]
-(https://cx-freeze.readthedocs.io/en/latest/installation.html)
+Please check the
+[installation](https://cx-freeze.readthedocs.io/en/latest/installation.html)
 for more information and how to install in other environments such as pipenv,
 conda-forge, etc.
 
@@ -40,7 +42,11 @@ The official documentation is available
 If you need help you can also ask on the
 [discussion](https://github.com/marcelotduarte/cx_Freeze/discussions) channel.
 
-# What's New:
+# What's New v7.1:
+- Added new option --zip-filename in build_exe
+- Bug fixes and improvements
+
+# What's New v7.0:
 - Added support for [pyproject.toml](https://cx-freeze.readthedocs.io/en/stable/setup_script.html)
 - Create Linux AppImage format: [bdist_appimage](https://cx-freeze.readthedocs.io/en/stable/bdist_appimage.html)
 - Create an DEB distribution: [bdist_deb](https://cx-freeze.readthedocs.io/en/stable/bdist_deb.html)
