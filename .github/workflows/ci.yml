@@ -64,7 +64,15 @@ jobs:
         with:
           cache: 'packages'
           python-version: ${{ matrix.python-version }}
+        if: "${{ matrix.python-version }}" != "3.13"
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          cache: 'pip'
+          python-version: ${{ matrix.python-version }}
           allow-prereleases: true
+        if: "${{ matrix.python-version }}" == "3.13"
 
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
@@ -72,8 +80,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          if [ "${{ matrix.os }}" == "windows-latest" ] && \
-             [ "${{ matrix.python-version }}" == "3.13" ]; then
+          if [ "${{ matrix.python-version }}" == "3.13" ]; then
+            python -m pip install --upgrade uv --disable-pip-version-check
             uv pip install --system cx_Logging lief --extra-index-url=https://marcelotduarte.github.io/packages/
           fi
           uv pip install --system -r requirements.txt -r requirements-test.txt
