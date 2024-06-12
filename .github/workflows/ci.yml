@@ -24,11 +24,11 @@ jobs:
       - name: Set up Python
         uses: drivendataorg/setup-python-uv-action@main
         with:
-          cache: 'packages'
+          cache: 'venv'
           python-version: '3.12'
 
       - name: Install dependencies
-        run: uv pip install --system -e.[dev,doc]
+        run: uv pip install -e.[dev,doc]
 
       - name: Run pre-commit
         run: >-
