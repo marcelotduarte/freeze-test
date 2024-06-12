@@ -66,7 +66,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
         if: !startsWith(matrix.python-version, '3.13')
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }} pre-release
         uses: actions/setup-python@v5
         with:
           cache: 'pip'
