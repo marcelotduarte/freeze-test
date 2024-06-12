@@ -60,7 +60,7 @@ jobs:
           repository: marcelotduarte/cx_Freeze
 
       - name: Set up Python ${{ matrix.python-version }}
-        if: !startsWith(matrix.python-version, '3.13')
+        if: startsWith(matrix.python-version, '3.13')
         uses: drivendataorg/setup-python-uv-action@main
         with:
           cache: 'packages'
