@@ -60,19 +60,11 @@ jobs:
           repository: marcelotduarte/cx_Freeze
 
       - name: Set up Python ${{ matrix.python-version }}
-        if: ${{ matrix.python-version != '3.13' }}
-        uses: drivendataorg/setup-python-uv-action@main
+        uses: marcelotduarte/setup-python-uv-action@new
         with:
           cache: 'packages'
           python-version: ${{ matrix.python-version }}
-
-      - name: Set up Python ${{ matrix.python-version }} pre-release
-        uses: actions/setup-python@v5
-        with:
-          cache: 'pip'
-          python-version: ${{ matrix.python-version }}
           allow-prereleases: true
-        if: startsWith(matrix.python-version, '3.13')
 
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
@@ -81,11 +73,9 @@ jobs:
       - name: Install dependencies
         run: |
           if [ "${{ matrix.python-version }}" == "3.13" ]; then
-            python -m pip install --upgrade uv --disable-pip-version-check
             uv pip install --system cx_Logging lief --extra-index-url=https://marcelotduarte.github.io/packages/
           fi
-          uv pip install --system -r requirements.txt -r requirements-test.txt
-          uv pip install --system -e. --no-build-isolation --no-deps
+          uv pip install --system -e. --no-build-isolation
 
       - name: Generate coverage report
         run: pytest -nauto --cov="cx_Freeze" --cov-report=xml
@@ -142,7 +132,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
 
-  tests_unix_binary_wheel:
+  build_unix_binary_wheel:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -184,9 +174,38 @@ jobs:
           name: cx-freeze-pip-${{ matrix.os }}-${{ matrix.python-version }}
           path: wheelhouse
 
+  tests_unix_binary_wheel:
+    needs:
+      - build_unix_binary_wheel
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        python-version: ['3.10', '3.12']
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+          repository: marcelotduarte/cx_Freeze
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: drivendataorg/setup-python-uv-action@main
+        with:
+          cache: 'venv'
+          python-version: ${{ matrix.python-version }}
+
+      - name: Download the artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cx-freeze-pip-${{ matrix.os }}-${{ matrix.python-version }}
+          path: wheelhouse
+
       - name: Install dependencies - tests
         run: |
-          uv venv
           uv pip install -r requirements.txt -r requirements-test.txt
           uv pip install cx_Freeze --no-index --no-deps -f wheelhouse
           # enable extra test - pandas, numpy
@@ -199,9 +218,7 @@ jobs:
         run: uv pip list -v
 
       - name: Generate coverage report
-        run: |
-          source .venv/bin/activate
-          pytest -nauto --cov="cx_Freeze" --cov-report=xml
+        run: pytest -nauto --cov="cx_Freeze" --cov-report=xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
