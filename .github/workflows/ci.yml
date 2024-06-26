@@ -66,7 +66,7 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: marcelotduarte/setup-python-uv-action@new
         with:
-          cache: 'packages'
+          cache: 'venv'
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
 
@@ -77,9 +77,9 @@ jobs:
       - name: Install dependencies
         run: |
           if [ "${{ matrix.python-version }}" == "3.13" ]; then
-            uv pip install --system cx_Logging lief --extra-index-url=https://marcelotduarte.github.io/packages/
+            uv pip install cx_Logging lief --extra-index-url=https://marcelotduarte.github.io/packages/
           fi
-          uv pip install --system -e. --no-build-isolation
+          uv pip install -e.[test] --no-build-isolation
 
       - name: Generate coverage report
         run: pytest -nauto --cov="cx_Freeze" --cov-report=xml
@@ -114,18 +114,18 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: drivendataorg/setup-python-uv-action@main
         with:
-          cache: 'packages'
+          cache: 'venv'
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: uv pip install --system -e.[test]
+        run: uv pip install -e.[test]
 
       - name: Generate coverage report
         run: |
           if [ "${{ matrix.extra-requirement }}" == "lief-disabled" ]; then
             export CX_FREEZE_BIND=imagehlp
           else
-            uv pip install --system "${{ matrix.extra-requirement }}"
+            uv pip install "${{ matrix.extra-requirement }}"
           fi
           pytest -nauto --cov="cx_Freeze" --cov-report=xml
 
