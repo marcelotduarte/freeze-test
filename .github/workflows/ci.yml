@@ -11,6 +11,10 @@ on:
           - develop
           - main
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   pre_commit:
     runs-on: ubuntu-latest
