@@ -28,7 +28,7 @@ jobs:
       - name: Set up Python
         uses: drivendataorg/setup-python-uv-action@main
         with:
-          cache: 'venv'
+          cache: 'packages'
           python-version: '3.12'
 
       - name: Install dependencies
@@ -66,7 +66,7 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: marcelotduarte/setup-python-uv-action@new
         with:
-          cache: 'venv'
+          cache: 'packages'
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
 
@@ -116,7 +116,7 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: drivendataorg/setup-python-uv-action@main
         with:
-          cache: 'venv'
+          cache: 'packages'
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
