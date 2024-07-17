@@ -35,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: new
+          ref: main
           repository: marcelotduarte/cx_freeze-feedstock
 
       - uses: actions/checkout@v4
@@ -113,7 +113,7 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          ref: new
+          ref: main
           repository: marcelotduarte/cx_freeze-feedstock
 
       - uses: actions/checkout@v4
@@ -173,7 +173,7 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          ref: new
+          ref: main
           repository: marcelotduarte/cx_freeze-feedstock
 
       - name: Update recipe
