@@ -5,9 +5,11 @@ _name=cx_Freeze
 _realname=cx-freeze
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=7.1.0.dev24
+pkgver=7.2.0
 pkgrel=1
 pkgdesc="Creates standalone executables from Python scripts, with the same performance (mingw-w64)"
+source=()
+sha256sums=()
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64')
 msys2_references=(
@@ -40,8 +42,6 @@ checkdepends=(
     "${MINGW_PACKAGE_PREFIX}-python-pytest-xdist"
     "${MINGW_PACKAGE_PREFIX}-python-psutil"
 )
-source=()
-sha256sums=()
 
 prepare() {
   echo "pwd: $(pwd)" 
