@@ -74,7 +74,7 @@ jobs:
 
       - name: Install dependencies
         env:
-          UV_EXTRA_INDEX_URL=https://marcelotduarte.github.io/packages/
+          UV_EXTRA_INDEX_URL: https://marcelotduarte.github.io/packages/
         run: uv pip install -e.[test]
 
       - name: Generate coverage report
