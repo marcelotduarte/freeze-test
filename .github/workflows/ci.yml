@@ -44,14 +44,12 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-13 ]
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
         include:
           - os: macos-14
             python-version: '3.11'
           - os: macos-14
             python-version: '3.12'
-          - os: windows-latest
-            python-version: '3.13'
       fail-fast: false
     defaults:
       run:
@@ -75,13 +73,9 @@ jobs:
         run: sudo apt-get install -y alien fakeroot rpm
 
       - name: Install dependencies
-        run: |
-          if [ "${{ matrix.python-version }}" == "3.13" ]; then
-            uv pip install cx_Logging --extra-index-url=https://marcelotduarte.github.io/packages/
-            uv pip install -r requirements.txt -r requirements-test.txt
-            uv pip install -e. --no-build-isolation --no-deps
-          fi
-          uv pip install -e.[test]
+        env:
+          UV_EXTRA_INDEX_URL=https://marcelotduarte.github.io/packages/
+        run: uv pip install -e.[test]
 
       - name: Generate coverage report
         run: pytest -nauto --cov="cx_Freeze" --cov-report=xml
