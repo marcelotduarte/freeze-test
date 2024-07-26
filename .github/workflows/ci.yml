@@ -72,9 +72,13 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get install -y alien fakeroot rpm
 
-      - name: Install dependencies
+      - name: Install dependencies from packages for python pre-releases
+        if: runner.os == 'Windows' && matrix.python-version == '3.13'
         env:
           UV_EXTRA_INDEX_URL: https://marcelotduarte.github.io/packages/
+        run: uv pip install cx_Logging
+
+      - name: Install dependencies
         run: uv pip install -e.[test]
 
       - name: Generate coverage report
