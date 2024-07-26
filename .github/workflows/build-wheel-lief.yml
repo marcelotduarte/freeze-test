@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 env:
-  python-version: '3.13.0-alpha.6'
+  python-version: '3.13'
   SCCACHE_DIR: 'C:\Users\runner\AppData\Local\Mozilla\sccache'
   
 jobs:
@@ -22,12 +22,13 @@ jobs:
         with:
           fetch-depth: 0
           repository: lief-project/LIEF
-          ref: 0.14.1
+          ref: 0.15.1
 
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ env.python-version }}
           architecture: ${{ matrix.arch }}
+          allow-prereleases: true
 
       - name: Install system dependencies
         run: |
@@ -101,6 +102,7 @@ jobs:
         with:
           python-version: ${{ env.python-version }}
           architecture: ${{ matrix.arch }}
+          allow-prereleases: true
 
       - name: Install system dependencies
         run: |
