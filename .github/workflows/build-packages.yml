@@ -210,11 +210,6 @@ jobs:
       # to build the index
       - build_conda_unix
       - build_conda_windows
-      # to wait for all artifacts
-      - build_msys2
-      - build_wheel
-      - build_wheel_cx_logging
-      - build_wheel_lief
     strategy:
       fail-fast: false
     name: Conda index
@@ -262,6 +257,11 @@ jobs:
     name: Update packages repository
     needs:
       - build_conda_index
+      # to wait for all artifacts
+      - build_msys2
+      - build_wheel
+      #- build_wheel_cx_logging
+      #- build_wheel_lief
     env:
       LIEF_LINK: https://lief.s3-website.fr-par.scw.cloud/latest
       PACKAGES: https://marcelotduarte.github.io/packages
