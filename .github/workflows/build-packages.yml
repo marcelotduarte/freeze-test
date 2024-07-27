@@ -5,10 +5,11 @@ on:
     # run every day at 7:30AM UTC
     - cron:  '30 7 * * *'
   workflow_dispatch:
-
-env:
-  BUILD_CX_LOGGING: 'true'
-  BUILD_LIEF: 'false'
+    inputs:
+      build_cx_logging:
+        default: true
+      build_lief:
+        default: false
 
 jobs:
 
@@ -26,15 +27,16 @@ jobs:
 
   build_wheel_cx_logging:
     name: Build cx_Logging
+    if: ${{ inputs.build_cx_logging == 'true' }}
     uses: ./.github/workflows/build-wheel-cxl.yml
     with:
-      build: ${{ env.BUILD_CX_LOGGING }}
+      build: ${{ inputs.build_cx_logging }}
 
   build_wheel_lief:
     name: Build LIEF
     uses: ./.github/workflows/build-wheel-lief.yml
     with:
-      build: ${{ env.BUILD_LIEF }}
+      build: ${{ inputs.build_lief }}
 
   conda_recipe:
     name: Generate conda-forge recipe
@@ -308,7 +310,7 @@ jobs:
           sed -i '/## /d' lief/index.md
           rm -rf lief/*.whl
           # local build
-          if [ ${{ env.BUILD_LIEF == 'true' }} ]; then
+          if [ ${{ inputs.build_lief == 'true' }} ]; then
             mv lief/index.md lief/dev.md
             mv artifacts/lief-*/*.whl lief/ || true
             python make_index.py lief --base LIEF --mask "*.whl"
@@ -319,7 +321,7 @@ jobs:
           fi
 
       - name: Create index for cx-logging wheels
-        if: ${{ env.BUILD_CX_LOGGING == 'true' }}
+        if: ${{ inputs.build_cx_logging == 'true' }}
         run: |
           mkdir -p cx-logging
           mv artifacts/cx-logging-*/* cx-logging/
@@ -359,7 +361,7 @@ jobs:
           echo -e "Development wheels for [cx_Freeze](cx-freeze/index.md).\n">>index.md
           echo -e "Development packages for MSYS2 [python-cx-freeze](msys2/index.md).\n">>index.md
           echo -e "Development packages for conda-forge [cx_freeze](conda/index.md).\n">>index.md
-          if [ ${{ env.BUILD_CX_LOGGING == 'true' }} ];then
+          if [ ${{ inputs.build_cx_logging == 'true' }} ];then
             echo -e "# Packages for cx_Logging 3.2 \[Windows\]\[Python 3.13\]\n">>index.md
             echo -e "Unofficial wheels for [cx_Logging](cx-logging/index.md).\n">>index.md
           fi
