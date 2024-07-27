@@ -2,6 +2,9 @@ name: Build wheel (cx_Logging)
 
 on:
   workflow_call:
+    inputs:
+      build:
+        default: true
   workflow_dispatch:
 
 env:
@@ -9,13 +12,14 @@ env:
 
 jobs:
   build_wheel:
+    name: Build cx_Logging [${{ matrix.os }}-${{ matrix.arch }}]
+    runs-on: ${{ matrix.os }}
+    if: ${{ inputs.build == 'true' }}
     strategy:
       fail-fast: false
       matrix:
         os: [windows-latest]
         arch: ['x64', 'x86']
-    name: Build cx_Logging [${{ matrix.os }}-${{ matrix.arch }}]
-    runs-on: ${{ matrix.os }}
     defaults:
       run:
         shell: bash

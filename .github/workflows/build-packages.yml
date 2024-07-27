@@ -26,13 +26,15 @@ jobs:
 
   build_wheel_cx_logging:
     name: Build cx_Logging
-    if: ${{ env.BUILD_CX_LOGGING_ENABLE == 'true' }}
     uses: ./.github/workflows/build-wheel-cxl.yml
+    with:
+      build: ${{ env.BUILD_CX_LOGGING_ENABLE }}
 
   build_wheel_lief:
     name: Build LIEF
-    if: ${{ BUILD_LIEF_ENABLE == 'true' }}
     uses: ./.github/workflows/build-wheel-lief.yml
+    with:
+      build: ${{ env.BUILD_LIEF_ENABLE }}
 
   conda_recipe:
     name: Generate conda-forge recipe
