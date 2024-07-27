@@ -25,12 +25,12 @@ jobs:
       branch: develop
 
   build_wheel_cx_logging:
-    if: ${{ env.BUILD_CX_LOGGING_ENABLE == 'true' }}
+    if: ${{ BUILD_CX_LOGGING_ENABLE == 'true' }}
     name: Build cx_Logging
     uses: ./.github/workflows/build-wheel-cxl.yml
 
   build_wheel_lief:
-    if: ${{ env.BUILD_LIEF_ENABLE == 'true' }}
+    if: ${{ BUILD_LIEF_ENABLE == 'true' }}
     name: Build LIEF
     uses: ./.github/workflows/build-wheel-lief.yml
 
