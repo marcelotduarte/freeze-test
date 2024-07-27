@@ -25,12 +25,12 @@ jobs:
       branch: develop
 
   build_wheel_cx_logging:
-    if: ${{ env.BUILD_CX_LOGGING_ENABLE }}
+    if: env.BUILD_CX_LOGGING_ENABLE == 'true'
     name: Build cx_Logging
     uses: ./.github/workflows/build-wheel-cxl.yml
 
   build_wheel_lief:
-    if: ${{ env.BUILD_LIEF_ENABLE }}
+    if: env.BUILD_LIEF_ENABLE == 'true'
     name: Build LIEF
     uses: ./.github/workflows/build-wheel-lief.yml
 
@@ -317,7 +317,7 @@ jobs:
           fi
 
       - name: Create index for cx-logging wheels
-        if: ${{ env.BUILD_CX_LOGGING_ENABLE }}
+        if: env.BUILD_CX_LOGGING_ENABLE == 'true'
         run: |
           mkdir -p cx-logging
           mv artifacts/cx-logging-*/* cx-logging/
