@@ -2,9 +2,6 @@ name: Build wheel (LIEF)
 
 on:
   workflow_call:
-    inputs:
-      build:
-        default: true
   workflow_dispatch:
 
 env:

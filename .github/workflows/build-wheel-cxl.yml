@@ -2,9 +2,6 @@ name: Build wheel (cx_Logging)
 
 on:
   workflow_call:
-    inputs:
-      build:
-        default: true
   workflow_dispatch:
 
 env:

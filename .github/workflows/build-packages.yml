@@ -29,14 +29,11 @@ jobs:
     name: Build cx_Logging
     if: ${{ inputs.build_cx_logging == 'true' }}
     uses: ./.github/workflows/build-wheel-cxl.yml
-    with:
-      build: ${{ inputs.build_cx_logging }}
 
   build_wheel_lief:
     name: Build LIEF
+    if: ${{ inputs.build_lief == 'true' }}
     uses: ./.github/workflows/build-wheel-lief.yml
-    with:
-      build: ${{ inputs.build_lief }}
 
   conda_recipe:
     name: Generate conda-forge recipe
