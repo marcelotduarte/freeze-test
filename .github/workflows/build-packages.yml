@@ -25,13 +25,13 @@ jobs:
       branch: develop
 
   build_wheel_cx_logging:
-    if: ${{ BUILD_CX_LOGGING_ENABLE == 'true' }}
     name: Build cx_Logging
+    if: ${{ env.BUILD_CX_LOGGING_ENABLE == 'true' }}
     uses: ./.github/workflows/build-wheel-cxl.yml
 
   build_wheel_lief:
-    if: ${{ BUILD_LIEF_ENABLE == 'true' }}
     name: Build LIEF
+    if: ${{ BUILD_LIEF_ENABLE == 'true' }}
     uses: ./.github/workflows/build-wheel-lief.yml
 
   conda_recipe:
