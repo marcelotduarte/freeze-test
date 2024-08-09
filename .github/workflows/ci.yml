@@ -84,13 +84,6 @@ jobs:
       - name: Generate coverage report
         run: pytest -nauto --cov="cx_Freeze" --cov-report=xml
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-          verbose: true
-
   tests_extra:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -129,13 +122,6 @@ jobs:
             uv pip install "${{ matrix.extra-requirement }}"
           fi
           pytest -nauto --cov="cx_Freeze" --cov-report=xml
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-          verbose: true
 
   build_unix_binary_wheel:
     runs-on: ${{ matrix.os }}
@@ -227,13 +213,6 @@ jobs:
       - name: Generate coverage report
         run: pytest -nauto --cov="cx_Freeze" --cov-report=xml
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-          verbose: true
-
   build_msys2:
     name: Build msys2
     uses: ./.github/workflows/build-packages-msys2.yml
@@ -257,6 +236,6 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
-          fail_ci_if_error: true
+          fail_ci_if_error: false
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
