@@ -6,7 +6,7 @@ on:
   workflow_call:
     inputs:
       branch:
-        default: ${{ github.ref }}
+        default: main
         required: true
         type: string
       extra_linux_platforms:
@@ -20,9 +20,12 @@ on:
   workflow_dispatch:
     inputs:
       branch:
-        default: ${{ github.ref }}
+        default: develop
         required: true
-        type: string
+        type: choice
+        options:
+          - develop
+          - main
       extra_linux_platforms:
         default: true
         required: false
