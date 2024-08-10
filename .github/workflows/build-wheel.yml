@@ -9,6 +9,14 @@ on:
         default: ${{ github.ref }}
         required: true
         type: string
+      extra_linux_platforms:
+        default: true
+        required: false
+        type: boolean
+      extra_macos_platforms:
+        default: true
+        required: false
+        type: boolean
   workflow_dispatch:
 
 jobs:
@@ -42,7 +50,7 @@ jobs:
           allow-prereleases: true
 
       - name: Set up QEMU
-        if: runner.os == 'Linux'
+        if: runner.os == 'Linux' && inputs.extra_linux_platforms
         uses: docker/setup-qemu-action@v3
         with:
           platforms: arm64,ppc64le
@@ -57,14 +65,15 @@ jobs:
           PY_VERSION_NODOT=$(echo ${{ matrix.python-version }}|sed 's/\.//')
           if [ "${{ matrix.os }}" == "macos-13" ]; then
             export CIBW_ARCHS="x86_64"
-          elif [ "${{ matrix.os }}" == "macos-14" ]; then
+          elif [ "${{ matrix.os }}" == "macos-14" &&
+                  ${{ inputs.extra_macos_platforms }} == true ]; then
             export CIBW_ARCHS="universal2 arm64"
           fi
           export CIBW_BUILD="cp${PY_VERSION_NODOT}-*"
           cibuildwheel --output-dir wheelhouse --prerelease-pythons
 
       - name: Add sdist
-        if: runner.os == 'Linux' && matrix.python-version == '3.11'
+        if: runner.os == 'Linux' && matrix.python-version == '3.12'
         run: |
           uv pip install --system --upgrade build
           python -m build . --sdist -o wheelhouse
@@ -74,6 +83,7 @@ jobs:
         with:
           name: cx-freeze-pip-${{ matrix.os }}-${{ matrix.python-version }}
           path: wheelhouse
+          compression-level: 0  # no compression
 
   publish:
     name: Publish package to PyPI
