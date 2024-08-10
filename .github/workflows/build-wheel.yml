@@ -18,6 +18,19 @@ on:
         required: false
         type: boolean
   workflow_dispatch:
+    inputs:
+      branch:
+        default: ${{ github.ref }}
+        required: true
+        type: string
+      extra_linux_platforms:
+        default: true
+        required: false
+        type: boolean
+      extra_macos_platforms:
+        default: true
+        required: false
+        type: boolean
 
 jobs:
   build_wheel:

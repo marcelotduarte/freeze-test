@@ -152,7 +152,7 @@ jobs:
 
   tests_unix_binary_wheel:
     needs:
-      - build_unix_binary_wheel
+      - tests  # reuse the wheels
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
