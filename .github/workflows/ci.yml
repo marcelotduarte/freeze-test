@@ -78,11 +78,38 @@ jobs:
           UV_EXTRA_INDEX_URL: https://marcelotduarte.github.io/packages/
         run: uv pip install cx_Logging
 
-      - name: Install dependencies
-        run: uv pip install -e.[test]
+      - name: Install cibuildwheel
+        run: uv pip install "`grep cibuildwheel requirements-dev.txt`"
+
+      - name: Build wheel for Python ${{ matrix.python-version }}
+        env:
+          CIBW_BUILD_FRONTEND: build[uv]
+        run: |
+          PYTHON_TAG=cp$(echo ${{ matrix.python-version }}|sed 's/\.//')
+          ARCH=$(python -c "import platform; print(platform.machine().lower())")
+          if [ "${{ runner.os }}" == "Linux" ]; then
+            PLATFORM_TAG=manylinux_$ARCH
+          elif [ "${{ runner.os }}" == "Windows" ]; then
+            PLATFORM_TAG=win_$ARCH
+          else
+            PLATFORM_TAG=macosx_$ARCH
+          fi
+          cibuildwheel --only ${PYTHON_TAG}-${PLATFORM_TAG} --prerelease-pythons
+
+      - name: Install cx_Freeze and dependencies
+        run: |
+          uv pip install -r requirements.txt -r requirements-test.txt
+          uv pip install cx_Freeze --no-index --no-deps -f wheelhouse -v
 
       - name: Generate coverage report
         run: pytest -nauto --cov="cx_Freeze" --cov-report=xml
+
+      - name: Upload the wheel
+        uses: actions/upload-artifact@v4
+        with:
+          name: cx-freeze-pip-${{ matrix.os }}-${{ matrix.python-version }}
+          path: wheelhouse
+          compression-level: 0  # wheel is a zip file
 
   tests_extra:
     runs-on: ${{ matrix.os }}
@@ -122,48 +149,6 @@ jobs:
             uv pip install "${{ matrix.extra-requirement }}"
           fi
           pytest -nauto --cov="cx_Freeze" --cov-report=xml
-
-  build_unix_binary_wheel:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        python-version: ['3.10', '3.12']
-    defaults:
-      run:
-        shell: bash
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.branch }}
-          repository: marcelotduarte/cx_Freeze
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: drivendataorg/setup-python-uv-action@main
-        with:
-          cache: 'packages'
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install dependencies - build wheel
-        run: uv pip install --system "`grep cibuildwheel requirements-dev.txt`"
-
-      - name: Build wheel for Python ${{ matrix.python-version }}
-        run: |
-          PYTHON_TAG=cp$(echo ${{ matrix.python-version }}|sed 's/\.//')
-          ARCH=$(python -c "import platform; print(platform.machine().lower())")
-          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-            PLATFORM_TAG=manylinux_$ARCH
-          else
-            PLATFORM_TAG=macosx_$ARCH
-          fi
-          cibuildwheel --only ${PYTHON_TAG}-${PLATFORM_TAG}
-
-      - name: Upload the artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: cx-freeze-pip-${{ matrix.os }}-${{ matrix.python-version }}
-          path: wheelhouse
 
   tests_unix_binary_wheel:
     needs:
