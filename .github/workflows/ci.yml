@@ -44,7 +44,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-13]
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13-dev']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
         include:
           - os: macos-14  # macos-14 is apple silicon
             python-version: '3.11'
@@ -78,8 +78,8 @@ jobs:
           UV_EXTRA_INDEX_URL: https://marcelotduarte.github.io/packages/
         run: uv pip install cx_Logging
 
-      - name: Install cibuildwheel
-        run: uv pip install "`grep cibuildwheel requirements-dev.txt`"
+      #- name: Install cibuildwheel
+      #  run: uv pip install "`grep cibuildwheel requirements-dev.txt`"
 
       - name: Build wheel for Python ${{ matrix.python-version }}
         env:
@@ -94,7 +94,8 @@ jobs:
           else
             PLATFORM_TAG=macosx_$ARCH
           fi
-          cibuildwheel --only ${PYTHON_TAG}-${PLATFORM_TAG} --prerelease-pythons
+          pipx run "`grep cibuildwheel requirements-dev.txt`" \
+            --only ${PYTHON_TAG}-${PLATFORM_TAG} --prerelease-pythons
 
       - name: Install cx_Freeze and dependencies
         run: |
