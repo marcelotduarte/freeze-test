@@ -73,15 +73,19 @@ jobs:
         run: sudo apt-get install -y alien fakeroot rpm
 
       - name: Install dependencies from packages for python pre-releases
-        if: runner.os == 'Windows' && matrix.python-version == '3.13'
+        if: runner.os == 'Windows' #&& matrix.python-version == '3.13'
         env:
           UV_EXTRA_INDEX_URL: https://marcelotduarte.github.io/packages/
-        run: uv pip install cx_Logging
+        #run: uv pip install cx_Logging
+        run: |
+          uv pip install build setuptools cx_Logging
+          python -m build -n -x -w wheelhouse
 
       #- name: Install cibuildwheel
       #  run: uv pip install "`grep cibuildwheel requirements-dev.txt`"
 
-      - name: Build wheel for Python ${{ matrix.python-version }}
+      - name: Build wheel for Python ${{ matrix.python-version }} [${{ runner.os }}]
+        if: runner.os != 'Windows'
         env:
           CIBW_BUILD_FRONTEND: build[uv]
         run: |
