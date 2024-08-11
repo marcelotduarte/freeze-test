@@ -79,6 +79,7 @@ jobs:
         #run: uv pip install cx_Logging
         run: |
           uv pip install build setuptools cx_Logging
+          mkdir wheelhouse
           python -m build -n -x -w wheelhouse
 
       #- name: Install cibuildwheel
