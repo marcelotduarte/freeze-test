@@ -295,6 +295,9 @@ jobs:
         with:
           path: artifacts
 
+      - name: List artifacts
+        run: cd artifacts && ls -l
+
       - name: Create index for LIEF
         run: |
           mkdir lief
