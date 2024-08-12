@@ -40,13 +40,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-13]
+        os: [ubuntu-latest, windows-latest]
         python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
         include:
-          - os: macos-14  # macos-14 is apple silicon
-            python-version: '3.11'
-          - os: macos-14
-            python-version: '3.12'
+          - os: macos-13  # macos-13 is x86_64
+            python-version: '3.8 - 3.10'
+          - os: macos-14  # macos-14 is arm64 (apple silicon)
+            python-version: '3.11 - 3.13'
     name: Build [${{ matrix.os }}-${{ matrix.python-version }}]
     runs-on: ${{ matrix.os }}
     defaults:
@@ -78,14 +78,17 @@ jobs:
 
       - name: Build wheel for Python ${{ matrix.python-version }}
         run: |
-          PY_VERSION_NODOT=$(echo ${{ matrix.python-version }}|sed 's/\.//')
           if [ "${{ matrix.os }}" == "macos-13" ]; then
-            export CIBW_ARCHS="x86_64"
-          elif [ "${{ matrix.os }}" == "macos-14" &&
-                  ${{ inputs.extra_macos_platforms }} == true ]; then
-            export CIBW_ARCHS="universal2 arm64"
+            export CIBW_BUILD="cp{3,9,10}-*"
+          elif [ "${{ matrix.os }}" == "macos-14" ]; then
+            if ! ${{ inputs.extra_macos_platforms }}; then
+              export CIBW_ARCHS="arm64"
+            fi
+            export CIBW_BUILD="cp{11,12,13}-*"
+          elif [ runner.os == 'Linux' ] || [ runner.os == 'Windows' ]; then
+            PY_VERSION_NODOT=$(echo ${{ matrix.python-version }}|sed 's/\.//')
+            export CIBW_BUILD="cp${PY_VERSION_NODOT}-*"
           fi
-          export CIBW_BUILD="cp${PY_VERSION_NODOT}-*"
           cibuildwheel --output-dir wheelhouse --prerelease-pythons
 
       - name: Add sdist
