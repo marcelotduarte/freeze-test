@@ -353,7 +353,7 @@ jobs:
       - name: Create index for cx_Freeze wheels
         run: |
           mkdir -p cx-freeze
-          mv "artifacts/cx-freeze-pip-*/*" cx-freeze/
+          mv artifacts/cx-freeze-whl-*/* cx-freeze/
           python make_index.py cx-freeze --base cx_Freeze
 
       - name: Cleanup

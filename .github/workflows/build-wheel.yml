@@ -47,7 +47,7 @@ jobs:
             python-version: '3.8 - 3.10'
           - os: macos-14  # macos-14 is arm64 (apple silicon)
             python-version: '3.11 - 3.13'
-    name: Build [${{ matrix.os }}-${{ matrix.python-version }}]
+    name: Build [${{ matrix.os }}][${{ matrix.python-version }}]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -97,7 +97,7 @@ jobs:
       - name: Upload the artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cx-freeze-pip-${{ matrix.os }}-${{ matrix.python-version }}
+          name: cx-freeze-whl-${{ matrix.os }}
           path: wheelhouse
           compression-level: 0  # no compression
 
@@ -122,7 +122,7 @@ jobs:
       - name: Join files to upload
         run: |
           mkdir -p wheelhouse
-          mv artifacts/cx-freeze-pip-*/* wheelhouse/
+          mv artifacts/cx-freeze-whl-*/* wheelhouse/
 
       - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
