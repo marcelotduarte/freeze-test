@@ -79,12 +79,12 @@ jobs:
       - name: Build wheel for Python ${{ matrix.python-version }}
         run: |
           if [ "${{ matrix.os }}" == "macos-13" ]; then
-            export CIBW_BUILD="cp{3,9,10}-*"
+            export CIBW_BUILD="cp3{8,9,10}-*"
           elif [ "${{ matrix.os }}" == "macos-14" ]; then
             if ! ${{ inputs.extra_macos_platforms }}; then
               export CIBW_ARCHS="arm64"
             fi
-            export CIBW_BUILD="cp{11,12,13}-*"
+            export CIBW_BUILD="cp3{11,12,13}-*"
           elif [ runner.os == 'Linux' ] || [ runner.os == 'Windows' ]; then
             PY_VERSION_NODOT=$(echo ${{ matrix.python-version }}|sed 's/\.//')
             export CIBW_BUILD="cp${PY_VERSION_NODOT}-*"
