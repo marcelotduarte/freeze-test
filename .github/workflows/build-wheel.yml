@@ -41,7 +41,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
+        python-version: '3.8 - 3.13'
         include:
           - os: macos-13  # macos-13 is x86_64
             python-version: '3.8 - 3.10'
@@ -85,9 +85,6 @@ jobs:
               export CIBW_ARCHS="arm64"
             fi
             export CIBW_BUILD="cp3{11,12,13}-*"
-          elif [ runner.os == 'Linux' ] || [ runner.os == 'Windows' ]; then
-            PY_VERSION_NODOT=$(echo ${{ matrix.python-version }}|sed 's/\.//')
-            export CIBW_BUILD="cp${PY_VERSION_NODOT}-*"
           fi
           cibuildwheel --output-dir wheelhouse --prerelease-pythons
 
