@@ -1,9 +1,16 @@
 name: Build packages
 
 on:
-  schedule:
-    # run every day at 7:30AM UTC
-    - cron:  '30 7 * * *'
+  workflow_call:
+    inputs:
+      build_cx_logging:
+        default: true
+        required: false
+        type: boolean
+      build_lief:
+        default: false
+        required: false
+        type: boolean
   workflow_dispatch:
     inputs:
       build_cx_logging:
