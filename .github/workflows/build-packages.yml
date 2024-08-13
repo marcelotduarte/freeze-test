@@ -303,7 +303,7 @@ jobs:
           path: artifacts
 
       - name: List artifacts
-        run: cd artifacts && ls -l
+        run: cd artifacts && ls -l */*
 
       - name: Create index for LIEF
         run: |
@@ -353,7 +353,7 @@ jobs:
       - name: Create index for cx_Freeze wheels
         run: |
           mkdir -p cx-freeze
-          mv artifacts/cx-freeze-pip-*/* cx-freeze/ -u
+          cp -auv artifacts/cx-freeze-pip-*/* cx-freeze/
           python make_index.py cx-freeze --base cx_Freeze
 
       - name: Cleanup
