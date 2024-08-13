@@ -2,8 +2,8 @@ name: Build packages
 
 on:
   schedule:
-    # run every day at 7:30AM UTC
-    - cron:  '30 7 * * *'
+    # run every day at 8:30AM UTC
+    - cron:  '30 8 * * *'
 
 jobs:
 
