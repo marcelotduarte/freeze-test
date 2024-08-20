@@ -11,6 +11,8 @@ on:
         default: false
         required: false
         type: boolean
+      token:
+        default: ${{ secrets.PUSH }}
   workflow_dispatch:
     inputs:
       build_cx_logging:
@@ -21,6 +23,8 @@ on:
         default: false
         required: false
         type: boolean
+      token:
+        default: ${{ secrets.PUSH }}
 
 jobs:
 
@@ -283,7 +287,7 @@ jobs:
         with:
           fetch-depth: 0
           repository: marcelotduarte/packages
-          token: ${{ secrets.PUSH }}
+          token: ${{ inputs.token }}
 
       - uses: actions/setup-python@v5
         with:

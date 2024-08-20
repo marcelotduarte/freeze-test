@@ -13,3 +13,4 @@ jobs:
     with:
       build_cx_logging: true
       build_lief: false
+      token: ${{ secrets.PUSH }}
