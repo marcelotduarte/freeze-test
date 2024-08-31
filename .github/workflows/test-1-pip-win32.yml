@@ -35,7 +35,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - id: set-matrix
         run: echo "matrix=$(python ci/_platform.py windows)" >> $GITHUB_OUTPUT
@@ -67,9 +67,10 @@ jobs:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: marcelotduarte/setup-python-uv-action@new
         with:
+          cache: 'packages'
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
 
