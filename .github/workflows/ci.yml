@@ -76,9 +76,10 @@ jobs:
 
       - name: Build wheel for Python ${{ matrix.python-version }} [Windows]
         if: runner.os == 'Windows'
-        env:
-          UV_EXTRA_INDEX_URL: https://marcelotduarte.github.io/packages/
         run: |
+          if [ "${{ matrix.python-version }}" == "3.13" ]; then
+            export UV_EXTRA_INDEX_URL=https://marcelotduarte.github.io/packages/
+          fi
           uv pip install build setuptools cx_Logging
           python -m build -n -x -w -o wheelhouse
 
