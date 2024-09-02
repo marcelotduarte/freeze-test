@@ -291,7 +291,6 @@ jobs:
         with:
           fetch-depth: 0
           repository: marcelotduarte/packages
-          token: ${{ secrets.PUSH }}
 
       - uses: actions/setup-python@v5
         with:
