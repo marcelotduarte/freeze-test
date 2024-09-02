@@ -308,7 +308,7 @@ jobs:
 
       - name: Create index for LIEF
         run: |
-          mkdir lief
+          mkdir -p lief
           cd lief
           for f in $(
             curl $LIEF_LINK/lief/ | grep -Eo "href=\"(.*win.*)\"" | cut -c"7-" | cut -d \" -f 1
