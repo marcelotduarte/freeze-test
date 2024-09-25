@@ -153,7 +153,8 @@ jobs:
         run: echo ${{ needs.conda_recipe.outputs.data_path }} | base64 -d>meta.yaml
 
       - name: Update conda-forge.yml
-        run: sed -i 's/conda_forge_output_validation: true/conda_forge_output_validation: false/' conda-forge.yml
+        run: |
+          sed -i 's/conda_forge_output_validation\: true/conda_forge_output_validation: false/' conda-forge.yml
 
       - run: cat recipe/meta.yaml
 
