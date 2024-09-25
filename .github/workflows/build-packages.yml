@@ -154,7 +154,7 @@ jobs:
 
       - name: Update conda-forge.yml
         run: |
-          sed -i '/conda_forge_output_validation/c\conda_forge_output_validation: false' conda-forge.yml
+          sed -i.xx 's/conda_forge_output_validation\: true/conda_forge_output_validation: false/' conda-forge.yml
 
       - run: cat recipe/meta.yaml
 
