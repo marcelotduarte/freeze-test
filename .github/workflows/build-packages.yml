@@ -152,6 +152,9 @@ jobs:
         working-directory: recipe
         run: echo ${{ needs.conda_recipe.outputs.data_path }} | base64 -d>meta.yaml
 
+      - name: Update conda-forge.yml
+        run: sed -i '/conda_forge_output_validation:/c\conda_forge_output_validation: false' conda-forge.yml
+
       - run: cat recipe/meta.yaml
 
       - name: Build the conda package
@@ -363,9 +366,7 @@ jobs:
           python main/make_index.py cx-freeze --base cx_Freeze
 
       - name: Cleanup
-        run: |
-          rm -rf main
-          rm -rf artifacts
+        run: rm -rf artifacts main
 
       - name: Create packages template
         run: |
