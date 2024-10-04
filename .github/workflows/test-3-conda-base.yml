@@ -6,7 +6,7 @@ on:
         required: true
         type: string
       python-version:
-        default: "3.8-3.12"
+        default: "3.9-3.13"
         required: false
         type: string
       deps:
@@ -49,7 +49,7 @@ jobs:
       - id: get-python
         run: |
           if [[ ${{ inputs.python-version }} == 3.*-3.* ]]; then
-            echo 'python-version=["3.8", "3.9", "3.10", "3.11", "3.12"]' >> $GITHUB_OUTPUT
+            echo 'python-version=["3.9", "3.10", "3.11", "3.12", "3.13"]' >> $GITHUB_OUTPUT
           else
             echo 'python-version=["${{ inputs.python-version }}"]' >> $GITHUB_OUTPUT
           fi
@@ -85,8 +85,6 @@ jobs:
           - sample: pyqt6
           - sample: pyqt6-simplebrowser
           - sample: pyside6-simplebrowser
-          - sample: matplotlib_tk
-            python-version: "3.8"
         branch: ${{ fromJSON(needs.matrix.outputs.branch) }}
         deps: ${{ fromJSON(needs.matrix.outputs.deps) }}
     name: ${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.python-version }}
