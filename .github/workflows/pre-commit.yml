@@ -21,11 +21,14 @@ jobs:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
-      - name: Set up Python
-        uses: marcelotduarte/setup-python-uv-action@new
+      - uses: actions/setup-python@v5
         with:
-          cache: 'packages'
           python-version: '3.12'
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "**/requirements-d*.txt"
 
       - name: Install dependencies
         run: uv pip install -e.[dev,doc]
