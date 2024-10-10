@@ -41,11 +41,17 @@ jobs:
           repository: marcelotduarte/cx_Freeze
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: marcelotduarte/setup-python-uv-action@new
+        uses: actions/setup-python@v5
         with:
-          cache: 'packages'
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: |
+            **/requirements.txt
+            **/requirements-test.txt
 
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
@@ -57,7 +63,7 @@ jobs:
           if [ "${{ matrix.python-version }}" == "3.13" ]; then
             export UV_EXTRA_INDEX_URL=https://marcelotduarte.github.io/packages/
           fi
-          uv pip install build setuptools cx_Logging
+          uv pip install --system build setuptools cx_Logging
           python -m build -n -x -w -o wheelhouse
 
       - name: Build wheel for Python ${{ matrix.python-version }} [Linux/macOS]
@@ -74,7 +80,7 @@ jobs:
           else
             PLATFORM_TAG=macosx_$ARCH
           fi
-          uv pip install "`grep cibuildwheel requirements-dev.txt`"
+          uv pip install --system "`grep cibuildwheel requirements-dev.txt`"
           cibuildwheel --only ${PYTHON_TAG}-${PLATFORM_TAG} --prerelease-pythons
 
       - name: Upload the wheel
@@ -87,8 +93,8 @@ jobs:
 
       - name: Install cx_Freeze and dependencies
         run: |
-          uv pip install -r requirements.txt -r requirements-test.txt
-          uv pip install cx_Freeze --no-index --no-deps -f wheelhouse -v
+          uv pip install --system -r requirements.txt -r requirements-test.txt
+          uv pip install --system cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
 
       - name: Generate coverage report
         run: pytest -nauto --cov="cx_Freeze" --cov-report=xml
@@ -115,13 +121,20 @@ jobs:
           repository: marcelotduarte/cx_Freeze
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: marcelotduarte/setup-python-uv-action@new
+        uses: actions/setup-python@v5
         with:
-          cache: 'packages'
           python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: |
+            **/requirements.txt
+            **/requirements-test.txt
 
       - name: Install dependencies
-        run: uv pip install -e.[test]
+        run: uv pip install --system -e.[test]
 
       - name: Generate coverage report
         run: |
@@ -151,10 +164,17 @@ jobs:
           repository: marcelotduarte/cx_Freeze
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: marcelotduarte/setup-python-uv-action@new
+        uses: actions/setup-python@v5
         with:
-          cache: 'packages'
           python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: |
+            **/requirements.txt
+            **/requirements-test.txt
 
       - name: Download the artifact
         uses: actions/download-artifact@v4
@@ -164,18 +184,18 @@ jobs:
 
       - name: Install dependencies
         run: |
-          uv pip install -r requirements.txt -r requirements-test.txt
-          uv pip install cx_Freeze --no-index --no-deps -f wheelhouse -v
+          uv pip install --system -r requirements.txt -r requirements-test.txt
+          uv pip install --system cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
 
       - name: Install dependencies - extra
         run: |
           if [ "${{ matrix.python-version }}" == "3.10" ]; then
-            uv pip install -i https://pypi.anaconda.org/intel/simple numpy -v
+            uv pip install --system -i https://pypi.anaconda.org/intel/simple numpy -v
           fi
-          uv pip install pandas -v
+          uv pip install --system pandas -v
 
       - name: Pip list
-        run: uv pip list -v
+        run: uv pip list --system
 
       - name: Generate coverage report
         run: pytest -nauto --cov="cx_Freeze" --cov-report=xml
