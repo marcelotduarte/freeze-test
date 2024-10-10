@@ -31,7 +31,7 @@ jobs:
           cache-dependency-glob: "**/requirements-d*.txt"
 
       - name: Install dependencies
-        run: uv pip install -e.[dev,doc]
+        run: uv pip install --system -e.[dev,doc]
 
       - name: Run pre-commit
         run: >-
