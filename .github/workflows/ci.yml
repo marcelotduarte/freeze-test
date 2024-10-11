@@ -61,7 +61,7 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           if [ "${{ matrix.python-version }}" == "3.13" ]; then
-            export UV_EXTRA_INDEX_URL=https://marcelotduarte.github.io/packages/
+            uv pip install --system cx_Logging --extra-index-url=https://marcelotduarte.github.io/packages/
           fi
           uv pip install --system build -r requirements.txt
           pyproject-build -n -x -w -o wheelhouse
