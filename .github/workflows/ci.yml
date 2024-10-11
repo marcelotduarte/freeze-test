@@ -141,7 +141,7 @@ jobs:
           if [ "${{ matrix.extra-requirement }}" == "lief-disabled" ]; then
             export CX_FREEZE_BIND=imagehlp
           else
-            uv pip install "${{ matrix.extra-requirement }}"
+            uv pip install --system "${{ matrix.extra-requirement }}"
           fi
           pytest -nauto --cov="cx_Freeze" --cov-report=xml
 
