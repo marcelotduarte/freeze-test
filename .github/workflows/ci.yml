@@ -64,7 +64,7 @@ jobs:
             export UV_EXTRA_INDEX_URL=https://marcelotduarte.github.io/packages/
           fi
           uv pip install --system build -r requirements.txt
-          uv run -m build -n -x -w -o wheelhouse
+          pyproject-build -n -x -w -o wheelhouse
 
       - name: Build wheel for Python ${{ matrix.python-version }} [Linux/macOS]
         if: runner.os != 'Windows'
