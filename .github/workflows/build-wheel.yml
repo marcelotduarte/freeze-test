@@ -46,7 +46,7 @@ jobs:
           - os: macos-13  # macos-13 is x86_64
             python-version: '3.9 - 3.10'
           - os: macos-14  # macos-14 is arm64 (apple silicon)
-            python-version: '3.11 - 3.13'
+            python-version: '3.11 - 3.12'
     name: Build [${{ matrix.os }}][${{ matrix.python-version }}]
     runs-on: ${{ matrix.os }}
     defaults:
@@ -61,9 +61,15 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          cache: 'pip'
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: |
+            **/requirements.txt
+            **/requirements-dev.txt
 
       - name: Set up QEMU
         if: runner.os == 'Linux' && inputs.extra_linux_platforms
@@ -72,11 +78,11 @@ jobs:
           platforms: arm64,ppc64le
 
       - name: Install cibuildwheel
-        run: |
-          python -m pip install --upgrade uv --disable-pip-version-check
-          uv pip install --system "`grep cibuildwheel requirements-dev.txt`"
+        run: uv pip install --system "`grep cibuildwheel requirements-dev.txt`"
 
       - name: Build wheel for Python ${{ matrix.python-version }}
+        env:
+          CIBW_BUILD_FRONTEND: build[uv]
         run: |
           if [ "${{ matrix.os }}" == "macos-13" ]; then
             export CIBW_BUILD="cp3{9,10}-*"
@@ -84,7 +90,7 @@ jobs:
             if ! ${{ inputs.extra_macos_platforms }}; then
               export CIBW_ARCHS="arm64"
             fi
-            export CIBW_BUILD="cp3{11,12,13}-*"
+            export CIBW_BUILD="cp3{11,12}-*"
           fi
           cibuildwheel --output-dir wheelhouse --prerelease-pythons
 
@@ -92,7 +98,7 @@ jobs:
         if: runner.os == 'Linux' && matrix.python-version == '3.12'
         run: |
           uv pip install --system --upgrade build
-          python -m build . --sdist -o wheelhouse
+          pyproject-build . --sdist -o wheelhouse
 
       - name: Upload the artifact
         uses: actions/upload-artifact@v4
