@@ -22,6 +22,7 @@ jobs:
     with:
       branch: ${{ inputs.branch }}
       extra_linux_platforms: false
+      extra_macos_platforms: false
 
   tests:
     needs:

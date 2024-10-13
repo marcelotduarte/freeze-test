@@ -84,7 +84,11 @@ jobs:
         env:
           CIBW_BUILD_FRONTEND: build[uv]
         run: |
-          if [ "${{ matrix.os }}" == "macos-13" ]; then
+          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            if ! ${{ inputs.extra_linux_platforms }}; then
+              export CIBW_ARCHS="x86_64"
+            fi
+          elif [ "${{ matrix.os }}" == "macos-13" ]; then
             export CIBW_BUILD="cp3{9,10}-*"
           elif [ "${{ matrix.os }}" == "macos-14" ]; then
             if ! ${{ inputs.extra_macos_platforms }}; then
