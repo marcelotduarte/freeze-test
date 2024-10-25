@@ -21,7 +21,7 @@ jobs:
     uses: ./.github/workflows/build-wheel.yml
     with:
       branch: ${{ inputs.branch }}
-      extra_linux_platforms: false
+      extra_linux_platforms: true
       extra_macos_platforms: false
 
   tests:
@@ -199,6 +199,51 @@ jobs:
 
       - name: Generate coverage report
         run: pytest -nauto --cov="cx_Freeze" --cov-report=xml
+
+  tests_aarch64:
+    needs:
+      - build_wheel
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+      fail-fast: false
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+          repository: marcelotduarte/cx_Freeze
+
+      - name: Download the wheel
+        uses: actions/download-artifact@v4
+        with:
+          name: cx-freeze-whl-${{ matrix.os }}
+          path: wheelhouse
+
+      - uses: uraimo/run-on-arch-action@v2
+        name: Test aarch64
+        id: runcmd
+        with:
+          arch: aarch64
+          distro: ubuntu22.04
+          githubToken: ${{ github.token }}
+          dockerRunArgs: |
+            --volume "${PWD}:/cx_Freeze"
+          shell: /bin/bash
+          install: |
+            apt-get update -q -y
+            apt-get install -q -y --allow-downgrades alien cpio=2.13+dfsg-7 fakeroot rpm python3-pip
+          run: |
+            cd /cx_Freeze
+            python3 -m sysconfig
+            pip install -r requirements.txt -r requirements-test.txt
+            pip install cx_Freeze --no-index --no-deps -f wheelhouse
+            # Generate coverage report
+            pytest -nauto --cov="cx_Freeze" --cov-report=xml
 
   build_msys2:
     name: Build msys2
