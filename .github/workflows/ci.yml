@@ -236,13 +236,18 @@ jobs:
           shell: /bin/bash
           install: |
             apt-get update -q -y
-            apt-get install -q -y --allow-downgrades alien cpio=2.13+dfsg-7 fakeroot rpm python3-pip
+            apt-get install -q -y --allow-downgrades alien cpio=2.13+dfsg-7 fakeroot rpm python3-pip python3-venv
           run: |
             cd /cx_Freeze
+            echo "> sysconfig"
             python3 -m sysconfig
+            echo "> venv"
+            python3 -m venv
+            source venv/bin/activate
+            echo "> install"
             pip install -r requirements.txt -r requirements-test.txt
             pip install cx_Freeze --no-index --no-deps -f wheelhouse
-            # Generate coverage report
+            echo "> coverage"
             pytest -nauto --cov="cx_Freeze" --cov-report=xml
 
   build_msys2:
