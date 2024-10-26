@@ -242,8 +242,8 @@ jobs:
             echo "> sysconfig"
             python3 -m sysconfig
             echo "> venv"
-            python3 -m venv
-            source venv/bin/activate
+            python3 -m venv .venv
+            source .venv/bin/activate
             echo "> install"
             pip install -r requirements.txt -r requirements-test.txt
             pip install cx_Freeze --no-index --no-deps -f wheelhouse
