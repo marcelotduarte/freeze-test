@@ -52,7 +52,7 @@ jobs:
     steps:
       - name: Install extra packages (Linux)
         if: runner.os == 'Linux'
-        run: sudo apt-get install -y alien fakeroot rpm
+        run: sudo apt-get install -qy --allow-downgrades alien cpio=2.13+dfsg-7 fakeroot rpm
 
       - uses: actions/checkout@v4
         with:
@@ -235,8 +235,8 @@ jobs:
             --volume "${PWD}:/cx_Freeze"
           shell: /bin/bash
           install: |
-            apt-get update -q -y
-            apt-get install -q -y --allow-downgrades alien cpio=2.13+dfsg-7 fakeroot rpm python3-pip python3-venv
+            apt-get update -qy
+            apt-get install -qy --allow-downgrades alien cpio=2.13+dfsg-7 fakeroot rpm python3-pip python3-venv
           run: |
             cd /cx_Freeze
             echo "> sysconfig"
