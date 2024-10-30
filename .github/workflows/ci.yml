@@ -249,6 +249,8 @@ jobs:
             pip install cx_Freeze --no-index --no-deps -f wheelhouse
             echo "> coverage"
             pytest -nauto --cov="cx_Freeze" --cov-report=xml
+            echo "> ldd test"
+            ldd $(python -c "import cx_Freeze.bases as b; print(b.__path__[0])")/console*
 
   build_msys2:
     name: Build msys2
