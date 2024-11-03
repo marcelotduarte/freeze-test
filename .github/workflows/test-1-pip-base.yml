@@ -23,6 +23,14 @@ on:
 
 name: Test-1-pip
 jobs:
+  build_wheel:
+    name: Build wheels
+    uses: ./.github/workflows/build-wheel.yml
+    with:
+      branch: ${{ inputs.branch }}
+      extra_linux_platforms: false
+      extra_macos_platforms: false
+
   matrix:
     name: Generate matrix of samples
     runs-on: ${{ inputs.os }}
@@ -56,7 +64,9 @@ jobs:
         shell: bash
 
   tests:
-    needs: [matrix]
+    needs:
+      - build_wheel
+      - matrix
     strategy:
       fail-fast: false
       matrix:
@@ -97,7 +107,14 @@ jobs:
           enable-cache: true
           cache-dependency-glob: |
             **/requirements.txt
-            **/requirements-dev.txt
+            **/ci/build-*
+
+      - name: Download the wheel
+        if: ${{ inputs.deps == d }}
+        uses: actions/download-artifact@v4
+        with:
+          name: cx-freeze-whl-${{ matrix.os }}
+          path: wheelhouse
 
       - name: Freeze and run "${{ matrix.sample }}"
         env:
