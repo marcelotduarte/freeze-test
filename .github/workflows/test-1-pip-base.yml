@@ -82,19 +82,22 @@ jobs:
         shell: bash
     steps:
 
-      - name: Checkout cx_Freeze
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: marcelotduarte/setup-python-uv-action@new
+      - uses: actions/setup-python@v5
         with:
-          cache: 'packages'
           python-version: ${{ matrix.python-version }}
-          architecture: x64
           allow-prereleases: true
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: |
+            **/requirements.txt
+            **/requirements-dev.txt
 
       - name: Freeze and run "${{ matrix.sample }}"
         env:
