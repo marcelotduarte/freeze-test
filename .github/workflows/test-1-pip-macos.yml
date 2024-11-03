@@ -8,10 +8,11 @@ on:
         options:
           - develop
       python-version:
-        default: "3.9-3.13"
+        default: "3.9-3.12"
         required: false
         type: choice
         options:
+          - "3.9-3.12"
           - "3.9-3.13"
           - "3.9"
           - "3.10"
@@ -19,7 +20,7 @@ on:
           - "3.12"
           - "3.13"
       deps:
-        default: "p"
+        default: "d"
         required: false
         type: choice
         options:

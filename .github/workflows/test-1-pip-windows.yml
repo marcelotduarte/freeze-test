@@ -19,7 +19,7 @@ on:
           - "3.12"
           - "3.13"
       deps:
-        default: "p"
+        default: "e"
         required: false
         type: choice
         options:

@@ -81,8 +81,6 @@ jobs:
         run: uv pip install --system "`grep cibuildwheel requirements-dev.txt`"
 
       - name: Build wheel for Python ${{ matrix.python-version }}
-        env:
-          CIBW_BUILD_FRONTEND: build[uv]
         run: |
           if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
             if ! ${{ inputs.extra_linux_platforms }}; then
