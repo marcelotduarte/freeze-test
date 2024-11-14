@@ -289,6 +289,7 @@ jobs:
       LIEF_LINK: https://lief.s3-website.fr-par.scw.cloud/latest
       PACKAGES: https://marcelotduarte.github.io/packages
     permissions:
+      id-token: write
       contents: write
     runs-on: ubuntu-latest
 
