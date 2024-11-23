@@ -10,7 +10,7 @@ on:
         required: false
         type: string
       deps:
-        default: "p"
+        default: "l"
         required: false
         type: string
       bdist:
@@ -49,7 +49,7 @@ jobs:
       - id: get-python
         run: |
           if [[ ${{ inputs.python-version }} == 3.*-3.* ]]; then
-            echo 'python-version=["3.9", "3.10", "3.11", "3.12", "3.13"]' >> $GITHUB_OUTPUT
+            echo 'python-version=["3.9", "3.10", "3.11", "3.12"]' >> $GITHUB_OUTPUT
           else
             echo 'python-version=["${{ inputs.python-version }}"]' >> $GITHUB_OUTPUT
           fi
