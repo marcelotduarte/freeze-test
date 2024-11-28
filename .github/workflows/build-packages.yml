@@ -251,17 +251,17 @@ jobs:
       - name: Download all conda artifacts
         uses: actions/download-artifact@v4
         with:
-          path: artifacts
+          path: build_artifacts
+          pattern: cx-freeze-conda-*
+          merge-multiple: true
 
-      - run: ls -l artifacts/*/
+      - run: ls -l build_artifacts
 
       - name: Install conda index
         run: conda install -c conda-forge conda-index
 
       - name: Run conda index
         run: |
-          mkdir -p build_artifacts
-          cp -auv artifacts/cx-freeze-conda-*/* build_artifacts/
           python -m conda_index --verbose -n packages/conda \
             --subdir linux-64 \
             --subdir osx-64 --subdir osx-arm64 \
