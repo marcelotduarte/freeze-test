@@ -236,7 +236,7 @@ jobs:
           shell: /bin/bash
           install: |
             apt-get update -qy
-            apt-get install -qy --allow-downgrades alien cpio=2.13+dfsg-7 fakeroot rpm python3-pip python3-venv
+            apt-get install -qy alien fakeroot rpm python3-pip python3-venv
           run: |
             cd /cx_Freeze
             echo "> sysconfig"
@@ -250,7 +250,7 @@ jobs:
             echo "> coverage"
             pytest -nauto --cov="cx_Freeze" --cov-report=xml || true
             echo "> ldd test"
-            ldd $(python -c "import cx_Freeze.bases as b; print(b.__path__[0])")/console*
+            ldd $(python -c "import cx_Freeze.bases as b; print(b.__path__[0])")/console*-gnu
 
   build_msys2:
     name: Build msys2
