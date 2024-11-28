@@ -50,10 +50,6 @@ jobs:
         shell: bash
 
     steps:
-      - name: Install extra packages (Linux)
-        if: runner.os == 'Linux'
-        run: sudo apt-get install -qy --allow-downgrades alien cpio=2.13+dfsg-7 fakeroot rpm
-
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch }}
@@ -68,7 +64,7 @@ jobs:
       - name: Sysconfig
         run: python -m sysconfig
 
-      - uses: astral-sh/setup-uv@v3
+      - uses: astral-sh/setup-uv@v4
         with:
           enable-cache: true
           cache-dependency-glob: |
@@ -81,7 +77,11 @@ jobs:
           name: cx-freeze-whl-${{ matrix.os }}
           path: wheelhouse
 
-      - name: Install cx_Freeze and dependencies
+      - name: Install dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -qy --allow-downgrades alien cpio=2.13+dfsg-7 fakeroot rpm
+
+      - name: Install dependencies to test
         run: |
           uv pip install --system -r requirements.txt -r requirements-test.txt
           uv pip install --system cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
@@ -118,7 +118,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
 
-      - uses: astral-sh/setup-uv@v3
+      - uses: astral-sh/setup-uv@v4
         with:
           enable-cache: true
           cache-dependency-glob: |
@@ -131,7 +131,7 @@ jobs:
           name: cx-freeze-whl-${{ matrix.os }}
           path: wheelhouse
 
-      - name: Install cx_Freeze and dependencies
+      - name: Install dependencies to test
         run: |
           uv pip install --system -r requirements.txt -r requirements-test.txt
           uv pip install --system cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
@@ -169,7 +169,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
 
-      - uses: astral-sh/setup-uv@v3
+      - uses: astral-sh/setup-uv@v4
         with:
           enable-cache: true
           cache-dependency-glob: |
@@ -182,7 +182,7 @@ jobs:
           name: cx-freeze-whl-${{ matrix.os }}
           path: wheelhouse
 
-      - name: Install cx_Freeze and dependencies
+      - name: Install dependencies to test
         run: |
           uv pip install --system -r requirements.txt -r requirements-test.txt
           uv pip install --system cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
@@ -229,7 +229,7 @@ jobs:
         id: runcmd
         with:
           arch: aarch64
-          distro: ubuntu22.04
+          distro: ubuntu20.04
           githubToken: ${{ github.token }}
           dockerRunArgs: |
             --volume "${PWD}:/cx_Freeze"
