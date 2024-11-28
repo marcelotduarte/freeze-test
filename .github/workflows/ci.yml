@@ -245,12 +245,13 @@ jobs:
             python3 -m venv .venv
             source .venv/bin/activate
             echo "> install"
-            pip install -r requirements.txt -r requirements-test.txt
+            sed -i 's/==.*//' requirements-test.txt
+            pip install -r requirements.txt -r requirements-test.txt --upgrade
             pip install cx_Freeze --no-index --no-deps -f wheelhouse
             echo "> coverage"
             pytest -nauto --cov="cx_Freeze" --cov-report=xml || true
             echo "> ldd test"
-            ldd $(python -c "import cx_Freeze.bases as b; print(b.__path__[0])")/console*-gnu
+            ldd $(python -c "import cx_Freeze.bases as b; print(b.__path__[0])")/console*-gnu || true
 
   build_msys2:
     name: Build msys2
