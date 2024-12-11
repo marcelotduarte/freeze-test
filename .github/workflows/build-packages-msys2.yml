@@ -53,7 +53,7 @@ jobs:
       - name: '🚧 Build package'
         run: |
           makepkg-mingw -sCLf --noconfirm --noprogressbar --skippgpcheck
-          mv src/python-cx-freeze-${{ matrix.sys }}/.coverage .coverage-${{ matrix.sys }}
+          mv src/python-cx-freeze-${{ matrix.sys }}/.coverage .coverage.${{ matrix.sys }}
 
       - name: '📤 Upload artifact: package'
         uses: actions/upload-artifact@v4
@@ -62,5 +62,5 @@ jobs:
           path: |
             mingw-w64-*.zst
             mingw-w64-*.zst.sig
-            .coverage-*
+            .coverage.*
           include-hidden-files: true
