@@ -304,13 +304,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          path: main
+          #path: main
           ref: main
           repository: marcelotduarte/packages
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: Preserve make_index script
+        run: cp make_index.py create_index.py
 
       - name: Recreate branch gh-pages
         run: |
@@ -339,7 +342,7 @@ jobs:
           done
           cd ..
           # redirected files
-          python main/make_index.py lief --base LIEF
+          python create_index.py lief --base LIEF
           sed -i 's,${{ env.PACKAGES }},${{ env.LIEF_LINK }},g' lief/index.md
           sed -i '/## /d' lief/index.md
           rm -rf lief/*.whl
@@ -347,7 +350,7 @@ jobs:
           if ${{ inputs.build_lief }}; then
             mv lief/index.md lief/dev.md
             mv artifacts/lief-*/*.whl lief/ || true
-            python main/make_index.py lief --base LIEF --mask "*.whl"
+            python create_index.py lief --base LIEF --mask "*.whl"
             mv lief/index.md lief/local.md
             # join
             echo -e "`cat lief/local.md`\n`cat lief/dev.md`\n">lief/index.md
@@ -359,27 +362,27 @@ jobs:
         run: |
           mkdir -p cx-logging
           mv artifacts/cx-logging-*/* cx-logging/
-          python main/make_index.py cx-logging --base cx_Logging
+          python create_index.py cx-logging --base cx_Logging
 
       - name: Create index for python-cx-freeze (msys2)
         run: |
           mkdir -p msys2
           mv artifacts/cx-freeze-msys2-*/* msys2/
-          python main/make_index.py msys2 --base python-cx-freeze --mask "*.tar.zst"
+          python create_index.py msys2 --base python-cx-freeze --mask "*.tar.zst"
 
       - name: Create index for cx_freeze (conda)
         run: |
           mv artifacts/cx-freeze-conda conda
-          python main/make_index.py conda --mask "cx_freeze*.conda" --mask "cx_freeze*.tar.bz2"
+          python create_index.py conda --mask "cx_freeze*.conda" --mask "cx_freeze*.tar.bz2"
 
       - name: Create index for cx_Freeze wheels
         run: |
           mkdir -p cx-freeze
           mv artifacts/cx-freeze-whl-*/* cx-freeze/
-          python main/make_index.py cx-freeze --base cx_Freeze
+          python create_index.py cx-freeze --base cx_Freeze
 
       - name: Cleanup
-        run: rm -rf artifacts main
+        run: rm -rf artifacts create_index.py
 
       - name: Create packages template
         run: |
