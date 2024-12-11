@@ -72,7 +72,7 @@ build() {
 check() {
   cd python-${_realname}-${MSYSTEM}
   ${MINGW_PREFIX}/bin/pip install cx_Freeze -f dist --no-deps --no-index
-  ${MINGW_PREFIX}/bin/pytest -nauto --cov="cx_Freeze" --cov-report=xml
+  ${MINGW_PREFIX}/bin/pytest -nauto --cov="cx_Freeze"
 }
 
 package() {

@@ -69,7 +69,7 @@ jobs:
           enable-cache: true
           cache-dependency-glob: |
             **/requirements.txt
-            **/requirements-test.txt
+            **/tests/requirements.txt
 
       - name: Download the wheel
         uses: actions/download-artifact@v4
@@ -79,15 +79,26 @@ jobs:
 
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
-        run: sudo apt-get install -qy --allow-downgrades alien cpio=2.13+dfsg-7 fakeroot rpm
+        run: |
+          sudo apt-get install -qy alien fakeroot rpm
+          sudo apt-get install -qy --allow-downgrades cpio=2.13+dfsg-7
 
       - name: Install dependencies to test
         run: |
-          uv pip install --system -r requirements.txt -r requirements-test.txt
+          uv pip install --system -r requirements.txt -r tests/requirements.txt
           uv pip install --system cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
 
       - name: Generate coverage report
-        run: pytest -nauto --cov="cx_Freeze" --cov-report=xml
+        env:
+          COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}"
+        run: pytest -nauto --cov="cx_Freeze"
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: cov-${{ matrix.python-version }}.${{ matrix.os }}
+          path: .coverage.*
+          include-hidden-files: true
 
   tests_extra:
     needs:
@@ -123,7 +134,7 @@ jobs:
           enable-cache: true
           cache-dependency-glob: |
             **/requirements.txt
-            **/requirements-test.txt
+            **/tests/requirements.txt
 
       - name: Download the wheel
         uses: actions/download-artifact@v4
@@ -133,7 +144,7 @@ jobs:
 
       - name: Install dependencies to test
         run: |
-          uv pip install --system -r requirements.txt -r requirements-test.txt
+          uv pip install --system -r requirements.txt -r tests/requirements.txt
           uv pip install --system cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
 
       - name: Generate coverage report
@@ -143,7 +154,17 @@ jobs:
           else
             uv pip install --system "${{ matrix.extra-requirement }}"
           fi
-          pytest -nauto --cov="cx_Freeze" --cov-report=xml
+          MATRIX_ID=${{ matrix.python-version }}.${{ matrix.os }}
+          SUFFIX=$(echo "${{ matrix.extra-requirement }}" | sed 's/==/-/')
+          export COVERAGE_FILE=".coverage.$MATRIX_ID.$SUFFIX"
+          pytest -nauto --cov="cx_Freeze"
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: cov-${{ matrix.python-version }}.${{ matrix.os }}-${{ hashFiles('.coverage.*') }}
+          path: .coverage.*
+          include-hidden-files: true
 
   tests_unix_binary_wheel:
     needs:
@@ -174,7 +195,7 @@ jobs:
           enable-cache: true
           cache-dependency-glob: |
             **/requirements.txt
-            **/requirements-test.txt
+            **/tests/requirements.txt
 
       - name: Download the wheel
         uses: actions/download-artifact@v4
@@ -184,7 +205,7 @@ jobs:
 
       - name: Install dependencies to test
         run: |
-          uv pip install --system -r requirements.txt -r requirements-test.txt
+          uv pip install --system -r requirements.txt -r tests/requirements.txt
           uv pip install --system cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
 
       - name: Install dependencies - extra
@@ -198,7 +219,16 @@ jobs:
         run: uv pip list --system
 
       - name: Generate coverage report
-        run: pytest -nauto --cov="cx_Freeze" --cov-report=xml
+        env:
+          COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}-pandas"
+        run: pytest -nauto --cov="cx_Freeze"
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: cov-${{ matrix.python-version }}.${{ matrix.os }}-pandas
+          path: .coverage.*
+          include-hidden-files: true
 
   tests_aarch64:
     needs:
@@ -211,8 +241,8 @@ jobs:
     defaults:
       run:
         shell: bash
-
     steps:
+
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch }}
@@ -229,7 +259,7 @@ jobs:
         id: runcmd
         with:
           arch: aarch64
-          distro: ubuntu20.04
+          distro: ubuntu22.04
           githubToken: ${{ github.token }}
           dockerRunArgs: |
             --volume "${PWD}:/cx_Freeze"
@@ -245,14 +275,19 @@ jobs:
             python3 -m venv .venv
             source .venv/bin/activate
             echo "> install"
-            sed -i 's/==.*//' requirements-test.txt
-            pip install -r requirements.txt -r requirements-test.txt --upgrade
+            sed -i 's/==.*//' tests/requirements.txt
+            pip install -r requirements.txt -r tests/requirements.txt --upgrade
             pip install cx_Freeze --no-index --no-deps -f wheelhouse
             echo "> coverage"
-            pytest -nauto --cov="cx_Freeze" --cov-report=xml || true
-            echo "> ldd test"
-            ldd $(python -c "import cx_Freeze.bases as b; print(b.__path__[0])")/console*-gnu || true
+            pytest -nauto --cov="cx_Freeze" || true
+            mv .coverage .coverage.aarch64
 
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: cov-aarch64
+          path: .coverage.*
+          include-hidden-files: true
   build_msys2:
     name: Build msys2
     uses: ./.github/workflows/build-packages-msys2.yml
@@ -273,9 +308,43 @@ jobs:
           pattern: cx-freeze-msys2-*
           merge-multiple: true
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
         with:
-          fail_ci_if_error: false
-          token: ${{ secrets.CODECOV_TOKEN }}
-          verbose: true
+          name: cov-msys2
+          path: .coverage.*
+          include-hidden-files: true
+
+  coverage:
+    needs:
+      - tests
+      - tests_extra
+      - tests_msys2
+      - tests_unix_binary_wheel
+    permissions:
+      pull-requests: write
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - name: Download coverage data
+        uses: actions/download-artifact@v4
+        with:
+          pattern: cov-*
+          merge-multiple: true
+
+      - name: Coverage comment
+        id: coverage_comment
+        uses: py-cov-action/python-coverage-comment-action@v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MERGE_COVERAGE_FILES: true
+
+      - name: Store Pull Request comment to be posted
+        uses: actions/upload-artifact@v4
+        if: steps.coverage_comment.outputs.COMMENT_FILE_WRITTEN == 'true'
+        with:
+          name: python-coverage-comment-action
+          path: python-coverage-comment-action.txt
