@@ -289,16 +289,17 @@ jobs:
       LIEF_LINK: https://lief.s3-website.fr-par.scw.cloud/latest
       PACKAGES: https://marcelotduarte.github.io/packages
     permissions:
+      actions: read
       contents: write
       id-token: write
       pages: write
     runs-on: ubuntu-latest
     steps:
 
-      - uses: actions/checkout@v4
-        with:
-          repository: marcelotduarte/packages
-          ref: gh-pages
+      #- uses: actions/checkout@v4
+      #  with:
+      #    repository: marcelotduarte/packages
+      #    ref: gh-pages
 
       - uses: actions/checkout@v4
         with:
