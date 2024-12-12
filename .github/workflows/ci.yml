@@ -315,6 +315,7 @@ jobs:
           include-hidden-files: true
 
   coverage:
+    if: github.event_name == 'pull_request'
     needs:
       - tests
       - tests_extra
