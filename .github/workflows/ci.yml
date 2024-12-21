@@ -55,7 +55,7 @@ jobs:
 
       - uses: astral-sh/setup-uv@v5
         env:
-          UV_PYTHON_PREFERENCE=system
+          UV_PYTHON_PREFERENCE: system
         with:
           enable-cache: true
           cache-dependency-glob: |
