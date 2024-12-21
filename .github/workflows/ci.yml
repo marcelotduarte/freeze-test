@@ -61,8 +61,8 @@ jobs:
         with:
           enable-cache: true
           cache-dependency-glob: |
-            **/requirements.txt
-            **/tests/requirements.txt
+            requirements.txt
+            tests/requirements.txt
           python-version: ${{ matrix.python-version }}
 
       - name: Env
@@ -74,7 +74,8 @@ jobs:
       - name: Download the wheel
         uses: actions/download-artifact@v4
         with:
-          name: cx-freeze-whl-${{ matrix.os }}
+          merge-multiple: true
+          pattern: cx-freeze-whl-${{ matrix.os }}-*
           path: wheelhouse
 
       - name: Install dependencies (Linux)
@@ -138,7 +139,8 @@ jobs:
       - name: Download the wheel
         uses: actions/download-artifact@v4
         with:
-          name: cx-freeze-whl-${{ matrix.os }}
+          merge-multiple: true
+          pattern: cx-freeze-whl-${{ matrix.os }}-*
           path: wheelhouse
 
       - name: Install dependencies to test
@@ -191,14 +193,15 @@ jobs:
         with:
           enable-cache: true
           cache-dependency-glob: |
-            **/requirements.txt
-            **/tests/requirements.txt
+            requirements.txt
+            tests/requirements.txt
           python-version: ${{ matrix.python-version }}
 
       - name: Download the wheel
         uses: actions/download-artifact@v4
         with:
-          name: cx-freeze-whl-${{ matrix.os }}
+          merge-multiple: true
+          pattern: cx-freeze-whl-${{ matrix.os }}-*
           path: wheelhouse
 
       - name: Install dependencies to test
@@ -249,7 +252,8 @@ jobs:
       - name: Download the wheel
         uses: actions/download-artifact@v4
         with:
-          name: cx-freeze-whl-${{ matrix.os }}
+          merge-multiple: true
+          pattern: cx-freeze-whl-${{ matrix.os }}-*
           path: wheelhouse
 
       - uses: uraimo/run-on-arch-action@v2

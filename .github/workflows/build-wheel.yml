@@ -112,6 +112,7 @@ jobs:
 
       - name: Build sdist and wheels ${{ github.event_name }}
         run: |
+          uv pip install build
           if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
             if [ "${{ matrix.arch }}" == "x86_64" ]; then
               ./ci/build-wheel.sh "cp3*-manylinux_x86_64"
