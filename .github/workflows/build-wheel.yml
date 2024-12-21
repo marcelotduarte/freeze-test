@@ -66,6 +66,8 @@ jobs:
         shell: python
 
   build_wheel:
+    needs:
+      - matrix
     strategy:
       fail-fast: false
       matrix:
