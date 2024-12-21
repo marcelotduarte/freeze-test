@@ -46,28 +46,26 @@ jobs:
     defaults:
       run:
         shell: bash
-
     steps:
+
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-          allow-prereleases: true
-
-      - name: Sysconfig
-        run: python -m sysconfig
-
-      - uses: astral-sh/setup-uv@v4
+      - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
           cache-dependency-glob: |
             **/requirements.txt
             **/tests/requirements.txt
+          python-version: ${{ matrix.python-version }}
+
+      - name: Env
+        run: env | sort
+
+      - name: Sysconfig
+        run: python -m sysconfig
 
       - name: Download the wheel
         uses: actions/download-artifact@v4
@@ -83,13 +81,13 @@ jobs:
 
       - name: Install dependencies to test
         run: |
-          uv pip install --system -r requirements.txt -r tests/requirements.txt
-          uv pip install --system cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
+          uv pip install -r requirements.txt -r tests/requirements.txt
+          uv pip install cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
 
       - name: Generate coverage report
         env:
           COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}"
-        run: pytest -nauto --cov="cx_Freeze"
+        run: uv run pytest -nauto --cov="cx_Freeze"
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
@@ -121,18 +119,13 @@ jobs:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-          allow-prereleases: true
-
-      - uses: astral-sh/setup-uv@v4
+      - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
           cache-dependency-glob: |
             **/requirements.txt
             **/tests/requirements.txt
+          python-version: ${{ matrix.python-version }}
 
       - name: Download the wheel
         uses: actions/download-artifact@v4
@@ -142,20 +135,20 @@ jobs:
 
       - name: Install dependencies to test
         run: |
-          uv pip install --system -r requirements.txt -r tests/requirements.txt
-          uv pip install --system cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
+          uv pip install -r requirements.txt -r tests/requirements.txt
+          uv pip install cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
 
       - name: Generate coverage report
         run: |
           if [ "${{ matrix.extra-requirement }}" == "lief-disabled" ]; then
             export CX_FREEZE_BIND=imagehlp
           else
-            uv pip install --system "${{ matrix.extra-requirement }}"
+            uv pip install "${{ matrix.extra-requirement }}"
           fi
           MATRIX_ID=${{ matrix.python-version }}.${{ matrix.os }}
           SUFFIX=$(echo "${{ matrix.extra-requirement }}" | sed 's/==/-/')
           export COVERAGE_FILE=".coverage.$MATRIX_ID.$SUFFIX"
-          pytest -nauto --cov="cx_Freeze"
+          uv run pytest -nauto --cov="cx_Freeze"
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
@@ -182,18 +175,13 @@ jobs:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-          allow-prereleases: true
-
-      - uses: astral-sh/setup-uv@v4
+      - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
           cache-dependency-glob: |
             **/requirements.txt
             **/tests/requirements.txt
+          python-version: ${{ matrix.python-version }}
 
       - name: Download the wheel
         uses: actions/download-artifact@v4
@@ -203,23 +191,23 @@ jobs:
 
       - name: Install dependencies to test
         run: |
-          uv pip install --system -r requirements.txt -r tests/requirements.txt
-          uv pip install --system cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
+          uv pip install -r requirements.txt -r tests/requirements.txt
+          uv pip install cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
 
       - name: Install dependencies - extra
         run: |
           if [ "${{ matrix.python-version }}" == "3.10" ]; then
-            uv pip install --system -i https://pypi.anaconda.org/intel/simple numpy -v
+            uv pip install -i https://pypi.anaconda.org/intel/simple numpy -v
           fi
-          uv pip install --system pandas -v
+          uv pip install pandas -v
 
       - name: Pip list
-        run: uv pip list --system
+        run: uv pip list
 
       - name: Generate coverage report
         env:
           COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}-pandas"
-        run: pytest -nauto --cov="cx_Freeze"
+        run: uv run pytest -nauto --cov="cx_Freeze"
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
