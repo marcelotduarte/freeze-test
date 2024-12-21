@@ -50,7 +50,7 @@ jobs:
 
       - id: includes
         run: |
-          import json
+          import json, os
           extra = []
           if "${{ inputs.extra_linux_platforms }}" == "true":
             extra += [
@@ -61,7 +61,7 @@ jobs:
             extra += [
               {"os": "macos-14", "arch": "universal2"},
             ]
-          with open("${{ env.GITHUB_OUTPUT }}", "a+") as f:
+          with open(os.environ["GITHUB_OUTPUT"], "a+") as f:
             print("extra="+json.dumps(extra), file=f)
         shell: python
 
