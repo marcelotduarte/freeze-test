@@ -33,10 +33,13 @@ jobs:
 
   matrix:
     name: Generate matrix of samples
-    runs-on: ${{ inputs.os }}
     outputs:
       sample: ${{ steps.get-samples.outputs.samples }}
       python-version: ${{ steps.get-python.outputs.python-version }}
+    defaults:
+      run:
+        shell: bash
+    runs-on: ${{ inputs.os }}
     steps:
 
       - uses: actions/checkout@v4
@@ -50,7 +53,6 @@ jobs:
 
       - id: get-samples
         run: echo "samples=$(python ci/_platform.py)" >> $GITHUB_OUTPUT
-        shell: bash
 
       - id: get-python
         run: |
@@ -61,7 +63,6 @@ jobs:
           else
             echo 'python-version=["${{ inputs.python-version }}"]' >> $GITHUB_OUTPUT
           fi
-        shell: bash
 
   tests:
     needs:

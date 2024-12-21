@@ -54,6 +54,8 @@ jobs:
           repository: marcelotduarte/cx_Freeze
 
       - uses: astral-sh/setup-uv@v5
+        env:
+          UV_PYTHON_PREFERENCE=system
         with:
           enable-cache: true
           cache-dependency-glob: |
@@ -87,7 +89,7 @@ jobs:
       - name: Generate coverage report
         env:
           COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}"
-        run: uv run pytest -nauto --cov="cx_Freeze"
+        run: pytest -nauto --cov="cx_Freeze"
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
@@ -123,8 +125,8 @@ jobs:
         with:
           enable-cache: true
           cache-dependency-glob: |
-            **/requirements.txt
-            **/tests/requirements.txt
+            requirements.txt
+            tests/requirements.txt
           python-version: ${{ matrix.python-version }}
 
       - name: Download the wheel
@@ -148,7 +150,7 @@ jobs:
           MATRIX_ID=${{ matrix.python-version }}.${{ matrix.os }}
           SUFFIX=$(echo "${{ matrix.extra-requirement }}" | sed 's/==/-/')
           export COVERAGE_FILE=".coverage.$MATRIX_ID.$SUFFIX"
-          uv run pytest -nauto --cov="cx_Freeze"
+          pytest -nauto --cov="cx_Freeze"
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
@@ -207,7 +209,7 @@ jobs:
       - name: Generate coverage report
         env:
           COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}-pandas"
-        run: uv run pytest -nauto --cov="cx_Freeze"
+        run: pytest -nauto --cov="cx_Freeze"
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
