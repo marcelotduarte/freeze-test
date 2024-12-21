@@ -2,7 +2,8 @@ name: Build wheel
 
 on:
   release:
-    types: [created]
+    types:
+      - created
   workflow_call:
     inputs:
       branch:
@@ -36,12 +37,41 @@ on:
         type: boolean
 
 jobs:
+  matrix:
+    name: Generate matrix of builds
+    outputs:
+      includes: ${{ steps.includes.outputs.extra }}
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - id: includes
+        run: |
+          import json
+          extra = []
+          if "${{ inputs.extra_linux_platforms }}" == "true":
+            extra += [
+              {"os": "ubuntu-latest", "arch": "arm64"},
+              {"os": "ubuntu-latest", "arch": "ppc64le"},
+            ]
+          if "${{ inputs.extra_macos_platforms }}" == "true":
+            extra += [
+              {"os": "macos-14", "arch": "universal2"},
+            ]
+          with open("${{ env.GITHUB_OUTPUT }}", "a+") as f:
+            print("extra="+json.dumps(extra), file=f)
+        shell: python
+
   build_wheel:
     strategy:
       fail-fast: false
       matrix:
         # macos-14 is arm64 (apple silicon), macos-13 is x86_64
         os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+        includes: ${{ fromJSON(needs.matrix.outputs.includes) }}
     name: Build [${{ matrix.os }}]
     runs-on: ${{ matrix.os }}
     defaults:
@@ -57,33 +87,33 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          allow-prereleases: true
 
-      - uses: astral-sh/setup-uv@v4
+      - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
           cache-dependency-glob: |
             **/requirements.txt
             **/requirements-dev.txt
+          python-version: '3.12'
 
       - name: Set up QEMU
-        if: runner.os == 'Linux' && inputs.extra_linux_platforms
+        if: runner.os == 'Linux' && matrix.arch
         uses: docker/setup-qemu-action@v3
         with:
-          platforms: arm64,ppc64le
+          platforms: ${{ matrix.arch }}
 
       - name: Build sdist and wheels ${{ github.event_name }}
         run: |
           if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-            if ! ${{ inputs.extra_linux_platforms }}; then
-              ./ci/build-wheel.sh "cp3{9,10,11,12,13}-manylinux*" --archs="x86_64"
+            if ! ${{ matrix.arch }}; then
+              ./ci/build-wheel.sh "cp3*-manylinux_x86_64"
             else
-              ./ci/build-wheel.sh --all
+              ./ci/build-wheel.sh "cp3*-*linux_${{ matrix.arch }}"
             fi
           elif [ "${{ matrix.os }}" == "macos-13" ]; then
             ./ci/build-wheel.sh "cp3{9,10}-*"
           elif [ "${{ matrix.os }}" == "macos-14" ]; then
-            if ! ${{ inputs.extra_macos_platforms }}; then
+            if ! ${{ matrix.arch }}; then
               ./ci/build-wheel.sh "cp3{11,12,13}-*" --archs="arm64"
             else
               ./ci/build-wheel.sh "cp3{11,12,13}-*"

@@ -12,7 +12,7 @@ on:
           - main
 
 concurrency:
-  group: ${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -53,9 +53,11 @@ jobs:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
       - uses: astral-sh/setup-uv@v5
-        env:
-          UV_PYTHON_PREFERENCE: system
         with:
           enable-cache: true
           cache-dependency-glob: |
@@ -114,12 +116,16 @@ jobs:
     defaults:
       run:
         shell: bash
-
     steps:
+
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
       - uses: astral-sh/setup-uv@v5
         with:
@@ -170,12 +176,16 @@ jobs:
     defaults:
       run:
         shell: bash
-
     steps:
+
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
       - uses: astral-sh/setup-uv@v5
         with:
