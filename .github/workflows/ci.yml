@@ -46,6 +46,8 @@ jobs:
     defaults:
       run:
         shell: bash
+    env:
+      UV_SYSTEM_PYTHON: true
     steps:
 
       - uses: actions/checkout@v4
@@ -85,8 +87,8 @@ jobs:
 
       - name: Install dependencies to test
         run: |
-          uv pip install --system -r requirements.txt -r tests/requirements.txt
-          uv pip install --system cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
+          uv pip install -r requirements.txt -r tests/requirements.txt
+          uv pip install cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
 
       - name: Generate coverage report
         env:
@@ -116,6 +118,8 @@ jobs:
     defaults:
       run:
         shell: bash
+    env:
+      UV_SYSTEM_PYTHON: true
     steps:
 
       - uses: actions/checkout@v4
@@ -143,15 +147,15 @@ jobs:
 
       - name: Install dependencies to test
         run: |
-          uv pip install --system -r requirements.txt -r tests/requirements.txt
-          uv pip install --system cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
+          uv pip install -r requirements.txt -r tests/requirements.txt
+          uv pip install cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
 
       - name: Generate coverage report
         run: |
           if [ "${{ matrix.extra-requirement }}" == "lief-disabled" ]; then
             export CX_FREEZE_BIND=imagehlp
           else
-            uv pip install --system "${{ matrix.extra-requirement }}"
+            uv pip install "${{ matrix.extra-requirement }}"
           fi
           MATRIX_ID=${{ matrix.python-version }}.${{ matrix.os }}
           SUFFIX=$(echo "${{ matrix.extra-requirement }}" | sed 's/==/-/')
@@ -176,6 +180,8 @@ jobs:
     defaults:
       run:
         shell: bash
+    env:
+      UV_SYSTEM_PYTHON: true
     steps:
 
       - uses: actions/checkout@v4
@@ -203,18 +209,18 @@ jobs:
 
       - name: Install dependencies to test
         run: |
-          uv pip install --system -r requirements.txt -r tests/requirements.txt
-          uv pip install --system cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
+          uv pip install -r requirements.txt -r tests/requirements.txt
+          uv pip install cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
 
       - name: Install dependencies - extra
         run: |
           if [ "${{ matrix.python-version }}" == "3.10" ]; then
-            uv pip install --system -i https://pypi.anaconda.org/intel/simple numpy -v
+            uv pip install -i https://pypi.anaconda.org/intel/simple numpy -v
           fi
-          uv pip install --system pandas -v
+          uv pip install pandas -v
 
       - name: Pip list
-        run: uv pip list --system
+        run: uv pip list
 
       - name: Generate coverage report
         env:
