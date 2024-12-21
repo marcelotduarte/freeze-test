@@ -39,8 +39,6 @@ on:
 jobs:
   matrix:
     name: Generate matrix of builds
-    outputs:
-      includes: ${{ steps.includes.outputs.extra }}
     runs-on: ubuntu-latest
     steps:
 
@@ -72,14 +70,16 @@ jobs:
           print("extra="+json.dumps(extra))
         shell: python
 
+    outputs:
+      includes: ${{ steps.includes.outputs.extra }}
+
   build_wheel:
     needs:
       - matrix
     strategy:
       fail-fast: false
-      matrix:
-        # macos-14 is arm64 (apple silicon), macos-13 is x86_64
-        includes: ${{ fromJSON(needs.matrix.outputs.includes) }}
+      # macos-14 is arm64 (apple silicon), macos-13 is x86_64
+      matrix: ${{ fromJSON(needs.matrix.outputs.includes) }}
     name: Build [${{ matrix.os }}]
     runs-on: ${{ matrix.os }}
     defaults:
