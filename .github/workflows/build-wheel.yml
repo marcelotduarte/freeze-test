@@ -83,7 +83,7 @@ jobs:
       fail-fast: false
       # macos-14 is arm64 (apple silicon), macos-13 is x86_64
       matrix: ${{ fromJSON(needs.matrix.outputs.data) }}
-    name: Build [${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.tag }}]
+    name: Build [${{ matrix.os }}-${{ matrix.arch }}](job-${{ strategy.job-index }})
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -114,8 +114,7 @@ jobs:
           platforms: ${{ matrix.arch }}
 
       - name: Build sdist and wheels ${{ github.event_name }}
-        run: |
-          ./ci/build-wheel.sh "${{ matrix.tag }}"
+        run: ./ci/build-wheel.sh "${{ matrix.tag }}"
 
       - name: Upload the artifact
         uses: actions/upload-artifact@v4
