@@ -1,0 +1,82 @@
+name: CI-313
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        default: develop
+        required: true
+        type: choice
+        options:
+          - develop
+          - main
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    needs:
+      - build_wheel
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-14, macos-13]
+        python-version: ['3.13', '3.13t']
+          - os: windows-latest
+            python-version: '3.13t'
+      fail-fast: false
+    defaults:
+      run:
+        shell: bash
+    env:
+      UV_SYSTEM_PYTHON: true
+    steps:
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+          repository: marcelotduarte/cx_Freeze
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: |
+            requirements.txt
+            tests/requirements.txt
+          python-version: ${{ matrix.python-version }}
+
+      - name: Env
+        run: env | sort
+
+      - name: Sysconfig
+        run: python -m sysconfig
+
+      - name: Install dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get install -qy alien fakeroot rpm
+          sudo apt-get install -qy --allow-downgrades cpio=2.13+dfsg-7
+
+      - name: Install dependencies to test
+        run: |
+          uv pip install -r requirements.txt -r tests/requirements.txt
+          uv pip install --extra-index-url https://test.pypi.org/simple/ cx-Freeze==7.3.0.2759.dev1735753415 --no-deps --reinstall
+
+      - name: Generate coverage report
+        env:
+          COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}"
+        run: pytest -nauto --cov="cx_Freeze"
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: cov-${{ matrix.python-version }}.${{ matrix.os }}
+          path: .coverage.*
+          include-hidden-files: true
