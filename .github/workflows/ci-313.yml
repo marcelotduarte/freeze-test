@@ -30,7 +30,7 @@ jobs:
       run:
         shell: bash
     env:
-      UV_SYSTEM_PYTHON: true
+      UV_SYSTEM_PYTHON: ${{ matrix.python-version != '3.13t' }}
     steps:
 
       - uses: actions/checkout@v4
