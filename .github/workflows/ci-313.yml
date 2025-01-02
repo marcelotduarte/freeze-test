@@ -17,8 +17,6 @@ concurrency:
 
 jobs:
   tests:
-    needs:
-      - build_wheel
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
