@@ -59,9 +59,6 @@ jobs:
       - name: Sysconfig
         run: python -m sysconfig
 
-      - name: Sysconfig
-        run: uv run -m sysconfig || true
-
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
         run: |
@@ -73,15 +70,18 @@ jobs:
           uv pip install -r requirements.txt -r tests/requirements.txt
           uv pip install --extra-index-url https://test.pypi.org/simple/ cx-Freeze==7.3.0.2759.dev1735753415 --no-deps --reinstall
 
+      - name: Sysconfig
+        run: uv run -m sysconfig || true
+
       - name: pip list
-        run: uv pip list
+        run: uv pip list -v
 
       - name: Generate coverage report
         env:
           COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}"
         run: |
-          source .venv/bin/activate
-          pytest -nauto --cov="cx_Freeze"
+          #source .venv/bin/activate
+          uv run -m pytest -nauto --cov="cx_Freeze"
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
