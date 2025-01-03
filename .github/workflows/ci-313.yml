@@ -59,6 +59,9 @@ jobs:
       - name: Sysconfig
         run: python -m sysconfig
 
+      - name: Sysconfig
+        run: uv run -m sysconfig || true
+
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
         run: |
@@ -69,6 +72,9 @@ jobs:
         run: |
           uv pip install -r requirements.txt -r tests/requirements.txt
           uv pip install --extra-index-url https://test.pypi.org/simple/ cx-Freeze==7.3.0.2759.dev1735753415 --no-deps --reinstall
+
+      - name: pip list
+        run: uv pip list
 
       - name: Generate coverage report
         env:
