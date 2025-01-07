@@ -30,7 +30,7 @@ jobs:
       run:
         shell: bash
     env:
-      UV_SYSTEM_PYTHON: true  # ${{ matrix.python-version != '3.13t' }}
+      # UV_SYSTEM_PYTHON: ${{ matrix.python-version != '3.13t' }}
       UV_NO_PROGRESS: true
     steps:
 
@@ -51,19 +51,19 @@ jobs:
           cache-dependency-glob: |
             requirements.txt
             tests/requirements.txt
-          # python-version: ${{ matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
 
       - name: Install python
         run: |
-          uv python install ${{ matrix.python-version }}
-          echo "UV_PYTHON=$(uv python find ${{ matrix.python-version }})" >> $GITHUB_ENV
+          #uv python install ${{ matrix.python-version }}
+          #echo "UV_PYTHON=$(uv python find ${{ matrix.python-version }})" >> $GITHUB_ENV
         if: matrix.python-version == '3.13t'
 
       - name: Env
         run: env | sort
 
       - name: Sysconfig
-        run: uv run python -m sysconfig || true
+        run: uv run --no-install-project python -m sysconfig || true
 
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
@@ -71,11 +71,11 @@ jobs:
 
       - name: Install dependencies to test
         run: |
-          uv pip install -r requirements.txt -r tests/requirements.txt
+          uv sync --no-install-project --extra tests
           uv pip install --extra-index-url https://test.pypi.org/simple/ cx-Freeze==7.3.0.2759.dev1735753415 --no-deps --reinstall
 
       - name: Sysconfig
-        run: uv run -m sysconfig || true
+        run: uv run --no-install-project -m sysconfig || true
 
       - name: pip list
         run: uv pip list -v
