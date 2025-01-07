@@ -30,7 +30,6 @@ jobs:
       run:
         shell: bash
     env:
-      # UV_SYSTEM_PYTHON: ${{ matrix.python-version != '3.13t' }}
       UV_NO_PROGRESS: true
     steps:
 
@@ -53,17 +52,11 @@ jobs:
             tests/requirements.txt
           python-version: ${{ matrix.python-version }}
 
-      - name: Install python
-        run: |
-          #uv python install ${{ matrix.python-version }}
-          #echo "UV_PYTHON=$(uv python find ${{ matrix.python-version }})" >> $GITHUB_ENV
-        if: matrix.python-version == '3.13t'
-
       - name: Env
         run: env | sort
 
       - name: Sysconfig
-        run: uv run --no-install-project python -m sysconfig || true
+        run: uv run --no-project python -m sysconfig || true
 
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
@@ -75,7 +68,7 @@ jobs:
           uv pip install --extra-index-url https://test.pypi.org/simple/ cx-Freeze==7.3.0.2759.dev1735753415 --no-deps --reinstall
 
       - name: Sysconfig
-        run: uv run --no-install-project -m sysconfig || true
+        run: uv run --no-project -m sysconfig || true
 
       - name: pip list
         run: uv pip list -v
@@ -83,7 +76,7 @@ jobs:
       - name: Generate coverage report
         env:
           COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}"
-        run: pytest -nauto --cov="cx_Freeze"
+        run: uv run --no-project pytest -nauto --cov="cx_Freeze"
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
