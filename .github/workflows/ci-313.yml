@@ -33,6 +33,10 @@ jobs:
       UV_NO_PROGRESS: true
     steps:
 
+      - name: Install dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -qy alien fakeroot rpm
+
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch }}
@@ -56,19 +60,12 @@ jobs:
         run: env | sort
 
       - name: Sysconfig
-        run: uv run --no-project python -m sysconfig || true
-
-      - name: Install dependencies (Linux)
-        if: runner.os == 'Linux'
-        run: sudo apt-get install -qy alien fakeroot rpm
+        run: uv run --no-project -m sysconfig
 
       - name: Install dependencies to test
         run: |
           uv sync --no-install-project --extra tests
-          uv pip install --extra-index-url https://test.pypi.org/simple/ cx-Freeze==7.3.0.2759.dev1735753415 --no-deps --reinstall
-
-      - name: Sysconfig
-        run: uv run --no-project -m sysconfig || true
+          uv pip install --extra-index-url https://test.pypi.org/simple/ cx-Freeze==7.3.0.2759.dev1736267718 --no-deps --reinstall
 
       - name: pip list
         run: uv pip list -v
