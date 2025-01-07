@@ -30,7 +30,7 @@ jobs:
       run:
         shell: bash
     env:
-      # UV_SYSTEM_PYTHON: ${{ matrix.python-version != '3.13t' }}
+      UV_SYSTEM_PYTHON: true  # ${{ matrix.python-version != '3.13t' }}
       UV_NO_PROGRESS: true
     steps:
 
@@ -51,7 +51,11 @@ jobs:
           cache-dependency-glob: |
             requirements.txt
             tests/requirements.txt
-          python-version: ${{ matrix.python-version }}
+          # python-version: ${{ matrix.python-version }}
+
+      - name: Install python
+        run: uv python install ${{ matrix.python-version }}
+        if: matrix.python-version == '3.13t'
 
       - name: Env
         run: env | sort
@@ -61,9 +65,7 @@ jobs:
 
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
-        run: |
-          sudo apt-get install -qy alien fakeroot rpm
-          sudo apt-get install -qy --allow-downgrades cpio=2.13+dfsg-7
+        run: sudo apt-get install -qy alien fakeroot rpm
 
       - name: Install dependencies to test
         run: |
