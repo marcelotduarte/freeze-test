@@ -56,14 +56,14 @@ jobs:
       - name: Install python
         run: |
           uv python install ${{ matrix.python-version }}
-          echo "UV_PYTHON=${{ matrix.python-version }}" >> $GITHUB_ENV
+          echo "UV_PYTHON=$(uv python find ${{ matrix.python-version }})" >> $GITHUB_ENV
         if: matrix.python-version == '3.13t'
 
       - name: Env
         run: env | sort
 
       - name: Sysconfig
-        run: python -m sysconfig
+        run: uv run python -m sysconfig || true
 
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
