@@ -54,7 +54,9 @@ jobs:
           # python-version: ${{ matrix.python-version }}
 
       - name: Install python
-        run: uv python install ${{ matrix.python-version }}
+        run: |
+          uv python install ${{ matrix.python-version }}
+          echo "UV_PYTHON=${{ matrix.python-version }}" >> $GITHUB_ENV
         if: matrix.python-version == '3.13t'
 
       - name: Env
@@ -81,9 +83,7 @@ jobs:
       - name: Generate coverage report
         env:
           COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}"
-        run: |
-          #source .venv/bin/activate
-          uv run -m pytest -nauto --cov="cx_Freeze"
+        run: pytest -nauto --cov="cx_Freeze"
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4

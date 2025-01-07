@@ -14,8 +14,10 @@ on:
 jobs:
   pre_commit:
     runs-on: ubuntu-latest
-
+    env:
+      UV_SYSTEM_PYTHON: true
     steps:
+
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch }}
@@ -29,12 +31,12 @@ jobs:
         with:
           enable-cache: true
           cache-dependency-glob: |
-            **/requirements.txt
-            **/requirements-dev.txt
-            **/requirements-doc.txt
+            requirements.txt
+            requirements-dev.txt
+            doc/requirements.txt
 
       - name: Install dependencies
-        run: uv pip install --system -e.[dev,doc]
+        run: uv pip install -e.[dev,doc]
 
       - name: Run pre-commit
         run: >-

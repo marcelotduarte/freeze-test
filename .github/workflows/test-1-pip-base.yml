@@ -29,7 +29,6 @@ jobs:
     with:
       branch: ${{ inputs.branch }}
       extra_linux_platforms: false
-      extra_macos_platforms: false
 
   matrix:
     name: Generate matrix of samples
@@ -107,8 +106,8 @@ jobs:
         with:
           enable-cache: true
           cache-dependency-glob: |
-            **/requirements.txt
-            **/ci/build-*
+            requirements.txt
+            ci/build-*
 
       - name: Download the wheel
         if: ${{ inputs.deps == 'd' }}
