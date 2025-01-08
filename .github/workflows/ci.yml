@@ -91,7 +91,7 @@ jobs:
       - name: Install dependencies to test
         run: |
           #uv pip install -r requirements.txt -r tests/requirements.txt
-          uv sync --frozen --no-install-project --extra tests
+          uv sync -p ${{ matrix.python-version }} --frozen --no-install-project --extra tests
           uv pip install cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
 
       - name: Generate coverage report
