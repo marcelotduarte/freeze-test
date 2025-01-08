@@ -51,6 +51,7 @@ jobs:
         shell: bash
     env:
       UV_SYSTEM_PYTHON: true
+      UV_NO_PROGRESS: true
     steps:
 
       - name: Install dependencies (Linux)
@@ -89,7 +90,7 @@ jobs:
 
       - name: Install dependencies to test
         run: |
-          uv pip install -r requirements.txt -r tests/requirements.txt
+          uv sync --no-install-project --extra tests
           uv pip install cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
 
       - name: Generate coverage report
