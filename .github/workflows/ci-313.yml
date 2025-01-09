@@ -63,7 +63,7 @@ jobs:
       - name: Install dependencies to test
         run: |
           uv sync --no-install-project --extra tests
-          uv pip install --extra-index-url https://test.pypi.org/simple/ cx-Freeze==7.3.0.2759.dev1736267718 --no-deps --reinstall
+          uv pip install --extra-index-url https://test.pypi.org/simple/ "cx-Freeze==7.3.0.*" --no-deps --reinstall
 
       - name: pip list
         run: uv pip list -v
