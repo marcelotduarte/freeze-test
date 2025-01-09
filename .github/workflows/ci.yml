@@ -50,7 +50,6 @@ jobs:
       run:
         shell: bash
     env:
-      UV_SYSTEM_PYTHON: true
       UV_NO_PROGRESS: true
     steps:
 
@@ -74,12 +73,13 @@ jobs:
           cache-dependency-glob: |
             requirements.txt
             tests/requirements.txt
+          python-version: ${{ matrix.python-version }}
 
       - name: Env
         run: env | sort
 
       - name: Sysconfig
-        run: python -m sysconfig
+        run: uv run --no-project -m sysconfig
 
       - name: Download the wheel
         uses: actions/download-artifact@v4
@@ -90,14 +90,13 @@ jobs:
 
       - name: Install dependencies to test
         run: |
-          #uv pip install -r requirements.txt -r tests/requirements.txt
-          uv sync -p ${{ matrix.python-version }} --frozen --no-install-project --extra tests
+          uv sync --frozen --no-install-project --extra tests
           uv pip install cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
 
       - name: Generate coverage report
         env:
           COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}"
-        run: pytest -nauto --cov="cx_Freeze"
+        run: uv run --no-project pytest -nauto --cov="cx_Freeze"
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
