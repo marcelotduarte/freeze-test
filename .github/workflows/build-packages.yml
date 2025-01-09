@@ -11,24 +11,16 @@ on:
         default: false
         required: false
         type: boolean
-      token:
-        default: ''
-        required: false
-        type: string
   workflow_dispatch:
     inputs:
       build_cx_logging:
-        default: true
+        default: false
         required: false
         type: boolean
       build_lief:
         default: false
         required: false
         type: boolean
-      token:
-        default: ''
-        required: false
-        type: string
 
 jobs:
 
@@ -296,15 +288,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      #- uses: actions/checkout@v4
-      #  with:
-      #    repository: marcelotduarte/packages
-      #    ref: gh-pages
-
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          #path: main
           ref: main
           repository: marcelotduarte/packages
 
@@ -313,7 +299,7 @@ jobs:
           python-version: "3.12"
 
       - name: Preserve make_index script
-        run: cp make_index.py create_index.py
+        run: mv make_index.py create_index.py
 
       - name: Recreate branch gh-pages
         run: |
