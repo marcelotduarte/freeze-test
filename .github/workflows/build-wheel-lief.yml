@@ -61,7 +61,7 @@ jobs:
 
       - name: Build SDK
         run: |
-          sed -i 's/msvc14_get_vc_env\(arch\)/EnvironmentInfo(arch).return_env()/' ./scripts/windows/package_sdk.py
+          sed -i 's/msvc14_get_vc_env(arch)/EnvironmentInfo(arch).return_env()/' ./scripts/windows/package_sdk.py
           python ./scripts/windows/package_sdk.py
         shell: bash
 
