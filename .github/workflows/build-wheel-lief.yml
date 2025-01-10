@@ -104,12 +104,18 @@ jobs:
           python-version: ${{ env.python-version }}
           architecture: ${{ matrix.arch }}
           allow-prereleases: true
+        if: env.python-version != '3.13t'
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          python-version: ${{ env.python-version }}
 
       - name: Install system dependencies
         run: |
           choco install ninja
           choco install sccache
-          python -m pip install --upgrade pip setuptools
+          uv pip install --upgrade pip setuptools
 
       - uses: ilammy/msvc-dev-cmd@v1
         with:
@@ -159,7 +165,7 @@ jobs:
 
       - name: Build Python ${{ env.python-version }}
         run: |
-          python -m pip -vvv wheel --wheel-dir=dist/ ./api/python
+          uv run -m pip -vvv wheel --wheel-dir=dist/ ./api/python
         shell: cmd
 
       - name: 'Upload Python artifacts [${{ env.python-version }}]'
