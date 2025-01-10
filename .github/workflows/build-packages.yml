@@ -387,7 +387,7 @@ jobs:
         run: python create_index.py cx-freeze --base cx_Freeze
 
       - name: Cleanup
-        run: rm -rf lief-wheels create_index.py
+        run: rm -rf lief-wheels *.py *.md PKGBUILD
 
       - name: Create packages template
         run: |
