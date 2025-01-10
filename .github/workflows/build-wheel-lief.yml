@@ -8,7 +8,7 @@ env:
   python-version: '3.13'
   python-version-sdk: '3.10'
   SCCACHE_DIR: 'C:\Users\runner\AppData\Local\Mozilla\sccache'
-  LIEF_TAG: '0.15.1'
+  LIEF_TAG: '0.16.2'
   
 jobs:
   build-sdk:
