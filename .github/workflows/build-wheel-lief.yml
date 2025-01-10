@@ -61,7 +61,9 @@ jobs:
 
       - name: Build SDK
         run: |
+          sed -i 's/msvc14_get_vc_env/EnvironmentInfo/' ./scripts/windows/package_sdk.py
           python ./scripts/windows/package_sdk.py
+        shell: bash
 
       - name: 'Upload SDK artifact'
         uses: actions/upload-artifact@v4
