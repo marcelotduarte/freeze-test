@@ -319,9 +319,6 @@ jobs:
           pattern: lief-*
           merge-multiple: true
 
-      - name: List artifacts
-        run: cd artifacts && ls -l */*
-
       - name: Create index for LIEF
         run: |
           mkdir -p lief
