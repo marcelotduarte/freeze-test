@@ -39,8 +39,8 @@ jobs:
 
       - uses: ilammy/msvc-dev-cmd@v1
         with:
-          vsversion: "2022"
           arch: ${{ matrix.arch }}
+          vsversion: "2022"
 
       - name: Get Date
         id: get-date
@@ -91,7 +91,8 @@ jobs:
     needs: build-sdk
     strategy:
       matrix:
-        arch: ['x86', 'x64']
+        arch: ['x64', 'x86']
+        python-version: ['3.13', '3.13t']
       fail-fast: false
     env:
       SCCACHE_CACHE_SIZE: 2G
@@ -104,15 +105,15 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: ${{ env.python-version }}
+          python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.arch }}
           allow-prereleases: true
-        if: env.python-version != '3.13t'
+        if: matrix.python-version != '3.13t'
 
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
-          python-version: ${{ env.python-version }}
+          python-version: ${{ matrix.python-version }}
 
       - name: Install system dependencies
         run: |
@@ -122,6 +123,7 @@ jobs:
 
       - uses: ilammy/msvc-dev-cmd@v1
         with:
+          arch: ${{ matrix.arch }}
           vsversion: "2022"
 
       - name: Get Date
@@ -135,9 +137,9 @@ jobs:
         continue-on-error: false
         with:
           path: ${{ env.SCCACHE_DIR }}
-          key: ${{ runner.os }}-${{ matrix.arch }}-sccache-${{ env.python-version }}-${{ steps.get-date.outputs.date }}
+          key: ${{ runner.os }}-${{ matrix.arch }}-sccache-${{ matrix.python-version }}-${{ steps.get-date.outputs.date }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.arch }}-sccache-${{ env.python-version }}
+            ${{ runner.os }}-${{ matrix.arch }}-sccache-${{ matrix.python-version }}
 
       - name: Download LIEF install dir
         uses: actions/download-artifact@v4
@@ -150,30 +152,25 @@ jobs:
 
       - name: Set arch specific env
         if: matrix.arch == 'x64'
-        run: |
-          echo "ARCH=x64" >> $env:GITHUB_ENV
+        run: echo "ARCH=x64" >> $env:GITHUB_ENV
 
       - name: Set arch specific env
         if: matrix.arch == 'x86'
-        run: |
-          echo "ARCH=x86" >> $env:GITHUB_ENV
+        run: echo "ARCH=x86" >> $env:GITHUB_ENV
 
       - name: Set Python config (${{ matrix.arch }})
-        run: |
-          echo ("PYLIEF_CONF=" + $env:GITHUB_WORKSPACE + "/scripts/windows/py-" + $env:ARCH + ".toml") >> $env:GITHUB_ENV
+        run: echo ("PYLIEF_CONF=" + $env:GITHUB_WORKSPACE + "/scripts/windows/py-" + $env:ARCH + ".toml") >> $env:GITHUB_ENV
 
       - name: Set env variables
-        run: |
-          chcp 65001 #set code page to utf-8
+        run: chcp 65001 #set code page to utf-8
 
-      - name: Build Python ${{ env.python-version }}
-        run: |
-          uv run -m pip -vvv wheel --wheel-dir=dist/ ./api/python
-        shell: cmd
+      - name: Build Python ${{ matrix.python-version }}
+        run: uv run -m pip -vvv wheel --wheel-dir=dist/ ./api/python
+        shell: bash
 
-      - name: 'Upload Python artifacts [${{ env.python-version }}]'
+      - name: 'Upload Python artifacts [${{ matrix.python-version }}]'
         uses: actions/upload-artifact@v4
         with:
-          name: lief-windows-${{ matrix.arch }}-wheel-${{ env.python-version }}
+          name: lief-windows-${{ matrix.arch }}-wheel-${{ matrix.python-version }}
           path: dist/*.whl
           retention-days: 3
