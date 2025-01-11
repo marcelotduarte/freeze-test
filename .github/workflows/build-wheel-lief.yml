@@ -40,6 +40,7 @@ jobs:
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           vsversion: "2022"
+          arch: ${{ matrix.arch }}
 
       - name: Get Date
         id: get-date
