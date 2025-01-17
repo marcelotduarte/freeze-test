@@ -45,4 +45,4 @@ jobs:
       python-version: ${{ inputs.python-version }}
       deps: ${{ inputs.deps }}
       bdist: ${{ inputs.bdist }}
-      os: windows-latest
+      os: windows

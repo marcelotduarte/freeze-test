@@ -36,13 +36,13 @@ on:
           - ""
           - "bdist_mac"
           - "bdist_dmg"
-      os:
-        default: macos-13
+      os_version:
+        default: 13
         required: false
         type: choice
         options:
-          - macos-13
-          - macos-14
+          - 13
+          - 14
 
 name: Test-1-pip (macOS)
 jobs:
@@ -54,4 +54,5 @@ jobs:
       python-version: ${{ inputs.python-version }}
       deps: ${{ inputs.deps }}
       bdist: ${{ inputs.bdist }}
-      os: ${{ inputs.os }}
+      os: macos
+      os_version: ${{ inputs.os }}

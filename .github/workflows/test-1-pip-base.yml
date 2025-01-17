@@ -17,8 +17,12 @@ on:
         required: false
         type: string
       os:
-        default: ubuntu-latest
+        default: ubuntu
         required: true
+        type: string
+      os_version:
+        default: latest
+        required: false
         type: string
 
 name: Test-1-pip
@@ -38,7 +42,7 @@ jobs:
     defaults:
       run:
         shell: bash
-    runs-on: ${{ inputs.os }}
+    runs-on: ${{ inputs.os }}-${{ matrix.os_version }}
     steps:
 
       - uses: actions/checkout@v4
@@ -85,8 +89,8 @@ jobs:
             python-version: "3.13"
           - sample: pyside2-simplebrowser
             python-version: "3.13"
-    name: ${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.python-version }}
-    runs-on: ${{ inputs.os }}
+    name: ${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.os_version }}-${{ matrix.python-version }}
+    runs-on: ${{ inputs.os }}-${{ matrix.os_version }}
     defaults:
       run:
         shell: bash
@@ -128,7 +132,7 @@ jobs:
         run: |
           mkdir ${{ matrix.sample }}-${{ inputs.os }}
           cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ inputs.os }} || true
-          if [[ ${{ inputs.os }} == macos-* ]]; then
+          if [ "${{ inputs.os }}" == "macos" ]; then
             mkdir ${{ matrix.sample }}-${{ inputs.os }}/app-${{ matrix.python-version }}
             cp build/*.app/Contents/MacOS/*.{err,log,png} ${{ matrix.sample }}-${{ inputs.os }}/app-${{ matrix.python-version }} || true
           fi
