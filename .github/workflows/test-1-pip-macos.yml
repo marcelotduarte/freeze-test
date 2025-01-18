@@ -55,4 +55,4 @@ jobs:
       deps: ${{ inputs.deps }}
       bdist: ${{ inputs.bdist }}
       os: macos
-      os_version: ${{ inputs.os }}
+      os_version: ${{ inputs.os_version }}
