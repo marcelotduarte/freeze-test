@@ -43,7 +43,7 @@ jobs:
     defaults:
       run:
         shell: bash
-    runs-on: ${{ inputs.os }}-${{ matrix.os_version }}
+    runs-on: ${{ inputs.os }}-${{ inputs.os_version }}
     steps:
 
       - uses: actions/checkout@v4
@@ -90,8 +90,8 @@ jobs:
             python-version: "3.13"
           - sample: pyside2-simplebrowser
             python-version: "3.13"
-    name: ${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.os_version }}-${{ matrix.python-version }}
-    runs-on: ${{ inputs.os }}-${{ matrix.os_version }}
+    name: ${{ matrix.sample }}-${{ inputs.os }}-${{ inputs.os_version }}-${{ matrix.python-version }}
+    runs-on: ${{ inputs.os }}-${{ inputs.os_version }}
     defaults:
       run:
         shell: bash
