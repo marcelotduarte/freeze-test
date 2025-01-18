@@ -14,6 +14,10 @@ on:
         default: true
         required: false
         type: boolean
+      os:
+        default: all
+        required: false
+        type: string
   workflow_dispatch:
     inputs:
       branch:
@@ -27,6 +31,15 @@ on:
         default: true
         required: false
         type: boolean
+      os:
+        default: all
+        required: false
+        type: choice
+        options:
+          - all
+          - macos
+          - ubuntu
+          - windows
 
 jobs:
   matrix:
@@ -102,8 +115,12 @@ jobs:
                     "tag": "cp3*-win32",
                 },
               ]
+          if "${{ inputs.os }}" != "all":
+              def func(item):
+                  return item["os"] == "${{ inputs.os }}"
+              include = list(filter(func, include))
           with open(os.environ["GITHUB_OUTPUT"], "a+") as f:
-            print("data="+json.dumps({"include": include}), file=f)
+              print("data="+json.dumps({"include": include}), file=f)
           print("data="+json.dumps({"include": include}))
         shell: python
 

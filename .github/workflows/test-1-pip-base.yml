@@ -33,6 +33,7 @@ jobs:
     with:
       branch: ${{ inputs.branch }}
       extra_linux_platforms: false
+      os: ${{ inputs.os }}
 
   matrix:
     name: Generate matrix of samples
