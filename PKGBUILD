@@ -21,6 +21,7 @@ depends=(
     "${MINGW_PACKAGE_PREFIX}-python-pip"
     "${MINGW_PACKAGE_PREFIX}-python-setuptools"
     "${MINGW_PACKAGE_PREFIX}-python-cx-logging"
+    "${MINGW_PACKAGE_PREFIX}-python-lief"
 )
 makedepends=(
     "${MINGW_PACKAGE_PREFIX}-python-build"
@@ -35,9 +36,6 @@ checkdepends=(
     "${MINGW_PACKAGE_PREFIX}-python-pytest-mock"
     "${MINGW_PACKAGE_PREFIX}-python-pytest-timeout"
     "${MINGW_PACKAGE_PREFIX}-python-pytest-xdist"
-)
-optdepends=(
-    "${MINGW_PACKAGE_PREFIX}-python-lief"
 )
 options=(!strip)
 source=()
