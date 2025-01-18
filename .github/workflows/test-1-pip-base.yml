@@ -118,7 +118,8 @@ jobs:
         if: ${{ inputs.deps == 'd' }}
         uses: actions/download-artifact@v4
         with:
-          name: cx-freeze-whl-${{ inputs.os }}
+          merge-multiple: true
+          pattern: cx-freeze-whl-${{ inputs.os }}*
           path: wheelhouse
 
       - name: Freeze and run "${{ matrix.sample }}"
