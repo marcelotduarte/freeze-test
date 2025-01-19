@@ -21,8 +21,10 @@ depends=(
     "${MINGW_PACKAGE_PREFIX}-python-pip"
     "${MINGW_PACKAGE_PREFIX}-python-setuptools"
     "${MINGW_PACKAGE_PREFIX}-python-cx-logging"
-    "${MINGW_PACKAGE_PREFIX}-python-lief"
 )
+if [ "${MINGW_ARCH}" != "mingw32" ]; then
+    depends+=("${MINGW_PACKAGE_PREFIX}-python-lief")
+fi
 makedepends=(
     "${MINGW_PACKAGE_PREFIX}-python-build"
     "${MINGW_PACKAGE_PREFIX}-python-installer"
