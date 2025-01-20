@@ -35,7 +35,7 @@ jobs:
         shell: msys2 {0}
     env:
       MINGW_ARCH: ${{ matrix.sys }}
-    runs-on: windows-latest
+    runs-on: windows-2025
     steps:
 
       - name: '⚙️ git config'
