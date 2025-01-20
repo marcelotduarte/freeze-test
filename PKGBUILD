@@ -9,7 +9,7 @@ pkgver=7.3.0
 pkgrel=1
 pkgdesc="Creates standalone executables from Python scripts, with the same performance (mingw-w64)"
 arch=('any')
-mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clangarm64')
+mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://github.com/marcelotduarte/cx_Freeze/"
 msys2_references=(
   'pypi: cx-Freeze'
