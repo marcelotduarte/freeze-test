@@ -22,7 +22,7 @@ depends=(
     "${MINGW_PACKAGE_PREFIX}-python-setuptools"
     "${MINGW_PACKAGE_PREFIX}-python-cx-logging"
 )
-if [ "${MINGW_ARCH}" != "mingw32" ]; then
+if [ "${MINGW_ARCH}" != "mingw32" ] && [ "${MINGW_ARCH}" != "clangarm64" ]; then
     depends+=("${MINGW_PACKAGE_PREFIX}-python-lief")
 fi
 makedepends=(
