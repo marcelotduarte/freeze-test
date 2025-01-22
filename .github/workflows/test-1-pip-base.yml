@@ -37,9 +37,6 @@ jobs:
 
   matrix:
     name: Generate matrix of samples
-    outputs:
-      sample: ${{ steps.get-samples.outputs.samples }}
-      python-version: ${{ steps.get-python.outputs.python-version }}
     defaults:
       run:
         shell: bash
@@ -55,18 +52,11 @@ jobs:
         with:
           python-version: "3.12"
 
-      - id: get-samples
-        run: echo "samples=$(python ci/_platform.py)" >> $GITHUB_OUTPUT
+      - id: samples
+        run: python ci/_platform.py --py="${{ inputs.python-version }}" --matrix
 
-      - id: get-python
-        run: |
-          if [[ ${{ inputs.python-version }} == 3.*-3.12 ]]; then
-            echo 'python-version=["3.9", "3.10", "3.11", "3.12"]' >> $GITHUB_OUTPUT
-          elif [[ ${{ inputs.python-version }} == 3.*-3.* ]]; then
-            echo 'python-version=["3.9", "3.10", "3.11", "3.12", "3.13"]' >> $GITHUB_OUTPUT
-          else
-            echo 'python-version=["${{ inputs.python-version }}"]' >> $GITHUB_OUTPUT
-          fi
+    outputs:
+      data: ${{ steps.samples.outputs.matrix }}
 
   tests:
     needs:
@@ -74,22 +64,7 @@ jobs:
       - matrix
     strategy:
       fail-fast: false
-      matrix:
-        sample: ${{ fromJSON(needs.matrix.outputs.sample) }}
-        python-version: ${{ fromJSON(needs.matrix.outputs.python-version) }}
-        exclude:
-          - sample: pyside2
-            python-version: "3.11"
-          - sample: pyside2-simplebrowser
-            python-version: "3.11"
-          - sample: pyside2
-            python-version: "3.12"
-          - sample: pyside2-simplebrowser
-            python-version: "3.12"
-          - sample: pyside2
-            python-version: "3.13"
-          - sample: pyside2-simplebrowser
-            python-version: "3.13"
+      matrix: ${{ fromJSON(needs.matrix.outputs.data) }}
     name: ${{ matrix.sample }}-${{ inputs.os }}-${{ inputs.os_version }}-${{ matrix.python-version }}
     runs-on: ${{ inputs.os }}-${{ inputs.os_version }}
     defaults:
