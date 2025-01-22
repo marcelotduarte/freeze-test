@@ -6,7 +6,7 @@ on:
         required: true
         type: string
       python-version:
-        default: "3.9-3.13"
+        default: "3.9,3.10,3.11,3.12"
         required: false
         type: string
       deps:
@@ -26,11 +26,6 @@ jobs:
   matrix:
     name: Generate matrix of samples
     runs-on: ${{ inputs.os }}
-    outputs:
-      sample: ${{ steps.get-samples.outputs.samples }}
-      python-version: ${{ steps.get-python.outputs.python-version }}
-      branch: ${{ steps.get-branch.outputs.branch }}
-      deps: ${{ steps.get-deps.outputs.deps }}
     steps:
 
       - uses: actions/checkout@v4
@@ -42,18 +37,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - id: get-samples
-        run: echo "samples=$(python ci/_platform.py)" >> $GITHUB_OUTPUT
-        shell: bash
-
-      - id: get-python
-        run: |
-          if [[ ${{ inputs.python-version }} == 3.*-3.* ]]; then
-            echo 'python-version=["3.9", "3.10", "3.11", "3.12"]' >> $GITHUB_OUTPUT
-          else
-            echo 'python-version=["${{ inputs.python-version }}"]' >> $GITHUB_OUTPUT
-          fi
-        shell: bash
+      - id: samples
+        run: python ci/_platform.py --py="${{ inputs.python-version }}" --matrix
 
       - id: get-branch
         run: |
@@ -70,18 +55,22 @@ jobs:
           echo "deps=[\"$deps\"]" >> $GITHUB_OUTPUT
         shell: bash
 
+    outputs:
+      data: ${{ steps.samples.outputs.matrix }}
+      branch: ${{ steps.get-branch.outputs.branch }}
+      deps: ${{ steps.get-deps.outputs.deps }}
+
   tests:
-    needs: [matrix]
+    needs:
+      - matrix
     strategy:
       fail-fast: false
-      matrix:
-        sample: ${{ fromJSON(needs.matrix.outputs.sample) }}
-        python-version: ${{ fromJSON(needs.matrix.outputs.python-version) }}
+      matrix: ${{ fromJSON(needs.matrix.outputs.data) }}
         exclude:
-          - sample: pyside2
-            python-version: "3.12"
-          - sample: pyside2-simplebrowser
-            python-version: "3.12"
+          #- sample: pyside2
+          #  python-version: "3.12"
+          #- sample: pyside2-simplebrowser
+          #  python-version: "3.12"
           - sample: pyqt6
           - sample: pyqt6-simplebrowser
           - sample: pyside6-simplebrowser
