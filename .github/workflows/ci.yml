@@ -82,6 +82,12 @@ jobs:
       - name: Sysconfig
         run: uv run --no-project -m sysconfig
 
+      - name: platform
+        run: uv run --no-project -m platform
+
+      - name: platform machine
+        run: uv run --no-project python -c "import platform; print(platform.machine())"
+
       - name: Download the wheel
         uses: actions/download-artifact@v4
         with:
