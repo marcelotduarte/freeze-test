@@ -44,18 +44,8 @@ jobs:
       - id: samples
         run: python ci/_platform.py --py="${{ inputs.python-version }}" --matrix >> $GITHUB_OUTPUT
 
-      - id: get-deps
-        run: |
-          deps=${{ inputs.deps }}
-          if [ "${{ inputs.python-version }}" == "3.13" ]; then
-            deps=d
-          fi
-          echo "deps=[\"$deps\"]" >> $GITHUB_OUTPUT
-        shell: bash
-
     outputs:
       data: ${{ steps.samples.outputs.matrix }}
-      deps: ${{ steps.get-deps.outputs.deps }}
 
   tests:
     needs:
@@ -63,13 +53,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.matrix.outputs.data) }}
-    name: ${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.python-version }}
+    name: ${{ matrix.sample }}-${{ inputs.os }}-${{ inputs.os_version }}-${{ matrix.python-version }}
     runs-on: ${{ inputs.os }}-${{ inputs.os_version }}
     defaults:
       run:
         shell: bash -l {0}
     env:
-      DEPS: ${{ fromJSON(needs.matrix.outputs.deps) }}
       KEY_BASE: ${{ inputs.os }}-${{ matrix.python-version }}
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
     steps:
@@ -91,7 +80,12 @@ jobs:
         env:
           TEST_BDIST: ${{ inputs.bdist }}
         id: freeze-and-run
-        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=$DEPS
+        run: |
+          if [ "${{ matrix.python-version }}" == "3.13" ]; then
+            ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=d
+          else
+            ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=${{ inputs.deps }}
+          fi
 
       - name: Collect images and logs
         if: ${{ always() }}
