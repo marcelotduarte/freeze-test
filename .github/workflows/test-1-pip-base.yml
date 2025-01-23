@@ -97,6 +97,10 @@ jobs:
           pattern: cx-freeze-whl-${{ inputs.os }}*
           path: wheelhouse
 
+      - name: List wheelhouse
+        if: ${{ inputs.deps == 'd' }}
+        run: ls -l wheelhouse
+
       - name: Freeze and run "${{ matrix.sample }}"
         env:
           TEST_BDIST: ${{ inputs.bdist }}
