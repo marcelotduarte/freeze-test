@@ -53,7 +53,7 @@ jobs:
           python-version: "3.12"
 
       - id: samples
-        run: python ci/_platform.py --py="${{ inputs.python-version }}" --matrix
+        run: python ci/_platform.py --py="${{ inputs.python-version }}" --matrix >> $GITHUB_OUTPUT
 
     outputs:
       data: ${{ steps.samples.outputs.matrix }}
