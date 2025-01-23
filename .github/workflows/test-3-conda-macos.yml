@@ -8,11 +8,11 @@ on:
         options:
           - develop
       python-version:
-        default: "3.9-3.12"
+        default: "3.9,3.10,3.11,3.12"
         required: false
         type: choice
         options:
-          - "3.9-3.12"
+          - "3.9,3.10,3.11,3.12"
           - "3.9"
           - "3.10"
           - "3.11"
@@ -34,13 +34,13 @@ on:
           - ""
           - "bdist_mac"
           - "bdist_dmg"
-      os:
-        default: macos-13
+      os_version:
+        default: "13"
         required: false
         type: choice
         options:
-          - macos-13
-          - macos-14
+          - "13"
+          - "14"
 
 name: Test-3-conda (macOS)
 jobs:
@@ -52,4 +52,5 @@ jobs:
       python-version: ${{ inputs.python-version }}
       deps: ${{ inputs.deps }}
       bdist: ${{ inputs.bdist }}
-      os: ${{ inputs.os }}
+      os: macos
+      os_version: ${{ inputs.os_version }}
