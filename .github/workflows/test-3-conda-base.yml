@@ -10,7 +10,7 @@ on:
         required: false
         type: string
       deps:
-        default: "l"
+        default: "p"
         required: false
         type: string
       bdist:
@@ -82,7 +82,7 @@ jobs:
         id: freeze-and-run
         run: |
           if [ "${{ matrix.python-version }}" == "3.13" ]; then
-            ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=d
+            ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=e
           else
             ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=${{ inputs.deps }}
           fi

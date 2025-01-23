@@ -24,7 +24,7 @@ on:
         type: choice
         options:
           - "p"
-          - "d"
+          - "e"
           - "l"
       bdist:
         default: ""
