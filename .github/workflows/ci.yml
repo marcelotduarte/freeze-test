@@ -21,15 +21,14 @@ jobs:
     uses: ./.github/workflows/build-wheel.yml
     with:
       branch: ${{ inputs.branch }}
-      extra_linux_platforms: true
+      extra_platforms: true
 
   tests:
-    needs:
-      - build_wheel
+    needs: build_wheel
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-14]
+        os: [ubuntu-latest, windows-latest, macos-14, ubuntu-24.04-arm]
         python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.13t']
         include:
           - os: macos-13  # macos-13 is x86_64
@@ -113,8 +112,7 @@ jobs:
           include-hidden-files: true
 
   tests_extra:
-    needs:
-      - build_wheel
+    needs: build_wheel
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -179,8 +177,7 @@ jobs:
           include-hidden-files: true
 
   tests_unix_binary_wheel:
-    needs:
-      - build_wheel
+    needs: build_wheel
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -309,8 +306,7 @@ jobs:
       branch: ${{ inputs.branch }}
 
   tests_msys2:
-    needs:
-      - build_msys2
+    needs: build_msys2
     runs-on: windows-latest
     strategy:
       fail-fast: false

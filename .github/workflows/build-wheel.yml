@@ -82,7 +82,7 @@ jobs:
                   "tag": "cp3{12,13}*-macosx_universal2",
               },
           ]
-          if "${{ inputs.extra_linux_platforms }}" == "true":
+          if "${{ inputs.extra_platforms }}" == "true":
               include += [
                 {
                     "os": "ubuntu",
@@ -92,13 +92,13 @@ jobs:
                 },
                 {
                     "os": "ubuntu",
-                    "os_version": "latest",
+                    "os_version": "24.04-arm",
                     "arch": "arm64",
                     "tag": "cp3*-manylinux_aarch64",
                 },
                 {
                     "os": "ubuntu",
-                    "os_version": "latest",
+                    "os_version": "24.04-arm",
                     "arch": "arm64",
                     "tag": "cp3*-musllinux_aarch64",
                 },
@@ -159,7 +159,7 @@ jobs:
           cache-dependency-glob: "pyproject.toml"
 
       - name: Set up QEMU
-        if: runner.os == 'Linux' && matrix.arch != 'x86_64'
+        if: runner.os == 'Linux' && matrix.arch != 'x86_64' && matrix.arch != 'arm64'
         uses: docker/setup-qemu-action@v3
         with:
           platforms: ${{ matrix.arch }}
