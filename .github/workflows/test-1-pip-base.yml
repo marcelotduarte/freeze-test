@@ -32,7 +32,7 @@ jobs:
     uses: ./.github/workflows/build-wheel.yml
     with:
       branch: ${{ inputs.branch }}
-      extra_linux_platforms: false
+      extra_platforms: false
       os: ${{ inputs.os }}
 
   matrix:
