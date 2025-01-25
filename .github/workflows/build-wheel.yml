@@ -10,7 +10,7 @@ on:
         default: main
         required: true
         type: string
-      extra_linux_platforms:
+      extra_platforms:
         default: true
         required: false
         type: boolean
@@ -27,7 +27,7 @@ on:
         options:
           - develop
           - main
-      extra_linux_platforms:
+      extra_platforms:
         default: true
         required: false
         type: boolean
