@@ -128,8 +128,7 @@ jobs:
       data: ${{ steps.includes.outputs.data }}
 
   build_wheel:
-    needs:
-      - matrix
+    needs: matrix
     strategy:
       fail-fast: false
       # macos-14 is arm64 (apple silicon), macos-13 is x86_64
