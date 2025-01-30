@@ -25,27 +25,19 @@ jobs:
 
   tests:
     needs: build_wheel
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-${{ matrix.os_version }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-14, ubuntu-24.04-arm]
+        os: [ubuntu, windows, macos]
+        os_version: [latest]
         python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.13t']
         include:
-          - os: macos-13  # macos-13 is x86_64
-            python-version: '3.9'
-          - os: macos-13
-            python-version: '3.10'
-          - os: macos-13
-            python-version: '3.11'
+          - os: ubuntu
+            os_version: 24.04-arm
         exclude:
-          - os: macos-14  # macos-14 is arm64 (apple silicon)
-            python-version: '3.9'
-          - os: macos-14
-            python-version: '3.10'
-          - os: macos-14
-            python-version: '3.11'
-          - os: windows-latest  # provisional
-            python-version: '3.13t'
+          - os: windows
+            os_version: latest
+            python-version: '3.13t'  # provisional
       fail-fast: false
     defaults:
       run:
@@ -113,12 +105,14 @@ jobs:
 
   tests_extra:
     needs: build_wheel
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-${{ matrix.os_version }}
     strategy:
       matrix:
-        os: [windows-latest]
-        python-version: ['3.10']
+        os: [windows]
+        os_version: [latest]
+        python-version: ['3.11']
         extra-requirement:
+          - lief==0.15.1
           - lief==0.14.1
           - lief==0.13.2
           - lief-disabled
@@ -178,10 +172,11 @@ jobs:
 
   tests_unix_binary_wheel:
     needs: build_wheel
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-${{ matrix.os_version }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu]
+        os_version: [latest]
         python-version: ['3.10', '3.12']
     defaults:
       run:
@@ -236,66 +231,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cov-${{ matrix.python-version }}.${{ matrix.os }}-pandas
-          path: .coverage.*
-          include-hidden-files: true
-
-  tests_aarch64:
-    needs:
-      - build_wheel
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-      fail-fast: false
-    defaults:
-      run:
-        shell: bash
-    steps:
-
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.branch }}
-          repository: marcelotduarte/cx_Freeze
-
-      - name: Download the wheel
-        uses: actions/download-artifact@v4
-        with:
-          merge-multiple: true
-          pattern: cx-freeze-whl-${{ matrix.os }}*
-          path: wheelhouse
-
-      - uses: uraimo/run-on-arch-action@v2
-        name: Test aarch64
-        id: runcmd
-        with:
-          arch: aarch64
-          distro: ubuntu22.04
-          githubToken: ${{ github.token }}
-          dockerRunArgs: |
-            --volume "${PWD}:/cx_Freeze"
-          shell: /bin/bash
-          install: |
-            apt-get update -qy
-            apt-get install -qy alien fakeroot rpm python3-pip python3-venv
-          run: |
-            cd /cx_Freeze
-            echo "> sysconfig"
-            python3 -m sysconfig
-            echo "> venv"
-            python3 -m venv .venv
-            source .venv/bin/activate
-            echo "> install"
-            sed -i 's/==.*//' tests/requirements.txt
-            pip install -r requirements.txt -r tests/requirements.txt --upgrade
-            pip install cx_Freeze --no-index --no-deps -f wheelhouse
-            echo "> coverage"
-            pytest -nauto --cov="cx_Freeze" || true
-            mv .coverage .coverage.aarch64
-
-      - name: Upload coverage reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: cov-aarch64
           path: .coverage.*
           include-hidden-files: true
 
