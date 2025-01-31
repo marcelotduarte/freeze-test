@@ -109,7 +109,7 @@ jobs:
 
       - name: Generate coverage report
         env:
-          COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}"
+          COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}-${{ matrix.os_version }}"
         run: uv run --no-project pytest -nauto --cov="cx_Freeze"
 
       - name: Upload coverage reports
