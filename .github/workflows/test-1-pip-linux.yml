@@ -36,6 +36,14 @@ on:
           - "bdist_appimage"
           - "bdist_deb"
           - "bdist_rpm"
+      os_version:
+        default: "24.04"
+        required: false
+        type: choice
+        options:
+          - "22.04"
+          - "24.04"
+          - "24.04-arm"
 
 name: Test-1-pip (Linux)
 jobs:
@@ -48,3 +56,4 @@ jobs:
       deps: ${{ inputs.deps }}
       bdist: ${{ inputs.bdist }}
       os: ubuntu
+      os_version: ${{ inputs.os_version }}
