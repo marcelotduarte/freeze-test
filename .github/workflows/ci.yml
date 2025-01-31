@@ -109,13 +109,13 @@ jobs:
 
       - name: Generate coverage report
         env:
-          COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}-${{ matrix.os_version }}"
+          COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}-${{ strategy.job-index }}"
         run: uv run --no-project pytest -nauto --cov="cx_Freeze"
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
         with:
-          name: cov-${{ matrix.python-version }}.${{ matrix.os }}
+          name: cov-${{ matrix.python-version }}.${{ matrix.os }}-${{ strategy.job-index }}
           path: .coverage.*
           include-hidden-files: true
 
@@ -168,15 +168,14 @@ jobs:
           uv pip install cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
 
       - name: Generate coverage report
+        env:
+          COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}-${{ strategy.job-index }}"
         run: |
           if [ "${{ matrix.extra-requirement }}" == "lief-disabled" ]; then
             export CX_FREEZE_BIND=imagehlp
           else
             uv pip install "${{ matrix.extra-requirement }}"
           fi
-          MATRIX_ID=${{ matrix.python-version }}.${{ matrix.os }}
-          SUFFIX=$(echo "${{ matrix.extra-requirement }}" | sed 's/==/-/')
-          export COVERAGE_FILE=".coverage.$MATRIX_ID.$SUFFIX"
           pytest -nauto --cov="cx_Freeze"
 
       - name: Upload coverage reports
@@ -240,13 +239,13 @@ jobs:
 
       - name: Generate coverage report
         env:
-          COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}-pandas"
+          COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}-${{ strategy.job-index }}"
         run: pytest -nauto --cov="cx_Freeze"
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
         with:
-          name: cov-${{ matrix.python-version }}.${{ matrix.os }}-pandas
+          name: cov-${{ matrix.python-version }}.${{ matrix.os }}-${{ strategy.job-index }}
           path: .coverage.*
           include-hidden-files: true
 
