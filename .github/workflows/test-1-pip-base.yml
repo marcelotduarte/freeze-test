@@ -10,7 +10,7 @@ on:
         required: false
         type: string
       deps:
-        default: "p"
+        default: "d"
         required: false
         type: string
       bdist:

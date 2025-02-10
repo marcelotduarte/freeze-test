@@ -19,13 +19,13 @@ on:
           - "3.12"
           - "3.13"
       deps:
-        default: "e"
+        default: "d"
         required: false
         type: choice
         options:
-          - "p"
           - "d"
           - "e"
+          - "p"
           - "l"
       bdist:
         default: ""
