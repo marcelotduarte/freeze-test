@@ -45,7 +45,7 @@ jobs:
           python-version: "3.12"
 
       - id: samples
-        run: python ci/_platform.py mingw --matrix >> $GITHUB_OUTPUT
+        run: python ci/_platform.py mingw --variants=${{ inputs.sys-version }} --matrix >> $GITHUB_OUTPUT
 
     outputs:
       data: ${{ steps.samples.outputs.matrix }}
