@@ -2,21 +2,23 @@ on:
   workflow_dispatch:
     inputs:
       sys-version:
-        default: "ucrt64, mingw64"
+        default: "ucrt64,mingw64"
         required: false
         type: choice
         options:
-          - "ucrt64, mingw64"
-          - "ucrt64"
+          - "ucrt64,mingw64"
+          - "clang64"
           - "mingw64"
+          - "ucrt64"
           - "mingw32"
       deps:
-        default: "p"
+        default: "d"
         required: false
         type: choice
         options:
-          - "p"
           - "d"
+          - "e"
+          - "p"
           - "l"
       bdist:
         default: ""
@@ -31,10 +33,6 @@ jobs:
   matrix:
     name: Generate matrix of samples
     runs-on: ubuntu-latest
-    outputs:
-      sample: ${{ steps.get-samples.outputs.samples }}
-      sys-version: ${{ steps.get-sys.outputs.version }}
-      deps: ${{ steps.get-deps.outputs.deps }}
     steps:
 
       - uses: actions/checkout@v4
@@ -46,30 +44,18 @@ jobs:
         with:
           python-version: "3.12"
 
-      - id: get-samples
-        run: echo "samples=$(python ci/_platform.py mingw)" >> $GITHUB_OUTPUT
+      - id: samples
+        run: python ci/_platform.py mingw --matrix >> $GITHUB_OUTPUT
 
-      - id: get-sys
-        run: |
-          version="${{ inputs.sys-version }}"
-          version=$(python -c "print('$version'.replace(', ', '\", \"'))")
-          echo "version=[\"$version\"]" >> $GITHUB_OUTPUT
+    outputs:
+      data: ${{ steps.samples.outputs.matrix }}
 
   tests:
-    needs: [matrix]
+    needs: matrix
     strategy:
       fail-fast: false
-      matrix:
-        sample: ${{ fromJSON(needs.matrix.outputs.sample) }}
-        sys: ${{ fromJSON(needs.matrix.outputs.sys-version) }}
-        exclude:
-          - sample: opencv
-            sys: mingw32
-          - sample: pyqt6
-            sys: mingw32
-          - sample: pyside6
-            sys: mingw32
-    name: ${{ matrix.sample }}-${{ matrix.sys }}
+      matrix: ${{ fromJSON(needs.matrix.outputs.data) }}
+    name: ${{ matrix.sample }}-${{ matrix.variant }}
     runs-on: windows-latest
     defaults:
       run:
@@ -84,7 +70,7 @@ jobs:
 
       - uses: msys2/setup-msys2@v2
         with:
-          msystem: ${{ matrix.sys }}
+          msystem: ${{ matrix.variant }}
           pacboy: python-setuptools:p
           update: true
 
@@ -98,13 +84,13 @@ jobs:
         if: ${{ always() }}
         working-directory: samples/${{ matrix.sample }}
         run: |
-          mkdir ${{ matrix.sample }}-${{ matrix.sys }}
-          cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.sys }} || true
+          mkdir ${{ matrix.sample }}-${{ matrix.variant }}
+          cp build/exe.*/*.{err,log,png} ${{ matrix.sample }}-${{ matrix.variant }} || true
 
       - name: Upload the logs (and screenshots)
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: logs-msys2-${{ matrix.sample }}-${{ matrix.sys }}
-          path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ matrix.sys }}/**
+          name: logs-msys2-${{ matrix.sample }}-${{ matrix.variant }}
+          path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ matrix.variant }}/**
           if-no-files-found: ignore
