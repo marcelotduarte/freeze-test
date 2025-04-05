@@ -5,7 +5,7 @@ _name=cx_Freeze
 _realname=cx-freeze
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=7.3.0
+pkgver=8.1.0
 pkgrel=1
 pkgdesc="Creates standalone executables from Python scripts, with the same performance (mingw-w64)"
 arch=('any')
@@ -22,7 +22,7 @@ depends=(
     "${MINGW_PACKAGE_PREFIX}-python-setuptools"
     "${MINGW_PACKAGE_PREFIX}-python-cx-logging"
 )
-if [ "${MINGW_ARCH}" != "mingw32" ] && [ "${MINGW_ARCH}" != "clangarm64" ]; then
+if [ "${MINGW_ARCH}" != "mingw32" ] && [ "${CARCH}" != "aarch64" ]; then
     depends+=("${MINGW_PACKAGE_PREFIX}-python-lief")
 fi
 makedepends=(
@@ -57,6 +57,8 @@ prepare() {
   cd "${srcdir}"/python-${_realname}-${MSYSTEM}
   # ignore version check for setuptools
   sed -i 's/"setuptools>=.*"/"setuptools"/' pyproject.toml
+  sed -i 's/"cabarchive>=.*"/#"cabarchive"/' pyproject.toml
+  sed -i 's/"striprtf>=.*"/#"striprtf"/' pyproject.toml
 }
 
 pkgver() {
