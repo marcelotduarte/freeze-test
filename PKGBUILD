@@ -5,7 +5,7 @@ _name=cx_Freeze
 _realname=cx-freeze
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=8.1.0
+pkgver=8.2.0
 pkgrel=1
 pkgdesc="Creates standalone executables from Python scripts, with the same performance (mingw-w64)"
 arch=('any')
@@ -34,7 +34,6 @@ makedepends=(
 checkdepends=(
     "${MINGW_PACKAGE_PREFIX}-python-pytest"
     "${MINGW_PACKAGE_PREFIX}-python-pytest-cov"
-    "${MINGW_PACKAGE_PREFIX}-python-pytest-datafiles"
     "${MINGW_PACKAGE_PREFIX}-python-pytest-mock"
     "${MINGW_PACKAGE_PREFIX}-python-pytest-timeout"
     "${MINGW_PACKAGE_PREFIX}-python-pytest-xdist"

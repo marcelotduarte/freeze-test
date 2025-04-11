@@ -70,6 +70,14 @@ jobs:
         with:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
+          sparse-checkout: |
+            pyproject.toml
+            cx_Freeze/icons
+            samples
+            tests
+
+      - name: List files
+        run: find . -name '*' -print
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -144,6 +152,11 @@ jobs:
         with:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
+          sparse-checkout: |
+            pyproject.toml
+            cx_Freeze/icons
+            samples
+            tests
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -185,70 +198,6 @@ jobs:
           path: .coverage.*
           include-hidden-files: true
 
-  tests_unix_binary_wheel:
-    needs: build_wheel
-    runs-on: ${{ matrix.os }}-${{ matrix.os_version }}
-    strategy:
-      matrix:
-        os: [ubuntu]
-        os_version: [latest]
-        python-version: ['3.10', '3.12']
-    defaults:
-      run:
-        shell: bash
-    env:
-      UV_SYSTEM_PYTHON: true
-    steps:
-
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.branch }}
-          repository: marcelotduarte/cx_Freeze
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-          cache-dependency-glob: "pyproject.toml"
-
-      - name: Download the wheel
-        uses: actions/download-artifact@v4
-        with:
-          merge-multiple: true
-          pattern: cx-freeze-whl-${{ matrix.os }}*
-          path: wheelhouse
-
-      - name: Install dependencies to test
-        run: |
-          uv pip install --extra tests --upgrade -r pyproject.toml
-          uv pip install cx_Freeze --no-index --no-deps -f wheelhouse --reinstall
-
-      - name: Install dependencies - extra
-        run: |
-          if [ "${{ matrix.python-version }}" == "3.10" ]; then
-            uv pip install -i https://pypi.anaconda.org/intel/simple numpy -v
-          fi
-          uv pip install pandas -v
-
-      - name: Pip list
-        run: uv pip list
-
-      - name: Generate coverage report
-        env:
-          COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}-${{ strategy.job-index }}"
-        run: pytest -nauto --cov="cx_Freeze"
-
-      - name: Upload coverage reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: cov-${{ matrix.python-version }}.${{ matrix.os }}-${{ strategy.job-index }}
-          path: .coverage.*
-          include-hidden-files: true
-
   build_msys2:
     name: Build msys2
     uses: ./.github/workflows/build-packages-msys2.yml
@@ -281,7 +230,6 @@ jobs:
       - tests
       - tests_extra
       - tests_msys2
-      - tests_unix_binary_wheel
     permissions:
       pull-requests: write
       contents: write
