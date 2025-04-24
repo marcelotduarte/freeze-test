@@ -42,28 +42,36 @@ checkdepends=(
   "${MINGW_PACKAGE_PREFIX}-python-pytest-xdist"
 )
 options=(!strip)
-source=()
-sha256sums=()
+if [ "$CI" == "true" ]; then
+  source=("file://$startdir/${_realname/-/_}-${pkgver}.tar.gz")
+  sha256sums=(SKIP)
+else
+  source=()
+  sha256sums=()
+fi
 
 prepare() {
-  echo "pwd: $(pwd)" 
-  echo "srcdir: ${srcdir}"
-  rm -Rf "${srcdir}"/python-${_realname}-${MSYSTEM}
-  mkdir -p "${srcdir}"/python-${_realname}-${MSYSTEM}
-  if [ -d ../cx_Freeze ]; then
-    cp -a ../cx_Freeze/* "${srcdir}"/python-${_realname}-${MSYSTEM}
-  else
-    cp -a ../../cx_Freeze/* "${srcdir}"/python-${_realname}-${MSYSTEM}
+  if ! [ "$CI" == "true" ]; then
+    # Local
+    cd ../../cx_Freeze
+    pkgver=$(grep "__version__ = " cx_Freeze/__init__.py | sed 's/-dev./.dev/' | awk -F\" '{print $2}')
+    ${MINGW_PREFIX}/bin/python -m build -s -x -n -o "$startdir"
+    cd "${srcdir}"
+    echo "Extract tar archive"
+    ${MINGW_PREFIX}/bin/bsdtar -x -v -f "$startdir/${_realname/-/_}-${pkgver}.tar.gz"
   fi
 
-  cd "${srcdir}"/python-${_realname}-${MSYSTEM}
+  cd "${srcdir}"/${_name}-${pkgver}
   # ignore version check for setuptools
   sed -i 's/"setuptools>=.*"/"setuptools"/' pyproject.toml
+
+  rm -Rf "${srcdir}"/python-${_realname}-${MSYSTEM}
+  cp -a "${srcdir}"/cx_Freeze-${pkgver} "${srcdir}"/python-${_realname}-${MSYSTEM}
 }
 
 pkgver() {
   cd python-${_realname}-${MSYSTEM}
-  grep "__version__ = " cx_Freeze/__init__.py | sed 's/-/./' | awk -F\" '{print $2}'
+  grep "__version__ = " cx_Freeze/__init__.py | sed 's/-dev./.dev/' | awk -F\" '{print $2}'
 }
 
 build() {
