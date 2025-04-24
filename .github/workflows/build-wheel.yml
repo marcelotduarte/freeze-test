@@ -152,10 +152,11 @@ jobs:
         with:
           python-version: '3.12'
 
-      - uses: astral-sh/setup-uv@v5
+      - uses: astral-sh/setup-uv@v6
         with:
-          enable-cache: true
           cache-dependency-glob: "pyproject.toml"
+          enable-cache: true
+          python-version: '3.12'
 
       - name: Set up QEMU
         if: runner.os == 'Linux' && matrix.arch != 'x86_64' && matrix.arch != 'arm64'
