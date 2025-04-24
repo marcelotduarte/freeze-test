@@ -80,8 +80,16 @@ build() {
 }
 
 check() {
-  ${MINGW_PREFIX}/bin/pip install cx_Freeze -f python-${_realname}-${MSYSTEM}/dist --no-deps --no-index
-  ${MINGW_PREFIX}/bin/python -m pytest -nauto --cov="cx_Freeze" python-${_realname}-${MSYSTEM}/tests
+  cd python-${_realname}-${MSYSTEM}
+  ${MINGW_PREFIX}/bin/pip install cx_Freeze -f dist --no-deps --no-index
+
+  mkdir -p "${srcdir}/python-test"
+  cp pyproject.toml "${srcdir}/python-test/"
+  cp -a samples "${srcdir}/python-test/samples/"
+  cp -a tests "${srcdir}/python-test/tests/"
+
+  cd "${srcdir}/python-test"
+  ${MINGW_PREFIX}/bin/python -m pytest -nauto --cov="cx_Freeze"
 }
 
 package() {
