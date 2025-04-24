@@ -80,9 +80,8 @@ build() {
 }
 
 check() {
-  cd python-${_realname}-${MSYSTEM}
-  ${MINGW_PREFIX}/bin/pip install cx_Freeze -f dist --no-deps --no-index
-  ${MINGW_PREFIX}/bin/python -m pytest -nauto --cov="cx_Freeze"
+  ${MINGW_PREFIX}/bin/pip install cx_Freeze -f python-${_realname}-${MSYSTEM}/dist --no-deps --no-index
+  ${MINGW_PREFIX}/bin/python -m pytest -nauto --cov="cx_Freeze" python-${_realname}-${MSYSTEM}/tests
 }
 
 package() {
