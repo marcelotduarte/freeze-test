@@ -102,7 +102,7 @@ jobs:
           PKGVER=$(ls *.tar.gz | awk -F- '{print $2}' | awk -F.tar.gz '{print $1}')
           sed -i "s/pkgver=.*/pkgver=$PKGVER/" PKGBUILD
           makepkg-mingw -sCLf --noconfirm --noprogressbar --skippgpcheck
-          mv src/python-cx-freeze-${{ matrix.sys }}/.coverage .coverage.${{ matrix.sys }}
+          mv src/python-test/.coverage .coverage.${{ matrix.sys }}
 
       - name: '📤 Upload artifact: package'
         uses: actions/upload-artifact@v4
