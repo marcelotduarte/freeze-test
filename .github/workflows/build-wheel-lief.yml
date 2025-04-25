@@ -5,9 +5,9 @@ on:
   workflow_dispatch:
 
 env:
+  LIEF_TAG: '0.16.5'
   python-version-sdk: '3.10'
   SCCACHE_DIR: 'C:\Users\runner\AppData\Local\Mozilla\sccache'
-  LIEF_TAG: '0.16.2'
   
 jobs:
   build-sdk:
@@ -106,8 +106,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.arch }}
-          allow-prereleases: true
-        if: matrix.python-version != '3.13t'
 
       - uses: astral-sh/setup-uv@v6
         with:
