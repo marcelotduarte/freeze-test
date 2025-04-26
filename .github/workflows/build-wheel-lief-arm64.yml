@@ -37,7 +37,7 @@ jobs:
 
       - uses: ilammy/msvc-dev-cmd@v1
         with:
-          arch: ${{ matrix.arch }}
+          arch: amd64_${{ matrix.arch }}
 
       - name: Get Date
         id: get-date
