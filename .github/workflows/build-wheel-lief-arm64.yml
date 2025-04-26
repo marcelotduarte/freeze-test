@@ -11,7 +11,7 @@ env:
   
 jobs:
   build-sdk:
-    runs-on: windows-11-arm
+    runs-on: windows-2025
     strategy:
       matrix:
         arch: ['arm64']
