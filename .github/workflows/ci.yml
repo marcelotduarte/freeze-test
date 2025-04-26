@@ -52,12 +52,6 @@ jobs:
             python-version: '3.13t'
           - os: windows
             os_version: 11-arm
-            python-version: '3.9'
-          - os: windows
-            os_version: 11-arm
-            python-version: '3.10'
-          - os: windows
-            os_version: 11-arm
             python-version: '3.11'
           - os: windows
             os_version: 11-arm
