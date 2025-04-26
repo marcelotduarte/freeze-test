@@ -88,10 +88,8 @@ jobs:
     needs: build-sdk
     strategy:
       matrix:
-        #arch: ['x64', 'x86']
-        #python-version: ['3.13', '3.13t']
         arch: ['arm64']
-        python-version: ['3.13t']
+        python-version: ['3.13', '3.13t']
       fail-fast: false
     env:
       SCCACHE_CACHE_SIZE: 2G
@@ -115,7 +113,7 @@ jobs:
 
       - uses: ilammy/msvc-dev-cmd@v1
         with:
-          arch: ${{ matrix.arch }}
+          arch: amd64_${{ matrix.arch }}
 
       - name: Get Date
         id: get-date
