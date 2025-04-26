@@ -6,7 +6,7 @@ on:
 
 env:
   LIEF_TAG: '0.16.5'
-  python-version-sdk: '3.10'
+  python-version-sdk: '3.12'
   SCCACHE_DIR: 'C:\Users\runner\AppData\Local\Mozilla\sccache'
   
 jobs:
