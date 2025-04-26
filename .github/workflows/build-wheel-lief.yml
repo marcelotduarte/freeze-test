@@ -163,7 +163,7 @@ jobs:
         run: chcp 65001 #set code page to utf-8
 
       - name: Build Python ${{ matrix.python-version }}
-        run: uv run -m pip -vvv wheel --wheel-dir=dist/ ./api/python
+        run: uv build --wheel -o dist ./api/python
         shell: bash
 
       - name: 'Upload Python artifacts [${{ matrix.python-version }}]'
