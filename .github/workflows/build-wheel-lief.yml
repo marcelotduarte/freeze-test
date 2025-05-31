@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 env:
-  LIEF_TAG: '0.16.5'
+  LIEF_TAG: '0.16.6'
   python-version-sdk: '3.10'
   SCCACHE_DIR: 'C:\Users\runner\AppData\Local\Mozilla\sccache'
   
