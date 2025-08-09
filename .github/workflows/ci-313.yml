@@ -66,9 +66,7 @@ jobs:
         run: uv pip list -v
 
       - name: Generate coverage report
-        env:
-          COVERAGE_FILE: ".coverage.${{ matrix.python-version }}.${{ matrix.os }}"
-        run: uv run --no-project pytest -nauto --cov="cx_Freeze"
+        run: uv run --no-project coverage run
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4

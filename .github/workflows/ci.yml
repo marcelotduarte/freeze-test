@@ -112,7 +112,7 @@ jobs:
         run: uv run --no-project python -c "import platform; print(platform.machine())"
 
       - name: Download the wheel
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           merge-multiple: true
           pattern: cx-freeze-whl-${{ matrix.os }}*
@@ -125,9 +125,7 @@ jobs:
               --no-build --no-deps --no-index --prerelease=allow --reinstall
 
       - name: Generate coverage report
-        env:
-          COVERAGE_FILE: ".coverage.${{ strategy.job-index }}"
-        run: uv run --no-project pytest --dist=loadfile --durations=20 -nauto --cov="cx_Freeze"
+        run: uv run --no-project coverage run
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
@@ -150,7 +148,7 @@ jobs:
     steps:
 
       - name: Download msys2 artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           pattern: cx-freeze-msys2-*
           merge-multiple: true
@@ -178,7 +176,7 @@ jobs:
           repository: marcelotduarte/cx_Freeze
 
       - name: Download coverage data
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           pattern: cov-*
           merge-multiple: true
