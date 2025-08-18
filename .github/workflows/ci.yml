@@ -75,7 +75,7 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get install -qy alien fakeroot rpm
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
@@ -170,7 +170,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
