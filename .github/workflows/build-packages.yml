@@ -128,7 +128,7 @@ jobs:
     runs-on: ${{ matrix.config.os }}-latest
 
     steps:
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -297,7 +297,7 @@ jobs:
           ref: gh-pages
           repository: marcelotduarte/packages
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
