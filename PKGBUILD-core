@@ -54,8 +54,8 @@ fi
 prepare() {
   if ! [ "$CI" == "true" ]; then
     # Local
-    cd ../../freeze-core
-    pkgver=$(grep "__version__ = " src/freeze-core/__init__.py | sed 's/-dev./.dev/' | awk -F\" '{print $2}')
+    cd ../../${_realname}
+    pkgver=$(grep "__version__ = " src/${_realname}/__init__.py | sed 's/-dev./.dev/' | awk -F\" '{print $2}')
     ${MINGW_PREFIX}/bin/python -m build -s -x -n -o "$startdir"
     cd "${srcdir}"
     echo "Extract tar archive"
@@ -71,12 +71,12 @@ prepare() {
   fi
 
   rm -Rf "${srcdir}"/python-${_realname}-${MSYSTEM}
-  cp -a "${srcdir}"/cx_Freeze-${pkgver} "${srcdir}"/python-${_realname}-${MSYSTEM}
+  cp -a "${srcdir}"/${_realname/-/_}-${pkgver} "${srcdir}"/python-${_realname}-${MSYSTEM}
 }
 
 pkgver() {
   cd python-${_realname}-${MSYSTEM}
-  grep "__version__ = " src/freeze-core/__init__.py | sed 's/-dev./.dev/' | awk -F\" '{print $2}'
+  grep "__version__ = " src/${_realname}/__init__.py | sed 's/-dev./.dev/' | awk -F\" '{print $2}'
 }
 
 build() {
@@ -86,7 +86,7 @@ build() {
 
 check() {
   cd python-${_realname}-${MSYSTEM}
-  pip install freeze-core -f dist --no-deps --no-index
+  pip install ${_realname} -f dist --no-deps --no-index
 
   mkdir -p "${srcdir}/python-test-core"
   cp pyproject.toml "${srcdir}/python-test-core/"
