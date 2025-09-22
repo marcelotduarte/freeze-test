@@ -55,7 +55,7 @@ prepare() {
   if ! [ "$CI" == "true" ]; then
     # Local
     cd ../../${_realname}
-    pkgver=$(grep "__version__ = " src/${_realname}/__init__.py | sed 's/-dev./.dev/' | awk -F\" '{print $2}')
+    pkgver=$(grep "__version__ = " src/${_realname/-/_}/__init__.py | sed 's/-dev./.dev/' | awk -F\" '{print $2}')
     ${MINGW_PREFIX}/bin/python -m build -s -x -n -o "$startdir"
     cd "${srcdir}"
     echo "Extract tar archive"
@@ -76,7 +76,7 @@ prepare() {
 
 pkgver() {
   cd python-${_realname}-${MSYSTEM}
-  grep "__version__ = " src/${_realname}/__init__.py | sed 's/-dev./.dev/' | awk -F\" '{print $2}'
+  grep "__version__ = " src/${_realname/-/_}/__init__.py | sed 's/-dev./.dev/' | awk -F\" '{print $2}'
 }
 
 build() {
