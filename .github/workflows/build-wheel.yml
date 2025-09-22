@@ -70,6 +70,6 @@ jobs:
       - name: Upload the artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cx-freeze-wheel-${{ matrix.os }}-job-${{ strategy.job-index }}
+          name: cx-freeze-wheel
           path: wheelhouse
           compression-level: 0  # no compression

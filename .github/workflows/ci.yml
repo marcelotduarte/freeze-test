@@ -115,7 +115,7 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           merge-multiple: true
-          pattern: cx-freeze-wheel-${{ matrix.os }}*
+          pattern: cx-freeze-wheel
           path: wheelhouse
 
       - name: Install dependencies to test
