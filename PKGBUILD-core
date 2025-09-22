@@ -62,7 +62,7 @@ prepare() {
     ${MINGW_PREFIX}/bin/bsdtar -x -v -f "$startdir/${_realname/-/_}-${pkgver}.tar.gz"
   fi
 
-  cd "${srcdir}"/${_realname}-${pkgver}
+  cd "${srcdir}"/${_realname/-/_}-${pkgver}
   # ignore version check for setuptools
   sed -i 's/"setuptools>=.*"/"setuptools"/' pyproject.toml
   if [ "${MINGW_ARCH}" == "mingw32" ]; then
