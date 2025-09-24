@@ -44,6 +44,7 @@ checkdepends=(
 )
 options=(!strip)
 if [ "$CI" == "true" ]; then
+  pkgver=$(ls ${_realname/-/_}-*.tar.gz | awk -F- '{print $2}' | awk -F.tar.gz '{print $1}')
   source=("file://$startdir/${_realname/-/_}-${pkgver}.tar.gz")
   sha256sums=(SKIP)
 else
@@ -55,14 +56,14 @@ prepare() {
   if ! [ "$CI" == "true" ]; then
     # Local
     cd ../../${_realname}
-    _pkgver=$(grep "__version__ = " src/${_realname/-/_}/__init__.py | sed 's/-dev./.dev/' | awk -F\" '{print $2}')
+    pkgver=$(grep "__version__ = " src/${_realname/-/_}/__init__.py | sed 's/-dev./.dev/' | awk -F\" '{print $2}')
     ${MINGW_PREFIX}/bin/python -m build -s -x -n -o "$startdir"
     cd "${srcdir}"
     echo "Extract tar archive"
-    ${MINGW_PREFIX}/bin/bsdtar -x -v -f "$startdir/${_realname/-/_}-${_pkgver}.tar.gz"
+    ${MINGW_PREFIX}/bin/bsdtar -x -v -f "$startdir/${_realname/-/_}-${pkgver}.tar.gz"
   fi
 
-  cd "${srcdir}"/${_realname/-/_}-${_pkgver}
+  cd "${srcdir}"/${_realname/-/_}-${pkgver}
   # ignore version check for setuptools
   sed -i 's/"setuptools>=.*"/"setuptools"/' pyproject.toml
   if [ "${MINGW_ARCH}" == "mingw32" ]; then
@@ -71,7 +72,7 @@ prepare() {
   fi
 
   rm -Rf "${srcdir}"/python-${_realname}-${MSYSTEM}
-  cp -a "${srcdir}"/${_realname/-/_}-${_pkgver} "${srcdir}"/python-${_realname}-${MSYSTEM}
+  cp -a "${srcdir}"/${_realname/-/_}-${pkgver} "${srcdir}"/python-${_realname}-${MSYSTEM}
 }
 
 pkgver() {
