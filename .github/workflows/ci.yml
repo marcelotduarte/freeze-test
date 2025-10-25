@@ -25,44 +25,15 @@ jobs:
 
   tests:
     needs: build_wheel
-    runs-on: ${{ matrix.os }}-${{ matrix.os-version }}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu, windows, macos]
-        os-version: [latest]
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.13t']
-        include:
-          - os: ubuntu
-            os-version: 24.04-arm
-            python-version: '3.9'
-          - os: ubuntu
-            os-version: 24.04-arm
-            python-version: '3.10'
-          - os: ubuntu
-            os-version: 24.04-arm
-            python-version: '3.11'
-          - os: ubuntu
-            os-version: 24.04-arm
-            python-version: '3.12'
-          - os: ubuntu
-            os-version: 24.04-arm
-            python-version: '3.13'
-          - os: ubuntu
-            os-version: 24.04-arm
-            python-version: '3.13t'
-          - os: windows
-            os-version: 11-arm
-            python-version: '3.11'
-          - os: windows
-            os-version: 11-arm
-            python-version: '3.12'
-          - os: windows
-            os-version: 11-arm
-            python-version: '3.13'
+        os: [ubuntu-latest, windows-latest, macos-latest, ubuntu-24.04-arm, windows-11-arm]
+        python-version:
+          ["3.10", "3.11", "3.12", "3.13", "3.13t", "3.14", "3.14t"]
         exclude:
-          - os: windows
-            os-version: latest
-            python-version: '3.13t'  # provisional
+          - os: windows-11-arm
+            python-version: '3.10'  # does not exist
       fail-fast: false
     defaults:
       run:
@@ -80,6 +51,7 @@ jobs:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
           sparse-checkout: |
+            ci
             pyproject.toml
             samples
             tests
@@ -119,8 +91,10 @@ jobs:
           path: wheelhouse
 
       - name: Install dependencies to test
+        run: ci/install-tools.sh --tests
+
+      - name: Install cx_Freeze from wheelhouse
         run: |
-          uv pip install --extra tests --upgrade -r pyproject.toml
           uv pip install cx_Freeze -f wheelhouse \
               --no-build --no-deps --no-index --prerelease=allow --reinstall
 
