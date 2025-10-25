@@ -21,7 +21,6 @@ jobs:
     uses: ./.github/workflows/build-wheel.yml
     with:
       branch: ${{ inputs.branch }}
-      extra_platforms: true
 
   tests:
     needs: build_wheel
