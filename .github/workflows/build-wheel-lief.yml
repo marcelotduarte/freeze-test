@@ -160,7 +160,9 @@ jobs:
         run: chcp 65001 #set code page to utf-8
 
       - name: Build Python ${{ matrix.python-version }}
-        run: pip -vvv wheel --wheel-dir=dist/ ./api/python
+        run: |
+          sed -i 's/pydantic==2.11.3/pydantic==2.41.4/' ./api/python/build-requirements.txt
+          pip -vvv wheel --wheel-dir=dist/ ./api/python
         shell: bash
 
       - name: 'Upload Python artifacts [${{ matrix.python-version }}]'
