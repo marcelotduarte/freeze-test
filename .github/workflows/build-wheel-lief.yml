@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 env:
-  LIEF_TAG: '0.16.6'
+  LIEF_TAG: '0.17.1'
   python-version-sdk: '3.10'
   SCCACHE_DIR: 'C:\Users\runner\AppData\Local\Mozilla\sccache'
   
@@ -94,7 +94,7 @@ jobs:
         #arch: ['x64', 'x86']
         #python-version: ['3.13', '3.13t']
         arch: ['x64']
-        python-version: ['3.13t']
+        python-version: ['3.13t', '3.14t']
       fail-fast: false
     env:
       SCCACHE_CACHE_SIZE: 2G
