@@ -1,4 +1,4 @@
-name: CI
+name: CI-msys2
 
 on:
   workflow_dispatch:
@@ -107,9 +107,36 @@ jobs:
           path: .coverage.*
           include-hidden-files: true
 
+  build_msys2:
+    name: Build msys2
+    uses: ./.github/workflows/build-packages-msys2.yml
+    with:
+      branch: ${{ inputs.branch }}
+
+  tests_msys2:
+    needs: build_msys2
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+    steps:
+
+      - name: Download msys2 artifacts
+        uses: actions/download-artifact@v5
+        with:
+          pattern: cx-freeze-msys2-*
+          merge-multiple: true
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: cov-msys2
+          path: .coverage.*
+          include-hidden-files: true
+
   coverage:
     needs:
       - tests
+      - tests_msys2
     permissions:
       pull-requests: write
       contents: write
