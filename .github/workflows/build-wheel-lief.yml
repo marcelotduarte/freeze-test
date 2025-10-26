@@ -161,7 +161,7 @@ jobs:
 
       - name: Build Python ${{ matrix.python-version }}
         run: |
-          sed -i 's/pydantic==2.11.3/pydantic==2.41.4/' ./api/python/build-requirements.txt
+          sed -i 's/pydantic==2.11.3/pydantic/' ./api/python/build-requirements.txt
           pip -vvv wheel --wheel-dir=dist/ ./api/python
         shell: bash
 
