@@ -91,7 +91,7 @@ jobs:
 
       - name: Download the wheel
         if: ${{ inputs.deps == 'd' }}
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           merge-multiple: true
           pattern: cx-freeze-whl-${{ inputs.os }}*
