@@ -100,7 +100,7 @@ jobs:
 
       - name: Upload the logs (and screenshots)
         if: ${{ always() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: logs-pip-${{ matrix.sample }}-${{ matrix.os }}-${{ inputs.python-version }}
           path: |

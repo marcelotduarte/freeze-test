@@ -100,7 +100,7 @@ jobs:
 
       - name: Upload the logs (and screenshots)
         if: ${{ always() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: logs-conda-${{ matrix.sample }}-${{ inputs.os }}-${{ matrix.python-version }}
           path: ./samples/${{ matrix.sample }}/${{ matrix.sample }}-${{ inputs.os }}/**

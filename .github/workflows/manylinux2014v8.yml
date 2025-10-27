@@ -62,7 +62,7 @@ jobs:
           docker images
       -
         name: Upload the artifact (docker image)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.policy }}_${{ matrix.platform }}
           path: /tmp/docker/${{ matrix.policy }}_${{ matrix.platform }}.tar
