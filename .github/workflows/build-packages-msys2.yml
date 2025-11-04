@@ -143,7 +143,6 @@ jobs:
           PKGVER=$(ls freeze_core-*.tar.gz | awk -F- '{print $2}' | awk -F.tar.gz '{print $1}')
           sed -i "s/pkgver=.*/pkgver=$PKGVER/" PKGBUILD-core
           makepkg-mingw -sCLf --noconfirm --noprogressbar -p PKGBUILD-core
-          #mv src/python-test-core/.coverage .coverage.${{ matrix.sys }}-core
 
       - name: ' Download artifact: cx-freeze-sdist'
         uses: actions/download-artifact@v6
