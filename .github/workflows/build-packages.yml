@@ -82,7 +82,7 @@ jobs:
           pushd cx_Freeze/cx_Freeze
           VERSION=$(grep "__version__ = " __init__.py | sed 's/-/./' | awk -F\" '{print $2}')
           popd
-          sed -i 's/  version:/  version: $VERSION  #/' recipe.yaml
+          sed -i "s/  version: 8/  version: $VERSION  #8/" recipe.yaml
           sed -i 's/number:/  number: 0  #/' recipe.yaml
           sed -i 's/coverage run || true/coverage run/' recipe.yaml
           echo "recipe=$(base64 --wrap=0 recipe.yaml)" >> $GITHUB_OUTPUT
