@@ -66,7 +66,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: v850dev
+          ref: v850ratler
           repository: marcelotduarte/cx_freeze-feedstock
 
       - uses: actions/checkout@v5
@@ -82,18 +82,14 @@ jobs:
           pushd cx_Freeze/cx_Freeze
           VERSION=$(grep "__version__ = " __init__.py | sed 's/-/./' | awk -F\" '{print $2}')
           popd
-          sed -i "/set version/c\{% set version = \"$VERSION\" %}" meta.yaml
-          sed -i '/number:/c\  number: 0' meta.yaml
-          #sed -i '/- url:/c\  - git_url: https://github.com/marcelotduarte/cx_Freeze.git' meta.yaml
-          #sed -i '/sha256:/c\    git_rev: develop' meta.yaml
-          sed -i '/patches:/c\  #' meta.yaml
-          sed -i '/\.patch/c\  #' meta.yaml
-          sed -i 's/coverage run || true/coverage run/' meta.yaml
-          echo "meta=$(base64 --wrap=0 meta.yaml)" >> $GITHUB_OUTPUT
-          cp meta.yaml meta_path.yaml
-          sed -i '/git_url:/c\  - path: ./cx_Freeze' meta_path.yaml
-          sed -i '/git_rev:/c\    #' meta_path.yaml
-          echo "meta_path=$(base64 --wrap=0 meta_path.yaml)" >> $GITHUB_OUTPUT
+          sed -i "/  version:/c\  version: $VERSION" recipe.yaml
+          sed -i '/number:/c\  number: 0' recipe.yaml
+          sed -i 's/coverage run || true/coverage run/' recipe.yaml
+          echo "recipe=$(base64 --wrap=0 recipe.yaml)" >> $GITHUB_OUTPUT
+          cp recipe.yaml recipe_path.yaml
+          sed -i '/git:/c\  - path: ./cx_Freeze' recipe_path.yaml
+          sed -i '/rev:/c\    #' recipe_path.yaml
+          echo "recipe_path=$(base64 --wrap=0 recipe_path.yaml)" >> $GITHUB_OUTPUT
           git diff
 
       - name: List 'unix' configurations
@@ -126,8 +122,8 @@ jobs:
           done
           echo "config=[${CONFIGS::-2}]" >> $GITHUB_OUTPUT
     outputs:
-      data: ${{ steps.recipe.outputs.meta }}
-      data_path: ${{ steps.recipe.outputs.meta_path }}
+      data: ${{ steps.recipe.outputs.recipe }}
+      data_path: ${{ steps.recipe.outputs.recipe_path }}
       unix: ${{ steps.unix.outputs.config }}
       win: ${{ steps.win.outputs.config }}
 
@@ -147,7 +143,7 @@ jobs:
 
       - uses: actions/checkout@v5
         with:
-          ref: v850dev
+          ref: v850ratler
           repository: marcelotduarte/cx_freeze-feedstock
 
       - uses: actions/checkout@v5
@@ -158,13 +154,13 @@ jobs:
 
       - name: Update recipe
         working-directory: recipe
-        run: echo ${{ needs.conda_recipe.outputs.data_path }} | base64 -d>meta.yaml
+        run: echo ${{ needs.conda_recipe.outputs.data_path }} | base64 -d>recipe.yaml
 
       - name: Update conda-forge.yml
         run: |
           sed -i.xx 's/conda_forge_output_validation\: true/conda_forge_output_validation: false/' conda-forge.yml
 
-      - run: cat recipe/meta.yaml
+      - run: cat recipe/recipe.yaml
 
       - name: Build the conda package
         run: python build-locally.py ${{ matrix.config.name }}
@@ -207,23 +203,23 @@ jobs:
 
       - run: conda info
 
-      - run: conda install conda-build
+      - run: conda install rattler-build
 
       - uses: actions/checkout@v5
         with:
-          ref: v850dev
+          ref: v850ratler
           repository: marcelotduarte/cx_freeze-feedstock
 
       - name: Update recipe
         working-directory: recipe
-        run: echo ${{ needs.conda_recipe.outputs.data }} | base64 -d>meta.yaml
+        run: echo ${{ needs.conda_recipe.outputs.data }} | base64 -d>recipe.yaml
 
-      - run: cat recipe/meta.yaml
+      - run: cat recipe/recipe.yaml
 
       - name: Build the conda package
         run: |
           mkdir -p build_artifacts
-          conda build recipe -m .ci_support/${{ matrix.config.name }}.yaml --output-folder build_artifacts
+          rattler-build build -r recipe/recipe.yaml -m .ci_support/${{ matrix.config.name }}.yaml --output-dir build_artifacts
 
       - run: ls -l build_artifacts
 
@@ -266,7 +262,7 @@ jobs:
       - run: ls -l build_artifacts
 
       - name: Install conda index
-        run: conda install -c conda-forge conda-index
+        run: conda install conda-index
 
       - name: Run conda index
         run: |
