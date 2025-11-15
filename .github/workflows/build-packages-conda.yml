@@ -56,7 +56,7 @@ jobs:
           sed -i.bkp "s/  version: 8/  version: $VERSION  # 8/" recipe.yaml
           sed -i.bkp 's/number:/  number: 0  # /' recipe.yaml
           sed -i.bkp 's/coverage run || true/coverage run/' recipe.yaml
-          sed -i.bkp 's!git:!  - path: ./cx_Freeze!' recipe.yaml
+          sed -i.bkp 's!- git:!- path: ./cx_Freeze  # !' recipe.yaml
           sed -i.bkp 's/rev:/  # /' recipe.yaml
           git diff
 
