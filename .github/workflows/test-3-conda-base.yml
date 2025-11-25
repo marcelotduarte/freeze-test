@@ -32,7 +32,7 @@ jobs:
     runs-on: ${{ inputs.os }}-${{ inputs.os_version }}
     steps:
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
@@ -64,7 +64,7 @@ jobs:
     steps:
 
       - name: Checkout cx_Freeze
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
