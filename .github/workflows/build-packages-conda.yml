@@ -40,7 +40,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: v850ratler
+          ref: main
           repository: marcelotduarte/cx_freeze-feedstock
 
       - uses: actions/checkout@v5
