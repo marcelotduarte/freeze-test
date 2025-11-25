@@ -82,15 +82,16 @@ jobs:
           pushd cx_Freeze/cx_Freeze
           VERSION=$(grep "__version__ = " __init__.py | sed 's/-/./' | awk -F\" '{print $2}')
           popd
-          sed -i.bkp "s/version:/version: $VERSION  #/" recipe.yaml
-          sed -i.bkp 's/number:/number: 0  #/' recipe.yaml
+          # keep the space before the context variables for distinction
+          sed -i.bkp "s/  version:/  version: $VERSION  #/" recipe.yaml
+          sed -i.bkp 's/  number:/  number: 0  #/' recipe.yaml
           sed -i.bkp 's/coverage run || true/coverage run/' recipe.yaml
-          sed -i.bkp 's|url:|git: https://github.com/marcelotduarte/cx_Freeze.git|' recipe.yaml
-          sed -i.bkp 's/sha256:/rev: develop/g' recipe.yaml
+          sed -i.bkp 's|  url:|  git: https://github.com/marcelotduarte/cx_Freeze.git|' recipe.yaml
+          sed -i.bkp 's/  sha256:/  rev: develop/g' recipe.yaml
           echo "recipe=$(base64 --wrap=0 recipe.yaml)" >> $GITHUB_OUTPUT
           cp recipe.yaml recipe_path.yaml
-          sed -i.bkp 's|git:|path: ./cx_Freeze  #|' recipe_path.yaml
-          sed -i.bkp 's|rev:|#|' recipe_path.yaml
+          sed -i.bkp 's|  git:|  path: ./cx_Freeze  #|' recipe_path.yaml
+          sed -i.bkp 's|  rev:|#|' recipe_path.yaml
           echo "recipe_path=$(base64 --wrap=0 recipe_path.yaml)" >> $GITHUB_OUTPUT
           git diff
 
