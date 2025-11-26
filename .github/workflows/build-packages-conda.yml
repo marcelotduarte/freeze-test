@@ -72,8 +72,8 @@ jobs:
           # needs to be unique for each matrix entry
           artifact-name: package-${{ matrix.target-platform }}
           build-args: >
-            --target-platform ${{ matrix.target-platform }}
-            ${{ matrix.target-platform == 'linux-aarch64' && ' --no-test' || '' }}
+            --target-platform ${{ matrix.target-platform }} --no-test
+          #  ${{ matrix.target-platform == 'linux-aarch64' && ' --no-test' || '' }}
 
       - run: find . -name '*.conda' -print
       - run: find . -name '*.tar.bz2' -print
