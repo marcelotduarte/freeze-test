@@ -74,6 +74,6 @@ jobs:
           build-args: >
             --target-platform ${{ matrix.target-platform }}
             ${{ matrix.target-platform == 'linux-aarch64' && ' --no-test' || '' }}
-            --output-dir build_artifacts
 
-      - run: ls -l build_artifacts
+      - run: find . -name '*.conda' -print
+      - run: find . -name '*.tar.bz2' -print
