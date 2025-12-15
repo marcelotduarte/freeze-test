@@ -83,7 +83,7 @@ jobs:
         run: uv run --no-project python -c "import platform; print(platform.machine())"
 
       - name: Download the wheel
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           merge-multiple: true
           pattern: cx-freeze-wheel
@@ -122,7 +122,7 @@ jobs:
           repository: marcelotduarte/cx_Freeze
 
       - name: Download coverage data
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           pattern: cov-*
           merge-multiple: true
