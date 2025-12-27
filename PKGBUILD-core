@@ -16,6 +16,7 @@ msys2_references=(
 license=('spdx:MIT')
 depends=(
   "${MINGW_PACKAGE_PREFIX}-python"
+  "${MINGW_PACKAGE_PREFIX}-python-certifi"
   "${MINGW_PACKAGE_PREFIX}-python-filelock"
 )
 if [ "${MINGW_ARCH}" != "mingw32" ]; then

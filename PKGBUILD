@@ -1,11 +1,11 @@
-# Maintainer: Marcelo Duarte https://github.com/marcelotduarte
+# Maintainer: Marcelo Duarte @marcelotduarte
 # makepkg-mingw -sCLf
 
 _name=cx_Freeze
 _realname=cx-freeze
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=8.5.0
+pkgver=8.5.1
 pkgrel=1
 pkgdesc="Creates standalone executables from Python scripts, with the same performance (mingw-w64)"
 arch=('any')
@@ -19,6 +19,7 @@ depends=(
   "${MINGW_PACKAGE_PREFIX}-python"
   "${MINGW_PACKAGE_PREFIX}-python-packaging"
   "${MINGW_PACKAGE_PREFIX}-python-setuptools"
+  "${MINGW_PACKAGE_PREFIX}-python-freeze-core"
 )
 if [ "${MINGW_ARCH}" != "mingw32" ]; then
   depends+=(
@@ -28,6 +29,9 @@ fi
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-python-build"
   "${MINGW_PACKAGE_PREFIX}-python-installer"
+)
+optdepends=(
+  "${MINGW_PACKAGE_PREFIX}-python-cx-logging"
 )
 checkdepends=(
   "${MINGW_PACKAGE_PREFIX}-python-pip"
@@ -86,7 +90,7 @@ check() {
 
   cd "${srcdir}/python-test"
   if [ "${MINGW_ARCH}" == "mingw32" ]; then
-    coverage run -m pytest --dist=loadfile -nauto -k "not hooks"
+    coverage run -m pytest --dist=loadfile -nauto -k "not hooks" tests
   else
     coverage run
   fi
