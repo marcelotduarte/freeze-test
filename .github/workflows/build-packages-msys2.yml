@@ -143,7 +143,7 @@ jobs:
           PKGVER=$(ls freeze_core-*.tar.gz | awk -F- '{print $2}' | awk -F.tar.gz '{print $1}')
           PKGREL=9
           sed -i "s/pkgver=.*/pkgver=$PKGVER/" PKGBUILD-core
-          sed -i "s/pkgrel=.*/pkgver=$PKGREL/" PKGBUILD-core
+          sed -i "s/pkgrel=.*/pkgrel=$PKGREL/" PKGBUILD-core
           makepkg-mingw -sCLf --noconfirm --noprogressbar -p PKGBUILD-core
           pacman -U "${MINGW_PACKAGE_PREFIX}-freeze-core-${PKGVER}-${PKGREL}-any.pkg.tar.zst" --noconfirm
 
