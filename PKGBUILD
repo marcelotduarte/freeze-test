@@ -81,7 +81,7 @@ build() {
 
 check() {
   cd python-${_realname}-${MSYSTEM}
-  pip install cx_Freeze -f dist --no-deps --no-index
+  pip install ${_realname} -f dist --no-deps --no-index
 
   mkdir -p "${srcdir}/python-test"
   cp pyproject.toml "${srcdir}/python-test/"
@@ -96,6 +96,7 @@ check() {
   fi
   coverage combine
   coverage report
+  pip uninstall ${_realname} -y
 }
 
 package() {

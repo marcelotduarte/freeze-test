@@ -97,6 +97,7 @@ check() {
   fi
   coverage combine
   coverage report
+  pip uninstall ${_realname} -y
 }
 
 package() {
