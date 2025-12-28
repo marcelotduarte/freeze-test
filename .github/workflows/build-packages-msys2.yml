@@ -145,7 +145,7 @@ jobs:
           sed -i "s/pkgver=.*/pkgver=$PKGVER/" PKGBUILD-core
           sed -i "s/pkgrel=.*/pkgrel=$PKGREL/" PKGBUILD-core
           makepkg-mingw -sCLf --noconfirm --noprogressbar -p PKGBUILD-core
-          pacman -U "${MINGW_PACKAGE_PREFIX}-freeze_core-${PKGVER}-${PKGREL}-any.pkg.tar.zst" --noconfirm
+          pacman -U "${MINGW_PACKAGE_PREFIX}-python-freeze-core-${PKGVER}-${PKGREL}-any.pkg.tar.zst" --noconfirm
 
       - name: ' Download artifact: cx-freeze-sdist'
         uses: actions/download-artifact@v7
