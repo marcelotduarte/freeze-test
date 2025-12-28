@@ -1,5 +1,5 @@
 # Maintainer: Marcelo Duarte @marcelotduarte
-# makepkg-mingw -sCLf
+# makepkg-mingw -sCLf -p PKGBUILD-core
 
 _realname=freeze-core
 pkgbase=mingw-w64-python-${_realname}
@@ -15,8 +15,8 @@ msys2_references=(
 )
 license=('spdx:MIT')
 depends=(
+  "${MINGW_PACKAGE_PREFIX}-ca-certificates"
   "${MINGW_PACKAGE_PREFIX}-python"
-  "${MINGW_PACKAGE_PREFIX}-python-certifi"
   "${MINGW_PACKAGE_PREFIX}-python-filelock"
 )
 if [ "${MINGW_ARCH}" != "mingw32" ]; then
@@ -53,10 +53,10 @@ prepare() {
     # Local
     cd ../../${_realname}
     pkgver=$(grep "__version__ = " src/${_realname/-/_}/__init__.py | sed 's/-dev./.dev/' | awk -F\" '{print $2}')
-    ${MINGW_PREFIX}/bin/python -m build -s -x -n -o "$startdir"
+    python -m build -s -x -n -o "$startdir"
     cd "${srcdir}"
     echo "Extract tar archive"
-    ${MINGW_PREFIX}/bin/bsdtar -x -v -f "$startdir/${_realname/-/_}-${pkgver}.tar.gz"
+    bsdtar -x -v -f "$startdir/${_realname/-/_}-${pkgver}.tar.gz"
   fi
 
   cd "${srcdir}"/${_realname/-/_}-${pkgver}

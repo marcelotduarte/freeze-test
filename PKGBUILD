@@ -55,10 +55,10 @@ prepare() {
     # Local
     cd ../../cx_Freeze
     pkgver=$(grep "__version__ = " cx_Freeze/__init__.py | sed 's/-dev./.dev/' | awk -F\" '{print $2}')
-    ${MINGW_PREFIX}/bin/python -m build -s -x -n -o "$startdir"
+    python -m build -s -x -n -o "$startdir"
     cd "${srcdir}"
     echo "Extract tar archive"
-    ${MINGW_PREFIX}/bin/bsdtar -x -v -f "$startdir/${_realname/-/_}-${pkgver}.tar.gz"
+    bsdtar -x -v -f "$startdir/${_realname/-/_}-${pkgver}.tar.gz"
   fi
 
   cd "${srcdir}"/${_name}-${pkgver}
