@@ -61,26 +61,26 @@ prepare() {
     bsdtar -x -v -f "$startdir/${_realname/-/_}-${pkgver}.tar.gz"
   fi
 
-  cd "${srcdir}"/${_name}-${pkgver}
+  cd "${srcdir}/${_name}-${pkgver}"
   # ignore version check for setuptools
   sed -i 's/"setuptools>=.*"/"setuptools"/' pyproject.toml
 
-  rm -Rf "${srcdir}"/python-${_realname}-${MSYSTEM}
-  cp -a "${srcdir}"/cx_Freeze-${pkgver} "${srcdir}"/python-${_realname}-${MSYSTEM}
+  rm -Rf "${srcdir}/python-${_realname}-${MSYSTEM}"
+  cp -a "${srcdir}/cx_Freeze-${pkgver}" "${srcdir}/python-${_realname}-${MSYSTEM}"
 }
 
 pkgver() {
-  cd python-${_realname}-${MSYSTEM}
+  cd "python-${_realname}-${MSYSTEM}"
   grep "__version__ = " cx_Freeze/__init__.py | sed 's/-dev./.dev/' | awk -F\" '{print $2}'
 }
 
 build() {
-  cd python-${_realname}-${MSYSTEM}
+  cd "python-${_realname}-${MSYSTEM}"
   python -m build --wheel --skip-dependency-check --no-isolation
 }
 
 check() {
-  cd python-${_realname}-${MSYSTEM}
+  cd "python-${_realname}-${MSYSTEM}"
   pip install ${_realname} -f dist --no-deps --no-index
 
   mkdir -p "${srcdir}/python-test"
@@ -100,9 +100,8 @@ check() {
 }
 
 package() {
-  cd python-${_realname}-${MSYSTEM}
+  cd "python-${_realname}-${MSYSTEM}"
   MSYS2_ARG_CONV_EXCL="--prefix=" \
-    ${MINGW_PREFIX}/bin/python -m installer --prefix=${MINGW_PREFIX} \
-    --destdir="${pkgdir}" dist/*.whl
+    python -m installer --prefix="${MINGW_PREFIX}" --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE.md "${pkgdir}${MINGW_PREFIX}/share/licenses/python-${_realname}/LICENSE.md"
 }
