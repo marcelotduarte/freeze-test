@@ -20,11 +20,11 @@ depends=(
   "${MINGW_PACKAGE_PREFIX}-python-packaging"
   "${MINGW_PACKAGE_PREFIX}-python-setuptools"
   "${MINGW_PACKAGE_PREFIX}-python-freeze-core"
-  "${MINGW_PACKAGE_PREFIX}-python-msilib"
 )
 if [ "${MINGW_ARCH}" != "mingw32" ]; then
   depends+=(
     "${MINGW_PACKAGE_PREFIX}-python-lief"
+    "${MINGW_PACKAGE_PREFIX}-python-msilib"
   )
 fi
 makedepends=(
