@@ -83,7 +83,7 @@ jobs:
           # keep the space before the context variables for distinction
           sed -i.bkp "s/  version:.*$/  version: $VERSION/" recipe.yaml
           sed -i.bkp 's/  number:.*$/  number: 0/' recipe.yaml
-          sed -i.bkp 's/coverage run || true/coverage run/' recipe.yaml
+          sed -i.bkp 's/coverage run || true/coverage run -m pytest --dist=loadfile --durations=20 -nauto -rpfEsXx tests --venv-keep-prefix' recipe.yaml
           sed -i.bkp 's|  url:.*$|  git: https://github.com/marcelotduarte/cx_Freeze.git|' recipe.yaml
           sed -i.bkp 's/  sha256:.*$/  rev: develop/g' recipe.yaml
           echo "recipe=$(base64 --wrap=0 recipe.yaml)" >> $GITHUB_OUTPUT
