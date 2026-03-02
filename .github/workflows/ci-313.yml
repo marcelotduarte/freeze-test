@@ -69,7 +69,7 @@ jobs:
         run: uv run --no-project coverage run
 
       - name: Upload coverage reports
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: cov-${{ matrix.python-version }}.${{ matrix.os }}
           path: .coverage.*
