@@ -66,7 +66,7 @@ jobs:
           git diff
 
       - name: Build conda package
-        uses: prefix-dev/rattler-build-action@v0.2.34
+        uses: prefix-dev/rattler-build-action@v0.2.36
         with:
           recipe-path: recipe/recipe.yaml
           # needs to be unique for each matrix entry
