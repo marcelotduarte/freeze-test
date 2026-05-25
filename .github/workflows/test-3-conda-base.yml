@@ -69,7 +69,7 @@ jobs:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
-      - uses: conda-incubator/setup-miniconda@v3
+      - uses: conda-incubator/setup-miniconda@v4
         with:
           activate-environment: ${{ env.KEY_BASE }}
           python-version: ${{ matrix.python-version }}
