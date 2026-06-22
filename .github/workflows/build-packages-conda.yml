@@ -39,12 +39,12 @@ jobs:
       run:
         shell: bash
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: main
           repository: marcelotduarte/cx_freeze-feedstock
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: develop
           repository: marcelotduarte/cx_Freeze
