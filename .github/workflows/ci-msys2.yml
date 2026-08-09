@@ -45,7 +45,7 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get install -qy alien fakeroot rpm
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
@@ -59,7 +59,7 @@ jobs:
         run: find . -name '*' -print
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -143,7 +143,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
