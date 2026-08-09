@@ -36,7 +36,7 @@ jobs:
           repository: marcelotduarte/cx_Freeze
 
       - name: '⚙️ Set up Python'
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: '3.14'
 
@@ -73,7 +73,7 @@ jobs:
           repository: marcelotduarte/freeze-core
 
       - name: '⚙️ Set up Python'
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: '3.14'
 
@@ -110,7 +110,7 @@ jobs:
           repository: marcelotduarte/python-msilib
 
       - name: '⚙️ Set up Python'
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: '3.14'
 
