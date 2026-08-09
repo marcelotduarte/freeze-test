@@ -43,12 +43,12 @@ jobs:
     runs-on: ${{ inputs.os }}-${{ inputs.os_version }}
     steps:
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -72,12 +72,12 @@ jobs:
         shell: bash
     steps:
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
