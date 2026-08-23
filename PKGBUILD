@@ -33,9 +33,11 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-python-build"
   "${MINGW_PACKAGE_PREFIX}-python-installer"
 )
-optdepends=(
-  "${MINGW_PACKAGE_PREFIX}-python-cx-logging"
-)
+if [ "${MINGW_ARCH}" != "mingw32" ]; then
+  optdepends=(
+    "${MINGW_PACKAGE_PREFIX}-python-cx-logging"
+  )
+fi
 checkdepends=(
   "${MINGW_PACKAGE_PREFIX}-python-pip"
   "${MINGW_PACKAGE_PREFIX}-python-coverage"

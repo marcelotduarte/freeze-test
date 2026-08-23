@@ -25,6 +25,7 @@ if [ "${MINGW_ARCH}" != "mingw32" ]; then
   depends+=(
     "${MINGW_PACKAGE_PREFIX}-python-cabarchive"
     "${MINGW_PACKAGE_PREFIX}-python-striprtf"
+    "${MINGW_PACKAGE_PREFIX}-python-cx-logging"
   )
 fi
 makedepends=(
@@ -33,7 +34,6 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-python-build"
   "${MINGW_PACKAGE_PREFIX}-python-installer"
   "${MINGW_PACKAGE_PREFIX}-python-setuptools"
-  "${MINGW_PACKAGE_PREFIX}-python-cx-logging"
 )
 checkdepends=(
   "${MINGW_PACKAGE_PREFIX}-python-pip"
