@@ -178,6 +178,8 @@ jobs:
           name: freeze-core-sdist
 
       - name: '🚧 Build package: freeze-core'
+        env:
+          MAKEPKG_LINT_PKGBUILD: 1
         run: |
           PKGVER=$(ls freeze_core-*.tar.gz | awk -F- '{print $2}' | awk -F.tar.gz '{print $1}')
           PKGREL=9
@@ -192,6 +194,8 @@ jobs:
           name: python-msilib-sdist
 
       - name: '🚧 Build package: python-msilib'
+        env:
+          MAKEPKG_LINT_PKGBUILD: 1
         run: |
           PKGVER=$(ls python_msilib-*.tar.gz | awk -F- '{print $2}' | awk -F.tar.gz '{print $1}')
           PKGREL=9
@@ -206,6 +210,8 @@ jobs:
           name: cx-freeze-sdist
 
       - name: '🚧 Build package: cx-freeze'
+        env:
+          MAKEPKG_LINT_PKGBUILD: 1
         run: |
           PKGVER=$(ls cx_freeze-*.tar.gz | awk -F- '{print $2}' | awk -F.tar.gz '{print $1}')
           sed -i "s/pkgver=.*/pkgver=$PKGVER/" PKGBUILD

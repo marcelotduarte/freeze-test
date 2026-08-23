@@ -68,7 +68,7 @@ build() {
 }
 
 check() {
-  pacman -R "${MINGW_PACKAGE_PREFIX}-python-${_realname}" --noconfirm
+  pacman -R "${MINGW_PACKAGE_PREFIX}-python-${_realname}" --noconfirm --nodeps || true
   cd "python-${_realname}-${MSYSTEM}"
   pip install ${_realname} -f dist --no-deps --no-index --break-system-packages
 
