@@ -32,8 +32,6 @@ jobs:
     uses: ./.github/workflows/build-wheel.yml
     with:
       branch: ${{ inputs.branch }}
-      extra_platforms: false
-      os: ${{ inputs.os }}
 
   matrix:
     name: Generate matrix of samples
