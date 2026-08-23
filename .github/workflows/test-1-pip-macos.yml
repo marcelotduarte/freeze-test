@@ -39,12 +39,15 @@ on:
           - "bdist_mac"
           - "bdist_dmg"
       os_version:
-        default: "13"
+        default: "15"
         required: false
         type: choice
         options:
-          - "13"
           - "14"
+          - "15"
+          - "26"
+          - "15-intel"
+          - "26-intel"
 
 name: Test-1-pip (macOS)
 jobs:

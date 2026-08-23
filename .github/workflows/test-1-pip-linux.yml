@@ -40,13 +40,16 @@ on:
           - "bdist_deb"
           - "bdist_rpm"
       os_version:
-        default: "24.04"
+        default: "26.04"
         required: false
         type: choice
         options:
+          - "22.04"
           - "24.04"
           - "26.04"
+          - "22.04-arm"
           - "24.04-arm"
+          - "26.04-arm"
 
 name: Test-1-pip (Linux)
 jobs:

@@ -37,6 +37,14 @@ on:
         options:
           - ""
           - "bdist_msi"
+      os_version:
+        default: "2025"
+        required: false
+        type: choice
+        options:
+          - "2022"
+          - "2025"
+          - "11-arm"
 
 name: Test-1-pip (Windows)
 jobs:
