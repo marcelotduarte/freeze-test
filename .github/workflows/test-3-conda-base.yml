@@ -82,12 +82,7 @@ jobs:
         env:
           TEST_BDIST: ${{ inputs.bdist }}
         id: freeze-and-run
-        run: |
-          if [ "${{ matrix.python-version }}" == "3.13" ]; then
-            ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=e
-          else
-            ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=${{ inputs.deps }}
-          fi
+        run: ./ci/build-test-one.sh ${{ matrix.sample }} --debug --deps=${{ inputs.deps }}
 
       - name: Collect images and logs
         if: ${{ always() }}
