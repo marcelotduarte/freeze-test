@@ -93,7 +93,7 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           merge-multiple: true
-          pattern: cx-freeze-whl-${{ inputs.os }}*
+          pattern: cx-freeze-wheel
           path: wheelhouse
 
       - name: List wheelhouse
