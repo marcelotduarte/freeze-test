@@ -22,6 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
+          persist-credentials: false
           fetch-depth: 0
           repository: lief-project/LIEF
           ref: ${{ env.LIEF_TAG }}
@@ -99,6 +100,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
+          persist-credentials: false
           fetch-depth: 0
           repository: lief-project/LIEF
           ref: ${{ env.LIEF_TAG }}

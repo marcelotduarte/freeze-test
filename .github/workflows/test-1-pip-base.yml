@@ -45,6 +45,7 @@ jobs:
 
       - uses: actions/checkout@v7
         with:
+          persist-credentials: false
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
@@ -74,6 +75,7 @@ jobs:
 
       - uses: actions/checkout@v7
         with:
+          persist-credentials: false
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
@@ -82,7 +84,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
 
-      - uses: astral-sh/setup-uv@v7
+      - uses: astral-sh/setup-uv@v9
         with:
           enable-cache: true
           cache-dependency-glob: |

@@ -32,6 +32,7 @@ jobs:
       - name: '🧰 Checkout'
         uses: actions/checkout@v7
         with:
+          persist-credentials: false
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
@@ -41,7 +42,7 @@ jobs:
           python-version: '3.14'
 
       - name: '⚙️ Set up uv'
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v9
         with:
           cache-dependency-glob: "pyproject.toml"
           enable-cache: true
@@ -69,6 +70,7 @@ jobs:
       - name: '🧰 Checkout'
         uses: actions/checkout@v7
         with:
+          persist-credentials: false
           #ref: ${{ inputs.branch }}
           repository: marcelotduarte/freeze-core
 
@@ -78,7 +80,7 @@ jobs:
           python-version: '3.14'
 
       - name: '⚙️ Set up uv'
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v9
         with:
           cache-dependency-glob: "pyproject.toml"
           enable-cache: true
@@ -106,6 +108,7 @@ jobs:
       - name: '🧰 Checkout'
         uses: actions/checkout@v7
         with:
+          persist-credentials: false
           #ref: ${{ inputs.branch }}
           repository: marcelotduarte/python-msilib
 
@@ -115,7 +118,7 @@ jobs:
           python-version: '3.14'
 
       - name: '⚙️ Set up uv'
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v9
         with:
           cache-dependency-glob: "pyproject.toml"
           enable-cache: true
@@ -159,6 +162,8 @@ jobs:
 
       - name: '🧰 Checkout'
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: '${{ matrix.icon }} Setup MSYS2'
         uses: msys2/setup-msys2@v2

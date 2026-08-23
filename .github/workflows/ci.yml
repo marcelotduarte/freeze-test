@@ -15,12 +15,18 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   build_wheel:
     name: Build wheels
     uses: ./.github/workflows/build-wheel.yml
     with:
       branch: ${{ inputs.branch }}
+    permissions:
+      contents: read
+      id-token: write # Required for nested job 'publish'
 
   tests:
     needs: build_wheel
@@ -36,13 +42,13 @@ jobs:
     env:
       UV_NO_PROGRESS: true
     steps:
-
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
-        run: sudo apt-get install -qy alien fakeroot rpm
+        run: sudo apt-get install -qy alien
 
       - uses: actions/checkout@v7
         with:
+          persist-credentials: false
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
           sparse-checkout: |
@@ -59,12 +65,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - uses: astral-sh/setup-uv@v7
+      - uses: astral-sh/setup-uv@v9
         with:
           activate-environment: true
           cache-dependency-glob: "pyproject.toml"
           enable-cache: true
-          python-version: ${{ matrix.python-version }}
 
       - name: Env
         run: env | sort
@@ -85,8 +90,8 @@ jobs:
           pattern: cx-freeze-wheel
           path: wheelhouse
 
-      - name: Install dependencies to test
-        run: ci/install-tools.sh --tests
+      - name: Install the dependencies for the tests
+        run: uv pip install --upgrade -r pyproject.toml --group tests
 
       - name: Install cx_Freeze from wheelhouse
         run: |
@@ -107,13 +112,14 @@ jobs:
     needs:
       - tests
     permissions:
-      pull-requests: write
-      contents: write
+      contents: write # Required for editing existing comments.
+      pull-requests: write # Required for publishing new comments in pull requests.
     runs-on: ubuntu-latest
     steps:
 
       - uses: actions/checkout@v7
         with:
+          persist-credentials: false
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
@@ -125,7 +131,7 @@ jobs:
 
       - name: Coverage comment
         id: coverage_comment
-        uses: py-cov-action/python-coverage-comment-action@v3
+        uses: py-cov-action/python-coverage-comment-action@v4
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MERGE_COVERAGE_FILES: true

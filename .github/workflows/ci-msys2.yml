@@ -47,6 +47,7 @@ jobs:
 
       - uses: actions/checkout@v7
         with:
+          persist-credentials: false
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
           sparse-checkout: |
@@ -145,6 +146,7 @@ jobs:
 
       - uses: actions/checkout@v7
         with:
+          persist-credentials: false
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 

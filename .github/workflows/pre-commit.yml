@@ -11,26 +11,59 @@ on:
           - develop
           - main
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   pre_commit:
-    runs-on: ubuntu-latest
-    env:
-      UV_SYSTEM_PYTHON: true
+    permissions:
+      contents: write # Required for pre-commit-ci lite
+      id-token: write # Required for pre-commit-ci lite
+    runs-on: ubuntu-slim
     steps:
-
       - uses: actions/checkout@v7
         with:
+          persist-credentials: false
           ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
 
-      - uses: actions/setup-python@v7
+      - uses: j178/prek-action@v2
         with:
-          python-version: "3.14"
+          extra-args: "--all-files --skip=build-docs --skip=ty"
 
-      - name: Install dependencies
-        run: ./ci/install-tools.sh --dev --tests
+  type_check:
+    name: Type check
+    runs-on: ${{ matrix.os }}-${{ matrix.os_version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu, windows, macos]
+        os_version: [latest]
+        python-version: ["3.11"]
+    defaults:
+      run:
+        shell: bash
+    env:
+      UV_NO_PROGRESS: true
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
-      - name: Run prek
-        run: >-
-          prek run --show-diff-on-failure --color=always
-          --all-files --hook-stage=manual --no-progress
+      - uses: astral-sh/setup-uv@v9
+        with:
+          activate-environment: true
+          cache-dependency-glob: "pyproject.toml"
+          enable-cache: true
+
+      - name: Install the dependencies for the tests
+        run: uv pip install --upgrade -r pyproject.toml --group tests
+
+      - name: Type check
+        uses: j178/prek-action@v2
+        with:
+          extra-args: "--all-files ty"

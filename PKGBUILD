@@ -1,5 +1,5 @@
 # Maintainer: Marcelo Duarte @marcelotduarte
-# makepkg-mingw -sCLf
+# makepkg-mingw -sCLfi --noconfirm
 
 _name=cx_Freeze
 _realname=cx-freeze
@@ -56,7 +56,7 @@ fi
 prepare() {
   if ! [ "$CI" == "true" ]; then
     # Local
-    cd ../../${name}
+    cd "../../${name}"
     pkgver=$(grep -m1 "^version = " pyproject.toml | awk -F\" '{print $2}')
     python -m build -s -x -n -o "${startdir}"
     cd "${srcdir}"
@@ -83,8 +83,9 @@ build() {
 }
 
 check() {
+  pacman -R "${MINGW_PACKAGE_PREFIX}-python-${_realname}" --noconfirm
   cd "python-${_realname}-${MSYSTEM}"
-  pip install ${_realname} -f dist --no-deps --no-index
+  pip install ${_realname} -f dist --no-deps --no-index --break-system-packages
 
   mkdir -p "${srcdir}/${_realname}-test"
   cp pyproject.toml "${srcdir}/${_realname}-test/"
@@ -99,7 +100,7 @@ check() {
   fi
   coverage combine
   coverage report
-  pip uninstall ${_realname} -y
+  pip uninstall ${_realname} -y --break-system-packages
 }
 
 package() {

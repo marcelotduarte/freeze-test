@@ -41,6 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
+          persist-credentials: false
           ref: main
           repository: marcelotduarte/cx_freeze-feedstock
 

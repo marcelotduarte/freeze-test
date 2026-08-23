@@ -13,6 +13,7 @@ jobs:
 
       - uses: actions/checkout@v7
         with:
+          persist-credentials: false
           ref: develop
           repository: marcelotduarte/cx_Freeze
 
@@ -70,6 +71,7 @@ jobs:
       - name: Checkout cx_Freeze
         uses: actions/checkout@v7
         with:
+          persist-credentials: false
           ref: develop
           repository: marcelotduarte/cx_Freeze
 
