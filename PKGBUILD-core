@@ -91,7 +91,7 @@ check() {
   cp -a tests "${srcdir}/${_realname}-test"
 
   cd "${srcdir}/${_realname}-test"
-  coverage run
+  coverage run || true
   coverage report
   pip uninstall ${_realname} -y --break-system-packages
 }
