@@ -63,9 +63,25 @@ jobs:
           sed -i.bkp "s/  version:.*$/  version: $VERSION/" recipe.yaml
           sed -i.bkp 's/  number:.*$/  number: 0/' recipe.yaml
           sed -i.bkp 's/coverage run || true/coverage run/' recipe.yaml
-          sed -i.bkp 's|  url:.*$|  path: ./cx_Freeze|' recipe.yaml
+          sed -i.bkp 's|  url:.*$|  path: ./freeze-core|' recipe.yaml
           sed -i.bkp 's|  sha256:.*$|  #|' recipe.yaml
           git diff
+
+      - name: Prepare variants
+        working-directory: recipe
+        run: |
+          cat << 'EOF' > conda_build_config.yaml
+          c_stdlib:
+            - sysroot                    # [linux]
+            - macosx_deployment_target   # [osx]
+            - vs                         # [win]
+          c_stdlib_version:              # [unix]
+            - 2.17                       # [linux]
+            - 10.13                      # [osx and x86_64]
+            - 11.0                       # [osx and arm64]
+          MACOSX_SDK_VERSION:            # [osx and x86_64]
+            - "11.0"                     # [osx and x86_64]
+          EOF
 
       - name: Build conda package
         uses: prefix-dev/rattler-build-action@v0.2.39
