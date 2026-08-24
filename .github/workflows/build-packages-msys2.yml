@@ -7,6 +7,10 @@ on:
         default: develop
         required: true
         type: string
+      tests:
+        default: false
+        required: false
+        type: boolean
   workflow_dispatch:
     inputs:
       branch:
@@ -16,6 +20,10 @@ on:
         options:
           - develop
           - main
+      tests:
+        default: true
+        required: false
+        type: boolean
 
 jobs:
 
@@ -215,7 +223,7 @@ jobs:
         run: |
           PKGVER=$(ls cx_freeze-*.tar.gz | awk -F- '{print $2}' | awk -F.tar.gz '{print $1}')
           sed -i "s/pkgver=.*/pkgver=$PKGVER/" PKGBUILD
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          if [ "${{ inputs.tests }}" == "true" ]; then
             makepkg-mingw -sCLf --noconfirm --noprogressbar
             mv src/cx-freeze-test/.coverage .coverage.${{ matrix.sys }}
           else
@@ -232,7 +240,7 @@ jobs:
             mingw-w64-*.zst.sig
 
       - name: '📤 Upload artifact: coverage'
-        if: github.event_name == 'workflow_dispatch'
+        if: inputs.tests == true
         uses: actions/upload-artifact@v7
         with:
           name: cx-freeze-msys2-${{ matrix.sys }}-coverage
