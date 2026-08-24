@@ -24,6 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        python-version: ["3.11", "3.12"]
         include:
           - os: ubuntu-latest
             target-platform: linux-64
@@ -74,6 +75,7 @@ jobs:
           artifact-name: package-${{ matrix.target-platform }}
           build-args: >
             --target-platform ${{ matrix.target-platform }} --no-test
+            --variant python=${{ matrix.python-version }}
           #  ${{ matrix.target-platform == 'linux-aarch64' && ' --no-test' || '' }}
 
       - run: find . -name '*.conda' -print
