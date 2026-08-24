@@ -55,7 +55,7 @@ jobs:
         id: recipe
         working-directory: recipe
         run: |
-          pushd cx_Freeze/cx_Freeze
+          pushd cx_Freeze
           VERSION=$(grep -m1 "^version = " pyproject.toml | awk -F\" '{print $2}')
           popd
           # keep the space before the context variables for distinction
