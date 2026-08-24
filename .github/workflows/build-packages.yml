@@ -137,119 +137,8 @@ jobs:
       unix: ${{ steps.unix.outputs.config }}
       win: ${{ steps.win.outputs.config }}
 
-  build_conda_unix:
-    needs: [conda_recipe]
-    strategy:
-      fail-fast: false
-      matrix:
-        config: ${{ fromJSON(needs.conda_recipe.outputs.unix) }}
-    name: Build ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}-latest
-
-    steps:
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.14"
-
-      - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-          ref: v850ratler
-          repository: marcelotduarte/cx_freeze-feedstock
-
-      - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-          ref: develop
-          repository: marcelotduarte/cx_Freeze
-          path: recipe/cx_Freeze
-
-      - name: Update recipe
-        working-directory: recipe
-        run: echo ${{ needs.conda_recipe.outputs.data_path }} | base64 -d>recipe.yaml
-
-      - name: Update conda-forge.yml
-        run: |
-          sed -i.xx 's/conda_forge_output_validation\: true/conda_forge_output_validation: false/' conda-forge.yml
-
-      - run: cat recipe/recipe.yaml
-
-      - name: Build the conda package
-        run: python build-locally.py ${{ matrix.config.name }}
-
-      - name: Move to build_artifacts
-        if: matrix.config.os == 'macos'
-        run: |
-          mkdir -p build_artifacts
-          mv miniforge3/conda-bld/* build_artifacts/
-
-      - run: ls -l build_artifacts
-
-      - name: Upload the conda artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: cx-freeze-conda-${{ matrix.config.name }}
-          path: |
-            ./build_artifacts/*/cx_freeze*.conda
-            ./build_artifacts/*/cx_freeze*.tar.bz2
-            !./build_artifacts/pkg_cache/*
-
-  build_conda_windows:
-    needs: [conda_recipe]
-    strategy:
-      fail-fast: false
-      matrix:
-        config: ${{ fromJSON(needs.conda_recipe.outputs.win) }}
-    name: Build ${{ matrix.config.name }}
-    defaults:
-      run:
-        shell: bash -l {0}
-    runs-on: ${{ matrix.config.os }}-latest
-
-    steps:
-      - uses: conda-incubator/setup-miniconda@v4
-        with:
-          activate-environment: freeze-${{ matrix.config.name }}
-          python-version: ${{ matrix.config.version }}
-          channels: conda-forge
-
-      - run: conda info
-
-      - run: conda install rattler-build
-
-      - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-          ref: v850ratler
-          repository: marcelotduarte/cx_freeze-feedstock
-
-      - name: Update recipe
-        working-directory: recipe
-        run: echo ${{ needs.conda_recipe.outputs.data }} | base64 -d>recipe.yaml
-
-      - run: cat recipe/recipe.yaml
-
-      - name: Build the conda package
-        run: |
-          mkdir -p build_artifacts
-          rattler-build build -r recipe/recipe.yaml -m .ci_support/${{ matrix.config.name }}.yaml --output-dir build_artifacts
-
-      - run: ls -l build_artifacts
-
-      - name: Upload the conda artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: cx-freeze-conda-${{ matrix.config.name }}
-          path: |
-            ./build_artifacts/*/cx_freeze*.conda
-            ./build_artifacts/*/cx_freeze*.tar.bz2
-            !./build_artifacts/pkg_cache/*
-
   build_conda_index:
-    needs:
-      # to build the index
-      - build_conda_unix
-      - build_conda_windows
+    needs: [build_conda]
     name: Conda index
     defaults:
       run:
@@ -262,14 +151,6 @@ jobs:
           activate-environment: freeze-index
           python-version: "3.14"
           channels: conda-forge
-
-      - name: Download all conda artifacts
-        uses: actions/download-artifact@v8
-        with:
-          path: build_artifacts-all
-          pattern: cx-freeze-conda-*
-          merge-multiple: true
-      - run: ls -l build_artifacts-all
 
       - name: Download freeze-core conda artifacts
         uses: actions/download-artifact@v8
