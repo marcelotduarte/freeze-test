@@ -193,7 +193,11 @@ jobs:
           PKGREL=9
           sed -i "s/pkgver=.*/pkgver=$PKGVER/" PKGBUILD-core
           sed -i "s/pkgrel=.*/pkgrel=$PKGREL/" PKGBUILD-core
-          makepkg-mingw -sCLf --noconfirm --noprogressbar -p PKGBUILD-core
+          if [ "${{ inputs.tests }}" == "true" ]; then
+            makepkg-mingw -sCLf --noconfirm --noprogressbar -p PKGBUILD-core
+          else
+            makepkg-mingw -sCLf --noconfirm --noprogressbar -p PKGBUILD-core --nocheck
+          fi
           pacman -U "${MINGW_PACKAGE_PREFIX}-python-freeze-core-${PKGVER}-${PKGREL}-any.pkg.tar.zst" --noconfirm
 
       - name: ' Download artifact: python-msilib-sdist'
@@ -209,7 +213,11 @@ jobs:
           PKGREL=9
           sed -i "s/pkgver=.*/pkgver=$PKGVER/" PKGBUILD-msilib
           sed -i "s/pkgrel=.*/pkgrel=$PKGREL/" PKGBUILD-msilib
-          makepkg-mingw -sCLf --noconfirm --noprogressbar -p PKGBUILD-msilib
+          if [ "${{ inputs.tests }}" == "true" ]; then
+            makepkg-mingw -sCLf --noconfirm --noprogressbar -p PKGBUILD-msilib
+          else
+            makepkg-mingw -sCLf --noconfirm --noprogressbar -p PKGBUILD-msilib --nocheck
+          fi
           pacman -U "${MINGW_PACKAGE_PREFIX}-python-msilib-${PKGVER}-${PKGREL}-any.pkg.tar.zst" --noconfirm
 
       - name: ' Download artifact: cx-freeze-sdist'
@@ -227,7 +235,6 @@ jobs:
             makepkg-mingw -sCLf --noconfirm --noprogressbar
             mv src/cx-freeze-test/.coverage .coverage.${{ matrix.sys }}
           else
-            # do not run check() in workflow_call to speed up the build
             makepkg-mingw -sCLf --noconfirm --noprogressbar --nocheck
           fi
 
