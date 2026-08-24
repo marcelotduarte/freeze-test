@@ -44,12 +44,11 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
-          ref: main
           repository: marcelotduarte/freeze-core-feedstock
 
       - uses: actions/checkout@v7
         with:
-          ref: develop
+          persist-credentials: false
           repository: marcelotduarte/freeze-core
           path: recipe/freeze-core
 
@@ -93,12 +92,12 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
-          ref: main
           repository: marcelotduarte/cx_freeze-feedstock
 
       - uses: actions/checkout@v7
         with:
-          ref: develop
+          persist-credentials: false
+          ref: ${{ inputs.branch }}
           repository: marcelotduarte/cx_Freeze
           path: recipe/cx_Freeze
 
