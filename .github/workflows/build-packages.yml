@@ -32,11 +32,23 @@ on:
 
 jobs:
 
+  build_freeze_core:
+    name: Build wheels for freeze-core
+    if: ${{ inputs.build_freeze_core }}
+    uses: marcelotduarte/freeze-core/.github/workflows/build.yml@main
+
   build_wheel:
     name: Build wheel for cx_Freeze
     uses: ./.github/workflows/build-wheel.yml
     with:
       branch: develop
+
+  build_conda:
+    name: Build conda packages for freeze-core and cx_freeze
+    uses: ./.github/workflows/build-packages-conda.yml
+    with:
+      branch: develop
+      #build_freeze_core: ${{ inputs.build_freeze_core }}
 
   build_msys2:
     name: Build msys2 packages
@@ -53,11 +65,6 @@ jobs:
     name: Build LIEF
     if: ${{ inputs.build_lief }}
     uses: ./.github/workflows/build-wheel-lief.yml
-
-  build_freeze_core:
-    name: Build wheels for freeze-core
-    if: ${{ inputs.build_freeze_core }}
-    uses: marcelotduarte/freeze-core/.github/workflows/build.yml@main
 
   conda_recipe:
     name: Generate conda-forge recipe
@@ -85,7 +92,7 @@ jobs:
           # keep the space before the context variables for distinction
           sed -i.bkp "s/  version:.*$/  version: $VERSION/" recipe.yaml
           sed -i.bkp 's/  number:.*$/  number: 0/' recipe.yaml
-          sed -i.bkp 's/coverage run || true/coverage run -m pytest --dist=loadfile --durations=20 -nauto -rpfEsXx tests --venv-keep-prefix/' recipe.yaml
+          #sed -i.bkp 's/coverage run || true/coverage run -m pytest --dist=loadfile --durations=20 -nauto -rpfEsXx tests --venv-keep-prefix/' recipe.yaml
           sed -i.bkp 's|  url:.*$|  git: https://github.com/marcelotduarte/cx_Freeze.git|' recipe.yaml
           sed -i.bkp 's/  sha256:.*$/  rev: develop/g' recipe.yaml
           echo "recipe=$(base64 --wrap=0 recipe.yaml)" >> $GITHUB_OUTPUT
@@ -243,8 +250,6 @@ jobs:
       # to build the index
       - build_conda_unix
       - build_conda_windows
-    strategy:
-      fail-fast: false
     name: Conda index
     defaults:
       run:
@@ -261,9 +266,23 @@ jobs:
       - name: Download all conda artifacts
         uses: actions/download-artifact@v8
         with:
-          path: build_artifacts
+          path: build_artifacts-all
           pattern: cx-freeze-conda-*
           merge-multiple: true
+      - run: ls -l build_artifacts-all
+
+      - name: Download freeze-core conda artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: build_artifacts
+          pattern: freeze-core-conda-*
+          merge-multiple: true
+
+      - name: Download cx-freeze conda artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: build_artifacts
+          name: cx-freeze-conda
 
       - run: ls -l build_artifacts
 

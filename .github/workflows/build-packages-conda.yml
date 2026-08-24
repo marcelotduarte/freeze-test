@@ -88,7 +88,7 @@ jobs:
         with:
           recipe-path: recipe/recipe.yaml
           # needs to be unique for each matrix entry
-          artifact-name: freeze-core-${{ matrix.target-platform }}
+          artifact-name: freeze-core-conda-${{ matrix.target-platform }}
           build-args: >
             --target-platform ${{ matrix.target-platform }} --no-test
             --variant python=${{ env.python-version }}
@@ -98,7 +98,7 @@ jobs:
       - run: find . -name '*.tar.bz2' -print
 
   build:
-    name: Build conda package
+    name: Build cx_freeze conda package
     needs: [build_freeze_core]
     runs-on:  ubuntu-latest
     defaults:
@@ -137,7 +137,7 @@ jobs:
         with:
           recipe-path: recipe/recipe.yaml
           # needs to be unique for each matrix entry
-          artifact-name: cx_freeze
+          artifact-name: cx-freeze-conda
           build-args: --no-test
 
       - run: find . -name '*.conda' -print
