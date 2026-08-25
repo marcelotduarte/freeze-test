@@ -102,12 +102,14 @@ jobs:
       - name: Run conda index
         run: |
           python -m conda_index --verbose -n packages/conda \
+            --subdir noarch \
             --subdir linux-64 \
             --subdir osx-64 --subdir osx-arm64 \
             --subdir win-64 \
             build_artifacts
 
-      - run: ls -l build_artifacts
+      - name: List of artifacts
+        run: ls -l build_artifacts/*/*
 
       - name: Upload repository data to the conda artifact
         uses: actions/upload-artifact@v7
@@ -157,9 +159,9 @@ jobs:
         run: |
           git rm -f cx-freeze/* --ignore-unmatch
           git rm -f cx-logging/* --ignore-unmatch
-          git rm -f msys2/* --ignore-unmatch
-          git rm -f conda/* -r --ignore-unmatch
           git rm -f freeze-core/* --ignore-unmatch
+          git rm -f conda/* -r --ignore-unmatch
+          git rm -f msys2/* --ignore-unmatch
 
       - name: Download all lief artifacts
         if: ${{ inputs.build_lief }}
@@ -172,15 +174,15 @@ jobs:
       - name: Create index for LIEF
         run: |
           mkdir -p lief
-          cd lief
+          pushd lief
           for f in $(
             curl $LIEF_LINK/lief/ | grep -Eo "href=\"(.*win.*)\"" | cut -c"7-" | cut -d \" -f 1
           ); do
             touch `basename $f`
           done
-          rm -rf lief/*-cp38-*.whl
           rm -rf lief/*-cp39-*.whl
-          cd ..
+          rm -rf lief/*-cp310-*.whl
+          popd
           # redirected files
           python create_index.py lief --base LIEF
           sed -i 's,${{ env.PACKAGES }},${{ env.LIEF_LINK }},g' lief/index.md
@@ -221,25 +223,6 @@ jobs:
         if: ${{ inputs.build_freeze_core }}
         run: python create_index.py freeze-core
 
-      - name: Download all msys2 artifacts
-        uses: actions/download-artifact@v8
-        with:
-          path: msys2
-          pattern: cx-freeze-msys2-*
-          merge-multiple: true
-
-      - name: Create index for python-cx-freeze (msys2)
-        run: python create_index.py msys2 --base python-cx-freeze --mask "*.tar.zst"
-
-      - name: Download all conda artifacts
-        uses: actions/download-artifact@v8
-        with:
-          path: conda
-          name: cx-freeze-conda
-
-      - name: Create index for cx_freeze (conda)
-        run: python create_index.py conda --mask "cx_freeze*.conda" --mask "cx_freeze*.tar.bz2"
-
       - name: Download all cx_Freeze artifacts
         uses: actions/download-artifact@v8
         with:
@@ -248,6 +231,35 @@ jobs:
 
       - name: Create index for cx_Freeze wheels
         run: python create_index.py cx-freeze --base cx_Freeze
+
+      - name: Download all msys2 artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: msys2
+          pattern: cx-freeze-msys2-*
+          merge-multiple: true
+
+      - name: Create index for python-cx-freeze and python-freeze-core (msys2)
+        run: python create_index.py msys2 --base python-cx-freeze --mask "*.tar.zst"
+
+      - name: Download cx-freeze conda artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: conda
+          name: cx-freeze-conda
+
+      - name: Download freeze-core conda artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: conda
+          pattern: freeze-core-conda-*
+          merge-multiple: true
+
+      - name: Create index for cx_freeze and freeze-core (conda)
+        run: >
+          python create_index.py conda
+          --mask "cx_freeze*.conda" --mask "cx_freeze*.tar.bz2"
+          --mask "freeze-core*.conda" --mask "freeze-core*.tar.bz2"
 
       - name: Cleanup
         run: rm -rf lief-wheels *.py *.md PKGBUILD*
@@ -267,10 +279,10 @@ jobs:
           echo -e "Development packages for MSYS2 [python-cx-freeze](msys2/index.md).\n">>index.md
           echo -e "Development packages for conda-forge [cx_freeze](conda/index.md).\n">>index.md
           if ${{ inputs.build_cx_logging }}; then
-            echo -e "# Packages for cx_Logging 3.2.1 \[Windows\]\[Python 3.13+\]\n">>index.md
+            echo -e "# Packages for cx_Logging 3.2.2 \[Windows\]\[Python 3.13+\]\n">>index.md
             echo -e "Unofficial wheels for [cx_Logging](cx-logging/index.md).\n">>index.md
           fi
-          echo -e "# Packages for LIEF \[Windows\]\[Python 3.10-3.14\]\n">>index.md
+          echo -e "# Packages for LIEF \[Windows\]\[Python 3.11-3.15\]\n">>index.md
           echo -e "Development wheels for [LIEF](lief/index.md).\n">>index.md
 
       - name: Publish cx_Freeze packages
