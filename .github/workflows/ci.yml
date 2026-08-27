@@ -45,16 +45,18 @@ jobs:
           ]
           python_version = ["3.11", "3.12", "3.13", "3.14", "3.14t", "3.15-dev", "3.15t-dev"]
 
+          print("include = [")
           include = []
           for osver in os_and_version:
               for pyver in python_version:
                   line = osver.copy()
                   line["python-version"] = pyver
+                  print(f"\t{line},")
                   include += [line]
+          print("]")
 
           with open(os.environ["GITHUB_OUTPUT"], "a+") as f:
             print("data="+json.dumps({"include": include}), file=f)
-          print("data="+json.dumps({"include": include}))
         shell: python
 
     outputs:
