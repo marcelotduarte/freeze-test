@@ -75,22 +75,6 @@ jobs:
           sed -i.bkp 's|  sha256:.*$|  #|' recipe.yaml
           git diff
 
-      - name: Prepare variants
-        working-directory: recipe
-        run: |
-          cat << 'EOF' > conda_build_config.yaml
-          c_stdlib:
-            - sysroot                    # [linux]
-            - macosx_deployment_target   # [osx]
-            - vs                         # [win]
-          c_stdlib_version:              # [unix]
-            - 2.17                       # [linux]
-            - 10.13                      # [osx and x86_64]
-            - 11.0                       # [osx and arm64]
-          MACOSX_SDK_VERSION:            # [osx and x86_64]
-            - "11.0"                     # [osx and x86_64]
-          EOF
-
       - name: Build conda package
         uses: prefix-dev/rattler-build-action@v0.2.39
         with:
@@ -98,8 +82,9 @@ jobs:
           # needs to be unique for each matrix entry
           artifact-name: freeze-core-conda-${{ matrix.target-platform }}
           build-args: >
-            --target-platform ${{ matrix.target-platform }} --no-test
+            --target-platform ${{ matrix.target-platform }}
             --variant python=${{ env.python-version }}
+            --no-test
           #  ${{ matrix.target-platform == 'linux-aarch64' && ' --no-test' || '' }}
 
       - run: find . -name '*.conda' -print
@@ -146,7 +131,7 @@ jobs:
           recipe-path: recipe/recipe.yaml
           # needs to be unique for each matrix entry
           artifact-name: cx-freeze-conda
-          build-args: ${{ inputs.tests == true && '' || '--no-test' }}
+          build-args: ${{ inputs.tests && '' || '--no-test' }}
 
       - run: find . -name '*.conda' -print
       - run: find . -name '*.tar.bz2' -print
