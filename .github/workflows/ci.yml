@@ -50,7 +50,7 @@ jobs:
               for pyver in python_version:
                   line = osver.copy()
                   line["python-version"] = pyver
-                  include += line
+                  include += [line]
 
           with open(os.environ["GITHUB_OUTPUT"], "a+") as f:
             print("data="+json.dumps({"include": include}), file=f)
