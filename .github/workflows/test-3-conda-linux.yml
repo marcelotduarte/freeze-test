@@ -8,12 +8,11 @@ on:
         options:
           - develop
       python-version:
-        default: "3.10,3.11,3.12,3.13,3.14"
+        default: "3.11,3.12,3.13,3.14"
         required: false
         type: choice
         options:
-          - "3.10,3.11,3.12,3.13,3.14"
-          - "3.10"
+          - "3.11,3.12,3.13,3.14"
           - "3.11"
           - "3.12"
           - "3.13"

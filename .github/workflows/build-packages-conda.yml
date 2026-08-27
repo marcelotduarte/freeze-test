@@ -21,7 +21,7 @@ on:
           - develop
           - main
       tests:
-        default: true
+        default: false
         required: false
         type: boolean
 
@@ -84,8 +84,7 @@ jobs:
           build-args: >
             --target-platform ${{ matrix.target-platform }}
             --variant python=${{ env.python-version }}
-            --no-test
-          #  ${{ matrix.target-platform == 'linux-aarch64' && ' --no-test' || '' }}
+            ${{ !inputs.tests && '--no-test' || '' }}
 
       - run: find . -name '*.conda' -print
       - run: find . -name '*.tar.bz2' -print
