@@ -35,45 +35,23 @@ jobs:
         id: includes
         run: |
           import json, os
+          os_and_version = [
+              {"os": "ubuntu", "os-version": "latest", "arch": "x86_64"},
+              {"os": "windows", "os-version": "latest", "arch": "x86_64"},
+              {"os": "macos", "os-version": "15-intel", "arch": "x86_64"},
+              {"os": "ubuntu", "os-version": "24.04-arm", "arch": "arm64"},
+              {"os": "windows", "os-version": "11-arm", "arch": "arm64"},
+              {"os": "macos", "os-version": "15", "arch": "arm64"},
+          ]
           python_version = ["3.11", "3.12", "3.13", "3.14", "3.14t", "3.15-dev", "3.15t-dev"]
-          include = [
-              {
-                  "os": "ubuntu",
-                  "os-version": "latest",
-                  "arch": "x86_64",
-                  "python-version": python_version,
-              },
-              {
-                  "os": "windows",
-                  "os-version": "latest",
-                  "arch": "x86_64",
-                  "python-version": python_version,
-              },
-              {
-                  "os": "macos",
-                  "os-version": "15-intel",
-                  "arch": "x86_64",
-                  "python-version": python_version,
-              },
-              {
-                  "os": "ubuntu",
-                  "os-version": "24.04-arm",
-                  "arch": "arm64",
-                  "python-version": python_version,
-              },
-              {
-                  "os": "windows",
-                  "os-version": "11-arm",
-                  "arch": "arm64",
-                  "python-version": python_version,
-              },
-              {
-                  "os": "macos",
-                  "os-version": "15",
-                  "arch": "arm64",
-                  "python-version": python_version,
-              },
-            ]
+
+          include = []
+          for osver in os_and_version:
+              for pyver in python_version:
+                  line = osver.copy()
+                  line["python-version"] = pyver
+                  include += line
+
           with open(os.environ["GITHUB_OUTPUT"], "a+") as f:
             print("data="+json.dumps({"include": include}), file=f)
           print("data="+json.dumps({"include": include}))
