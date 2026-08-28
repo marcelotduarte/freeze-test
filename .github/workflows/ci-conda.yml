@@ -165,10 +165,18 @@ jobs:
         run: python -c "import platform; print(platform.machine())"
         shell: bash -el {0}
 
-      - name: Generate coverage report
+      - name: Generate coverage report (top)
         run: |
           coverage run -m pytest -nauto -rpfEsXx tests/*.py
+        shell: bash -el {0}
+
+      - name: Generate coverage report (stdlib)
+        run: |
           coverage run -m pytest -nauto -rpfEsXx tests/stdlib
+        shell: bash -el {0}
+
+      - name: Generate coverage report (hooks)
+        run: |
           coverage run -m pytest --dist=loadfile --durations=20 -nauto -rpfEsXx tests/hooks
         shell: bash -el {0}
 
