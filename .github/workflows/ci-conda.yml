@@ -144,7 +144,10 @@ jobs:
         shell: bash -el {0}
 
       - name: Generate coverage report
-        run: coverage run -m pytest --dist=loadfile --durations=20 -n4 -rpfEsXx tests
+        run: |
+          coverage run -m pytest -nauto -rpfEsXx tests/*.py
+          coverage run -m pytest -nauto -rpfEsXx tests/stdlib
+          coverage run -m pytest --dist=loadfile --durations=20 -nauto -rpfEsXx tests/hooks
         shell: bash -el {0}
 
       - name: Upload coverage reports
