@@ -118,7 +118,6 @@ jobs:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
           architecture: x64
-          channels: conda-forge
 
       - name: Local index
         run: |
