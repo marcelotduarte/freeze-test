@@ -7,6 +7,10 @@ on:
         default: develop
         required: true
         type: string
+      build_freeze_core:
+        default: false
+        required: false
+        type: boolean
       tests:
         default: false
         required: false
@@ -20,6 +24,10 @@ on:
         options:
           - develop
           - main
+      build_freeze_core:
+        default: false
+        required: false
+        type: boolean
       tests:
         default: false
         required: false
@@ -27,6 +35,7 @@ on:
 
 jobs:
   build_freeze_core:
+    if: ${{ inputs.build_freeze_core }}
     name: Build freeze-core conda package
     runs-on: ${{ matrix.os }}
     strategy:
@@ -91,7 +100,6 @@ jobs:
 
   build:
     name: Build cx_freeze conda package
-    needs: [build_freeze_core]
     runs-on:  ubuntu-latest
     defaults:
       run:

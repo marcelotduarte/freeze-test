@@ -10,6 +10,10 @@ on:
         options:
           - develop
           - main
+      build_freeze_core:
+        default: false
+        required: false
+        type: boolean
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -24,6 +28,7 @@ jobs:
     uses: ./.github/workflows/build-packages-conda.yml
     with:
       branch: ${{ inputs.branch }}
+      build_freeze_core: ${{ inputs.build_freeze_core }}
     permissions:
       contents: read
 
