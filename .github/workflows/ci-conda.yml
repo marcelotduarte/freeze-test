@@ -73,8 +73,6 @@ jobs:
     defaults:
       run:
         shell: bash
-    env:
-      UV_NO_PROGRESS: true
     steps:
 
       - name: Install dependencies (Linux)
@@ -96,12 +94,24 @@ jobs:
       - name: List files
         run: find . -not -path '*/.*' -print
 
+      - name: Download the wheel
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          merge-multiple: true
+          name: cx-freeze-conda
+          path: condahouse
+
       - uses: conda-incubator/setup-miniconda@v4
         with:
           activate-environment: test-${{ matrix.os }}-${{ matrix.os-version }}
           python-version: ${{ matrix.python-version }}
           architecture: x64
           channels: conda-forge
+
+      - name: Install dependencies to test
+        run: |
+          ci/install-tools.sh --tests
+          conda install condahouse/noarch/cx_freeze-*-.conda --yes
 
       - name: Env
         run: env | sort
@@ -114,18 +124,6 @@ jobs:
 
       - name: platform machine
         run: python -c "import platform; print(platform.machine())"
-
-      - name: Download the wheel
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          merge-multiple: true
-          name: cx-freeze-conda
-          path: condahouse
-
-      - name: Install dependencies to test
-        run: |
-          ci/install-tools.sh --tests
-          conda install condahouse/noarch/cx_freeze-*-.conda --yes
 
       - name: Generate coverage report
         run: coverage run -m pytest --dist=loadfile --durations=20 -n4 -rpfEsXx tests
