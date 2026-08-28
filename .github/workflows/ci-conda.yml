@@ -120,6 +120,13 @@ jobs:
           architecture: x64
           channels: conda-forge
 
+      - name: Local index
+        run: |
+          conda install conda-build -y
+          conda index ./condahouse
+          conda remove conda-build -y
+        shell: bash -el {0}
+
       - name: Install dependencies to test
         run: ci/install-tools.sh --tests
         shell: bash -el {0}
@@ -127,18 +134,20 @@ jobs:
       - name: Install freeze-core (from dev)
         if: ${{ inputs.build_freeze_core }}
         run: |
-          conda install freeze-core=0.6.1
+          conda remove freeze-core -y
+          conda install -c ./condahouse freeze-core -y
         shell: bash -el {0}
 
       - name: Install freeze-core (from conda-forge)
         if: ${{ !inputs.build_freeze_core }}
-        run: conda install freeze-core=0.6.1
+        run: |
+          conda remove freeze-core -y
+          conda install freeze-core=0.6.1 -y
         shell: bash -el {0}
 
       - name: Install cx_freeze
         run: |
-          PKG=$(ls ./condahouse/noarch/cx_freeze-*.conda)
-          conda install "$PKG" -y
+          conda install -c ./condahouse cx_freeze -y
         shell: bash -el {0}
 
       - name: Env
