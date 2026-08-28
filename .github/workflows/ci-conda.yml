@@ -115,7 +115,7 @@ jobs:
 
       - uses: conda-incubator/setup-miniconda@v4
         with:
-          activate-environment: test-${{ matrix.os }}-${{ matrix.os-version }}
+          auto-update-conda: true
           python-version: ${{ matrix.python-version }}
           architecture: x64
           channels: conda-forge
@@ -125,21 +125,27 @@ jobs:
           ci/install-tools.sh --tests
           PKG=$(ls ./condahouse/noarch/cx_freeze-*.conda)
           conda install "$PKG" -y
+        shell: bash -el {0}
 
       - name: Env
         run: env | sort
+        shell: bash -el {0}
 
       - name: Sysconfig
         run: python -m sysconfig
+        shell: bash -el {0}
 
       - name: platform
         run: python -m platform
+        shell: bash -el {0}
 
       - name: platform machine
         run: python -c "import platform; print(platform.machine())"
+        shell: bash -el {0}
 
       - name: Generate coverage report
         run: coverage run -m pytest --dist=loadfile --durations=20 -n4 -rpfEsXx tests
+        shell: bash -el {0}
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
