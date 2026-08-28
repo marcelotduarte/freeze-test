@@ -41,9 +41,9 @@ jobs:
         run: |
           import json, os
           os_and_version = [
-              {"os": "ubuntu", "os-version": "latest", "arch": "x86_64"},
-              {"os": "windows", "os-version": "latest", "arch": "x86_64"},
-              {"os": "macos", "os-version": "15-intel", "arch": "x86_64"},
+              {"os": "ubuntu", "os-version": "latest", "arch": "x64"},
+              {"os": "windows", "os-version": "latest", "arch": "x64"},
+              {"os": "macos", "os-version": "15-intel", "arch": "x64"},
               {"os": "ubuntu", "os-version": "24.04-arm", "arch": "arm64"},
               {"os": "windows", "os-version": "11-arm", "arch": "arm64"},
               {"os": "macos", "os-version": "15", "arch": "arm64"},
@@ -77,12 +77,13 @@ jobs:
       fail-fast: false
     defaults:
       run:
-        shell: bash
+        shell: bash -el {0}
     steps:
 
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
         run: sudo apt-get install -qy alien
+        shell: bash
 
       - name: Fetch only the required files for testing
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -112,73 +113,62 @@ jobs:
 
       - name: List files
         run: find . -not -path '*/.*' -print
+        shell: bash
 
       - uses: conda-incubator/setup-miniconda@v4
         with:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
-          architecture: x64
+          architecture: ${{ matrix.arch }}
 
       - name: Local index
         run: |
           conda install conda-build -y
           conda index ./condahouse
           conda remove conda-build -y
-        shell: bash -el {0}
 
       - name: Install dependencies to test
         run: ci/install-tools.sh --tests
-        shell: bash -el {0}
 
       - name: Install freeze-core (from dev)
         if: ${{ inputs.build_freeze_core }}
         run: |
           conda remove freeze-core -y
           conda install -c ./condahouse freeze-core -y
-        shell: bash -el {0}
 
       - name: Install freeze-core (from conda-forge)
         if: ${{ !inputs.build_freeze_core }}
         run: |
           conda remove freeze-core -y
           conda install freeze-core=0.6.1 -y
-        shell: bash -el {0}
 
       - name: Install cx_freeze
         run: |
           conda install -c ./condahouse cx_freeze -y
-        shell: bash -el {0}
 
       - name: Env
         run: env | sort
-        shell: bash -el {0}
 
       - name: Sysconfig
         run: python -m sysconfig
-        shell: bash -el {0}
 
       - name: platform
         run: python -m platform
-        shell: bash -el {0}
 
       - name: platform machine
         run: python -c "import platform; print(platform.machine())"
-        shell: bash -el {0}
 
       - name: Generate coverage report (top)
         run: |
           coverage run -m pytest -nauto -rpfEsXx tests/*.py
-        shell: bash -el {0}
 
       - name: Generate coverage report (stdlib)
         run: |
           coverage run -m pytest -nauto -rpfEsXx tests/stdlib
-        shell: bash -el {0}
 
       - name: Generate coverage report (hooks)
         run: |
           coverage run -m pytest --dist=loadfile --durations=20 -nauto -rpfEsXx tests/hooks
-        shell: bash -el {0}
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
