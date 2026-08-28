@@ -123,7 +123,8 @@ jobs:
       - name: Install dependencies to test
         run: |
           ci/install-tools.sh --tests
-          conda install ./condahouse/noarch/cx_freeze-*-.conda --yes
+          PKG=$(ls ./condahouse/noarch/cx_freeze-*.conda)
+          conda install "$PKG" -y
 
       - name: Env
         run: env | sort
