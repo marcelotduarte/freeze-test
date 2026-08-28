@@ -121,8 +121,22 @@ jobs:
           channels: conda-forge
 
       - name: Install dependencies to test
+        run: ci/install-tools.sh --tests
+        shell: bash -el {0}
+
+      - name: Install freeze-core (from dev)
+        if: ${{ inputs.build_freeze_core }}
         run: |
-          ci/install-tools.sh --tests
+          conda install freeze-core=0.6.1
+        shell: bash -el {0}
+
+      - name: Install freeze-core (from conda-forge)
+        if: ${{ !inputs.build_freeze_core }}
+        run: conda install freeze-core=0.6.1
+        shell: bash -el {0}
+
+      - name: Install cx_freeze
+        run: |
           PKG=$(ls ./condahouse/noarch/cx_freeze-*.conda)
           conda install "$PKG" -y
         shell: bash -el {0}
