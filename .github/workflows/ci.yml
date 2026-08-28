@@ -10,6 +10,10 @@ on:
         options:
           - develop
           - main
+      build_freeze_core:
+        default: false
+        required: false
+        type: boolean
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -92,6 +96,20 @@ jobs:
             samples
             tests
 
+      - name: Download the wheels of freeze-core
+        if: ${{ inputs.build_freeze_core }}
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          merge-multiple: true
+          pattern: freeze-core-wheel-*
+          path: wheelhouse
+
+      - name: Download the wheel of cx-freeze
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: cx-freeze-wheel
+          path: wheelhouse
+
       - name: List files
         run: find . -not -path '*/.*' -print
 
@@ -117,13 +135,6 @@ jobs:
 
       - name: platform machine
         run: uv run --no-project python -c "import platform; print(platform.machine())"
-
-      - name: Download the wheel
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          merge-multiple: true
-          pattern: cx-freeze-wheel
-          path: wheelhouse
 
       - name: Install the dependencies for the tests
         run: uv pip install --upgrade -r pyproject.toml --group tests
