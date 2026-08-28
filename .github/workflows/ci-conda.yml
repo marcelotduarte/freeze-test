@@ -120,6 +120,7 @@ jobs:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.arch }}
+          channels: conda-forge,defaults
 
       - name: Local index
         run: |
