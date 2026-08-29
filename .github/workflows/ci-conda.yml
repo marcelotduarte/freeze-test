@@ -103,13 +103,13 @@ jobs:
         with:
           merge-multiple: true
           pattern: freeze-core-conda
-          path: condahouse
+          path: condahouse/freeze_core
 
       - name: Download the wheel of cx-freeze
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: cx-freeze-conda
-          path: condahouse
+          path: condahouse/cx_freeze
 
       - name: List files
         run: find . -not -path '*/.*' -print
@@ -122,11 +122,12 @@ jobs:
           architecture: ${{ matrix.arch }}
           channels: conda-forge,defaults
 
-      - name: Local index
-        run: |
-          conda install conda-build -y
-          conda index ./condahouse
-          conda remove conda-build -y
+      - name: Local index for freeze-core
+        if: ${{ inputs.build_freeze_core }}
+        run: conda index ./condahouse/freeze_core
+
+      - name: Local index for cx_freeze
+        run: conda index ./condahouse/cx_freeze
 
       - name: Install dependencies to test
         run: ci/install-tools.sh --tests
@@ -135,7 +136,7 @@ jobs:
         if: ${{ inputs.build_freeze_core }}
         run: |
           conda remove freeze-core -y
-          conda install -c ./condahouse freeze-core -y
+          conda install -c ./condahouse/freeze_core freeze-core -y
 
       - name: Install freeze-core (from conda-forge)
         if: ${{ !inputs.build_freeze_core }}
@@ -144,8 +145,7 @@ jobs:
           conda install freeze-core=0.6.1 -y
 
       - name: Install cx_freeze
-        run: |
-          conda install -c ./condahouse cx_freeze -y
+        run: conda install -c ./condahouse/cx_freeze cx_freeze -y
 
       - name: Env
         run: env | sort
@@ -160,16 +160,13 @@ jobs:
         run: python -c "import platform; print(platform.machine())"
 
       - name: Generate coverage report (top)
-        run: |
-          coverage run -m pytest -nauto -rpfEsXx tests/*.py
+        run: coverage run -m pytest -nauto -rpfEsXx tests/*.py
 
       - name: Generate coverage report (stdlib)
-        run: |
-          coverage run -m pytest -nauto -rpfEsXx tests/stdlib
+        run: coverage run -m pytest -nauto -rpfEsXx tests/stdlib
 
       - name: Generate coverage report (hooks)
-        run: |
-          coverage run -m pytest --dist=loadfile --durations=20 -nauto -rpfEsXx tests/hooks
+        run: coverage run -m pytest --dist=loadfile --durations=20 -nauto -rpfEsXx tests/hooks
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
