@@ -43,7 +43,7 @@ jobs:
           os_and_version = [
               {"os": "ubuntu", "os-version": "latest", "arch": "x64"},
               {"os": "windows", "os-version": "latest", "arch": "x64"},
-              {"os": "macos", "os-version": "15-intel", "arch": "x86_64"},
+              {"os": "macos", "os-version": "15-intel", "arch": "x64"},
               {"os": "ubuntu", "os-version": "24.04-arm", "arch": "arm64"},
               {"os": "windows", "os-version": "11-arm", "arch": "arm64"},
               {"os": "macos", "os-version": "15", "arch": "arm64"},
@@ -121,6 +121,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
           #architecture: ${{ matrix.arch }}
           channels: conda-forge,defaults
+
+      - name: conda info
+        run: conda info
 
       - name: Local index for freeze-core
         if: ${{ inputs.build_freeze_core }}
