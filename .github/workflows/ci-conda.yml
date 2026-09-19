@@ -44,8 +44,8 @@ jobs:
               {"os": "ubuntu", "os-version": "latest", "arch": "x64"},
               {"os": "windows", "os-version": "latest", "arch": "x64"},
               {"os": "macos", "os-version": "15-intel", "arch": "x86_64"},
-              {"os": "ubuntu", "os-version": "24.04-arm", "arch": "arm64"},
-              {"os": "windows", "os-version": "11-arm", "arch": "arm64"},
+              {"os": "ubuntu", "os-version": "24.04-arm", "arch": "aarch64"},
+              #{"os": "windows", "os-version": "11-arm", "arch": "arm64"},
               {"os": "macos", "os-version": "15", "arch": "arm64"},
           ]
           python_version = ["3.11", "3.12", "3.13", "3.14", "3.15"]
@@ -122,30 +122,29 @@ jobs:
           #architecture: ${{ matrix.arch }}
           channels: conda-forge,defaults
 
-      - name: Local index for freeze-core
-        if: ${{ inputs.build_freeze_core }}
-        run: conda index ./condahouse/freeze_core
-
-      - name: Local index for cx_freeze
-        run: conda index ./condahouse/cx_freeze
-
       - name: Install dependencies to test
         run: ci/install-tools.sh --tests
+
+      - name: conda info
+        run: conda info
 
       - name: Install freeze-core (from dev)
         if: ${{ inputs.build_freeze_core }}
         run: |
+          conda index ./condahouse/freeze_core
           conda remove freeze-core -y
           conda install -c ./condahouse/freeze_core freeze-core -y
 
       - name: Install freeze-core (from conda-forge)
-        if: ${{ !inputs.build_freeze_core }}
+        if: ${{ !inputs.build_freeze_core && matrix.os-version!='24.04-arm' }}
         run: |
           conda remove freeze-core -y
           conda install freeze-core=0.6.1 -y
 
       - name: Install cx_freeze
-        run: conda install -c ./condahouse/cx_freeze cx_freeze -y
+        run: |
+          conda index ./condahouse/cx_freeze
+          conda install -c ./condahouse/cx_freeze cx_freeze -y
 
       - name: Env
         run: env | sort
