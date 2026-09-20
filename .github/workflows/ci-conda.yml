@@ -48,7 +48,9 @@ jobs:
               #{"os": "windows", "os-version": "11-arm", "arch": "arm64"},
               {"os": "macos", "os-version": "15", "arch": "arm64"},
           ]
-          python_version = ["3.11", "3.12", "3.13", "3.14", "3.15"]
+          python_version = ["3.11", "3.12", "3.13", "3.14"]
+          if "${{ inputs.build_freeze_core }}" == "true":
+              python_version.append("3.15")
 
           print("include = [")
           include = []
