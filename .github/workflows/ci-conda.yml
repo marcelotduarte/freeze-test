@@ -117,7 +117,7 @@ jobs:
 
       - name: Set conda channels
         run: |
-          if "${{ matrix.python-version }}" == "3.15"; then
+          if [ "${{ matrix.python-version }}" == "3.15" ]; then
             CHANNELS="conda-forge,conda-forge/label/python_rc,defaults"
           else
             CHANNELS="conda-forge,defaults"
