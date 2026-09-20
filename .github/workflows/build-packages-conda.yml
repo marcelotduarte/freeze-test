@@ -94,7 +94,7 @@ jobs:
             --target-platform ${{ matrix.target-platform }}
             --variant python=${{ env.python-version }}
             ${{ !inputs.tests && '--no-test' || '' }}
-            -c conda-forge/label/python_rc
+            -c conda-forge -c conda-forge/label/python_rc
 
       - run: find . -name '*.conda' -print
       - run: find . -name '*.tar.bz2' -print
