@@ -139,7 +139,14 @@ jobs:
       - name: Install the dependencies for the tests
         run: uv pip install --upgrade -r pyproject.toml --group tests
 
-      - name: Install cx_Freeze from wheelhouse
+      - name: Install freeze-core (from wheelhouse)
+        if: ${{ inputs.build_freeze_core }}
+        run: |
+          uv pip uninstall freeze-core
+          uv pip install freeze-core -f wheelhouse \
+              --no-build --no-deps --no-index --prerelease=allow --reinstall
+
+      - name: Install cx_Freeze (from wheelhouse)
         run: |
           uv pip install cx_Freeze -f wheelhouse \
               --no-build --no-deps --no-index --prerelease=allow --reinstall
