@@ -29,6 +29,7 @@ jobs:
     uses: marcelotduarte/freeze-core/.github/workflows/build.yml@main
     permissions:
       contents: read
+      id-token: write
 
   build_wheel:
     name: Build wheels
