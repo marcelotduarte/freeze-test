@@ -27,6 +27,8 @@ jobs:
     name: Build wheels for freeze-core
     if: ${{ inputs.build_freeze_core }}
     uses: marcelotduarte/freeze-core/.github/workflows/build.yml@main
+    permissions:
+      contents: read
 
   build_wheel:
     name: Build wheels
