@@ -131,6 +131,7 @@ jobs:
           sed -i.bkp 's/coverage run || true/coverage run/' recipe.yaml
           sed -i.bkp 's|  url:.*$|  path: ./cx_Freeze|' recipe.yaml
           sed -i.bkp 's|  sha256:.*$|  #|' recipe.yaml
+          sed -i.bkp 's|- freeze-core ==0.6.1|- freeze-core >=0.6.1|' recipe.yaml
           git diff
 
       - name: Build conda package
