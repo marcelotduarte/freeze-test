@@ -37,13 +37,15 @@ requirements:
     - ${{ compiler("c") }}
     - ${{ stdlib("c") }}
   host:
-    - libpython
     - python
     - pip
     - setuptools ==84.0
     - if: win
       then:
         - cx_logging >=3.2
+    - if: match(python, ">3.14")
+      then:
+        - libpython
   run:
     - python
     - filelock >=3.20.3
