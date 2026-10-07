@@ -128,7 +128,6 @@ jobs:
 
       - uses: conda-incubator/setup-miniconda@v4
         with:
-          #auto-update-conda: true
           python-version: ${{ matrix.python-version }}
           channels: ${{ env.CHANNELS }}
 

@@ -1,0 +1,86 @@
+schema_version: 1
+
+context:
+  name: freeze-core
+  version: "0.7.7"
+  sha256: 232c304edcba47204bacd36af66d6411664557bdd7ad1aa7c0248f751723b54d
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/${{ name|replace("-", "_") }}-${{ version }}.tar.gz
+  sha256: ${{ sha256 }}
+
+build:
+  number: 0
+  skip: match(python, "<3.11")
+  script:
+    - if: not win
+      then:
+        - export CORE_FROZEN_MODULES=off
+    - ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  dynamic_linking:
+    missing_dso_allowlist:
+      - if: win
+        then:
+          - "**/cx_Logging.*.pyd"
+
+requirements:
+  build:
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+    - ${{ compiler("c") }}
+    - ${{ stdlib("c") }}
+  host:
+    - python
+    - pip
+    - setuptools ==84.0
+    - if: win
+      then:
+        - cx_logging >=3.2
+  run:
+    - python
+    - filelock >=3.20.3
+    - if: win
+      then:
+        - cabarchive >=0.2.4
+        - striprtf >=0.0.26
+
+tests:
+  - python:
+      imports:
+        - freeze_core
+  - files:
+      source:
+        - pyproject.toml
+        - tests
+    requirements:
+      run:
+        - coverage >=7.13.0
+        - pytest >=9.0.3
+        - if: not win
+          then:
+            - cabarchive >=0.2.4
+            - striprtf >=0.0.26
+    script:
+      - conda install cx_freeze --only-deps -y
+      - conda install "cx_freeze>=8.7.0" --no-deps -y
+      - conda list | grep freeze
+      - cxfreeze --version
+      - coverage run -m pytest tests
+
+about:
+  license: MIT
+  license_file: LICENSE
+  summary: Core dependency for cx_Freeze.
+  repository: https://github.com/marcelotduarte/freeze-core
+  homepage: https://marcelotduarte.github.io/cx_Freeze
+  documentation: https://cx-freeze.readthedocs.io/
+
+extra:
+  recipe-maintainers:
+    - marcelotduarte
