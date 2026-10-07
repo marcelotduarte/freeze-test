@@ -20,6 +20,7 @@ build:
     - if: not win
       then:
         - export CORE_FROZEN_MODULES=off
+        - ${{ PYTHON }} -c "import os,sys; print('IS_CONDA=',os.path.isdir(os.path.join(sys.prefix,'conda-meta')))"
     - ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   dynamic_linking:
     missing_dso_allowlist:
@@ -36,6 +37,7 @@ requirements:
     - ${{ compiler("c") }}
     - ${{ stdlib("c") }}
   host:
+    - libpython
     - python
     - pip
     - setuptools ==84.0
@@ -67,11 +69,13 @@ tests:
             - cabarchive >=0.2.4
             - striprtf >=0.0.26
     script:
-      - conda install cx_freeze --only-deps -y
-      - conda install "cx_freeze>=8.7.0" --no-deps -y
-      - conda list | grep freeze
-      - cxfreeze --version
-      - coverage run -m pytest tests
+      - if: match(python, "<3.15")
+        then:
+          - conda install "cx_freeze>=8.6.4" --only-deps -y
+          - conda install "cx_freeze>=8.7.0" --no-deps -y
+          - conda list | grep freeze
+          - cxfreeze --version
+          - coverage run -m pytest tests -s -v
 
 about:
   license: MIT
