@@ -68,7 +68,6 @@ jobs:
           persist-credentials: false
           repository: marcelotduarte/freeze-core
           path: recipe/freeze-core
-          branch: frozen_modules
 
       - uses: actions/checkout@v7
         with:
