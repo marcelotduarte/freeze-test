@@ -171,10 +171,10 @@ jobs:
         run: coverage run -m pytest -nauto -rpfEsXx tests/*.py
 
       - name: Generate coverage report (stdlib)
-        run: coverage run -m pytest -nauto -rpfEsXx tests/stdlib
+        run: coverage run -m pytest -nauto --dist=loadfile -rpfEsXx tests/stdlib/*.py
 
       - name: Generate coverage report (hooks)
-        run: coverage run -m pytest --dist=loadfile --durations=20 -nauto -rpfEsXx tests/hooks
+        run: coverage run -m pytest -nauto --dist=loadfile -rpfEsXx tests/hooks/*.py
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
