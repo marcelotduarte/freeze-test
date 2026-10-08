@@ -2,8 +2,8 @@ schema_version: 1
 
 context:
   name: freeze-core
-  version: "0.7.7"
-  sha256: 232c304edcba47204bacd36af66d6411664557bdd7ad1aa7c0248f751723b54d
+  version: "0.8.0"
+  sha256: 6a094108367cb9d91ad41b2ee751627dfdbfbc0ba6e278243bae99cf9fb87343
 
 package:
   name: ${{ name|lower }}
@@ -20,7 +20,6 @@ build:
     - if: not win
       then:
         - export CORE_FROZEN_MODULES=off
-        - ${{ PYTHON }} -c "import os,sys; print('IS_CONDA=',os.path.isdir(os.path.join(sys.prefix,'conda-meta')))"
     - ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   dynamic_linking:
     missing_dso_allowlist:
@@ -71,7 +70,7 @@ tests:
             - cabarchive >=0.2.4
             - striprtf >=0.0.26
     script:
-      - if: match(python, "<3.15")
+      - if: match(python, "<3.15") and target_platform not in ["linux-aarch64", "linux-ppc64le"]
         then:
           - conda install "cx_freeze>=8.6.4" --only-deps -y
           - conda install "cx_freeze>=8.7.0" --no-deps -y
