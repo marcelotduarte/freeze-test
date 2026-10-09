@@ -69,12 +69,6 @@ jobs:
           repository: marcelotduarte/freeze-core
           path: recipe/freeze-core
 
-      - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-          repository: marcelotduarte/freeze-test
-          path: recipe/freeze-test
-
       - name: Prepare recipe
         id: recipe
         working-directory: recipe
