@@ -29,17 +29,17 @@ jobs:
 
   build_sdist_cx_freeze:
     name: Build sdist for freeze-core
-    uses: marcelotduarte/cx_Freeze/.github/workflows/build-sdist.yml
+    uses: marcelotduarte/cx_Freeze/.github/workflows/build-sdist.yml@main
     with:
       branch: ${{ inputs.branch }}
 
   build_sdist_freeze_core:
     name: Build sdist for freeze-core
-    uses: marcelotduarte/freeze-core/.github/workflows/build-sdist.yml
+    uses: marcelotduarte/freeze-core/.github/workflows/build-sdist.yml@main
 
   build_sdist_msilib:
     name: Build sdist for python-msilib
-    uses: marcelotduarte/python-msilib/.github/workflows/build-sdist.yml
+    uses: marcelotduarte/python-msilib/.github/workflows/build-sdist.yml@main
 
   build_msys2:
     needs:
