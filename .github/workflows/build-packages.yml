@@ -39,7 +39,7 @@ jobs:
 
   build_wheel:
     name: Build wheel for cx_Freeze
-    uses: ./.github/workflows/build-wheel.yml
+    uses: marcelotduarte/cx_Freeze/.github/workflows/build.yml@main
     with:
       branch: develop
 
