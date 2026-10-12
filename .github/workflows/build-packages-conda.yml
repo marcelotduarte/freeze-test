@@ -33,6 +33,13 @@ on:
         required: false
         type: boolean
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   build_freeze_core:
     if: ${{ inputs.build_freeze_core }}
