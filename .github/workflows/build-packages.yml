@@ -35,11 +35,11 @@ jobs:
   build_freeze_core:
     name: Build wheels for freeze-core
     if: ${{ inputs.build_freeze_core }}
-    uses: marcelotduarte/freeze-core/.github/workflows/build.yml@main
+    uses: marcelotduarte/freeze-core/.github/workflows/build-wheel.yml@main
 
   build_wheel:
     name: Build wheel for cx_Freeze
-    uses: marcelotduarte/cx_Freeze/.github/workflows/build.yml@main
+    uses: marcelotduarte/cx_Freeze/.github/workflows/build-wheel.yml@main
     with:
       branch: develop
 

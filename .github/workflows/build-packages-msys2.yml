@@ -28,7 +28,7 @@ on:
 jobs:
 
   build_sdist_cx_freeze:
-    name: Build sdist for freeze-core
+    name: Build sdist for cx_Freeze
     uses: marcelotduarte/cx_Freeze/.github/workflows/build-sdist.yml@main
     with:
       branch: ${{ inputs.branch }}
