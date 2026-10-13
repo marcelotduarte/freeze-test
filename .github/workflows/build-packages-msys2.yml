@@ -27,6 +27,7 @@ on:
 
 concurrency:
   group: build-${{ github.ref }}
+  cancel-in-progress: false
   queue: max
 
 permissions:
