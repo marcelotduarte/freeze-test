@@ -78,7 +78,6 @@ jobs:
       contents: read
       id-token: write # Required for nested job 'publish'
     needs:
-      - build_conda
       - build_msys2
 
   build_conda_index:
