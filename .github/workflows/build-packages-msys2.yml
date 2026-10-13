@@ -34,13 +34,6 @@ permissions:
   contents: read
 
 jobs:
-
-  build_sdist_cx_freeze:
-    name: Build sdist for cx_Freeze
-    uses: marcelotduarte/cx_Freeze/.github/workflows/build-sdist.yml@main
-    with:
-      branch: ${{ inputs.branch }}
-
   build_sdist_freeze_core:
     name: Build sdist for freeze-core
     uses: marcelotduarte/freeze-core/.github/workflows/build-sdist.yml@main
@@ -48,12 +41,20 @@ jobs:
   build_sdist_msilib:
     name: Build sdist for python-msilib
     uses: marcelotduarte/python-msilib/.github/workflows/build-sdist.yml@main
+    needs:
+      - build_sdist_freeze_core
+
+  build_sdist_cx_freeze:
+    name: Build sdist for cx_Freeze
+    uses: marcelotduarte/cx_Freeze/.github/workflows/build-sdist.yml@main
+    with:
+      branch: ${{ inputs.branch }}
+    needs:
+      - build_sdist_msilib
 
   build_msys2:
     needs:
       - build_sdist_cx_freeze
-      - build_sdist_freeze_core
-      - build_sdist_msilib
     strategy:
       fail-fast: false
       matrix:
