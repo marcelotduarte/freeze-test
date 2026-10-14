@@ -1,12 +1,11 @@
 # Maintainer: Marcelo Duarte @marcelotduarte
 # makepkg-mingw -sCLfi --noconfirm
 
-_name=cx_Freeze
 _realname=cx-freeze
-_pyname=${_realname/-/_}
-pkgbase=mingw-w64-python-${_realname}
+_pyname="${_realname//-/_}"
+pkgbase="mingw-w64-python-${_realname}"
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=8.6.0
+pkgver=8.7.2
 pkgrel=1
 pkgdesc="Creates standalone executables from Python scripts, with the same performance (mingw-w64)"
 arch=('any')
@@ -48,6 +47,7 @@ checkdepends=(
 )
 options=(!strip)
 if [ "$CI" == "true" ]; then
+  pkgver=$(find "${_pyname}-*.tar.gz" | awk -F- '{print $2}' | awk -F.tar.gz '{print $1}')
   source=("file://${startdir}/${_pyname}-${pkgver}.tar.gz")
   sha256sums=(SKIP)
 else
@@ -58,7 +58,7 @@ fi
 prepare() {
   if ! [ "$CI" == "true" ]; then
     # Local
-    cd "../../${name}"
+    cd "../../cx_Freeze"
     pkgver=$(grep -m1 "^version = " pyproject.toml | awk -F\" '{print $2}')
     python -m build -s -x -n -o "${startdir}"
     cd "${srcdir}"
@@ -66,12 +66,12 @@ prepare() {
     bsdtar -x -v -f "${startdir}/${_pyname}-${pkgver}.tar.gz"
   fi
 
-  cd "${srcdir}/${_name}-${pkgver}"
+  cd "${srcdir}/${_pyname}-${pkgver}"
   # ignore version check for setuptools
   sed -i 's/"setuptools>=.*"/"setuptools"/' pyproject.toml
 
   rm -Rf "${srcdir}/python-${_realname}-${MSYSTEM}"
-  cp -a "${srcdir}/cx_Freeze-${pkgver}" "${srcdir}/python-${_realname}-${MSYSTEM}"
+  cp -a "${srcdir}/${_pyname}-${pkgver}" "${srcdir}/python-${_realname}-${MSYSTEM}"
 }
 
 pkgver() {
@@ -86,8 +86,10 @@ build() {
 
 check() {
   pacman -R "${MINGW_PACKAGE_PREFIX}-python-${_realname}" --noconfirm --nodeps || true
+
   cd "python-${_realname}-${MSYSTEM}"
-  pip install ${_realname} -f dist --no-deps --no-index --break-system-packages
+
+  pip install "${_realname}" -f dist --no-deps --no-index --break-system-packages
 
   mkdir -p "${srcdir}/${_realname}-test"
   cp pyproject.toml "${srcdir}/${_realname}-test/"
@@ -95,6 +97,7 @@ check() {
   cp -a tests "${srcdir}/${_realname}-test/tests/"
 
   cd "${srcdir}/${_realname}-test"
+
   if [ "${MINGW_ARCH}" == "mingw32" ]; then
     coverage run -m pytest --dist=loadfile -nauto -k "not hooks" tests
   else
@@ -102,7 +105,8 @@ check() {
   fi
   coverage combine
   coverage report
-  pip uninstall ${_realname} -y --break-system-packages
+
+  pip uninstall "${_realname}" -y --break-system-packages
 }
 
 package() {

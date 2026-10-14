@@ -3,9 +3,9 @@
 
 _realname=freeze-core
 _pyname=${_realname/-/_}
-pkgbase=mingw-w64-python-${_realname}
+pkgbase="mingw-w64-python-${_realname}"
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=0.7.2
+pkgver=0.8.0
 pkgrel=1
 pkgdesc="Core dependency for cx_Freeze (mingw-w64)"
 arch=('any')
@@ -42,7 +42,7 @@ checkdepends=(
 )
 options=(!strip)
 if [ "$CI" == "true" ]; then
-  pkgver=$(find ${_pyname}-*.tar.gz | awk -F- '{print $2}' | awk -F.tar.gz '{print $1}')
+  pkgver=$(find "${_pyname}-*.tar.gz" | awk -F- '{print $2}' | awk -F.tar.gz '{print $1}')
   source=("file://${startdir}/${_pyname}-${pkgver}.tar.gz")
   sha256sums=(SKIP)
 else
@@ -83,17 +83,20 @@ build() {
 
 check() {
   pacman -R "${MINGW_PACKAGE_PREFIX}-python-${_realname}" --noconfirm --nodeps || true
+
   cd "python-${_realname}-${MSYSTEM}"
-  pip install ${_realname} -f dist --no-deps --no-index --break-system-packages
+  pip install "${_realname}" -f dist --no-deps --no-index --break-system-packages
 
   mkdir -p "${srcdir}/${_realname}-test"
   cp pyproject.toml "${srcdir}/${_realname}-test"
   cp -a tests "${srcdir}/${_realname}-test"
 
   cd "${srcdir}/${_realname}-test"
-  coverage run || true
+
+  coverage run
   coverage report
-  pip uninstall ${_realname} -y --break-system-packages
+
+  pip uninstall "${_realname}" -y --break-system-packages
 }
 
 package() {
