@@ -99,7 +99,7 @@ check() {
   cd "${srcdir}/${_realname}-test"
 
   if [ "${MINGW_ARCH}" == "mingw32" ]; then
-    coverage run -m pytest tests/tests_win*.py
+    coverage run -m pytest tests/test_win*.py
   else
     coverage run
   fi
