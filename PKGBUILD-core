@@ -37,9 +37,11 @@ makedepends=(
 )
 checkdepends=(
   "${MINGW_PACKAGE_PREFIX}-python-coverage"
-  "${MINGW_PACKAGE_PREFIX}-python-cx-freeze"
   "${MINGW_PACKAGE_PREFIX}-python-pip"
   "${MINGW_PACKAGE_PREFIX}-python-pytest"
+  if [ "${MINGW_ARCH}" != "mingw32" ]; then
+    "${MINGW_PACKAGE_PREFIX}-python-cx-freeze"
+  fi
 )
 options=(!strip)
 if [ "$CI" == "true" ]; then
@@ -94,7 +96,11 @@ check() {
 
   cd "${srcdir}/${_realname}-test"
 
-  coverage run
+  if [ "${MINGW_ARCH}" == "mingw32" ]; then
+    coverage run -m pytest tests/tests_win*.py
+  else
+    coverage run
+  fi
   coverage report
 
   pip uninstall "${_realname}" -y --break-system-packages
