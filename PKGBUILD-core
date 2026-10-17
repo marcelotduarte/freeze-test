@@ -36,8 +36,9 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-python-setuptools"
 )
 checkdepends=(
-  "${MINGW_PACKAGE_PREFIX}-python-pip"
   "${MINGW_PACKAGE_PREFIX}-python-coverage"
+  "${MINGW_PACKAGE_PREFIX}-python-cx-freeze"
+  "${MINGW_PACKAGE_PREFIX}-python-pip"
   "${MINGW_PACKAGE_PREFIX}-python-pytest"
 )
 options=(!strip)
