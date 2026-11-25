@@ -142,7 +142,7 @@ jobs:
         run: |
           conda index ./wheelhouse/freeze_core
           conda remove freeze-core -y
-          conda install -c ./wheelhouse/freeze_core freeze-core -y
+          conda install -c ./wheelhouse/freeze_core freeze-core -y --no-deps --strict-channel-priority
 
       #- name: Install freeze-core (from conda-forge)
       #  if: ${{ !inputs.build_freeze_core && matrix.os-version!='24.04-arm' }}
@@ -153,7 +153,7 @@ jobs:
       - name: Install cx_freeze (from dev)
         run: |
           conda index ./wheelhouse/cx_freeze
-          conda install -c ./wheelhouse/cx_freeze cx_freeze -y
+          conda install -c ./wheelhouse/cx_freeze cx_freeze -y --no-deps --strict-channel-priority
 
       - name: Env
         run: env | sort
