@@ -107,10 +107,22 @@ jobs:
 
   build:
     name: Build cx_freeze conda package
-    runs-on:  ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            noarch-platform: linux
+          - os: windows-latest
+            noarch-platform: win
+          - os: macos-latest
+            noarch-platform: osx
     defaults:
       run:
         shell: bash
+    env:
+      python-min: "3.11"
     steps:
       - uses: actions/checkout@v7
         with:
@@ -143,9 +155,10 @@ jobs:
         with:
           recipe-path: recipe/recipe.yaml
           # needs to be unique for each matrix entry
-          artifact-name: cx-freeze-conda
+          artifact-name: cx-freeze-conda-${{ matrix.noarch-platform }}
           build-args: >
-            --variant python_min=3.11
+            --target-platform ${{ matrix.noarch-platform }}
+            --variant python_min=${{ env.python-min }}
             ${{ !inputs.tests && '--no-test' || '' }}
 
       - run: find . -name '*.conda' -print
