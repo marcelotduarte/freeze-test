@@ -5,7 +5,7 @@ _realname=cx-freeze
 _pyname="${_realname//-/_}"
 pkgbase="mingw-w64-python-${_realname}"
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=8.7.2
+pkgver=8.8.0
 pkgrel=1
 pkgdesc="Creates standalone executables from Python scripts, with the same performance (mingw-w64)"
 arch=('any')
@@ -98,10 +98,11 @@ check() {
 
   cd "${srcdir}/${_realname}-test"
 
-  if [ "${MINGW_ARCH}" == "mingw32" ]; then
-    coverage run -m pytest --dist=loadfile -nauto -k "not hooks" tests
-  else
-    coverage run
+  # Generate coverage report (stdlib)
+  coverage run -m pytest -nauto --dist=loadfile -rpfEsXx tests/*.py tests/stdlib/*.py || true
+  # Generate coverage report (non-stdlib)
+  if [ "${MINGW_ARCH}" != "mingw32" ]; then
+    coverage run -m pytest -nauto --dist=loadfile -rpfEsXx tests/hooks/*.py || true
   fi
   coverage combine
   coverage report

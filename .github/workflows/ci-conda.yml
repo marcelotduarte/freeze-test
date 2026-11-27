@@ -168,13 +168,10 @@ jobs:
       - name: platform machine
         run: python -c "import platform; print(platform.machine())"
 
-      - name: Generate coverage report (top)
-        run: coverage run -m pytest -nauto -rpfEsXx tests/*.py
-
       - name: Generate coverage report (stdlib)
-        run: coverage run -m pytest -nauto --dist=loadfile -rpfEsXx tests/stdlib/*.py
+        run: coverage run -m pytest -nauto --dist=loadfile -rpfEsXx tests/*.py tests/stdlib/*.py
 
-      - name: Generate coverage report (hooks)
+      - name: Generate coverage report (non-stdlib)
         run: coverage run -m pytest -nauto --dist=loadfile -rpfEsXx tests/hooks/*.py
 
       - name: Upload coverage reports

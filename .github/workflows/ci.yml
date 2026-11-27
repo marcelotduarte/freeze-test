@@ -161,8 +161,11 @@ jobs:
           uv pip install cx_Freeze -f wheelhouse \
               --no-build --no-deps --no-index --prerelease=allow --reinstall
 
-      - name: Generate coverage report
-        run: uv run --no-project coverage run
+      - name: Generate coverage report (stdlib)
+        run: uv run --no-project coverage run -m pytest -nauto --dist=loadfile -rpfEsXx tests/*.py tests/stdlib/*.py
+
+      - name: Generate coverage report (non-stdlib)
+        run: uv run --no-project coverage run -m pytest -nauto --dist=loadfile -rpfEsXx tests/hooks/*.py
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
