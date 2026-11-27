@@ -9,7 +9,7 @@ pkgver=8.8.0
 pkgrel=1
 pkgdesc="Creates standalone executables from Python scripts, with the same performance (mingw-w64)"
 arch=('any')
-mingw_arch=('mingw32' 'ucrt64' 'clang64' 'clangarm64')
+mingw_arch=('ucrt64' 'clang64' 'clangarm64')
 url="https://github.com/marcelotduarte/cx_Freeze/"
 msys2_repository_url='https://github.com/marcelotduarte/cx_Freeze'
 msys2_references=(
@@ -21,22 +21,14 @@ depends=(
   "${MINGW_PACKAGE_PREFIX}-python-packaging"
   "${MINGW_PACKAGE_PREFIX}-python-setuptools"
   "${MINGW_PACKAGE_PREFIX}-python-freeze-core"
+  "${MINGW_PACKAGE_PREFIX}-python-lief"
   "${MINGW_PACKAGE_PREFIX}-python-msilib"
+  "${MINGW_PACKAGE_PREFIX}-python-cx-logging"
 )
-if [ "${MINGW_ARCH}" != "mingw32" ]; then
-  depends+=(
-    "${MINGW_PACKAGE_PREFIX}-python-lief"
-  )
-fi
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-python-build"
   "${MINGW_PACKAGE_PREFIX}-python-installer"
 )
-if [ "${MINGW_ARCH}" != "mingw32" ]; then
-  optdepends=(
-    "${MINGW_PACKAGE_PREFIX}-python-cx-logging"
-  )
-fi
 checkdepends=(
   "${MINGW_PACKAGE_PREFIX}-python-pip"
   "${MINGW_PACKAGE_PREFIX}-python-coverage"
@@ -101,9 +93,7 @@ check() {
   # Generate coverage report (stdlib)
   coverage run -m pytest -nauto --dist=loadfile -rpfEsXx tests/*.py tests/stdlib/*.py || true
   # Generate coverage report (non-stdlib)
-  if [ "${MINGW_ARCH}" != "mingw32" ]; then
-    coverage run -m pytest -nauto --dist=loadfile -rpfEsXx tests/hooks/*.py || true
-  fi
+  coverage run -m pytest -nauto --dist=loadfile -rpfEsXx tests/hooks/*.py || true
   coverage combine
   coverage report
 

@@ -61,7 +61,6 @@ jobs:
         include:
           - { os: windows-latest, sys: clang64, env: clang-x86_64, icon: '🟧' }
           - { os: windows-11-arm, sys: clangarm64, env: clang-aarch64, icon: '🟧' }
-          - { os: windows-latest, sys: mingw32, env: i686, icon: ⬛' }
           - { os: windows-latest, sys: ucrt64,  env: ucrt-x86_64, icon: '🟨' }
     name: Build [${{ matrix.sys }} ${{ matrix.env }}]
     defaults:
