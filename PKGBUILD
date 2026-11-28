@@ -91,9 +91,9 @@ check() {
   cd "${srcdir}/${_realname}-test"
 
   # Generate coverage report (stdlib)
-  coverage run -m pytest -nauto --dist=loadfile -rpfEsXx tests/*.py tests/stdlib/*.py || true
+  coverage run -m pytest -nauto --dist=loadfile -rpfEsXx tests/*.py tests/stdlib/*.py
   # Generate coverage report (non-stdlib)
-  coverage run -m pytest -nauto --dist=loadfile -rpfEsXx tests/hooks/*.py || true
+  coverage run -m pytest -nauto --dist=loadfile -rpfEsXx tests/hooks/*.py
   coverage combine
   coverage report
 
